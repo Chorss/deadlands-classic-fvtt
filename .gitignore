@@ -59,6 +59,9 @@ books/
 # Extracted text carries the source's copyright — never commit.
 .pdf-extract/
 
+# Maintainer-local Polish translations of docs — repo docs are English; PL copies stay local & unpublished.
+docs/*.pl.md
+
 # Claude Code — commit shared `.claude/settings.json`, `.claude/commands/`,
 # `.claude/agents/`, `.claude/rules/` and `.claude/hooks/`, but keep
 # user-local overrides and runtime artifacts out of git.
