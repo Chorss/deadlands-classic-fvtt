@@ -1,0 +1,93 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '[0-9]*.[0-9]*.[0-9]*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build & publish Foundry release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (full history for compare link)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Validate tag matches system.json version
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          VERSION=$(node -e "console.log(JSON.parse(require('fs').readFileSync('system.json','utf8')).version)")
+          if [ "$TAG" != "$VERSION" ]; then
+            echo "::error::Tag '$TAG' does not match system.json version '$VERSION'"
+            exit 1
+          fi
+          PKG_VERSION=$(node -e "console.log(JSON.parse(require('fs').readFileSync('package.json','utf8')).version)")
+          if [ "$TAG" != "$PKG_VERSION" ]; then
+            echo "::error::Tag '$TAG' does not match package.json version '$PKG_VERSION'"
+            exit 1
+          fi
+
+      - name: Verify manifest + EN/PL key parity
+        run: node tools/verify-documenttypes.mjs
+
+      - name: Run unit tests
+        run: node --test tests/*.test.mjs
+
+      - name: Extract release notes from CHANGELOG.md
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          awk -v v="$TAG" '
+            $0 ~ "^## \\[" v "\\]" { found=1; next }
+            found && /^## \[/ { exit }
+            found { print }
+          ' CHANGELOG.md > /tmp/notes.md
+          if [ ! -s /tmp/notes.md ]; then
+            echo "::error::No CHANGELOG.md section found for [$TAG]. Did /release forget to update it?"
+            exit 1
+          fi
+          PREV=$(git tag --sort=-version:refname | grep -v "^${TAG}$" | head -1 || true)
+          if [ -n "$PREV" ]; then
+            {
+              echo ""
+              echo "**Full changelog:** https://github.com/${GITHUB_REPOSITORY}/compare/${PREV}...${TAG}"
+            } >> /tmp/notes.md
+          fi
+          echo "--- release notes preview ---"
+          cat /tmp/notes.md
+
+      - name: Build deadlands-classic.zip
+        run: |
+          PKG_FILES=( system.json module lang README.md LICENSE CHANGELOG.md )
+          for d in templates styles packs assets; do
+            [ -d "$d" ] && PKG_FILES+=( "$d" )
+          done
+          zip -r /tmp/deadlands-classic.zip "${PKG_FILES[@]}" \
+            -x "*.DS_Store" "*/.gitkeep"
+          echo "--- zip contents ---"
+          unzip -l /tmp/deadlands-classic.zip
+          # Safety net: forbidden paths must never appear in the shipped zip
+          if unzip -l /tmp/deadlands-classic.zip | grep -Eq "(^|[[:space:]])(books|\.pdf-extract|DeadlandsClassic|Deadlands-Classic|tests|tools|docs|scripts|node_modules|\.git|\.github|\.githooks|\.claude|\.idea|package\.json|package-lock\.json|biome\.json|\.mcp\.json)(/|$)"; then
+            echo "::error::Forbidden path detected in release zip — refusing to publish"
+            exit 1
+          fi
+
+      - name: Create GitHub Release with assets
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" \
+            --title "${GITHUB_REF_NAME}" \
+            --notes-file /tmp/notes.md \
+            --latest \
+            system.json \
+            /tmp/deadlands-classic.zip

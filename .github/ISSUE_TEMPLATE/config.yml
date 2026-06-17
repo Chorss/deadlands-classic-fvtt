@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Foundry VTT Developer Discord
+    url: https://discord.gg/foundryvtt
+    about: General Foundry VTT system development questions
+  - name: Foundry VTT API Documentation
+    url: https://foundryvtt.com/api/
+    about: Official Foundry VTT API reference

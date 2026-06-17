@@ -1,0 +1,72 @@
+# IDE
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+*~
+.directory
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+*.tgz
+.npm/
+
+# Test / coverage output (node --test)
+coverage/
+.nyc_output/
+
+# Build output
+dist/
+*.min.js
+*.min.css
+# Local release ZIP (CI builds the published artifact — keep local builds out of git).
+/*.zip
+
+# Foundry VTT — never commit world data or legacy NeDB stores
+*.db
+*.db.bak
+
+# Compendium packs — commit the JSON source of truth, ignore the built LevelDB.
+# `fvtt package pack` builds packs/<slug>/ (LevelDB) from packs/_source/<slug>/*.json.
+# Ignore pack contents (not the packs/ dir itself) so packs/_source/ can be re-included.
+packs/*
+!packs/_source/
+
+# Environment / secrets
+.env
+.env.local
+
+# Vendored reference projects (read-only; GPL-3.0 + MIT) — never tracked.
+vendor/
+
+# Source rulebook PDFs (copyright Pinnacle Entertainment Group et al.)
+# Drop PDFs into books/ — the whole folder is gitignored.
+books/
+
+# Local PDF text extraction (PDF-index migrated to private repo deadlands-rules-ref; see CLAUDE.md).
+# Extracted text carries the source's copyright — never commit.
+.pdf-extract/
+
+# Claude Code — commit shared `.claude/settings.json`, `.claude/commands/`,
+# `.claude/agents/`, `.claude/rules/` and `.claude/hooks/`, but keep
+# user-local overrides and runtime artifacts out of git.
+.claude/settings.local.json
+.claude/cache/
+.claude/logs/
+
+# Playwright MCP — test artifacts, traces, screenshots, recorded videos.
+test-results/
+playwright-report/
+.playwright/
