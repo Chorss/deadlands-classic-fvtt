@@ -1,0 +1,56 @@
+{
+  "id": "deadlands-classic",
+  "title": "Deadlands Classic",
+  "description": "A community-driven Foundry VTT game system for Deadlands Classic (Weird West). Features exploding dice (Aces), poker-card initiative, Fate Chips (White/Red/Blue/Legend) and location-based wounds.",
+  "version": "0.1.0",
+  "type": "system",
+  "compatibility": {
+    "minimum": "14",
+    "verified": "14.364"
+  },
+  "authors": [
+    {
+      "name": "Chorss",
+      "url": "https://github.com/Chorss"
+    }
+  ],
+  "url": "https://github.com/Chorss/deadlands-classic-fvtt",
+  "manifest": "https://github.com/Chorss/deadlands-classic-fvtt/releases/latest/download/system.json",
+  "download": "https://github.com/Chorss/deadlands-classic-fvtt/releases/latest/download/deadlands-classic.zip",
+  "documentTypes": {
+    "Actor": {
+      "cowboy": { "htmlFields": ["system.biography"] },
+      "huckster": { "htmlFields": ["system.biography"] },
+      "shaman": { "htmlFields": ["system.biography"] },
+      "blessed": { "htmlFields": ["system.biography"] },
+      "madScientist": { "htmlFields": ["system.biography"] },
+      "npc": { "htmlFields": ["system.biography"] },
+      "mook": {}
+    },
+    "Item": {
+      "weapon": {},
+      "armor": {},
+      "gear": {},
+      "edge": { "htmlFields": ["system.description"] },
+      "hindrance": { "htmlFields": ["system.description"] },
+      "ammo": {}
+    }
+  },
+  "initiative": "1d20",
+  "primaryTokenAttribute": "wind.value",
+  "esmodules": ["module/deadlands-classic.mjs"],
+  "styles": ["styles/deadlands-classic.css"],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    },
+    {
+      "lang": "pl",
+      "name": "Polski",
+      "path": "lang/pl.json"
+    }
+  ],
+  "packs": []
+}

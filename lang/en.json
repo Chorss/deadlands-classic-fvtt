@@ -1,0 +1,19 @@
+{
+  "DEADLANDS.System.Title": "Deadlands Classic",
+  "DEADLANDS.System.Loaded": "Deadlands Classic system ready.",
+
+  "TYPES.Actor.cowboy": "Cowboy",
+  "TYPES.Actor.huckster": "Huckster",
+  "TYPES.Actor.shaman": "Shaman",
+  "TYPES.Actor.blessed": "Blessed",
+  "TYPES.Actor.madScientist": "Mad Scientist",
+  "TYPES.Actor.npc": "NPC",
+  "TYPES.Actor.mook": "Mook",
+
+  "TYPES.Item.weapon": "Weapon",
+  "TYPES.Item.armor": "Armor",
+  "TYPES.Item.gear": "Gear",
+  "TYPES.Item.edge": "Edge",
+  "TYPES.Item.hindrance": "Hindrance",
+  "TYPES.Item.ammo": "Ammo"
+}

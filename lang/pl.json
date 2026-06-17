@@ -1,0 +1,19 @@
+{
+  "DEADLANDS.System.Title": "Deadlands Classic",
+  "DEADLANDS.System.Loaded": "System Deadlands Classic załadowany.",
+
+  "TYPES.Actor.cowboy": "Kowboj",
+  "TYPES.Actor.huckster": "Huckster",
+  "TYPES.Actor.shaman": "Szaman",
+  "TYPES.Actor.blessed": "Błogosławiony",
+  "TYPES.Actor.madScientist": "Szalony Naukowiec",
+  "TYPES.Actor.npc": "BN",
+  "TYPES.Actor.mook": "Statysta",
+
+  "TYPES.Item.weapon": "Broń",
+  "TYPES.Item.armor": "Pancerz",
+  "TYPES.Item.gear": "Ekwipunek",
+  "TYPES.Item.edge": "Zaleta",
+  "TYPES.Item.hindrance": "Wada",
+  "TYPES.Item.ammo": "Amunicja"
+}
