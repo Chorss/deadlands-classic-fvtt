@@ -8,7 +8,12 @@
       {{#each group.traits as |trait|}}
       <section class="dlc-trait" data-trait="{{trait.id}}">
         <header class="dlc-trait-head">
-          <h3 class="dlc-trait-name">{{localize trait.label}}</h3>
+          <h3 class="dlc-trait-name">
+            <button type="button" class="dlc-roll-btn"
+              data-action="rollTrait" data-trait-id="{{trait.id}}">
+              {{localize trait.label}}
+            </button>
+          </h3>
           <div class="dlc-trait-die">
             <input type="number" class="dlc-die-count" name="{{trait.dieCountPath}}" min="1"
               value="{{trait.dieCount}}" {{#unless @root.editable}}disabled{{/unless}} />
@@ -23,8 +28,13 @@
         {{#if trait.aptitudes.length}}
         <ul class="dlc-aptitudes">
           {{#each trait.aptitudes as |apt|}}
-          <li class="dlc-aptitude">
-            <span class="dlc-apt-name">{{localize apt.label}}</span>
+          <li class="dlc-aptitude" data-apt-level="{{apt.level}}">
+            <button type="button" class="dlc-roll-btn dlc-apt-roll {{#unless apt.level}}dlc-unskilled{{/unless}}"
+              data-action="rollAptitude"
+              data-trait-id="{{apt.traitId}}"
+              data-aptitude-id="{{apt.id}}">
+              {{localize apt.label}}
+            </button>
             <input type="number" class="dlc-apt-level" name="{{apt.path}}" min="0"
               value="{{apt.level}}" {{#unless @root.editable}}disabled{{/unless}} />
           </li>

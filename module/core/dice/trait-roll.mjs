@@ -8,12 +8,8 @@
  * @license MIT
  */
 
+import { toPascal } from "../utils.mjs";
 import { rollExplodingPool } from "./exploding-roll.mjs";
-
-/** Build the i18n key PascalCase segment from a camelCase id. */
-function toPascal(id) {
-  return id.charAt(0).toUpperCase() + id.slice(1);
-}
 
 /**
  * Roll a Trait (or Trait+Aptitude) pool and post a chat result.
@@ -40,20 +36,26 @@ export async function rollTrait(actorOrParams, traitId, options = {}) {
     const aptId = options.aptitudeId;
 
     dieType = trait.dieType;
+    const extraDice = options.extraDice ?? 0; // white chip bonus dice
     if (aptId) {
-      // Aptitude roll: aptitude level IS the die count. dlc p.27.
-      // ("Aptitudes tell you how many Trait dice to roll.")
-      dieCount = trait.aptitudes[aptId]?.level ?? 1;
+      const aptLevel = trait.aptitudes[aptId]?.level ?? 0;
+      const unskilled = aptLevel === 0; // dlc p.29: no aptitude = 1 die, -4 modifier
+      dieCount = (unskilled ? 1 : aptLevel) + extraDice;
+      const unskilledPenalty = unskilled ? -4 : 0;
+      modifier = (options.modifier ?? 0) + (trait.modifier ?? 0) + unskilledPenalty;
+      if (unskilled) label += ` [${game.i18n.localize("DEADLANDS.Roll.Unskilled")}]`;
     } else {
       // Pure trait roll: trait level is the die count. dlc p.27.
-      dieCount = trait.dieCount ?? 1;
+      dieCount = (trait.dieCount ?? 1) + extraDice;
+      modifier = (options.modifier ?? 0) + (trait.modifier ?? 0);
     }
-    modifier = (options.modifier ?? 0) + (trait.modifier ?? 0);
     tn = options.tn ?? 5;
 
     const traitKey = `DEADLANDS.Trait.${toPascal(traitId)}.Label`;
     const traitLabel = game.i18n.localize(traitKey);
-    const aptLabel = aptId ? ` / ${game.i18n.localize(`DEADLANDS.Aptitude.${toPascal(aptId)}.Label`)}` : "";
+    const aptLabel = aptId
+      ? ` / ${game.i18n.localize(`DEADLANDS.Aptitude.${toPascal(aptId)}.Label`)}`
+      : "";
     label = `${traitLabel}${aptLabel} (${dieCount}${dieType})`;
   }
 
@@ -69,10 +71,12 @@ export async function rollTrait(actorOrParams, traitId, options = {}) {
  * @param {number} tn
  */
 async function _postChatMessage(result, label, tn) {
-  const diceStr = result.dice.map((d) => {
-    const ace = d.aces > 0 ? `<span class="dlc-ace" title="Aces: ${d.aces}">⚡</span>` : "";
-    return `<span class="dlc-die">${d.total}${ace}</span>`;
-  }).join(" ");
+  const diceStr = result.dice
+    .map((d) => {
+      const ace = d.aces > 0 ? `<span class="dlc-ace" title="Aces: ${d.aces}">⚡</span>` : "";
+      return `<span class="dlc-die">${d.total}${ace}</span>`;
+    })
+    .join(" ");
 
   let outcomeClass, outcomeText;
   if (result.bust) {
@@ -80,16 +84,19 @@ async function _postChatMessage(result, label, tn) {
     outcomeText = game.i18n.localize("DEADLANDS.Roll.Bust");
   } else if (result.success) {
     outcomeClass = "dlc-success";
-    outcomeText = result.raises > 0
-      ? game.i18n.format("DEADLANDS.Roll.Raises", { raises: result.raises })
-      : game.i18n.localize("DEADLANDS.Roll.Success");
+    outcomeText =
+      result.raises > 0
+        ? game.i18n.format("DEADLANDS.Roll.Raises", { raises: result.raises })
+        : game.i18n.localize("DEADLANDS.Roll.Success");
   } else {
     outcomeClass = "dlc-fail";
     outcomeText = game.i18n.localize("DEADLANDS.Roll.Fail");
   }
 
-  const modStr = result.modifier !== 0
-    ? ` <span class="dlc-modifier">${result.modifier > 0 ? "+" : ""}${result.modifier}</span>` : "";
+  const modStr =
+    result.modifier !== 0
+      ? ` <span class="dlc-modifier">${result.modifier > 0 ? "+" : ""}${result.modifier}</span>`
+      : "";
 
   const content = `<div class="dlc-roll-card ${outcomeClass}">
   <header class="dlc-roll-label">${label}</header>
