@@ -1,0 +1,22 @@
+{{!-- Chat card (GM whisper): Blessed sin resolution. --}}
+<div class="dlc-chat-card dlc-sin-result">
+  <header class="dlc-chat-header">
+    <span class="dlc-actor-name">{{actorName}}</span>
+    <span class="dlc-chat-verb">{{localize "DEADLANDS.Blessed.Chat.SinHeader"}}</span>
+    <span class="dlc-sin-severity dlc-sin-{{severity}}">{{localize (concat "DEADLANDS.Blessed.Sin." (capitalize severity))}}</span>
+  </header>
+
+  <div class="dlc-sin-details">
+    <p>{{localize "DEADLANDS.Blessed.Sin.DeniedLabel"}}: <strong>{{denialLabel}}</strong></p>
+    <p>{{localize "DEADLANDS.Blessed.Chat.SpiritRoll"}} vs TN {{sinTN}}:
+      <strong class="{{#if faithLost}}dlc-failure{{else}}dlc-success{{/if}}">
+        {{#if spiritRoll.bust}}{{localize "DEADLANDS.Roll.Bust"}}{{else}}{{spiritRoll.total}}{{/if}}
+      </strong>
+    </p>
+    {{#if faithLost}}
+    <p class="dlc-faith-lost">{{localize "DEADLANDS.Blessed.Chat.FaithLost"}}</p>
+    {{else}}
+    <p class="dlc-faith-kept">{{localize "DEADLANDS.Blessed.Chat.FaithKept"}}</p>
+    {{/if}}
+  </div>
+</div>

@@ -34,7 +34,10 @@
       "edge": { "htmlFields": ["system.description"] },
       "hindrance": { "htmlFields": ["system.description"] },
       "ammo": {},
-      "hex": { "htmlFields": ["system.description"] }
+      "hex": { "htmlFields": ["system.description"] },
+      "miracle": { "htmlFields": ["system.description"] },
+      "favor": { "htmlFields": ["system.description"] },
+      "gizmo": { "htmlFields": ["system.description"] }
     }
   },
   "initiative": "1d20",
