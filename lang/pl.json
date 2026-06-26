@@ -130,5 +130,12 @@
   "DEADLANDS.Dialog.TraitRoll.TN": "Próg trudności",
   "DEADLANDS.Dialog.TraitRoll.Modifier": "Modyfikator",
   "DEADLANDS.Dialog.TraitRoll.WhiteChips": "Białe sztony",
-  "DEADLANDS.Dialog.TraitRoll.Roll": "Rzuć!"
+  "DEADLANDS.Dialog.TraitRoll.Roll": "Rzuć!",
+
+  "DEADLANDS.Chip.GMOnly": "Tylko MG może losować Sztony Losu na sesję.",
+  "DEADLANDS.Chip.SessionDraw": "Losowanie Sztonów Losu na sesję",
+  "DEADLANDS.ChipRule.Unknown": "Nieznany kolor sztonu.",
+  "DEADLANDS.ChipRule.NoneLeft": "Brak sztonów w tym kolorze.",
+  "DEADLANDS.ChipRule.BustOnlyLegend": "Tylko szton Legendy (przerzut) może uratować porażkę totalną!",
+  "DEADLANDS.ChipRule.OnePerAction": "Tylko jeden czerwony, niebieski lub legendarny szton na akcję."
 }

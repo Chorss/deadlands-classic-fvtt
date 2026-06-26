@@ -130,5 +130,12 @@
   "DEADLANDS.Dialog.TraitRoll.TN": "Target Number",
   "DEADLANDS.Dialog.TraitRoll.Modifier": "Modifier",
   "DEADLANDS.Dialog.TraitRoll.WhiteChips": "White Chips",
-  "DEADLANDS.Dialog.TraitRoll.Roll": "Roll!"
+  "DEADLANDS.Dialog.TraitRoll.Roll": "Roll!",
+
+  "DEADLANDS.Chip.GMOnly": "Only the GM can draw Fate Chips for the session.",
+  "DEADLANDS.Chip.SessionDraw": "Fate Chip Session Draw",
+  "DEADLANDS.ChipRule.Unknown": "Unknown chip color.",
+  "DEADLANDS.ChipRule.NoneLeft": "No chips of that color remaining.",
+  "DEADLANDS.ChipRule.BustOnlyLegend": "Only a Legend chip (reroll) can save a bust!",
+  "DEADLANDS.ChipRule.OnePerAction": "Only one red, blue, or legend chip per action."
 }
