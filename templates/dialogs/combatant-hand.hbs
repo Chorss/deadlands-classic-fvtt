@@ -1,0 +1,44 @@
+{{!-- Combatant hand dialog — shows Action Cards and allows play/sleeve actions.
+     Context: { name: string, hand: CardContext[], sleevedCard: CardContext|null }
+     CardContext: { rank, suit, joker, label, isJoker, isRedJoker, isBlackJoker }
+--}}
+<div class="dlc-combatant-hand">
+  <h3 class="dlc-hand-title">
+    {{localize "DEADLANDS.Combat.Hand.Title" name=name}}
+  </h3>
+
+  {{#if hand.length}}
+  <ul class="dlc-hand-cards">
+    {{#each hand}}
+    <li class="dlc-card
+        {{#if this.isJoker}} dlc-card--joker{{/if}}
+        {{#if this.isRedJoker}} dlc-card--red{{/if}}
+        {{#if this.isBlackJoker}} dlc-card--black{{/if}}">
+      <span class="dlc-card-label">{{this.label}}</span>
+      <div class="dlc-card-actions">
+        <button type="button" class="dlc-btn dlc-play-card"
+                data-rank="{{this.rank}}" data-suit="{{this.suit}}" data-joker="{{this.joker}}">
+          {{localize "DEADLANDS.Combat.Hand.Play"}}
+        </button>
+        {{#unless this.isJoker}}
+        <button type="button" class="dlc-btn dlc-sleeve-card"
+                data-rank="{{this.rank}}" data-suit="{{this.suit}}">
+          {{localize "DEADLANDS.Combat.Hand.Sleeve"}}
+        </button>
+        {{/unless}}
+      </div>
+    </li>
+    {{/each}}
+  </ul>
+  {{else}}
+  <p class="dlc-hand-empty">{{localize "DEADLANDS.Combat.Hand.Empty"}}</p>
+  {{/if}}
+
+  {{#if sleevedCard}}
+  <div class="dlc-sleeved">
+    <span class="dlc-sleeved-label">
+      {{localize "DEADLANDS.Combat.Hand.Sleeve"}}: {{sleevedCard.label}}
+    </span>
+  </div>
+  {{/if}}
+</div>

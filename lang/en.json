@@ -181,5 +181,31 @@
   "DEADLANDS.Scart.HeartAttack": "Heart Attack",
   "DEADLANDS.Scart.HeartAttack.Note": "Hard (9) Vigor roll. Fail: Vigor reduced + second Hard (9) Vigor or dies (Medicine TN 11 in 2d6 rounds). Die if Vigor < d4.",
   "DEADLANDS.Scart.CorporealAging": "Corporeal Aging",
-  "DEADLANDS.Scart.CorporealAging.Note": "Heart Attack + ages 1 year. GM applies all Heart Attack consequences."
+  "DEADLANDS.Scart.CorporealAging.Note": "Heart Attack + ages 1 year. GM applies all Heart Attack consequences.",
+
+  "DEADLANDS.Combat.Card.Label": "{rank} of {suit}",
+  "DEADLANDS.Combat.Card.RedJoker": "Red Joker",
+  "DEADLANDS.Combat.Card.BlackJoker": "Black Joker",
+  "DEADLANDS.Combat.Card.Suit.Spades": "Spades",
+  "DEADLANDS.Combat.Card.Suit.Hearts": "Hearts",
+  "DEADLANDS.Combat.Card.Suit.Diamonds": "Diamonds",
+  "DEADLANDS.Combat.Card.Suit.Clubs": "Clubs",
+  "DEADLANDS.Combat.Card.Rank.J": "Jack",
+  "DEADLANDS.Combat.Card.Rank.Q": "Queen",
+  "DEADLANDS.Combat.Card.Rank.K": "King",
+  "DEADLANDS.Combat.Card.Rank.A": "Ace",
+
+  "DEADLANDS.Combat.Initiative.Label": "Card Initiative",
+  "DEADLANDS.Combat.Initiative.Deal": "Deal Initiative Cards",
+  "DEADLANDS.Combat.Initiative.Bust": "{name} went bust — no action cards this round!",
+  "DEADLANDS.Combat.Initiative.BlackJoker": "{name} drew the Black Joker! Marshal draws a {chip} chip. Sleeve discarded. Deck reshuffles at round end.",
+  "DEADLANDS.Combat.Initiative.RedJoker": "{name} drew the Red Joker! Draws a {chip} chip and may act at any time this round.",
+  "DEADLANDS.Combat.Initiative.NoSleeveJoker": "Jokers cannot be kept up your sleeve.",
+
+  "DEADLANDS.Combat.Hand.Title": "Action Hand: {name}",
+  "DEADLANDS.Combat.Hand.Play": "Play Card",
+  "DEADLANDS.Combat.Hand.Sleeve": "Up the Sleeve",
+  "DEADLANDS.Combat.Hand.Empty": "No cards in hand.",
+
+  "DEADLANDS.Combat.Round.Reshuffle": "Action Deck reshuffled (Black Joker)."
 }

@@ -16,9 +16,12 @@
     "test": "node --test tests/*.test.mjs",
     "lint": "biome check",
     "fmt": "biome format --write",
-    "verify": "node tools/verify-documenttypes.mjs"
+    "verify": "node tools/verify-documenttypes.mjs",
+    "pack": "fvtt package pack --in packs/_source --out packs",
+    "unpack": "fvtt package unpack --in packs --out packs/_source"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.4.12"
+    "@biomejs/biome": "^2.4.12",
+    "@foundryvtt/foundryvtt-cli": "^1.0.6"
   }
 }

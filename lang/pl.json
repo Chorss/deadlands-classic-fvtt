@@ -181,5 +181,31 @@
   "DEADLANDS.Scart.HeartAttack": "Atak serca",
   "DEADLANDS.Scart.HeartAttack.Note": "Trudny (9) rzut Krzepkości. Porażka: Krzepkość obniżona + drugi trudny (9) rzut albo śmierć (Medycyna TN 11 w 2k6 rund). Śmierć jeśli Krzepkość < k4.",
   "DEADLANDS.Scart.CorporealAging": "Starzenie",
-  "DEADLANDS.Scart.CorporealAging.Note": "Atak serca + starzeje się o 1 rok. MG stosuje wszystkie efekty ataku serca."
+  "DEADLANDS.Scart.CorporealAging.Note": "Atak serca + starzeje się o 1 rok. MG stosuje wszystkie efekty ataku serca.",
+
+  "DEADLANDS.Combat.Card.Label": "{rank} {suit}",
+  "DEADLANDS.Combat.Card.RedJoker": "Czerwony Joker",
+  "DEADLANDS.Combat.Card.BlackJoker": "Czarny Joker",
+  "DEADLANDS.Combat.Card.Suit.Spades": "Pik",
+  "DEADLANDS.Combat.Card.Suit.Hearts": "Kier",
+  "DEADLANDS.Combat.Card.Suit.Diamonds": "Karo",
+  "DEADLANDS.Combat.Card.Suit.Clubs": "Trefl",
+  "DEADLANDS.Combat.Card.Rank.J": "Walet",
+  "DEADLANDS.Combat.Card.Rank.Q": "Dama",
+  "DEADLANDS.Combat.Card.Rank.K": "Król",
+  "DEADLANDS.Combat.Card.Rank.A": "As",
+
+  "DEADLANDS.Combat.Initiative.Label": "Inicjatywa kartami",
+  "DEADLANDS.Combat.Initiative.Deal": "Dobierz karty inicjatywy",
+  "DEADLANDS.Combat.Initiative.Bust": "{name} ma busa — brak kart akcji w tej rundzie!",
+  "DEADLANDS.Combat.Initiative.BlackJoker": "{name} dobił Czarnego Jokera! MG dobiera żeton {chip}. Karta ze spodnika odrzucona. Talia przetasowywana na końcu rundy.",
+  "DEADLANDS.Combat.Initiative.RedJoker": "{name} dobił Czerwonego Jokera! Dobiera żeton {chip} i może działać w dowolnej chwili tej rundy.",
+  "DEADLANDS.Combat.Initiative.NoSleeveJoker": "Jokerów nie można trzymać w spodniku.",
+
+  "DEADLANDS.Combat.Hand.Title": "Ręka akcji: {name}",
+  "DEADLANDS.Combat.Hand.Play": "Zagraj kartę",
+  "DEADLANDS.Combat.Hand.Sleeve": "W spodniku",
+  "DEADLANDS.Combat.Hand.Empty": "Brak kart w ręce.",
+
+  "DEADLANDS.Combat.Round.Reshuffle": "Talia kart akcji przetasowana (Czarny Joker)."
 }

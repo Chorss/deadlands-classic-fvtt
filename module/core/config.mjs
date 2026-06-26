@@ -279,6 +279,12 @@ export const CARD_RANKS = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q
 /** The two jokers: Red beats Black; Black is the penalty card. `dlc` p.118. */
 export const JOKERS = { red: "red", black: "black" };
 
+/** TN for the Quickness roll that determines Action Card count. `dlc` p.116. */
+export const INITIATIVE_TN = 5;
+
+/** Maximum Action Cards a combatant may hold at once without supernatural aid. `dlc` p.116. */
+export const MAX_ACTION_CARDS = 5;
+
 /**
  * Aggregated config object exposed as `game.deadlandsClassic.config`.
  * Kept as a single frozen namespace so downstream code and modders read one API.
@@ -299,4 +305,6 @@ export const DEADLANDS = Object.freeze({
   CARD_SUITS,
   CARD_RANKS,
   JOKERS,
+  INITIATIVE_TN,
+  MAX_ACTION_CARDS,
 });

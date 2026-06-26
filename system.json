@@ -52,5 +52,13 @@
       "path": "lang/pl.json"
     }
   ],
-  "packs": []
+  "packs": [
+    {
+      "name": "action-deck",
+      "label": "Action Deck",
+      "path": "packs/action-deck",
+      "type": "Cards",
+      "system": "deadlands-classic"
+    }
+  ]
 }

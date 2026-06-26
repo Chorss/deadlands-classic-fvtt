@@ -10,6 +10,9 @@
  */
 
 import { ArchetypeRegistry } from "./core/archetype-registry.mjs";
+import { ActionDeck } from "./core/cards/action-deck.mjs";
+import { DeadlandsCombat } from "./core/cards/deadlands-combat.mjs";
+import { DeadlandsCombatant } from "./core/cards/deadlands-combatant.mjs";
 import { canSpend, executeSpend } from "./core/chips/chip-rules.mjs";
 import { grantChips, spendChip } from "./core/chips/chip-widget.mjs";
 import { FatePot } from "./core/chips/fate-pot.mjs";
@@ -50,6 +53,8 @@ Hooks.once("init", () => {
   // Document classes.
   CONFIG.Actor.documentClass = DeadlandsActor;
   CONFIG.Item.documentClass = DeadlandsItem;
+  CONFIG.Combat.documentClass = DeadlandsCombat;
+  CONFIG.Combatant.documentClass = DeadlandsCombatant;
 
   // Type data models from the registries. Empty in Phase 1 — archetype and item
   // manifests populate these as they are imported in later phases.
@@ -87,7 +92,7 @@ Hooks.once("init", () => {
     items: ItemRegistry,
     overlays: OverlayRegistry,
     dice: { rollExplodingPool, rollTrait, rollDamage, rollGutsCheck, lookupScart, scartDiceForTN },
-    cards: null,
+    cards: { ActionDeck, DeadlandsCombat, DeadlandsCombatant },
     chips: {
       FatePot,
       canSpend,
@@ -113,4 +118,24 @@ Hooks.once("init", () => {
 
 Hooks.once("ready", () => {
   console.log(`${LOG_PREFIX} ${game.i18n.localize("DEADLANDS.System.Loaded")}`);
+});
+
+// ── Combat tracker — replace numeric initiative values with card labels ──────
+
+Hooks.on("renderCombatTracker", (_app, html) => {
+  const combat = game.combat;
+  if (!combat) return;
+  for (const combatant of combat.combatants) {
+    const row = html.querySelector(`[data-combatant-id="${combatant.id}"]`);
+    if (!row) continue;
+    const initEl = row.querySelector(".combatant-initiative");
+    if (!initEl) continue;
+    const card = combatant.highestCard;
+    if (card) {
+      initEl.textContent = DeadlandsCombat.cardLabel(card);
+      initEl.classList.add("dlc-initiative-card");
+      if (card.joker === "red") initEl.classList.add("dlc-initiative-red-joker");
+      if (card.joker === "black") initEl.classList.add("dlc-initiative-black-joker");
+    }
+  }
 });
