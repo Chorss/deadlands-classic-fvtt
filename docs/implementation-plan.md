@@ -1,6 +1,6 @@
 # Implementation plan: Deadlands Classic — Community Edition for Foundry VTT v14+
 
-> English translation of [`implementation-plan.md`](implementation-plan.md) (Polish original). Kept for English-speaking contributors; the Polish file is the one actively maintained — if they diverge, the Polish file wins.
+> English translation of [`implementation-plan.md`](implementation-plan.pl.md) (Polish original). Kept for English-speaking contributors; the Polish file is the one actively maintained — if they diverge, the Polish file wins.
 
 > Architecture document and implementation roadmap for the system. Reference point for all contributors.
 
