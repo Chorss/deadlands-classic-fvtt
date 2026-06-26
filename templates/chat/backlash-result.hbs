@@ -1,0 +1,24 @@
+{{!-- GM-whispered chat card for Extended Backlash Table result. hnh p.101-102. --}}
+<div class="dlc-chat-card dlc-backlash-result">
+  <header class="dlc-chat-header dlc-backlash-header">
+    {{localize "DEADLANDS.Huckster.Backlash.Header"}}
+  </header>
+
+  <div class="dlc-backlash-body">
+    <p>
+      <strong>{{actorName}}</strong> —
+      {{localize "DEADLANDS.Huckster.Backlash.Casting"}} <em>{{hexName}}</em>
+    </p>
+    <p class="dlc-backlash-roll">
+      {{localize "DEADLANDS.Huckster.Backlash.Roll"}}: <strong>{{roll}}</strong>
+    </p>
+    <p class="dlc-backlash-entry">
+      <strong>{{localize entryKey}}</strong>
+    </p>
+    <p class="dlc-backlash-note">{{localize noteKey}}</p>
+
+    {{#if hexSucceeds}}
+    <p class="dlc-backlash-succeeds">{{localize "DEADLANDS.Huckster.Backlash.HexSucceeds"}}</p>
+    {{/if}}
+  </div>
+</div>

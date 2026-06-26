@@ -33,7 +33,8 @@
       "gear": {},
       "edge": { "htmlFields": ["system.description"] },
       "hindrance": { "htmlFields": ["system.description"] },
-      "ammo": {}
+      "ammo": {},
+      "hex": { "htmlFields": ["system.description"] }
     }
   },
   "initiative": "1d20",
@@ -58,6 +59,20 @@
       "label": "Action Deck",
       "path": "packs/action-deck",
       "type": "Cards",
+      "system": "deadlands-classic"
+    },
+    {
+      "name": "hexes-srd",
+      "label": "Hexes",
+      "path": "packs/hexes-srd",
+      "type": "Item",
+      "system": "deadlands-classic"
+    },
+    {
+      "name": "edges-srd",
+      "label": "Edges",
+      "path": "packs/edges-srd",
+      "type": "Item",
       "system": "deadlands-classic"
     }
   ]

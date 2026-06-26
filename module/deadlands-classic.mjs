@@ -41,6 +41,7 @@ import {
 
 // Archetype manifests self-register on import. Adding an archetype = one line here.
 import "./archetypes/cowboy/manifest.mjs";
+import "./archetypes/huckster/manifest.mjs";
 import "./archetypes/npc/manifest.mjs";
 import "./archetypes/mook/manifest.mjs";
 

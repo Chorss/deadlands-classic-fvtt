@@ -1,0 +1,18 @@
+{
+  "_id": "shadowWalk001",
+  "name": "Shadow Walk",
+  "type": "hex",
+  "img": "icons/magic/control/teleport-silhouette-purple.webp",
+  "system": {
+    "trait": "smarts",
+    "hand": "ace",
+    "speed": "1",
+    "duration": "instant",
+    "range": "self",
+    "description": ""
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

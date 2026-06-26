@@ -1,0 +1,18 @@
+{
+  "_id": "privateEye001",
+  "name": "Private Eye",
+  "type": "hex",
+  "img": "icons/magic/perception/eye-ringed-glow-angry-small-blue.webp",
+  "system": {
+    "trait": "cognition",
+    "hand": "pair",
+    "speed": "1",
+    "duration": "concentration or 1 Wind/round",
+    "range": "1 mile/hex level",
+    "description": ""
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

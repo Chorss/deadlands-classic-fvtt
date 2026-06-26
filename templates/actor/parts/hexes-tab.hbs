@@ -1,0 +1,85 @@
+{{!-- Hexes tab: hexslingin' aptitude, last card draw, hex list. --}}
+<section class="tab dlc-hexes {{tab.cssClass}}" data-group="sheet" data-tab="hexes">
+
+  {{!-- Hexslingin' aptitude --}}
+  <div class="dlc-hexslingin">
+    <h2 class="dlc-section-title">{{localize "DEADLANDS.Huckster.Hexslingin.Label"}}</h2>
+    <div class="dlc-hexslingin-row">
+      <label>{{localize "DEADLANDS.Huckster.Hexslingin.Level"}}</label>
+      <input type="number" min="0" name="{{hexslingin.levelPath}}"
+        value="{{hexslingin.level}}" {{#unless editable}}disabled{{/unless}} />
+      <label>{{localize "DEADLANDS.Huckster.Hexslingin.Modifier"}}</label>
+      <input type="number" name="{{hexslingin.modifierPath}}"
+        value="{{hexslingin.modifier}}" {{#unless editable}}disabled{{/unless}} />
+    </div>
+  </div>
+
+  {{!-- Last draw (persisted from most recent cast) --}}
+  {{#if lastDraw.length}}
+  <div class="dlc-last-draw">
+    <h2 class="dlc-section-title">{{localize "DEADLANDS.Huckster.LastDraw.Label"}}</h2>
+    <ul class="dlc-card-row">
+      {{#each lastDraw as |card|}}
+      <li class="dlc-drawn-card {{#if card.joker}}dlc-joker dlc-joker-{{card.joker}}{{/if}}">
+        {{#if card.joker}}
+          <span class="dlc-card-rank">★</span>
+          <span class="dlc-card-suit">{{localize (concat "DEADLANDS.Combat.Card." (capitalize card.joker) "Joker")}}</span>
+        {{else}}
+          <span class="dlc-card-rank">{{card.rank}}</span>
+          <span class="dlc-card-suit">{{card.suit}}</span>
+        {{/if}}
+      </li>
+      {{/each}}
+    </ul>
+    {{#if backlashPending}}
+    <p class="dlc-backlash-warning">{{localize "DEADLANDS.Huckster.BacklashPending"}}</p>
+    {{/if}}
+  </div>
+  {{/if}}
+
+  {{!-- Hex list --}}
+  <div class="dlc-hex-list">
+    <h2 class="dlc-section-title">{{localize "DEADLANDS.Huckster.Section.Hexes"}}</h2>
+    {{#if hexes.length}}
+    <table class="dlc-hex-table">
+      <thead>
+        <tr>
+          <th>{{localize "DEADLANDS.Huckster.HexTable.Name"}}</th>
+          <th>{{localize "DEADLANDS.Huckster.HexTable.Trait"}}</th>
+          <th>{{localize "DEADLANDS.Huckster.HexTable.Hand"}}</th>
+          <th>{{localize "DEADLANDS.Huckster.HexTable.Speed"}}</th>
+          <th>{{localize "DEADLANDS.Huckster.HexTable.Duration"}}</th>
+          <th>{{localize "DEADLANDS.Huckster.HexTable.Range"}}</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each hexes as |hex|}}
+        <tr class="dlc-hex-row" data-hex-id="{{hex.id}}">
+          <td class="dlc-hex-name">
+            <img class="dlc-item-img" src="{{hex.img}}" alt="{{hex.name}}" />
+            {{hex.name}}
+          </td>
+          <td>{{localize hex.traitLabel}}</td>
+          <td>{{localize hex.handLabel}}</td>
+          <td>{{hex.speed}}</td>
+          <td>{{hex.duration}}</td>
+          <td>{{hex.range}}</td>
+          <td class="dlc-hex-actions">
+            {{#if @root.editable}}
+            <button type="button" class="dlc-cast-btn"
+              data-action="castHex" data-hex-id="{{hex.id}}">
+              {{localize "DEADLANDS.Huckster.Cast.Button"}}
+            </button>
+            {{/if}}
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    {{else}}
+    <p class="dlc-empty">{{localize "DEADLANDS.Sheet.Empty.Hexes"}}</p>
+    {{/if}}
+  </div>
+
+</section>

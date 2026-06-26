@@ -1,0 +1,18 @@
+{
+  "_id": "soulBlast001",
+  "name": "Soul Blast",
+  "type": "hex",
+  "img": "icons/magic/control/debuff-chains-blue.webp",
+  "system": {
+    "trait": "spirit",
+    "hand": "ace",
+    "speed": "1",
+    "duration": "instant",
+    "range": "50 yards/hex level",
+    "description": ""
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}
