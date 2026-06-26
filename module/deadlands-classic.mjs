@@ -16,6 +16,7 @@ import { FatePot } from "./core/chips/fate-pot.mjs";
 import { DEADLANDS } from "./core/config.mjs";
 import { rollDamage } from "./core/dice/damage-roll.mjs";
 import { rollExplodingPool } from "./core/dice/exploding-roll.mjs";
+import { lookupScart, rollGutsCheck, scartDiceForTN } from "./core/dice/guts-check.mjs";
 import { rollTrait } from "./core/dice/trait-roll.mjs";
 import { DeadlandsActor } from "./core/documents/deadlands-actor.mjs";
 import { DeadlandsItem } from "./core/documents/deadlands-item.mjs";
@@ -83,7 +84,7 @@ Hooks.once("init", () => {
     archetypes: ArchetypeRegistry,
     items: ItemRegistry,
     overlays: OverlayRegistry,
-    dice: { rollExplodingPool, rollTrait, rollDamage },
+    dice: { rollExplodingPool, rollTrait, rollDamage, rollGutsCheck, lookupScart, scartDiceForTN },
     cards: null,
     chips: {
       FatePot,

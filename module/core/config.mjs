@@ -215,6 +215,53 @@ export const HIT_LOCATION_TABLE = [
 ];
 
 /**
+ * Guts check TN table. `dlc` p.221.
+ * `scartDice` = number of d6s (exploding) rolled on the Scart Table on a failed check.
+ * @type {ReadonlyArray<{ tn: number, scartDice: number }>}
+ */
+export const GUTS_TN_TABLE = [
+  { tn: 3, scartDice: 1 },
+  { tn: 5, scartDice: 2 },
+  { tn: 7, scartDice: 3 },
+  { tn: 9, scartDice: 4 },
+  { tn: 11, scartDice: 5 },
+  { tn: 13, scartDice: 6 },
+];
+
+/**
+ * Scart Table — outcomes on a failed Guts check. `dlc` p.222.
+ * `windDice` = number of d6 Wind damage; `windDieType` = "d6".
+ * Wind loss uses open-ended dice (Aces count). `dlc` p.221: "Count Aces."
+ * @type {ReadonlyArray<{ min: number, max: number, key: string, windDice: number }>}
+ */
+export const SCART_TABLE = [
+  // Wind damage is open-ended (Aces count). dlc p.221: "Count Aces when rolling these dice."
+  // Rows 7–15: Wind damage stated explicitly in each row. dlc p.222.
+  // Rows 19–30: text says "goes Weak in the Knees" (rows 13–15) by reference — rulebook does
+  //   not repeat the 1d6 Wind explicitly in those rows. Design decision: apply 1d6 Wind for the
+  //   "Weak in the Knees" component so the cascade matches the referenced effect. dlc p.222.
+  // Row 36+: "has a Heart Attack" by reference — 3d6 Wind applies via cascade. dlc p.222.
+  { min: 1, max: 3, key: "uneasy", windDice: 0 },
+  { min: 4, max: 6, key: "queasy", windDice: 0 },
+  { min: 7, max: 9, key: "willies", windDice: 1 }, // dlc p.222: "1d6 Wind"
+  { min: 10, max: 12, key: "heebieJeebies", windDice: 1 }, // dlc p.222: "1d6 Wind"
+  { min: 13, max: 15, key: "weakKnees", windDice: 1 }, // dlc p.222: "1d6 Wind"
+  { min: 16, max: 18, key: "deadFaint", windDice: 3 }, // dlc p.222: "3d6 Wind"
+  { min: 19, max: 21, key: "minorPhobia", windDice: 1 }, // Weak in the Knees cascade
+  { min: 22, max: 24, key: "majorPhobia", windDice: 1 }, // Weak in the Knees cascade
+  { min: 25, max: 27, key: "corporealAlteration", windDice: 1 }, // Minor Phobia cascade
+  { min: 28, max: 30, key: "theShakes", windDice: 1 }, // Major Phobia cascade
+  { min: 31, max: 35, key: "heartAttack", windDice: 3 }, // dlc p.222: "3d6 Wind"
+  { min: 36, max: Infinity, key: "corporealAging", windDice: 3 }, // Heart Attack cascade
+];
+
+/**
+ * Fear Level modifiers applied to Guts checks. `dlc` p.220.
+ * Penalty = −fearLevel (e.g. Fear Level 3 → −3 to Guts roll).
+ */
+export const FEAR_LEVEL_MAX = 6;
+
+/**
  * Action Deck card suits with tie-break precedence (higher wins):
  * Spades > Hearts > Diamonds > Clubs. `dlc` p.117.
  * @type {Record<string, { precedence: number, symbol: string }>}
