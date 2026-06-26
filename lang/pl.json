@@ -111,5 +111,11 @@
   "DEADLANDS.Chip.White.Label": "Biały",
   "DEADLANDS.Chip.Red.Label": "Czerwony",
   "DEADLANDS.Chip.Blue.Label": "Niebieski",
-  "DEADLANDS.Chip.Legend.Label": "Legendy"
+  "DEADLANDS.Chip.Legend.Label": "Legendy",
+
+  "DEADLANDS.Roll.Bust": "Porażka totalna!",
+  "DEADLANDS.Roll.Success": "Sukces!",
+  "DEADLANDS.Roll.Fail": "Niepowodzenie.",
+  "DEADLANDS.Roll.Raises": "{raises} Sukces(y) dodatkowy!",
+  "DEADLANDS.Roll.Damage": "Obrażenia"
 }
