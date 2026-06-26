@@ -99,6 +99,7 @@
   "DEADLANDS.Aptitude.Tinkerin.Label": "Tinkerin'",
   "DEADLANDS.Aptitude.Guts.Label": "Guts",
 
+  "DEADLANDS.HitLocation.Body.Label": "Body",
   "DEADLANDS.HitLocation.Noggin.Label": "Noggin",
   "DEADLANDS.HitLocation.UpperGuts.Label": "Upper Guts",
   "DEADLANDS.HitLocation.LowerGuts.Label": "Lower Guts",

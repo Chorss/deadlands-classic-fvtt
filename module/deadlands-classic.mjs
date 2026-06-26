@@ -38,6 +38,8 @@ import {
 
 // Archetype manifests self-register on import. Adding an archetype = one line here.
 import "./archetypes/cowboy/manifest.mjs";
+import "./archetypes/npc/manifest.mjs";
+import "./archetypes/mook/manifest.mjs";
 
 const SYSTEM_ID = "deadlands-classic";
 const LOG_PREFIX = `${SYSTEM_ID} |`;
