@@ -16,6 +16,9 @@ import { DeadlandsItem } from "./core/documents/deadlands-item.mjs";
 import { ItemRegistry } from "./core/item-registry.mjs";
 import { OverlayRegistry } from "./core/overlay-registry.mjs";
 
+// Archetype manifests self-register on import. Adding an archetype = one line here.
+import "./archetypes/cowboy/manifest.mjs";
+
 const SYSTEM_ID = "deadlands-classic";
 const LOG_PREFIX = `${SYSTEM_ID} |`;
 
@@ -30,6 +33,24 @@ Hooks.once("init", () => {
   // manifests populate these as they are imported in later phases.
   CONFIG.Actor.dataModels = ArchetypeRegistry.dataModels();
   CONFIG.Item.dataModels = ItemRegistry.dataModels();
+
+  // Per-archetype actor sheets, sourced from the registry.
+  for (const def of ArchetypeRegistry.all()) {
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, def.sheetClass, {
+      types: [def.id],
+      makeDefault: true,
+      label: def.label,
+    });
+  }
+
+  // World-data migration version — seeded from day one so future schema changes
+  // can run a guarded migration in `ready` without breaking existing worlds (plan §8).
+  game.settings.register(SYSTEM_ID, "migrationVersion", {
+    scope: "world",
+    config: false,
+    type: String,
+    default: "",
+  });
 
   // Public system API — the single entry point for sheets, macros and modules.
   // Subsystem slots are declared up front for a stable shape; they are wired in
