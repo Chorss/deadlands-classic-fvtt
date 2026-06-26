@@ -35,9 +35,9 @@ export const FatePotModel = globalThis.foundry
       static defineSchema() {
         const f = foundry.data.fields;
         return {
-          white:  new f.NumberField({ integer: true, min: 0, initial: FATE_POT_SEED.white }),
-          red:    new f.NumberField({ integer: true, min: 0, initial: FATE_POT_SEED.red }),
-          blue:   new f.NumberField({ integer: true, min: 0, initial: FATE_POT_SEED.blue }),
+          white: new f.NumberField({ integer: true, min: 0, initial: FATE_POT_SEED.white }),
+          red: new f.NumberField({ integer: true, min: 0, initial: FATE_POT_SEED.red }),
+          blue: new f.NumberField({ integer: true, min: 0, initial: FATE_POT_SEED.blue }),
           legend: new f.NumberField({ integer: true, min: 0, initial: FATE_POT_SEED.legend }),
         };
       }

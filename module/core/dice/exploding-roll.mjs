@@ -70,7 +70,11 @@ function rollOneDie(faces, rng) {
  * @param {() => number} [opts._rng] — injectable RNG (default: Math.random)
  * @returns {PoolResult}
  */
-export function rollExplodingPool(dieCount, dieType, { modifier = 0, tn = 5, _rng = Math.random } = {}) {
+export function rollExplodingPool(
+  dieCount,
+  dieType,
+  { modifier = 0, tn = 5, _rng = Math.random } = {}
+) {
   const faces = Number(dieType.slice(1));
   if (!faces || faces < 2) throw new RangeError(`Invalid dieType: ${dieType}`);
   if (dieCount < 1) throw new RangeError(`dieCount must be ≥ 1, got ${dieCount}`);

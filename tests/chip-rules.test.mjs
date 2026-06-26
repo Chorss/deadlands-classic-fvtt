@@ -5,7 +5,7 @@
 
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { canSpend, applyChipCap } from "../module/core/chips/chip-rules.mjs";
+import { applyChipCap, canSpend } from "../module/core/chips/chip-rules.mjs";
 import { drawBlindPure } from "../module/core/chips/fate-pot.mjs";
 
 describe("canSpend", () => {

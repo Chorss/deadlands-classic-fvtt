@@ -33,7 +33,14 @@ import { rollExplodingPool } from "./exploding-roll.mjs";
  * @param {() => number} [params._rng]
  * @returns {Promise<DamageResult>}
  */
-export async function rollDamage({ dieCount, dieType, modifier = 0, armorValue = 0, label, _rng } = {}) {
+export async function rollDamage({
+  dieCount,
+  dieType,
+  modifier = 0,
+  armorValue = 0,
+  label,
+  _rng,
+} = {}) {
   // Pass modifier=0 to the pool — we apply it to the sum ourselves below.
   const poolResult = rollExplodingPool(dieCount, dieType, { modifier: 0, tn: 1, _rng });
 
@@ -58,13 +65,15 @@ export async function rollDamage({ dieCount, dieType, modifier = 0, armorValue =
  * @param {string} label
  */
 async function _postDamageChatMessage(result, label) {
-  const diceStr = result.dice.map((d) => {
-    const ace = d.aces > 0 ? `<span class="dlc-ace">⚡</span>` : "";
-    return `<span class="dlc-die">${d.total}${ace}</span>`;
-  }).join(" ");
+  const diceStr = result.dice
+    .map((d) => {
+      const ace = d.aces > 0 ? `<span class="dlc-ace">⚡</span>` : "";
+      return `<span class="dlc-die">${d.total}${ace}</span>`;
+    })
+    .join(" ");
 
-  const armorStr = result.armorValue > 0
-    ? ` <span class="dlc-armor">− ${result.armorValue} armor</span>` : "";
+  const armorStr =
+    result.armorValue > 0 ? ` <span class="dlc-armor">− ${result.armorValue} armor</span>` : "";
 
   const content = `<div class="dlc-roll-card dlc-damage">
   <header class="dlc-roll-label">${game.i18n.localize("DEADLANDS.Roll.Damage")}: ${label}</header>
