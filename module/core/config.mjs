@@ -168,6 +168,21 @@ export const WOUND_SEVERITIES = {
 export const WOUND_MAX = WOUND_SEVERITIES.maimed;
 
 /**
+ * Wound penalty applied to Trait/Aptitude rolls, keyed by severity level. The
+ * penalty comes from the character's *highest* current wound, NOT the sum.
+ * `dlc` p.140 (Wound Effects table).
+ * @type {Record<number, number>}
+ */
+export const WOUND_PENALTIES = {
+  0: 0,
+  1: -1,
+  2: -2,
+  3: -3,
+  4: -4,
+  5: -5,
+};
+
+/**
  * Wound-track slots (8). Limbs are split Left/Right (a design decision, not a
  * raw table row — `dlc` p.133). `limb: true` marks locations that go unusable
  * when Maimed (arm = no hand, leg = halved Pace).
@@ -231,6 +246,7 @@ export const DEADLANDS = Object.freeze({
   CHIP_LIMIT,
   WOUND_SEVERITIES,
   WOUND_MAX,
+  WOUND_PENALTIES,
   HIT_LOCATIONS,
   HIT_LOCATION_TABLE,
   CARD_SUITS,
