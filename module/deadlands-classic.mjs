@@ -11,6 +11,9 @@
 
 import { ArchetypeRegistry } from "./core/archetype-registry.mjs";
 import { DEADLANDS } from "./core/config.mjs";
+import { rollDamage } from "./core/dice/damage-roll.mjs";
+import { rollExplodingPool } from "./core/dice/exploding-roll.mjs";
+import { rollTrait } from "./core/dice/trait-roll.mjs";
 import { DeadlandsActor } from "./core/documents/deadlands-actor.mjs";
 import { DeadlandsItem } from "./core/documents/deadlands-item.mjs";
 import { ItemRegistry } from "./core/item-registry.mjs";
@@ -61,7 +64,7 @@ Hooks.once("init", () => {
     archetypes: ArchetypeRegistry,
     items: ItemRegistry,
     overlays: OverlayRegistry,
-    dice: null,
+    dice: { rollExplodingPool, rollTrait, rollDamage },
     cards: null,
     chips: null,
     wounds: null,
