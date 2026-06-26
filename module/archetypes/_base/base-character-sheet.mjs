@@ -14,6 +14,7 @@ import { APTITUDES, DEADLANDS, TRAITS } from "../../core/config.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
+const TextEditor = foundry.applications.ux.TextEditor.implementation;
 
 const TEMPLATE_ROOT = "systems/deadlands-classic/templates/actor/parts";
 
@@ -69,7 +70,15 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
     context.editable = this.isEditable;
     context.tabs = this._prepareTabs("sheet");
     context.traitGroups = this.#prepareTraits();
+    context.dieTypeChoices = Object.fromEntries(DEADLANDS.DIE_TYPES.map((d) => [d, d]));
+    context.wounds = this.#prepareWounds();
+    context.chips = this.#prepareChips();
     context.items = this.#prepareItems();
+    context.enrichedBiography = await TextEditor.enrichHTML(this.document.system.biography ?? "", {
+      secrets: this.document.isOwner,
+      rollData: this.document.getRollData(),
+      relativeTo: this.document,
+    });
     return context;
   }
 
@@ -82,7 +91,10 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
   /** Structured Trait → Aptitude view model with i18n keys and update paths. */
   #prepareTraits() {
     const system = this.document.system;
-    const groups = { corporeal: [], mental: [] };
+    const groups = {
+      corporeal: { id: "corporeal", label: "DEADLANDS.Sheet.TraitGroup.Corporeal", traits: [] },
+      mental: { id: "mental", label: "DEADLANDS.Sheet.TraitGroup.Mental", traits: [] },
+    };
     for (const [id, cfg] of Object.entries(TRAITS)) {
       const trait = system.traits[id];
       const aptitudes = Object.keys(APTITUDES[id] ?? {}).map((aptId) => ({
@@ -91,7 +103,7 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
         level: trait.aptitudes[aptId]?.level ?? 0,
         path: `system.traits.${id}.aptitudes.${aptId}.level`,
       }));
-      groups[cfg.group].push({
+      groups[cfg.group].traits.push({
         id,
         label: `DEADLANDS.Trait.${toPascal(id)}.Label`,
         dieCount: trait.dieCount,
@@ -103,7 +115,29 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
         aptitudes,
       });
     }
-    return groups;
+    return [groups.corporeal, groups.mental];
+  }
+
+  /** Wound-track view model: one entry per hit location. */
+  #prepareWounds() {
+    const system = this.document.system;
+    return Object.keys(DEADLANDS.HIT_LOCATIONS).map((id) => ({
+      id,
+      label: `DEADLANDS.HitLocation.${toPascal(id)}.Label`,
+      severity: system.wounds[id]?.severity ?? 0,
+      path: `system.wounds.${id}.severity`,
+    }));
+  }
+
+  /** Fate Chip view model: one entry per color. */
+  #prepareChips() {
+    const system = this.document.system;
+    return Object.keys(DEADLANDS.CHIP_COLORS).map((color) => ({
+      color,
+      label: `DEADLANDS.Chip.${toPascal(color)}.Label`,
+      value: system.chips[color] ?? 0,
+      path: `system.chips.${color}`,
+    }));
   }
 
   /** Group embedded items by type for the Combat / Gear tabs. */

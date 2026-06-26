@@ -1,0 +1,40 @@
+{{!-- Sheet header: portrait, name, and derived secondary stats. --}}
+<header class="dlc-sheet-header">
+  <img class="dlc-portrait" src="{{actor.img}}" data-edit="img" alt="{{actor.name}}" />
+
+  <div class="dlc-header-main">
+    <input class="dlc-charname" type="text" name="name" value="{{actor.name}}"
+      placeholder="{{localize 'DEADLANDS.Sheet.NamePlaceholder'}}" {{#unless editable}}disabled{{/unless}} />
+
+    <div class="dlc-secondary">
+      <label class="dlc-stat dlc-wind">
+        <span class="dlc-stat-label">{{localize 'DEADLANDS.Sheet.Wind'}}</span>
+        <span class="dlc-stat-pair">
+          <input type="number" name="system.wind.value" value="{{system.wind.value}}" {{#unless editable}}disabled{{/unless}} />
+          <span class="dlc-sep">/</span>
+          <span class="dlc-stat-max">{{system.wind.max}}</span>
+        </span>
+      </label>
+
+      <label class="dlc-stat">
+        <span class="dlc-stat-label">{{localize 'DEADLANDS.Sheet.Pace'}}</span>
+        <span class="dlc-stat-value">{{system.pace}}</span>
+      </label>
+
+      <label class="dlc-stat">
+        <span class="dlc-stat-label">{{localize 'DEADLANDS.Sheet.Size'}}</span>
+        <input type="number" name="system.size" value="{{system.size}}" {{#unless editable}}disabled{{/unless}} />
+      </label>
+
+      <label class="dlc-stat">
+        <span class="dlc-stat-label">{{localize 'DEADLANDS.Sheet.Grit'}}</span>
+        <input type="number" name="system.grit" value="{{system.grit}}" {{#unless editable}}disabled{{/unless}} />
+      </label>
+
+      <label class="dlc-stat">
+        <span class="dlc-stat-label">{{localize 'DEADLANDS.Sheet.Bounty'}}</span>
+        <input type="number" name="system.bounty" value="{{system.bounty}}" {{#unless editable}}disabled{{/unless}} />
+      </label>
+    </div>
+  </div>
+</header>

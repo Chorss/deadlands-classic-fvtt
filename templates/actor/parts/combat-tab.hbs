@@ -1,0 +1,44 @@
+{{!-- Combat: Fate Chips, wound track, and weapons. Full wound widget in Phase 6. --}}
+<section class="tab dlc-combat {{tab.cssClass}}" data-group="sheet" data-tab="combat">
+  <div class="dlc-chips">
+    <h2 class="dlc-section-title">{{localize 'DEADLANDS.Sheet.Section.Chips'}}</h2>
+    <ul class="dlc-chip-row">
+      {{#each chips as |chip|}}
+      <li class="dlc-chip dlc-chip-{{chip.color}}">
+        <span class="dlc-chip-label">{{localize chip.label}}</span>
+        <input type="number" min="0" name="{{chip.path}}" value="{{chip.value}}"
+          {{#unless @root.editable}}disabled{{/unless}} />
+      </li>
+      {{/each}}
+    </ul>
+  </div>
+
+  <div class="dlc-wounds">
+    <h2 class="dlc-section-title">{{localize 'DEADLANDS.Sheet.Section.Wounds'}}</h2>
+    <ul class="dlc-wound-list">
+      {{#each wounds as |wound|}}
+      <li class="dlc-wound" data-location="{{wound.id}}">
+        <span class="dlc-wound-label">{{localize wound.label}}</span>
+        <input type="number" class="dlc-wound-sev" min="0" max="5" name="{{wound.path}}"
+          value="{{wound.severity}}" {{#unless @root.editable}}disabled{{/unless}} />
+      </li>
+      {{/each}}
+    </ul>
+  </div>
+
+  <div class="dlc-weapons">
+    <h2 class="dlc-section-title">{{localize 'DEADLANDS.Sheet.Section.Weapons'}}</h2>
+    {{#if items.weapon.length}}
+    <ul class="dlc-item-list">
+      {{#each items.weapon as |weapon|}}
+      <li class="dlc-item" data-item-id="{{weapon.id}}">
+        <img class="dlc-item-img" src="{{weapon.img}}" alt="{{weapon.name}}" />
+        <span class="dlc-item-name">{{weapon.name}}</span>
+      </li>
+      {{/each}}
+    </ul>
+    {{else}}
+    <p class="dlc-empty">{{localize 'DEADLANDS.Sheet.Empty.Weapons'}}</p>
+    {{/if}}
+  </div>
+</section>
