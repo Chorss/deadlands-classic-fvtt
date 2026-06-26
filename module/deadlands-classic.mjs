@@ -21,6 +21,19 @@ import { DeadlandsActor } from "./core/documents/deadlands-actor.mjs";
 import { DeadlandsItem } from "./core/documents/deadlands-item.mjs";
 import { ItemRegistry } from "./core/item-registry.mjs";
 import { OverlayRegistry } from "./core/overlay-registry.mjs";
+import { drawHitLocation, resolveHitLocation } from "./core/wounds/hit-location.mjs";
+import {
+  computeWindMax,
+  gutsWoundsFromNegativeWind,
+  isWinded,
+} from "./core/wounds/wind-calculator.mjs";
+import {
+  applyWounds,
+  getBleedingRate,
+  highestWoundPenalty,
+  tickBleeding,
+  woundsFromDamage,
+} from "./core/wounds/wound-track.mjs";
 
 // Archetype manifests self-register on import. Adding an archetype = one line here.
 import "./archetypes/cowboy/manifest.mjs";
@@ -80,7 +93,18 @@ Hooks.once("init", () => {
       spendChip,
       drawForSession: FatePot.drawForSession.bind(FatePot),
     },
-    wounds: null,
+    wounds: {
+      woundsFromDamage,
+      applyWounds,
+      tickBleeding,
+      getBleedingRate,
+      highestWoundPenalty,
+      drawHitLocation,
+      resolveHitLocation,
+      computeWindMax,
+      isWinded,
+      gutsWoundsFromNegativeWind,
+    },
   };
 });
 

@@ -42,12 +42,14 @@ export async function rollTrait(actorOrParams, traitId, options = {}) {
       const unskilled = aptLevel === 0; // dlc p.29: no aptitude = 1 die, -4 modifier
       dieCount = (unskilled ? 1 : aptLevel) + extraDice;
       const unskilledPenalty = unskilled ? -4 : 0;
-      modifier = (options.modifier ?? 0) + (trait.modifier ?? 0) + unskilledPenalty;
+      const woundMod = actor.system.woundModifier ?? 0; // highest wound penalty. dlc p.140.
+      modifier = (options.modifier ?? 0) + (trait.modifier ?? 0) + unskilledPenalty + woundMod;
       if (unskilled) label += ` [${game.i18n.localize("DEADLANDS.Roll.Unskilled")}]`;
     } else {
       // Pure trait roll: trait level is the die count. dlc p.27.
       dieCount = (trait.dieCount ?? 1) + extraDice;
-      modifier = (options.modifier ?? 0) + (trait.modifier ?? 0);
+      const woundMod = actor.system.woundModifier ?? 0; // dlc p.140.
+      modifier = (options.modifier ?? 0) + (trait.modifier ?? 0) + woundMod;
     }
     tn = options.tn ?? 5;
 

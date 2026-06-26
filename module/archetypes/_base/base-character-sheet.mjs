@@ -158,15 +158,39 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
     return [groups.corporeal, groups.mental];
   }
 
-  /** Wound-track view model: one entry per hit location. */
+  /** Wound-track view model: one entry per hit location + Wind bar data. */
   #prepareWounds() {
     const system = this.document.system;
-    return Object.keys(DEADLANDS.HIT_LOCATIONS).map((id) => ({
-      id,
-      label: `DEADLANDS.HitLocation.${toPascal(id)}.Label`,
-      severity: system.wounds[id]?.severity ?? 0,
-      path: `system.wounds.${id}.severity`,
-    }));
+    const SEVERITY_LABELS = [
+      "DEADLANDS.Wound.Severity.None",
+      "DEADLANDS.Wound.Severity.Light",
+      "DEADLANDS.Wound.Severity.Heavy",
+      "DEADLANDS.Wound.Severity.Serious",
+      "DEADLANDS.Wound.Severity.Critical",
+      "DEADLANDS.Wound.Severity.Maimed",
+    ];
+    const woundLocations = Object.entries(DEADLANDS.HIT_LOCATIONS).map(([id, cfg]) => {
+      const severity = system.wounds[id]?.severity ?? 0;
+      // Build 5 pip objects so HBS can iterate without custom helpers.
+      const pips = Array.from({ length: 5 }, (_, i) => ({ filled: i < severity }));
+      return {
+        id,
+        label: `DEADLANDS.HitLocation.${toPascal(id)}.Label`,
+        severity,
+        severityLabel: SEVERITY_LABELS[severity] ?? SEVERITY_LABELS[0],
+        isLimb: cfg.limb ?? false,
+        isMaimed: severity >= 5,
+        pips,
+        path: `system.wounds.${id}.severity`,
+      };
+    });
+    const windValue = system.wind?.value ?? 0;
+    const windMax = system.wind?.max ?? 0;
+    return {
+      woundLocations,
+      wind: { value: windValue, max: windMax },
+      windedClass: windValue <= 0 ? "dlc-winded" : "",
+    };
   }
 
   /** Fate Chip view model: one entry per color. */

@@ -137,5 +137,18 @@
   "DEADLANDS.ChipRule.Unknown": "Nieznany kolor sztonu.",
   "DEADLANDS.ChipRule.NoneLeft": "Brak sztonów w tym kolorze.",
   "DEADLANDS.ChipRule.BustOnlyLegend": "Tylko szton Legendy (przerzut) może uratować porażkę totalną!",
-  "DEADLANDS.ChipRule.OnePerAction": "Tylko jeden czerwony, niebieski lub legendarny szton na akcję."
+  "DEADLANDS.ChipRule.OnePerAction": "Tylko jeden czerwony, niebieski lub legendarny szton na akcję.",
+
+  "DEADLANDS.Wound.Severity.None": "Brak",
+  "DEADLANDS.Wound.Severity.Light": "Lekka",
+  "DEADLANDS.Wound.Severity.Heavy": "Ciężka",
+  "DEADLANDS.Wound.Severity.Serious": "Poważna",
+  "DEADLANDS.Wound.Severity.Critical": "Krytyczna",
+  "DEADLANDS.Wound.Severity.Maimed": "Okaleczenie",
+
+  "DEADLANDS.Wound.Applied": "{wounds} rana(y) w {location}. Wiatr −{wind}.",
+  "DEADLANDS.Wound.Winded": "Wyczerpany! Brak akcji w tej rundzie.",
+  "DEADLANDS.Wound.BleedingTick": "Krwawienie: −{drain} Wiatr.",
+  "DEADLANDS.Wound.MaimedLimb": "{location} jest okaleczona — wyłączona z akcji.",
+  "DEADLANDS.Wound.WindRecovered": "Wiatr odzyskany: {value}/{max}."
 }

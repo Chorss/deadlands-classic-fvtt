@@ -137,5 +137,18 @@
   "DEADLANDS.ChipRule.Unknown": "Unknown chip color.",
   "DEADLANDS.ChipRule.NoneLeft": "No chips of that color remaining.",
   "DEADLANDS.ChipRule.BustOnlyLegend": "Only a Legend chip (reroll) can save a bust!",
-  "DEADLANDS.ChipRule.OnePerAction": "Only one red, blue, or legend chip per action."
+  "DEADLANDS.ChipRule.OnePerAction": "Only one red, blue, or legend chip per action.",
+
+  "DEADLANDS.Wound.Severity.None": "None",
+  "DEADLANDS.Wound.Severity.Light": "Light",
+  "DEADLANDS.Wound.Severity.Heavy": "Heavy",
+  "DEADLANDS.Wound.Severity.Serious": "Serious",
+  "DEADLANDS.Wound.Severity.Critical": "Critical",
+  "DEADLANDS.Wound.Severity.Maimed": "Maimed",
+
+  "DEADLANDS.Wound.Applied": "{wounds} wound(s) to {location}. Wind −{wind}.",
+  "DEADLANDS.Wound.Winded": "Winded! No actions this round.",
+  "DEADLANDS.Wound.BleedingTick": "Bleeding: −{drain} Wind.",
+  "DEADLANDS.Wound.MaimedLimb": "{location} is maimed — out of action.",
+  "DEADLANDS.Wound.WindRecovered": "Wind recovered to {value}/{max}."
 }

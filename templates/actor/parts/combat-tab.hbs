@@ -14,13 +14,31 @@
   </div>
 
   <div class="dlc-wounds">
-    <h2 class="dlc-section-title">{{localize 'DEADLANDS.Sheet.Section.Wounds'}}</h2>
+    {{!-- Wind bar --}}
+    <div class="dlc-wind-bar {{wounds.windedClass}}">
+      <h2 class="dlc-section-title">{{localize "DEADLANDS.Sheet.Wind"}}</h2>
+      <div class="dlc-wind-track">
+        <input type="number" class="dlc-wind-value" name="system.wind.value"
+          value="{{wounds.wind.value}}" min="0" max="{{wounds.wind.max}}" data-dtype="Number"
+          {{#unless @root.editable}}disabled{{/unless}} />
+        <span class="dlc-wind-sep">/</span>
+        <span class="dlc-wind-max">{{wounds.wind.max}}</span>
+        {{#if wounds.windedClass}}<span class="dlc-winded-badge">{{localize "DEADLANDS.Wound.Winded"}}</span>{{/if}}
+      </div>
+    </div>
+
+    {{!-- 8-slot wound track --}}
+    <h2 class="dlc-section-title">{{localize "DEADLANDS.Sheet.Section.Wounds"}}</h2>
     <ul class="dlc-wound-list">
-      {{#each wounds as |wound|}}
-      <li class="dlc-wound" data-location="{{wound.id}}">
+      {{#each wounds.woundLocations as |wound|}}
+      <li class="dlc-wound {{#if wound.isMaimed}}dlc-maimed{{/if}}" data-location="{{wound.id}}">
         <span class="dlc-wound-label">{{localize wound.label}}</span>
+        <div class="dlc-wound-pips">
+          {{#each wound.pips}}<span class="dlc-wound-pip {{#if filled}}dlc-pip-filled{{/if}}"></span>{{/each}}
+        </div>
         <input type="number" class="dlc-wound-sev" min="0" max="5" name="{{wound.path}}"
           value="{{wound.severity}}" {{#unless @root.editable}}disabled{{/unless}} />
+        {{#if wound.severity}}<span class="dlc-wound-severity">{{localize wound.severityLabel}}</span>{{/if}}
       </li>
       {{/each}}
     </ul>
