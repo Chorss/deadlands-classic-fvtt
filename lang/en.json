@@ -117,5 +117,18 @@
   "DEADLANDS.Roll.Success": "Success!",
   "DEADLANDS.Roll.Fail": "Failure.",
   "DEADLANDS.Roll.Raises": "{raises} Raise(s)!",
-  "DEADLANDS.Roll.Damage": "Damage"
+  "DEADLANDS.Roll.Damage": "Damage",
+  "DEADLANDS.Roll.Unskilled": "Unskilled",
+
+  "DEADLANDS.TN.Foolproof": "Foolproof",
+  "DEADLANDS.TN.Fair": "Fair",
+  "DEADLANDS.TN.Onerous": "Onerous",
+  "DEADLANDS.TN.Hard": "Hard",
+  "DEADLANDS.TN.Incredible": "Incredible",
+
+  "DEADLANDS.Dialog.TraitRoll.Title": "Trait Roll",
+  "DEADLANDS.Dialog.TraitRoll.TN": "Target Number",
+  "DEADLANDS.Dialog.TraitRoll.Modifier": "Modifier",
+  "DEADLANDS.Dialog.TraitRoll.WhiteChips": "White Chips",
+  "DEADLANDS.Dialog.TraitRoll.Roll": "Roll!"
 }

@@ -117,5 +117,18 @@
   "DEADLANDS.Roll.Success": "Sukces!",
   "DEADLANDS.Roll.Fail": "Niepowodzenie.",
   "DEADLANDS.Roll.Raises": "{raises} Sukces(y) dodatkowy!",
-  "DEADLANDS.Roll.Damage": "Obrażenia"
+  "DEADLANDS.Roll.Damage": "Obrażenia",
+  "DEADLANDS.Roll.Unskilled": "Bez umiejętności",
+
+  "DEADLANDS.TN.Foolproof": "Banalny",
+  "DEADLANDS.TN.Fair": "Normalny",
+  "DEADLANDS.TN.Onerous": "Trudny",
+  "DEADLANDS.TN.Hard": "Ciężki",
+  "DEADLANDS.TN.Incredible": "Niesamowity",
+
+  "DEADLANDS.Dialog.TraitRoll.Title": "Rzut na cechę",
+  "DEADLANDS.Dialog.TraitRoll.TN": "Próg trudności",
+  "DEADLANDS.Dialog.TraitRoll.Modifier": "Modyfikator",
+  "DEADLANDS.Dialog.TraitRoll.WhiteChips": "Białe sztony",
+  "DEADLANDS.Dialog.TraitRoll.Roll": "Rzuć!"
 }
