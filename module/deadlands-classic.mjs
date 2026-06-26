@@ -10,6 +10,9 @@
  */
 
 import { ArchetypeRegistry } from "./core/archetype-registry.mjs";
+import { canSpend, executeSpend } from "./core/chips/chip-rules.mjs";
+import { grantChips, spendChip } from "./core/chips/chip-widget.mjs";
+import { FatePot } from "./core/chips/fate-pot.mjs";
 import { DEADLANDS } from "./core/config.mjs";
 import { rollDamage } from "./core/dice/damage-roll.mjs";
 import { rollExplodingPool } from "./core/dice/exploding-roll.mjs";
@@ -46,6 +49,9 @@ Hooks.once("init", () => {
     });
   }
 
+  // Fate Pot world setting (4 integers — NOT Cards). dlc p.146. Plan §3.3.
+  FatePot.registerSetting(SYSTEM_ID);
+
   // World-data migration version — seeded from day one so future schema changes
   // can run a guarded migration in `ready` without breaking existing worlds (plan §8).
   game.settings.register(SYSTEM_ID, "migrationVersion", {
@@ -66,7 +72,14 @@ Hooks.once("init", () => {
     overlays: OverlayRegistry,
     dice: { rollExplodingPool, rollTrait, rollDamage },
     cards: null,
-    chips: null,
+    chips: {
+      FatePot,
+      canSpend,
+      executeSpend,
+      grantChips,
+      spendChip,
+      drawForSession: FatePot.drawForSession.bind(FatePot),
+    },
     wounds: null,
   };
 });
