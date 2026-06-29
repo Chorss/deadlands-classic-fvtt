@@ -144,18 +144,24 @@ Hooks.on("renderCombatTracker", (_app, html) => {
     }
 
     // Replace numeric initiative value with a card label.
-    const initEl = row.querySelector(".combatant-initiative");
-    if (initEl) {
+    // V14 uses .token-initiative > input.initiative-input instead of .combatant-initiative.
+    const initContainer = row.querySelector(".token-initiative");
+    if (initContainer) {
       const card = combatant.highestCard;
       if (card) {
-        initEl.textContent = DeadlandsCombat.cardLabel(card);
-        initEl.classList.add("dlc-initiative-card");
-        if (card.joker === "red") {
-          initEl.classList.add("dlc-initiative-red-joker");
+        const input = initContainer.querySelector(".initiative-input");
+        if (input) {
+          input.style.display = "none";
         }
-        if (card.joker === "black") {
-          initEl.classList.add("dlc-initiative-black-joker");
+        let label = initContainer.querySelector(".dlc-initiative-label");
+        if (!label) {
+          label = document.createElement("span");
+          label.classList.add("dlc-initiative-label", "dlc-initiative-card");
+          initContainer.appendChild(label);
         }
+        label.textContent = DeadlandsCombat.cardLabel(card);
+        label.classList.toggle("dlc-initiative-red-joker", card.joker === "red");
+        label.classList.toggle("dlc-initiative-black-joker", card.joker === "black");
       }
     }
 

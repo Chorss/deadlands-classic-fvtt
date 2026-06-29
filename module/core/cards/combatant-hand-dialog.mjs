@@ -35,7 +35,7 @@ export class CombatantHandDialog extends HandlebarsApplicationMixin(ApplicationV
 
   /** @override */
   static PARTS = {
-    hand: { template: "templates/dialogs/combatant-hand.hbs" },
+    hand: { template: "systems/deadlands-classic/templates/dialogs/combatant-hand.hbs" },
   };
 
   /** @override */
