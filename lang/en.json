@@ -207,6 +207,7 @@
   "DEADLANDS.Combat.Hand.Play": "Play Card",
   "DEADLANDS.Combat.Hand.Sleeve": "Up the Sleeve",
   "DEADLANDS.Combat.Hand.Empty": "No cards in hand.",
+  "DEADLANDS.Combat.Hand.Open": "Show Action Hand",
 
   "DEADLANDS.Combat.Round.Reshuffle": "Action Deck reshuffled (Black Joker).",
 

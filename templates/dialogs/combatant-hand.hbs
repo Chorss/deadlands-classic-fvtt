@@ -16,12 +16,12 @@
         {{#if this.isBlackJoker}} dlc-card--black{{/if}}">
       <span class="dlc-card-label">{{this.label}}</span>
       <div class="dlc-card-actions">
-        <button type="button" class="dlc-btn dlc-play-card"
+        <button type="button" class="dlc-btn dlc-play-card" data-action="playCard"
                 data-rank="{{this.rank}}" data-suit="{{this.suit}}" data-joker="{{this.joker}}">
           {{localize "DEADLANDS.Combat.Hand.Play"}}
         </button>
         {{#unless this.isJoker}}
-        <button type="button" class="dlc-btn dlc-sleeve-card"
+        <button type="button" class="dlc-btn dlc-sleeve-card" data-action="sleeveCard"
                 data-rank="{{this.rank}}" data-suit="{{this.suit}}">
           {{localize "DEADLANDS.Combat.Hand.Sleeve"}}
         </button>

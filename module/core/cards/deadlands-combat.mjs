@@ -64,10 +64,10 @@ export class DeadlandsCombat extends Combat {
    */
   async _quicknessCardCount(combatant) {
     const actor = combatant.actor;
-    if (!actor?.system?.quickness) {
+    if (!actor?.system?.traits?.quickness) {
       return 1;
     }
-    const { dieCount = 1, dieType = "d6" } = actor.system.quickness;
+    const { dieCount = 1, dieType = "d6" } = actor.system.traits.quickness;
     const result = rollExplodingPool(dieCount, dieType, { tn: DEADLANDS.INITIATIVE_TN });
     return quicknessCardCount(result);
   }

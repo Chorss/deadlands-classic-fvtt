@@ -11,6 +11,7 @@
 
 import { ArchetypeRegistry } from "./core/archetype-registry.mjs";
 import { ActionDeck } from "./core/cards/action-deck.mjs";
+import { CombatantHandDialog } from "./core/cards/combatant-hand-dialog.mjs";
 import { DeadlandsCombat } from "./core/cards/deadlands-combat.mjs";
 import { DeadlandsCombatant } from "./core/cards/deadlands-combatant.mjs";
 import { canSpend, executeSpend } from "./core/chips/chip-rules.mjs";
@@ -101,7 +102,7 @@ Hooks.once("init", () => {
     items: ItemRegistry,
     overlays: OverlayRegistry,
     dice: { rollExplodingPool, rollTrait, rollDamage, rollGutsCheck, lookupScart, scartDiceForTN },
-    cards: { ActionDeck, DeadlandsCombat, DeadlandsCombatant },
+    cards: { ActionDeck, CombatantHandDialog, DeadlandsCombat, DeadlandsCombatant },
     chips: {
       FatePot,
       canSpend,
@@ -141,20 +142,41 @@ Hooks.on("renderCombatTracker", (_app, html) => {
     if (!row) {
       continue;
     }
+
+    // Replace numeric initiative value with a card label.
     const initEl = row.querySelector(".combatant-initiative");
-    if (!initEl) {
+    if (initEl) {
+      const card = combatant.highestCard;
+      if (card) {
+        initEl.textContent = DeadlandsCombat.cardLabel(card);
+        initEl.classList.add("dlc-initiative-card");
+        if (card.joker === "red") {
+          initEl.classList.add("dlc-initiative-red-joker");
+        }
+        if (card.joker === "black") {
+          initEl.classList.add("dlc-initiative-black-joker");
+        }
+      }
+    }
+
+    // "Show hand" button — visible only to the owner or GM when cards are held.
+    const canSee = game.user.isGM || combatant.actor?.isOwner;
+    if (!canSee || !combatant.hand.length) {
       continue;
     }
-    const card = combatant.highestCard;
-    if (card) {
-      initEl.textContent = DeadlandsCombat.cardLabel(card);
-      initEl.classList.add("dlc-initiative-card");
-      if (card.joker === "red") {
-        initEl.classList.add("dlc-initiative-red-joker");
-      }
-      if (card.joker === "black") {
-        initEl.classList.add("dlc-initiative-black-joker");
-      }
+    const controls = row.querySelector(".combatant-controls");
+    if (!controls) {
+      continue;
     }
+    const btn = document.createElement("a");
+    btn.classList.add("dlc-hand-btn");
+    btn.setAttribute("aria-label", game.i18n.localize("DEADLANDS.Combat.Hand.Open"));
+    btn.title = game.i18n.localize("DEADLANDS.Combat.Hand.Open");
+    btn.innerHTML = '<i class="fas fa-hand"></i>';
+    btn.addEventListener("click", (ev) => {
+      ev.preventDefault();
+      CombatantHandDialog.open(combatant);
+    });
+    controls.prepend(btn);
   }
 });
