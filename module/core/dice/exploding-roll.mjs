@@ -26,6 +26,7 @@
  * @typedef {{
  *   dice: DieResult[],
  *   highest: number,
+ *   total: number,
  *   modifier: number,
  *   tn: number,
  *   bust: boolean,
@@ -100,5 +101,5 @@ export function rollExplodingPool(
   const raises = success ? Math.floor((highest - tn) / 5) : 0;
   const aces = dice.reduce((sum, d) => sum + d.aces, 0);
 
-  return { dice, highest, modifier, tn, bust, success, raises, aces };
+  return { dice, highest, total: highest, modifier, tn, bust, success, raises, aces };
 }

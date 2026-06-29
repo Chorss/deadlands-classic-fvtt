@@ -81,5 +81,5 @@ async function _postDamageChatMessage(result, label) {
   <div class="dlc-roll-total">${result.total}${armorStr}</div>
 </div>`;
 
-  await ChatMessage.create({ content, type: CONST.CHAT_MESSAGE_STYLES.OTHER });
+  await ChatMessage.create({ content, style: CONST.CHAT_MESSAGE_STYLES.OTHER });
 }

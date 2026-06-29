@@ -15,7 +15,7 @@
       {{/if}}
     </span>
     {{#if rollResult.raises}}
-    <span class="dlc-raises">+{{rollResult.raises}} {{localize "DEADLANDS.Roll.Raises"}}</span>
+    <span class="dlc-raises">{{localize "DEADLANDS.Roll.Raises" raises=rollResult.raises}}</span>
     {{/if}}
   </div>
 

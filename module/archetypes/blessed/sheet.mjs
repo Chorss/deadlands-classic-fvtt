@@ -115,7 +115,7 @@ export class BlessedSheet extends BaseCharacterSheet {
     }
 
     const maxWhite = this.document.system.chips?.white ?? 0;
-    const content = await renderTemplate(`${DIALOG_ROOT}/invoke-miracle-dialog.hbs`, {
+    const content = await foundry.applications.handlebars.renderTemplate(`${DIALOG_ROOT}/invoke-miracle-dialog.hbs`, {
       miracleName: miracleItem.name,
       tn: miracleItem.system.tn,
       maxWhite,

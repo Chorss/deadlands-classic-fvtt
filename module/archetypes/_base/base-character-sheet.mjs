@@ -35,7 +35,7 @@ const TN_CHOICES = [
  * @returns {Promise<{tn:number, modifier:number, whiteSpend:number}|null>}
  */
 async function _showRollDialog({ label, maxWhite, unskilled = false }) {
-  const content = await renderTemplate(`${DIALOG_ROOT}/trait-roll-dialog.hbs`, {
+  const content = await foundry.applications.handlebars.renderTemplate(`${DIALOG_ROOT}/trait-roll-dialog.hbs`, {
     label,
     maxWhite,
     unskilled,

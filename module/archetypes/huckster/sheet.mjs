@@ -117,7 +117,7 @@ export class HucksterSheet extends BaseCharacterSheet {
     }
 
     const maxWhite = this.document.system.chips.white ?? 0;
-    const content = await renderTemplate(`${DIALOG_ROOT}/cast-hex-dialog.hbs`, {
+    const content = await foundry.applications.handlebars.renderTemplate(`${DIALOG_ROOT}/cast-hex-dialog.hbs`, {
       hexName: hexItem.name,
       maxWhite,
     });

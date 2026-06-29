@@ -118,7 +118,7 @@ export class MadScientistSheet extends BaseCharacterSheet {
       return;
     }
 
-    const content = await renderTemplate(`${DIALOG_ROOT}/devise-blueprint-dialog.hbs`, {
+    const content = await foundry.applications.handlebars.renderTemplate(`${DIALOG_ROOT}/devise-blueprint-dialog.hbs`, {
       gizmoName: gizmoItem.name,
     });
 
@@ -152,7 +152,7 @@ export class MadScientistSheet extends BaseCharacterSheet {
       return;
     }
 
-    const content = await renderTemplate(`${DIALOG_ROOT}/devise-blueprint-dialog.hbs`, {
+    const content = await foundry.applications.handlebars.renderTemplate(`${DIALOG_ROOT}/devise-blueprint-dialog.hbs`, {
       gizmoName: gizmoItem.name,
       constructionTN: gizmoItem.system.constructionTN,
       isConstruction: true,

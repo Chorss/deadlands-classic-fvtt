@@ -53,12 +53,7 @@ export async function performRitual(actor, favorItem, opts = {}) {
   const traitDie = actor.system.traits?.[associatedTrait]?.dieType ?? "d6";
   const tn = favorItem.system.ritualTN ?? 5;
 
-  const rollResult = rollExplodingPool({
-    dieCount: Math.max(1, ritualLevel),
-    dieType: traitDie,
-    modifier: modifier + ritualMod,
-    tn,
-  });
+  const rollResult = rollExplodingPool(Math.max(1, ritualLevel), traitDie, { modifier: modifier + ritualMod, tn });
 
   if (rollResult.bust) {
     // Bust → manitou attacks. ghost-dancers p.57.
@@ -125,7 +120,7 @@ export async function spendFavor(actor, favorItem) {
   await actor.update({ "system.appeasement.current": current - cost });
   await _applyFavorEffect(actor, favorItem);
 
-  const content = await renderTemplate(
+  const content = await foundry.applications.handlebars.renderTemplate(
     "systems/deadlands-classic/templates/chat/ritual-result.hbs",
     {
       actorName: actor.name,
@@ -160,12 +155,7 @@ async function _resolveManitouAttack(actor) {
   // Shaman defends with ritual level × spirit die (dlc p.185: may use ritual instead of faith).
   const { level: ritualLevel = 0 } = actor.system.ritual ?? {};
   const spiritDie = actor.system.traits?.spirit?.dieType ?? "d6";
-  const shamanRoll = rollExplodingPool({
-    dieCount: Math.max(1, ritualLevel),
-    dieType: spiritDie,
-    modifier: 0,
-    tn: manitouSpirit,
-  });
+  const shamanRoll = rollExplodingPool(Math.max(1, ritualLevel), spiritDie, { modifier: 0, tn: manitouSpirit });
 
   // Manitou wins if shaman fails to beat manitouSpirit. ghost-dancers p.57.
   const shamanWins = !shamanRoll.bust && shamanRoll.total >= manitouSpirit;
@@ -218,7 +208,7 @@ async function _applyFavorEffect(actor, favorItem) {
 
 /** Post the ritual result to chat. */
 async function _sendRitualMessage(actor, favorItem, rollResult, meta) {
-  const content = await renderTemplate(
+  const content = await foundry.applications.handlebars.renderTemplate(
     "systems/deadlands-classic/templates/chat/ritual-result.hbs",
     {
       actorName: actor.name,

@@ -111,5 +111,5 @@ async function _postChatMessage(result, label, tn) {
   <div class="dlc-roll-outcome">${outcomeText}</div>
 </div>`;
 
-  await ChatMessage.create({ content, type: CONST.CHAT_MESSAGE_STYLES.OTHER });
+  await ChatMessage.create({ content, style: CONST.CHAT_MESSAGE_STYLES.OTHER });
 }

@@ -67,12 +67,7 @@ export async function castHex(actor, hexItem, opts = {}) {
   const dieCount = Math.max(1, hexslinging + whiteSpend);
 
   // 1. Roll hexslingin'. dlc p.157: level dice of the hex's trait die type vs TN 5.
-  const rollResult = rollExplodingPool({
-    dieCount,
-    dieType: traitDieType,
-    modifier: modifier + hexMod,
-    tn,
-  });
+  const rollResult = rollExplodingPool(dieCount, traitDieType, { modifier: modifier + hexMod, tn });
 
   if (rollResult.bust) {
     // Bust → immediate backlash, no card draw. dlc p.157.
@@ -158,7 +153,7 @@ async function _resolveBacklash(actor, hexItem) {
   const roll = Math.ceil(Math.random() * 20);
   const entry = HUCKSTER_BACKLASH_TABLE.find((e) => e.roll === roll) ?? HUCKSTER_BACKLASH_TABLE[0];
 
-  const content = await renderTemplate(
+  const content = await foundry.applications.handlebars.renderTemplate(
     "systems/deadlands-classic/templates/chat/backlash-result.hbs",
     {
       actorName: actor.name,
@@ -191,7 +186,7 @@ async function _sendCastMessage(actor, hexItem, rollResult, drawn, handResult, m
       : `${c.rank} ${game.i18n.localize(`DEADLANDS.Combat.Card.Suit.${_toPascal(c.suit)}`)}`,
   }));
 
-  const content = await renderTemplate(
+  const content = await foundry.applications.handlebars.renderTemplate(
     "systems/deadlands-classic/templates/chat/hex-cast-result.hbs",
     {
       actorName: actor.name,

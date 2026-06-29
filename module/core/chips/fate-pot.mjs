@@ -190,7 +190,7 @@ export class FatePot {
 
     await ChatMessage.create({
       content: `<div class="dlc-chip-draw"><strong>${game.i18n.localize("DEADLANDS.Chip.SessionDraw")}</strong><ul>${log.map((l) => `<li>${l}</li>`).join("")}</ul></div>`,
-      type: CONST.CHAT_MESSAGE_STYLES.OTHER,
+      style: CONST.CHAT_MESSAGE_STYLES.OTHER,
     });
   }
 }

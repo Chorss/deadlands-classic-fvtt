@@ -185,5 +185,5 @@ async function _postGutsChat({
   <div class="dlc-roll-outcome">${outcomeText}</div>${scartHtml}
 </div>`;
 
-  await ChatMessage.create({ content, type: CONST.CHAT_MESSAGE_STYLES.OTHER });
+  await ChatMessage.create({ content, style: CONST.CHAT_MESSAGE_STYLES.OTHER });
 }

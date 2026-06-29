@@ -17,7 +17,7 @@
       {{else}}{{rollResult.total}}{{/if}}
     </span>
     {{#if rollResult.raises}}
-    <span class="dlc-raises">+{{rollResult.raises}} {{localize "DEADLANDS.Roll.Raises"}}</span>
+    <span class="dlc-raises">{{localize "DEADLANDS.Roll.Raises" raises=rollResult.raises}}</span>
     {{/if}}
   </div>
   {{/unless}}
@@ -37,11 +37,11 @@
     {{/if}}
     {{else if spendOnly}}
     <p class="dlc-success-msg">
-      {{localize "DEADLANDS.Shaman.Chat.FavorGranted"}} ({{localize "DEADLANDS.Shaman.Chat.Cost"}}: {{cost}})
+      {{localize "DEADLANDS.Shaman.Chat.FavorGranted" favor=favorName}} ({{localize "DEADLANDS.Shaman.Chat.Cost"}}: {{cost}})
     </p>
     {{else if favorGranted}}
     <p class="dlc-success-msg">
-      {{localize "DEADLANDS.Shaman.Chat.FavorGranted"}}
+      {{localize "DEADLANDS.Shaman.Chat.FavorGranted" favor=favorName}}
     </p>
     {{else}}
     <p>

@@ -54,6 +54,11 @@ const LOG_PREFIX = `${SYSTEM_ID} |`;
 Hooks.once("init", () => {
   console.log(`${LOG_PREFIX} Initializing`);
 
+  // Handlebars helpers — capitalize first letter of a string.
+  Handlebars.registerHelper("capitalize", (str) =>
+    typeof str === "string" && str.length > 0 ? str[0].toUpperCase() + str.slice(1) : str
+  );
+
   // Document classes.
   CONFIG.Actor.documentClass = DeadlandsActor;
   CONFIG.Item.documentClass = DeadlandsItem;
