@@ -35,12 +35,15 @@ const TN_CHOICES = [
  * @returns {Promise<{tn:number, modifier:number, whiteSpend:number}|null>}
  */
 async function _showRollDialog({ label, maxWhite, unskilled = false }) {
-  const content = await renderTemplate(`${DIALOG_ROOT}/trait-roll-dialog.hbs`, {
-    label,
-    maxWhite,
-    unskilled,
-    tnChoices: TN_CHOICES,
-  });
+  const content = await foundry.applications.handlebars.renderTemplate(
+    `${DIALOG_ROOT}/trait-roll-dialog.hbs`,
+    {
+      label,
+      maxWhite,
+      unskilled,
+      tnChoices: TN_CHOICES,
+    }
+  );
 
   return foundry.applications.api.DialogV2.prompt({
     window: { title: game.i18n.localize("DEADLANDS.Dialog.TraitRoll.Title") },
@@ -123,7 +126,9 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
 
   /** @inheritDoc */
   async _preparePartContext(partId, context) {
-    if (context.tabs?.[partId]) context.tab = context.tabs[partId];
+    if (context.tabs?.[partId]) {
+      context.tab = context.tabs[partId];
+    }
     return context;
   }
 
@@ -196,6 +201,9 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
   /** Fate Chip view model: one entry per color. */
   #prepareChips() {
     const system = this.document.system;
+    if (!system.chips) {
+      return [];
+    }
     return Object.keys(DEADLANDS.CHIP_COLORS).map((color) => ({
       color,
       label: `DEADLANDS.Chip.${toPascal(color)}.Label`,
@@ -208,7 +216,9 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
   #prepareItems() {
     const byType = { weapon: [], armor: [], gear: [], edge: [], hindrance: [], ammo: [] };
     for (const item of this.document.items) {
-      if (!byType[item.type]) byType[item.type] = [];
+      if (!byType[item.type]) {
+        byType[item.type] = [];
+      }
       byType[item.type].push(item);
     }
     return byType;
@@ -220,13 +230,15 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
    * Pure Trait roll (no aptitude). dlc p.27.
    * @this {BaseCharacterSheet}
    */
-  static async #onRollTrait(event, target) {
+  static async #onRollTrait(_event, target) {
     const traitId = target.dataset.traitId;
     const label = game.i18n.localize(`DEADLANDS.Trait.${toPascal(traitId)}.Label`);
     const maxWhite = this.document.system.chips.white ?? 0;
 
     const params = await _showRollDialog({ label, maxWhite });
-    if (!params) return;
+    if (!params) {
+      return;
+    }
 
     if (params.whiteSpend > 0) {
       await this.document.update({
@@ -245,7 +257,7 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
    * Aptitude roll (trait die, aptitude die count). dlc p.27, p.29.
    * @this {BaseCharacterSheet}
    */
-  static async #onRollAptitude(event, target) {
+  static async #onRollAptitude(_event, target) {
     const traitId = target.dataset.traitId;
     const aptitudeId = target.dataset.aptitudeId;
     const trait = this.document.system.traits[traitId];
@@ -256,7 +268,9 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
     const maxWhite = this.document.system.chips.white ?? 0;
 
     const params = await _showRollDialog({ label, maxWhite, unskilled });
-    if (!params) return;
+    if (!params) {
+      return;
+    }
 
     if (params.whiteSpend > 0) {
       await this.document.update({

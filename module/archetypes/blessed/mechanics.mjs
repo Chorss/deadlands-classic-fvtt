@@ -57,14 +57,11 @@ export async function invokeMiracle(actor, miracleItem, opts = {}) {
   const dieCount = Math.max(1, faithLevel + whiteSpend);
   const tn = miracleItem.system.tn ?? 5;
 
-  const rollResult = rollExplodingPool({
-    dieCount,
-    dieType: spiritDie,
-    modifier: modifier + faithMod,
-    tn,
-  });
+  const rollResult = rollExplodingPool(dieCount, spiritDie, { modifier: modifier + faithMod, tn });
 
-  await _sendMiracleMessage(actor, miracleItem, rollResult, { miraculSucceeds: !rollResult.bust && rollResult.total >= tn });
+  await _sendMiracleMessage(actor, miracleItem, rollResult, {
+    miraculSucceeds: !rollResult.bust && rollResult.total >= tn,
+  });
 
   if (rollResult.bust) {
     // Bust on a faith roll = lose 1 faith if not already at 0. dlc p.177.
@@ -98,15 +95,12 @@ export async function trackSin(actor, severity = "minor") {
   });
 
   // Spirit roll vs sin TN — failure = lose 1 faith. dlc p.177.
-  const spiritRoll = rollExplodingPool({
-    dieCount: spiritDieCount,
-    dieType: spiritDie,
-    modifier: 0,
-    tn: sinTN,
-  });
+  const spiritRoll = rollExplodingPool(spiritDieCount, spiritDie, { modifier: 0, tn: sinTN });
 
   const faithLost = spiritRoll.bust || spiritRoll.total < sinTN;
-  if (faithLost) await _applyFaithLoss(actor);
+  if (faithLost) {
+    await _applyFaithLoss(actor);
+  }
 
   await _sendSinMessage(actor, severity, spiritRoll, faithLost, denialLabel);
 }
@@ -116,20 +110,22 @@ export async function trackSin(actor, severity = "minor") {
 /** Subtract 1 from faith level, floor at 0. dlc p.177. */
 async function _applyFaithLoss(actor) {
   const current = actor.system.faith?.level ?? 0;
-  if (current <= 0) return;
+  if (current <= 0) {
+    return;
+  }
   await actor.update({ "system.faith.level": current - 1 });
 }
 
 /** Post the miracle invocation result to chat. */
 async function _sendMiracleMessage(actor, miracleItem, rollResult, meta) {
-  const content = await renderTemplate(
+  const content = await foundry.applications.handlebars.renderTemplate(
     "systems/deadlands-classic/templates/chat/miracle-result.hbs",
     {
       actorName: actor.name,
       miracleName: miracleItem.name,
       rollResult,
       miracleSucceeds: meta.miraculSucceeds,
-    },
+    }
   );
 
   await ChatMessage.create({
@@ -140,7 +136,7 @@ async function _sendMiracleMessage(actor, miracleItem, rollResult, meta) {
 
 /** Post the sin resolution to chat (whisper to GM). */
 async function _sendSinMessage(actor, severity, spiritRoll, faithLost, denialLabel) {
-  const content = await renderTemplate(
+  const content = await foundry.applications.handlebars.renderTemplate(
     "systems/deadlands-classic/templates/chat/sin-result.hbs",
     {
       actorName: actor.name,
@@ -149,7 +145,7 @@ async function _sendSinMessage(actor, severity, spiritRoll, faithLost, denialLab
       faithLost,
       denialLabel,
       sinTN: SIN_TNS[severity],
-    },
+    }
   );
 
   await ChatMessage.create({

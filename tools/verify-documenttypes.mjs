@@ -89,22 +89,53 @@ if (manifest) {
   }
 }
 
-const en = readJson("lang/en.json");
-const pl = readJson("lang/pl.json");
+/**
+ * Detect i18n keys that are both a terminal string value and a parent prefix of another key.
+ * Foundry merges flat dot-notation keys into a nested object at runtime, so
+ * "FOO.Bar": "x" + "FOO.Bar.Baz": "y" causes a TypeError ("cannot set property 'Baz' on string").
+ */
+function checkI18nParentConflicts(langFile, flatJson) {
+  const keys = Object.keys(flatJson);
+  const _keySet = new Set(keys);
+  for (const key of keys) {
+    const child = keys.find((k) => k.startsWith(`${key}.`));
+    if (child) {
+      err(
+        `${langFile}: "${key}" is a string value but also a parent of "${child}" — rename to "${key}.Label"`
+      );
+    }
+  }
+}
+
+const LANG_FILES = ["lang/en.json", "lang/pl.json"];
+const [en, pl] = LANG_FILES.map(readJson);
+
+for (const [file, data] of LANG_FILES.map((f, i) => [f, [en, pl][i]])) {
+  if (data) {
+    checkI18nParentConflicts(file, data);
+  }
+}
+
 if (en && pl) {
   const enKeys = new Set(collectKeys(en));
   const plKeys = new Set(collectKeys(pl));
-  const missingPl = [...enKeys].filter((k) => !plKeys.has(k));
-  const missingEn = [...plKeys].filter((k) => !enKeys.has(k));
   const summarize = (list) =>
     list.slice(0, 5).join(", ") + (list.length > 5 ? ` (+${list.length - 5} more)` : "");
-  if (missingPl.length) err(`lang/pl.json missing keys: ${summarize(missingPl)}`);
-  if (missingEn.length) err(`lang/en.json missing keys: ${summarize(missingEn)}`);
+  const missingPl = [...enKeys].filter((k) => !plKeys.has(k));
+  const missingEn = [...plKeys].filter((k) => !enKeys.has(k));
+  if (missingPl.length) {
+    err(`lang/pl.json missing keys: ${summarize(missingPl)}`);
+  }
+  if (missingEn.length) {
+    err(`lang/en.json missing keys: ${summarize(missingEn)}`);
+  }
 }
 
 if (errors.length) {
   console.error("verify-documenttypes FAILED:");
-  for (const e of errors) console.error(`  - ${e}`);
+  for (const e of errors) {
+    console.error(`  - ${e}`);
+  }
   process.exit(1);
 }
 console.log("verify-documenttypes OK");

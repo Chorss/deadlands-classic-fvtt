@@ -26,6 +26,7 @@
  * @typedef {{
  *   dice: DieResult[],
  *   highest: number,
+ *   total: number,
  *   modifier: number,
  *   tn: number,
  *   bust: boolean,
@@ -52,7 +53,9 @@ function rollOneDie(faces, rng) {
     do {
       r = 1 + Math.floor(rng() * faces);
       total += r;
-      if (r === faces) aces++;
+      if (r === faces) {
+        aces++;
+      }
     } while (r === faces);
   }
 
@@ -76,8 +79,12 @@ export function rollExplodingPool(
   { modifier = 0, tn = 5, _rng = Math.random } = {}
 ) {
   const faces = Number(dieType.slice(1));
-  if (!faces || faces < 2) throw new RangeError(`Invalid dieType: ${dieType}`);
-  if (dieCount < 1) throw new RangeError(`dieCount must be ≥ 1, got ${dieCount}`);
+  if (!faces || faces < 2) {
+    throw new RangeError(`Invalid dieType: ${dieType}`);
+  }
+  if (dieCount < 1) {
+    throw new RangeError(`dieCount must be ≥ 1, got ${dieCount}`);
+  }
 
   const dice = Array.from({ length: dieCount }, () => rollOneDie(faces, _rng));
 
@@ -94,5 +101,5 @@ export function rollExplodingPool(
   const raises = success ? Math.floor((highest - tn) / 5) : 0;
   const aces = dice.reduce((sum, d) => sum + d.aces, 0);
 
-  return { dice, highest, modifier, tn, bust, success, raises, aces };
+  return { dice, highest, total: highest, modifier, tn, bust, success, raises, aces };
 }

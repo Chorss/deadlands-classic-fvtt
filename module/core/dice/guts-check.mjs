@@ -165,7 +165,7 @@ async function _postGutsChat({
 
   let scartHtml = "";
   if (scartEntry) {
-    const effectLabel = game.i18n.localize(`DEADLANDS.Scart.${toPascal(scartEntry.key)}`);
+    const effectLabel = game.i18n.localize(`DEADLANDS.Scart.${toPascal(scartEntry.key)}.Label`);
     const gmNote = game.i18n.localize(`DEADLANDS.Scart.${toPascal(scartEntry.key)}.Note`);
     const windStr =
       windLost > 0
@@ -185,5 +185,5 @@ async function _postGutsChat({
   <div class="dlc-roll-outcome">${outcomeText}</div>${scartHtml}
 </div>`;
 
-  await ChatMessage.create({ content, type: CONST.CHAT_MESSAGE_STYLES.OTHER });
+  await ChatMessage.create({ content, style: CONST.CHAT_MESSAGE_STYLES.OTHER });
 }

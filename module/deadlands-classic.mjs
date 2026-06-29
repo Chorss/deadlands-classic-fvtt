@@ -11,6 +11,7 @@
 
 import { ArchetypeRegistry } from "./core/archetype-registry.mjs";
 import { ActionDeck } from "./core/cards/action-deck.mjs";
+import { CombatantHandDialog } from "./core/cards/combatant-hand-dialog.mjs";
 import { DeadlandsCombat } from "./core/cards/deadlands-combat.mjs";
 import { DeadlandsCombatant } from "./core/cards/deadlands-combatant.mjs";
 import { canSpend, executeSpend } from "./core/chips/chip-rules.mjs";
@@ -54,6 +55,11 @@ const LOG_PREFIX = `${SYSTEM_ID} |`;
 Hooks.once("init", () => {
   console.log(`${LOG_PREFIX} Initializing`);
 
+  // Handlebars helpers — capitalize first letter of a string.
+  Handlebars.registerHelper("capitalize", (str) =>
+    typeof str === "string" && str.length > 0 ? str[0].toUpperCase() + str.slice(1) : str
+  );
+
   // Document classes.
   CONFIG.Actor.documentClass = DeadlandsActor;
   CONFIG.Item.documentClass = DeadlandsItem;
@@ -96,7 +102,7 @@ Hooks.once("init", () => {
     items: ItemRegistry,
     overlays: OverlayRegistry,
     dice: { rollExplodingPool, rollTrait, rollDamage, rollGutsCheck, lookupScart, scartDiceForTN },
-    cards: { ActionDeck, DeadlandsCombat, DeadlandsCombatant },
+    cards: { ActionDeck, CombatantHandDialog, DeadlandsCombat, DeadlandsCombatant },
     chips: {
       FatePot,
       canSpend,
@@ -126,20 +132,65 @@ Hooks.once("ready", () => {
 
 // ── Combat tracker — replace numeric initiative values with card labels ──────
 
+function _renderInitiativeLabel(row, combatant) {
+  const initContainer = row.querySelector(".token-initiative");
+  if (!initContainer) {
+    return;
+  }
+  const card = combatant.highestCard;
+  if (!card) {
+    return;
+  }
+
+  const input = initContainer.querySelector(".initiative-input");
+  if (input) {
+    input.style.display = "none";
+  }
+
+  let label = initContainer.querySelector(".dlc-initiative-label");
+  if (!label) {
+    label = document.createElement("span");
+    label.classList.add("dlc-initiative-label", "dlc-initiative-card");
+    initContainer.appendChild(label);
+  }
+  label.textContent = DeadlandsCombat.cardLabel(card);
+  label.classList.toggle("dlc-initiative-red-joker", card.joker === "red");
+  label.classList.toggle("dlc-initiative-black-joker", card.joker === "black");
+}
+
+function _renderHandButton(row, combatant) {
+  const canSee = game.user.isGM || combatant.actor?.isOwner;
+  if (!canSee || !combatant.hand.length) {
+    return;
+  }
+  const controls = row.querySelector(".combatant-controls");
+  if (!controls) {
+    return;
+  }
+
+  const btn = document.createElement("a");
+  btn.classList.add("dlc-hand-btn");
+  btn.setAttribute("aria-label", game.i18n.localize("DEADLANDS.Combat.Hand.Open"));
+  btn.title = game.i18n.localize("DEADLANDS.Combat.Hand.Open");
+  btn.innerHTML = '<i class="fas fa-hand"></i>';
+  btn.addEventListener("click", (ev) => {
+    ev.preventDefault();
+    CombatantHandDialog.open(combatant);
+  });
+  controls.prepend(btn);
+}
+
 Hooks.on("renderCombatTracker", (_app, html) => {
   const combat = game.combat;
-  if (!combat) return;
+  if (!combat) {
+    return;
+  }
   for (const combatant of combat.combatants) {
     const row = html.querySelector(`[data-combatant-id="${combatant.id}"]`);
-    if (!row) continue;
-    const initEl = row.querySelector(".combatant-initiative");
-    if (!initEl) continue;
-    const card = combatant.highestCard;
-    if (card) {
-      initEl.textContent = DeadlandsCombat.cardLabel(card);
-      initEl.classList.add("dlc-initiative-card");
-      if (card.joker === "red") initEl.classList.add("dlc-initiative-red-joker");
-      if (card.joker === "black") initEl.classList.add("dlc-initiative-black-joker");
+    if (!row) {
+      continue;
     }
+    _renderInitiativeLabel(row, combatant);
+    _renderHandButton(row, combatant);
   }
 });

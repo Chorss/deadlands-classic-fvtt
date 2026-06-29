@@ -37,12 +37,26 @@ Wired in `settings.json` under `hooks`:
 
 - `/verify-system` — manifest + EN/PL parity + tests, one-paragraph report
 - `/release` — cut a versioned release (bumps, tags, pushes; CI builds the zip)
+- `/new-phase N` — create branch `phase-N/<slug>`, extract checklist + test block from `docs/implementation-plan.pl.md`, list companion PDFs to verify
+
+## Skills
+
+- `verify-mechanic` — verify a mechanic against `deadlands-rules-ref` **before** coding it; returns `<slug> p.NNN` + paraphrase. Delegates to `pdf-reference-lookup`.
 
 ## Agents
 
 - `pdf-reference-lookup` — given a mechanic query, returns `<slug> p.NNN` + a short
   quoted fragment from the rulebook extracts. Resolves `$DEADLANDS_RULES_PATH` on
   every call; falls back to local `.pdf-extract/` if unset.
+- `mechanic-verifier` — audits **already-written** code or pack entries against the
+  rulebook; produces a per-value MATCH/MISMATCH table with page cites. Use after
+  coding a mechanic or during review.
+- `foundry-v14-checker` — scans `module/**/*.mjs` for V13 anti-patterns (`extends Application`,
+  `extends ActorSheet`, `template.json`, TinyMCE, hardcoded UI strings). Reports
+  ❌ FAIL / ⚠ WARN / ✅ OK with file:line citations.
+- `archetype-scaffolder` — given an archetype name, generates the full folder scaffold
+  (`manifest.mjs`, `data.mjs`, `sheet.mjs`, stub `mechanics.mjs`, i18n keys EN+PL,
+  `system.json` update, entry-point import). Invoke via `/add-archetype`.
 
 ## Rules
 
@@ -57,6 +71,7 @@ matching their `paths:` frontmatter.
 | `v14-api.md` | on demand | `module/**/*.mjs` — V14 API only, no V13 fallbacks |
 | `localization.md` | on demand | `lang/**`, `module/**`, `templates/**` — EN/PL key parity |
 | `references.md` | on demand | `vendor/**` — read, don't copy |
+| `rulebook-authority.md` | on demand | `module/**`, `tests/**`, `packs/**`, `docs/mechanics-reference.md` — `deadlands-rules-ref` is the only source of truth for game rules |
 
 ## Local setup (one-time)
 

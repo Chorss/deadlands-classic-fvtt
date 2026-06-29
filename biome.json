@@ -30,7 +30,17 @@
       "recommended": true,
       "complexity": {
         "noStaticOnlyClass": "off",
-        "noThisInStatic": "off"
+        "noThisInStatic": "off",
+        "noExcessiveCognitiveComplexity": {
+          "level": "error",
+          "options": { "maxAllowedComplexity": 15 }
+        }
+      },
+      "security": {
+        "noGlobalEval": "error"
+      },
+      "style": {
+        "useBlockStatements": "error"
       }
     }
   }

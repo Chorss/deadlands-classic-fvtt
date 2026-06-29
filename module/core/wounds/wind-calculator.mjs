@@ -43,6 +43,8 @@ export function isWinded(windValue) {
  * @returns {number} — guts wounds owed (0 if not yet negative enough)
  */
 export function gutsWoundsFromNegativeWind(windValue, windMax) {
-  if (windValue >= 0 || windMax <= 0) return 0;
+  if (windValue >= 0 || windMax <= 0) {
+    return 0;
+  }
   return Math.floor(Math.abs(windValue) / windMax);
 }

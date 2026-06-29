@@ -39,9 +39,19 @@ export class ShamanSheet extends BaseCharacterSheet {
   static TABS = {
     sheet: {
       tabs: [
-        { id: "traits", group: "sheet", icon: "fas fa-dice-d20", label: "DEADLANDS.Sheet.Tab.Traits" },
+        {
+          id: "traits",
+          group: "sheet",
+          icon: "fas fa-dice-d20",
+          label: "DEADLANDS.Sheet.Tab.Traits",
+        },
         { id: "combat", group: "sheet", icon: "fas fa-gun", label: "DEADLANDS.Sheet.Tab.Combat" },
-        { id: "favors", group: "sheet", icon: "fas fa-feather-alt", label: "DEADLANDS.Sheet.Tab.Favors" },
+        {
+          id: "favors",
+          group: "sheet",
+          icon: "fas fa-feather-alt",
+          label: "DEADLANDS.Sheet.Tab.Favors",
+        },
         { id: "gear", group: "sheet", icon: "fas fa-box", label: "DEADLANDS.Sheet.Tab.Gear" },
         { id: "bio", group: "sheet", icon: "fas fa-feather", label: "DEADLANDS.Sheet.Tab.Bio" },
       ],
@@ -91,19 +101,26 @@ export class ShamanSheet extends BaseCharacterSheet {
   // ── Action handlers ──────────────────────────────────────────────────────────
 
   /** @this {ShamanSheet} */
-  static async #onPerformRitual(event, target) {
+  static async #onPerformRitual(_event, target) {
     const favorId = target.dataset.favorId;
     const favorItem = this.document.items.get(favorId);
-    if (!favorItem) return;
+    if (!favorItem) {
+      return;
+    }
 
-    const content = await renderTemplate(`${DIALOG_ROOT}/ritual-dialog.hbs`, {
-      favorName: favorItem.name,
-      ritualTN: favorItem.system.ritualTN,
-      ritualTypeLabel: `DEADLANDS.Shaman.RitualType.${_toPascal(favorItem.system.ritualType)}`,
-    });
+    const content = await foundry.applications.handlebars.renderTemplate(
+      `${DIALOG_ROOT}/ritual-dialog.hbs`,
+      {
+        favorName: favorItem.name,
+        ritualTN: favorItem.system.ritualTN,
+        ritualTypeLabel: `DEADLANDS.Shaman.RitualType.${_toPascal(favorItem.system.ritualType)}`,
+      }
+    );
 
     const params = await foundry.applications.api.DialogV2.prompt({
-      window: { title: game.i18n.format("DEADLANDS.Shaman.Dialog.RitualTitle", { favor: favorItem.name }) },
+      window: {
+        title: game.i18n.format("DEADLANDS.Shaman.Dialog.RitualTitle", { favor: favorItem.name }),
+      },
       content,
       ok: {
         label: game.i18n.localize("DEADLANDS.Shaman.Dialog.Perform"),
@@ -114,15 +131,19 @@ export class ShamanSheet extends BaseCharacterSheet {
       },
     });
 
-    if (!params) return;
+    if (!params) {
+      return;
+    }
     await performRitual(this.document, favorItem, { modifier: params.modifier });
   }
 
   /** @this {ShamanSheet} */
-  static async #onSpendFavor(event, target) {
+  static async #onSpendFavor(_event, target) {
     const favorId = target.dataset.favorId;
     const favorItem = this.document.items.get(favorId);
-    if (!favorItem) return;
+    if (!favorItem) {
+      return;
+    }
     await spendFavor(this.document, favorItem);
   }
 }

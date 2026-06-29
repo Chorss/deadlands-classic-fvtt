@@ -50,49 +50,52 @@ export async function performRitual(actor, favorItem, opts = {}) {
   const { level: ritualLevel = 0, modifier: ritualMod = 0 } = actor.system.ritual ?? {};
   const ritualType = favorItem.system.ritualType ?? "dance";
   const associatedTrait = favorItem.system.ritualTrait ?? RITUAL_TRAITS[ritualType] ?? "nimbleness";
-  const traitData = actor.system.traits?.[associatedTrait];
-  const traitDie = traitData?.dieType ?? "d6";
+  const traitDie = actor.system.traits?.[associatedTrait]?.dieType ?? "d6";
   const tn = favorItem.system.ritualTN ?? 5;
-  const dieCount = Math.max(1, ritualLevel);
 
-  const rollResult = rollExplodingPool({
-    dieCount,
-    dieType: traitDie,
+  const rollResult = rollExplodingPool(Math.max(1, ritualLevel), traitDie, {
     modifier: modifier + ritualMod,
     tn,
   });
 
   if (rollResult.bust) {
     // Bust → manitou attacks. ghost-dancers p.57.
-    const entry = await _resolveManitouAttack(actor);
-    await _sendRitualMessage(actor, favorItem, rollResult, { earned: 0, bust: true, manitouDamage: entry });
+    const manitouDamage = await _resolveManitouAttack(actor);
+    await _sendRitualMessage(actor, favorItem, rollResult, {
+      earned: 0,
+      bust: true,
+      manitouDamage,
+    });
     return;
   }
 
-  const succeeded = rollResult.total >= tn;
-  let earned = 0;
-  if (succeeded) {
-    earned = 1 + rollResult.raises;
-
-    const guardianSpirit = actor.system.guardianSpirit ?? 0;
-    if (guardianSpirit > 0) {
-      // Can store Appeasement up to guardianSpirit level. ghost-dancers p.50.
-      const current = actor.system.appeasement?.current ?? 0;
-      const max = guardianSpirit;
-      await actor.update({
-        "system.appeasement.current": Math.min(current + earned, max),
-        "system.appeasement.max": max,
-      });
-    } else {
-      // No guardian spirit — immediately spend on the requested favor. ghost-dancers p.57.
-      const cost = favorItem.system.appeasementCost ?? 1;
-      if (earned >= cost) {
-        await _applyFavorEffect(actor, favorItem);
-      }
-    }
+  const earned = rollResult.total >= tn ? 1 + rollResult.raises : 0;
+  if (earned > 0) {
+    await _applyAppeasementOrFavor(actor, favorItem, earned);
   }
 
-  await _sendRitualMessage(actor, favorItem, rollResult, { earned, bust: false, manitouDamage: null });
+  await _sendRitualMessage(actor, favorItem, rollResult, {
+    earned,
+    bust: false,
+    manitouDamage: null,
+  });
+}
+
+/**
+ * Store earned Appeasement points or immediately spend them on a favor.
+ * ghost-dancers p.50 (store) and p.57 (immediate spend without guardian spirit).
+ */
+async function _applyAppeasementOrFavor(actor, favorItem, earned) {
+  const guardianSpirit = actor.system.guardianSpirit ?? 0;
+  if (guardianSpirit > 0) {
+    const current = actor.system.appeasement?.current ?? 0;
+    await actor.update({
+      "system.appeasement.current": Math.min(current + earned, guardianSpirit),
+      "system.appeasement.max": guardianSpirit,
+    });
+  } else if (earned >= (favorItem.system.appeasementCost ?? 1)) {
+    await _applyFavorEffect(actor, favorItem);
+  }
 }
 
 /**
@@ -112,7 +115,7 @@ export async function spendFavor(actor, favorItem) {
         name: actor.name,
         cost,
         current,
-      }),
+      })
     );
     return;
   }
@@ -120,7 +123,7 @@ export async function spendFavor(actor, favorItem) {
   await actor.update({ "system.appeasement.current": current - cost });
   await _applyFavorEffect(actor, favorItem);
 
-  const content = await renderTemplate(
+  const content = await foundry.applications.handlebars.renderTemplate(
     "systems/deadlands-classic/templates/chat/ritual-result.hbs",
     {
       actorName: actor.name,
@@ -132,7 +135,7 @@ export async function spendFavor(actor, favorItem) {
       bust: false,
       manitouDamage: null,
       spendOnly: true,
-    },
+    }
   );
   await ChatMessage.create({ content, speaker: ChatMessage.getSpeaker({ actor }) });
 }
@@ -155,7 +158,10 @@ async function _resolveManitouAttack(actor) {
   // Shaman defends with ritual level × spirit die (dlc p.185: may use ritual instead of faith).
   const { level: ritualLevel = 0 } = actor.system.ritual ?? {};
   const spiritDie = actor.system.traits?.spirit?.dieType ?? "d6";
-  const shamanRoll = rollExplodingPool({ dieCount: Math.max(1, ritualLevel), dieType: spiritDie, modifier: 0, tn: manitouSpirit });
+  const shamanRoll = rollExplodingPool(Math.max(1, ritualLevel), spiritDie, {
+    modifier: 0,
+    tn: manitouSpirit,
+  });
 
   // Manitou wins if shaman fails to beat manitouSpirit. ghost-dancers p.57.
   const shamanWins = !shamanRoll.bust && shamanRoll.total >= manitouSpirit;
@@ -164,7 +170,10 @@ async function _resolveManitouAttack(actor) {
   if (!shamanWins) {
     // 3d6 base + 1d6 per raise the manitou got. ghost-dancers p.57.
     // Raises are counted from the shaman's roll total (opposed contest). ghost-dancers p.57.
-    const manitouRaises = Math.max(0, Math.floor((manitouSpirit - (shamanRoll.bust ? 0 : shamanRoll.total)) / 5));
+    const manitouRaises = Math.max(
+      0,
+      Math.floor((manitouSpirit - (shamanRoll.bust ? 0 : shamanRoll.total)) / 5)
+    );
     damage = _rollRawDice(3 + manitouRaises, 6);
   }
 
@@ -172,8 +181,12 @@ async function _resolveManitouAttack(actor) {
 }
 
 function _cardToSpirit(card) {
-  if (!card) return 10;
-  if (card.joker) return 20;
+  if (!card) {
+    return 10;
+  }
+  if (card.joker) {
+    return 20;
+  }
   const faceMap = { A: 14, K: 13, Q: 12, J: 11 };
   const rank = card.rank;
   return faceMap[rank] ?? (parseInt(rank, 10) || 10);
@@ -182,7 +195,9 @@ function _cardToSpirit(card) {
 /** Roll n×d6 (non-exploding) and return the total. */
 function _rollRawDice(n, sides) {
   let total = 0;
-  for (let i = 0; i < n; i++) total += Math.floor(Math.random() * sides) + 1;
+  for (let i = 0; i < n; i++) {
+    total += Math.floor(Math.random() * sides) + 1;
+  }
   return total;
 }
 
@@ -199,7 +214,7 @@ async function _applyFavorEffect(actor, favorItem) {
 
 /** Post the ritual result to chat. */
 async function _sendRitualMessage(actor, favorItem, rollResult, meta) {
-  const content = await renderTemplate(
+  const content = await foundry.applications.handlebars.renderTemplate(
     "systems/deadlands-classic/templates/chat/ritual-result.hbs",
     {
       actorName: actor.name,
@@ -207,11 +222,14 @@ async function _sendRitualMessage(actor, favorItem, rollResult, meta) {
       rollResult,
       earned: meta.earned,
       cost: favorItem.system.appeasementCost ?? 1,
-      favorGranted: meta.earned >= (favorItem.system.appeasementCost ?? 1) && !meta.bust && (actor.system.guardianSpirit ?? 0) === 0,
+      favorGranted:
+        meta.earned >= (favorItem.system.appeasementCost ?? 1) &&
+        !meta.bust &&
+        (actor.system.guardianSpirit ?? 0) === 0,
       bust: meta.bust,
       manitouDamage: meta.manitouDamage,
       spendOnly: false,
-    },
+    }
   );
 
   await ChatMessage.create({

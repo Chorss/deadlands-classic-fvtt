@@ -72,9 +72,7 @@ export async function deviseBlueprint(actor, gizmoItem, opts = {}) {
   const dieCount = Math.max(1, scienceLevel);
   const blueprintTN = 5; // Fair (5) — dlc p.168.
 
-  const rollResult = rollExplodingPool({
-    dieCount,
-    dieType: cognitionDie,
+  const rollResult = rollExplodingPool(dieCount, cognitionDie, {
     modifier: modifier + scienceMod,
     tn: blueprintTN,
   });
@@ -147,9 +145,7 @@ export async function constructGizmo(actor, gizmoItem, opts = {}) {
   const dieCount = Math.max(1, tinkerinLevel);
   const constructionTN = gizmoItem.system.constructionTN ?? 5;
 
-  const rollResult = rollExplodingPool({
-    dieCount,
-    dieType: deftnessDie,
+  const rollResult = rollExplodingPool(dieCount, deftnessDie, {
     modifier: modifier + tinkerinMod,
     tn: constructionTN,
   });
@@ -194,14 +190,22 @@ export async function checkMalfunction(actor, gizmoItem) {
     severity = _malfunctionSeverity(d6Result);
   }
 
-  await _sendMalfunctionMessage(actor, gizmoItem, { d20, malfunction, severity, d6Result, reliability });
+  await _sendMalfunctionMessage(actor, gizmoItem, {
+    d20,
+    malfunction,
+    severity,
+    d6Result,
+    reliability,
+  });
   return { malfunction, severity, d20 };
 }
 
 // ── Internal helpers ──────────────────────────────────────────────────────────
 
 async function _drawCards(count) {
-  if (game.combat) return ActionDeck.deal(game.combat, count);
+  if (game.combat) {
+    return ActionDeck.deal(game.combat, count);
+  }
   return shuffleDeck(buildFullDeck()).slice(0, count);
 }
 
@@ -211,10 +215,11 @@ async function _drawCards(count) {
  */
 async function _rollMadnessTable(actor) {
   const roll = Math.ceil(Math.random() * 20);
-  const entry = MADNESS_TABLE.find((e) => e.roll === roll) ?? MADNESS_TABLE[MADNESS_TABLE.length - 1];
+  const entry =
+    MADNESS_TABLE.find((e) => e.roll === roll) ?? MADNESS_TABLE[MADNESS_TABLE.length - 1];
 
   await ChatMessage.create({
-    content: await renderTemplate(
+    content: await foundry.applications.handlebars.renderTemplate(
       "systems/deadlands-classic/templates/chat/madness-result.hbs",
       {
         actorName: actor.name,
@@ -222,7 +227,7 @@ async function _rollMadnessTable(actor) {
         key: entry.key,
         labelKey: `DEADLANDS.MadScientist.Madness.${_toPascal(entry.key)}.Label`,
         noteKey: `DEADLANDS.MadScientist.Madness.${_toPascal(entry.key)}.Note`,
-      },
+      }
     ),
     whisper: ChatMessage.getWhisperRecipients("GM"),
     speaker: ChatMessage.getSpeaker({ actor }),
@@ -236,13 +241,17 @@ async function _rollMadnessTable(actor) {
  * 2–5 → Major; 6–10 → Minor; 11–12 → Catastrophic.
  */
 function _malfunctionSeverity(d6total) {
-  if (d6total <= 5) return "major";
-  if (d6total <= 10) return "minor";
+  if (d6total <= 5) {
+    return "major";
+  }
+  if (d6total <= 10) {
+    return "minor";
+  }
   return "catastrophic";
 }
 
 async function _sendBlueprintMessage(actor, gizmoItem, rollResult, drawn, handResult, meta) {
-  const content = await renderTemplate(
+  const content = await foundry.applications.handlebars.renderTemplate(
     "systems/deadlands-classic/templates/chat/gizmo-result.hbs",
     {
       actorName: actor.name,
@@ -256,13 +265,13 @@ async function _sendBlueprintMessage(actor, gizmoItem, rollResult, drawn, handRe
       minHandKey: gizmoItem.system.blueprintHand
         ? `DEADLANDS.Huckster.Hand.${_toPascal(gizmoItem.system.blueprintHand)}`
         : null,
-    },
+    }
   );
   await ChatMessage.create({ content, speaker: ChatMessage.getSpeaker({ actor }) });
 }
 
 async function _sendConstructionMessage(actor, gizmoItem, rollResult, meta) {
-  const content = await renderTemplate(
+  const content = await foundry.applications.handlebars.renderTemplate(
     "systems/deadlands-classic/templates/chat/gizmo-result.hbs",
     {
       actorName: actor.name,
@@ -271,20 +280,20 @@ async function _sendConstructionMessage(actor, gizmoItem, rollResult, meta) {
       rollResult,
       constructionSucceeds: meta.succeeded,
       reliability: meta.reliability,
-    },
+    }
   );
   await ChatMessage.create({ content, speaker: ChatMessage.getSpeaker({ actor }) });
 }
 
 async function _sendMalfunctionMessage(actor, gizmoItem, meta) {
-  const content = await renderTemplate(
+  const content = await foundry.applications.handlebars.renderTemplate(
     "systems/deadlands-classic/templates/chat/gizmo-result.hbs",
     {
       actorName: actor.name,
       gizmoName: gizmoItem.name,
       phase: "malfunction",
       ...meta,
-    },
+    }
   );
   await ChatMessage.create({ content, speaker: ChatMessage.getSpeaker({ actor }) });
 }

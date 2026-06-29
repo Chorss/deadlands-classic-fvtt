@@ -33,7 +33,9 @@ export class DeadlandsCombat extends Combat {
   async rollInitiative(ids, _options = {}) {
     const idList = Array.isArray(ids) ? ids : [ids];
     const combatants = idList.map((id) => this.combatants.get(id)).filter(Boolean);
-    if (!combatants.length) return this;
+    if (!combatants.length) {
+      return this;
+    }
 
     await ActionDeck.initialize(this);
 
@@ -62,8 +64,10 @@ export class DeadlandsCombat extends Combat {
    */
   async _quicknessCardCount(combatant) {
     const actor = combatant.actor;
-    if (!actor?.system?.quickness) return 1;
-    const { dieCount = 1, dieType = "d6" } = actor.system.quickness;
+    if (!actor?.system?.traits?.quickness) {
+      return 1;
+    }
+    const { dieCount = 1, dieType = "d6" } = actor.system.traits.quickness;
     const result = rollExplodingPool(dieCount, dieType, { tn: DEADLANDS.INITIATIVE_TN });
     return quicknessCardCount(result);
   }
@@ -82,7 +86,9 @@ export class DeadlandsCombat extends Combat {
         await this._applyBlackJoker(combatant);
         // Black Joker is discarded, not added to hand. dlc p.118.
       } else {
-        if (card.joker === "red") await this._applyRedJoker(combatant);
+        if (card.joker === "red") {
+          await this._applyRedJoker(combatant);
+        }
         hand.push(card);
       }
     }
@@ -142,7 +148,9 @@ export class DeadlandsCombat extends Combat {
    */
   async nextRound() {
     for (const combatant of this.combatants) {
-      if (typeof combatant.clearHand === "function") await combatant.clearHand();
+      if (typeof combatant.clearHand === "function") {
+        await combatant.clearHand();
+      }
     }
     const reshuffled = await ActionDeck.maybeReshuffleAtRoundEnd(this);
     if (reshuffled) {
@@ -157,8 +165,12 @@ export class DeadlandsCombat extends Combat {
    * @returns {string}
    */
   static cardLabel(card) {
-    if (card.joker === "red") return game.i18n.localize("DEADLANDS.Combat.Card.RedJoker");
-    if (card.joker === "black") return game.i18n.localize("DEADLANDS.Combat.Card.BlackJoker");
+    if (card.joker === "red") {
+      return game.i18n.localize("DEADLANDS.Combat.Card.RedJoker");
+    }
+    if (card.joker === "black") {
+      return game.i18n.localize("DEADLANDS.Combat.Card.BlackJoker");
+    }
     const rankKey = `DEADLANDS.Combat.Card.Rank.${card.rank}`;
     const suitKey = `DEADLANDS.Combat.Card.Suit.${card.suit.charAt(0).toUpperCase()}${card.suit.slice(1)}`;
     const rank = game.i18n.has(rankKey) ? game.i18n.localize(rankKey) : card.rank;

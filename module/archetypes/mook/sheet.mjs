@@ -1,14 +1,3 @@
-/**
- * MookSheet — simplified actor sheet for unnamed mooks.
- *
- * Uses the base sheet template but replaces the wound context with a single
- * body slot and hides the chip widget.
- *
- * @license MIT
- */
-
-import { DEADLANDS } from "../../core/config.mjs";
-import { toPascal } from "../../core/utils.mjs";
 import { BaseCharacterSheet } from "../_base/base-character-sheet.mjs";
 
 const SEVERITY_LABELS = [

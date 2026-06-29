@@ -101,7 +101,9 @@ export class BaseCharacterDataModel extends foundry.abstract.TypeDataModel {
     // Wound penalty = the single highest wound level, NOT the sum. dlc p.140.
     let highest = 0;
     for (const slot of Object.values(this.wounds)) {
-      if (slot.severity > highest) highest = slot.severity;
+      if (slot.severity > highest) {
+        highest = slot.severity;
+      }
     }
     this.woundModifier = WOUND_PENALTIES[highest] ?? 0;
   }
