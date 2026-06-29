@@ -10,39 +10,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- **Project revival as Deadlands Classic — Community Edition.** Based on the work of [Dulux-Oz](https://github.com/Dulux-Oz/DeadlandsClassic) (GPL-3.0, newer, vendored for pattern research only) and [RhombusWeasel](https://github.com/RhombusWeasel/Deadlands-Classic) (MIT, older, Foundry v9-era, vendored for pattern research only). No code copied from either — architectural patterns only.
-- **Phase 0 — repo metadata & AI workshop.** Foundation for iterative development under Foundry VTT V14.
-- `CLAUDE.md` — project context loaded into every Claude Code session (stack, architectural patterns, directory layout, dev rules, sources of truth).
-- `.claude/` workshop:
-  - `settings.json` — 20 scoped permissions (node, npm, git read-only, Biome, PDF tooling), 8 denies for destructive ops, `SessionStart` hook that auto-wires `.githooks`, `PostToolUse` hooks dispatching to `post-write.sh` (`Write|Edit|MultiEdit`) and `post-extract-verify.sh` (`Bash`).
-  - `hooks/post-write.sh` — immediate syntax/JSON validation per file extension, with `verify-documenttypes.mjs` for `system.json` and `lang/*.json`.
-  - `rules/` — 5 path-scoped conventions (`commits`, `naming`, `v14-api`, `localization`, `references`) auto-loaded via `paths:` frontmatter.
-  - `agents/pdf-reference-lookup.md` — subagent for rulebook citations (page + short fragment, never bulk prose).
-  - `commands/` — `/verify-system` and `/release` slash commands.
-- `.mcp.json` — Playwright MCP (browser automation for sheet E2E verification) + context7 MCP (library docs lookup).
-- `.githooks/` — `pre-commit` (syntax + JSON + manifest validation) and `commit-msg` (rejects `Co-Authored-By: Claude` trailers; enforces conventional commit prefixes).
-- `tools/verify-documenttypes.mjs` — manifest structure check and EN/PL key parity validation.
-- `tests/smoke.test.mjs` — `node:test` placeholder so `npm run test` stays green from Phase 0.
-- Build tooling: `package.json` (Node 24+ engine, scripts: `fmt`, `lint`, `test`, `verify`), `biome.json`, `.editorconfig`.
-- Localization scaffolding: `lang/en.json` + `lang/pl.json` with 15 paired starter keys under `DEADLANDS.*`.
-- Module entry `module/deadlands-classic.mjs` — init/ready hook skeleton + `game.deadlandsClassic` namespace.
-- Styles entry `styles/deadlands-classic.css` — import skeleton for phases 2-5.
-- PDF rulebook lookup workflow via the private `deadlands-rules-ref` repo (`$DEADLANDS_RULES_PATH`); the `pdf-reference-lookup` subagent resolves it per call. (Earlier in-repo `docs/pdf-index/` + `scripts/extract-pdf.sh` migrated out to that private repo.)
-- Documentation: `docs/implementation-plan.md` (14-phase roadmap with architecture + registry contract), `docs/notes.md` (MIT rationale + workshop design rationale).
-- GitHub templates: issue templates (bug, feature, config), PR template.
 
 ### Changed
-- **License changed from GPL-3.0 to MIT** (pre-release). Aligns with Foundry ecosystem convention — `dnd5e`, `pf2e` (Apache-2.0), and the majority of community modules are permissive. No external contributions yet, so relicensing requires no third-party consent.
-- **Target platform: Foundry VTT V14+.** Dropped V13 compatibility. Manifest restructured around `documentTypes` (replaces legacy `template.json`); sheets will use `ApplicationV2 + HandlebarsApplicationMixin` (not `Application`); editor is ProseMirror (not TinyMCE).
-- **Actor types expanded:** added `madScientist` (core archetype, not dropped to expansion). Full list: `cowboy`, `huckster`, `shaman`, `blessed`, `madScientist`, `npc`, `mook`. Harrowed reclassified as an **overlay** (applicable on top of any archetype), not a standalone actor type.
-- **Item types restructured:** added `armor`, `ammo` as core types. Archetype-specific types (`hex`, `miracle`, `favor`, `gizmo`) will be registered by their owning archetype manifests in phases 9-10, not declared core.
-- **README** updated to V14-only compatibility table, v1 scope note (Classic only; HoE and Lost Colony deferred to v2+), and feature list including Legend chip (4th color, reroll bust), Mad Scientist archetype, Harrowed overlay, and 8 wound locations (per PDF p.133).
 
-### Removed
-- Draft item types `power` and `card` from the pre-release manifest. Replaced by archetype-specific types registered per manifest (phases 9-10) and a native Foundry `Cards` document for the action deck (phase 8). The Fate Pot is a world-level setting (a `{white,red,blue,legend}` DataModel), not a Cards deck.
+### Fixed
 
-### Notes
-- Pre-release. No tagged version exists yet — first release will be `0.1.0` once Phase 0 is merged and the manifest boots cleanly in Foundry V14.
-- No playable game logic yet — foundational scaffolding only.
+## [0.1.0] — 2026-06-29
 
-[Unreleased]: https://github.com/Chorss/deadlands-classic-fvtt/commits/main
+### Added
+- **Phases 1–2 — Foundry VTT V14 system scaffold.** `documentTypes`, `TypeDataModel`,
+  `ApplicationV2` sheets; `ArchetypeRegistry`, `ItemRegistry`, `OverlayRegistry` plugin
+  contracts; `DeadlandsActor` + `DeadlandsItem` base documents; core config constants;
+  EN/PL localization foundation (~200 paired keys).
+- **Phase 3 — Dice engine.** Exploding-die pool (`rollExplodingPool`), trait roll, damage
+  roll with unit tests. Raises calculated as `floor((total − TN) / 5)`.
+- **Phase 4 — Click-to-roll.** Trait and aptitude rolls from the character sheet; roll
+  dialog (die count, TN, modifier); white chip spend adds a die.
+- **Phase 5 — Fate Chips.** Fate Pot world setting (`white / red / blue / legend`);
+  chip-rules (spend validation); chip-widget (grant/spend from sheet).
+- **Phase 6 — Wounds & Wind.** Full wound track per location (Head, Chest, Guts,
+  Left/Right Arm, Left/Right Leg); `woundsFromDamage`, `applyWounds`, `tickBleeding`,
+  wound-penalty lookup; Wind calculation; hit-location draw.
+- **Phase 6A — Guts check.** Fear-check roll with Scart Table resolution.
+- **Phase 7 — NPC & Mook archetypes.** NPC sheet (full trait/wound model); Mook sheet
+  (simplified, no individual wound locations).
+- **Phase 8 — Action Deck & card initiative.** Native Foundry `Cards` deck;
+  `DeadlandsCombat` draws one card per combatant at round start; combat tracker shows
+  card labels (suit + rank + joker coloring); hand dialog for multi-card holders.
+- **Phase 9 — Huckster archetype.** Hexes item type; poker hand evaluator (full 5-card
+  scoring); hex casting with backlash; poker draw from the action deck.
+- **Phase 10 — Blessed, Shaman, Mad Scientist archetypes.** Blessed: miracles, sin
+  mechanic (Spirit roll on denial); Shaman: favors, ritual roll, Manitou spirit-contest
+  check; Mad Scientist: gizmos, blueprint design roll (Cognition), construction roll
+  (Deftness), Harrowed Madness Table on failure.
+- **CI workflow.** Lint (Biome), unit tests, manifest + EN/PL parity check on every PR
+  and `main` push.
+
+### Fixed
+- Combat tracker selectors updated for V14 (`.token-initiative > .initiative-input`
+  replaces `.combatant-initiative`).
+- `CombatantHandDialog` and initiative-value path corrections after V14 runtime testing.
+- Multiple V14 API compatibility fixes across archetype sheets and mechanics.
+
+[Unreleased]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.1.0...HEAD
+[0.1.0]: https://github.com/Chorss/deadlands-classic-fvtt/releases/tag/0.1.0
