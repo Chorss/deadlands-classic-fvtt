@@ -1,0 +1,11 @@
+/* Deadlands Classic — entry stylesheet.
+ *
+ * Partial imports will be activated as modules come online:
+ *   @import "./_variables.css";   (Phase 2 — theme tokens)
+ *   @import "./_base.css";        (Phase 2)
+ *   @import "./actor-sheet.css";  (Phase 2)
+ *   @import "./item-sheet.css";   (Phase 5)
+ *   @import "./combat.css";       (Phase 8)
+ */
+
+@import "./chips.css";

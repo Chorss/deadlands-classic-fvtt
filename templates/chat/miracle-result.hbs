@@ -1,0 +1,31 @@
+{{!-- Chat card: Blessed miracle invocation result. --}}
+<div class="dlc-chat-card dlc-miracle-result">
+  <header class="dlc-chat-header">
+    <span class="dlc-actor-name">{{actorName}}</span>
+    <span class="dlc-chat-verb">{{localize "DEADLANDS.Blessed.Chat.InvokeHeader"}}</span>
+    <span class="dlc-miracle-name">{{miracleName}}</span>
+  </header>
+
+  <div class="dlc-roll-summary">
+    <span class="dlc-roll-total {{#if rollResult.bust}}dlc-bust{{else if miracleSucceeds}}dlc-success{{else}}dlc-failure{{/if}}">
+      {{#if rollResult.bust}}
+        {{localize "DEADLANDS.Roll.Bust"}}
+      {{else}}
+        {{rollResult.total}}
+      {{/if}}
+    </span>
+    {{#if rollResult.raises}}
+    <span class="dlc-raises">+{{rollResult.raises}} {{localize "DEADLANDS.Roll.Raises"}}</span>
+    {{/if}}
+  </div>
+
+  <div class="dlc-miracle-outcome">
+    {{#if rollResult.bust}}
+    <p class="dlc-bust-msg">{{localize "DEADLANDS.Blessed.Chat.Bust"}}</p>
+    {{else if miracleSucceeds}}
+    <p class="dlc-success-msg">{{localize "DEADLANDS.Blessed.Chat.MiracleSuccess"}}</p>
+    {{else}}
+    <p class="dlc-fail-msg">{{localize "DEADLANDS.Blessed.Chat.MiracleFail"}}</p>
+    {{/if}}
+  </div>
+</div>

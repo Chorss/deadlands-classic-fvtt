@@ -1,0 +1,58 @@
+{{!-- Chat card: hex cast result. Posted by mechanics.mjs#castHex. --}}
+<div class="dlc-chat-card dlc-hex-cast">
+  <header class="dlc-chat-header">
+    <strong>{{actorName}}</strong> — {{localize "DEADLANDS.Huckster.Chat.CastHeader"}}
+    <em>{{hexName}}</em>
+  </header>
+
+  {{!-- Roll result --}}
+  <div class="dlc-chat-roll">
+    {{#if bust}}
+      <span class="dlc-bust">{{localize "DEADLANDS.Roll.Bust"}}</span>
+      <span class="dlc-backlash-tag">{{localize "DEADLANDS.Huckster.Chat.Backlash"}}</span>
+    {{else if (gt rollResult.raises 0)}}
+      <span class="dlc-success">{{localize "DEADLANDS.Roll.Success"}}</span>
+      <span class="dlc-raises">{{localize "DEADLANDS.Roll.Raises" raises=rollResult.raises}}</span>
+      <span class="dlc-cards-drawn">({{drawn.length}} {{localize "DEADLANDS.Huckster.Chat.CardsDrawn"}})</span>
+    {{else}}
+      <span class="dlc-success">{{localize "DEADLANDS.Roll.Success"}}</span>
+      <span class="dlc-cards-drawn">({{drawn.length}} {{localize "DEADLANDS.Huckster.Chat.CardsDrawn"}})</span>
+    {{/if}}
+  </div>
+
+  {{!-- Drawn cards --}}
+  {{#if drawn.length}}
+  <ul class="dlc-drawn-cards">
+    {{#each drawn as |card|}}
+    <li class="dlc-card {{#if card.joker}}dlc-joker-card dlc-joker-{{card.joker}}{{/if}}">
+      {{card.label}}
+    </li>
+    {{/each}}
+  </ul>
+  {{/if}}
+
+  {{!-- Poker hand evaluation --}}
+  {{#if handResult}}
+  <div class="dlc-hand-result">
+    <span class="dlc-hand-label">{{localize "DEADLANDS.Huckster.Chat.Hand"}}:</span>
+    <strong class="dlc-hand-name">{{localize handKey}}</strong>
+    <span class="dlc-hand-req">({{localize "DEADLANDS.Huckster.Chat.MinRequired"}}: {{localize minHandKey}})</span>
+  </div>
+  {{/if}}
+
+  {{!-- Outcome --}}
+  <div class="dlc-hex-outcome">
+    {{#if backlashTrigger}}
+      <span class="dlc-backlash-tag">
+        {{localize "DEADLANDS.Huckster.Chat.Backlash"}}
+        ({{#if (eq backlashTrigger "blackJoker")}}{{localize "DEADLANDS.Combat.Card.BlackJoker"}}
+        {{else if (eq backlashTrigger "redJoker")}}{{localize "DEADLANDS.Combat.Card.RedJoker"}}
+        {{else}}{{localize "DEADLANDS.Roll.Bust"}}{{/if}})
+      </span>
+    {{else if hexSucceeds}}
+      <span class="dlc-hex-success">{{localize "DEADLANDS.Huckster.Chat.HexSuccess"}}</span>
+    {{else}}
+      <span class="dlc-hex-fail">{{localize "DEADLANDS.Huckster.Chat.HexFail"}}</span>
+    {{/if}}
+  </div>
+</div>

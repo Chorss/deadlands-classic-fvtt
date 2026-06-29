@@ -1,0 +1,49 @@
+{{!-- Traits & Aptitudes (dlc p.37-51). Two columns: Corporeal / Mental. --}}
+<section class="tab dlc-traits {{tab.cssClass}}" data-group="sheet" data-tab="traits">
+  <div class="dlc-trait-columns">
+    {{#each traitGroups as |group|}}
+    <div class="dlc-trait-column dlc-{{group.id}}">
+      <h2 class="dlc-column-title">{{localize group.label}}</h2>
+
+      {{#each group.traits as |trait|}}
+      <section class="dlc-trait" data-trait="{{trait.id}}">
+        <header class="dlc-trait-head">
+          <h3 class="dlc-trait-name">
+            <button type="button" class="dlc-roll-btn"
+              data-action="rollTrait" data-trait-id="{{trait.id}}">
+              {{localize trait.label}}
+            </button>
+          </h3>
+          <div class="dlc-trait-die">
+            <input type="number" class="dlc-die-count" name="{{trait.dieCountPath}}" min="1"
+              value="{{trait.dieCount}}" {{#unless @root.editable}}disabled{{/unless}} />
+            <select class="dlc-die-type" name="{{trait.dieTypePath}}" {{#unless @root.editable}}disabled{{/unless}}>
+              {{selectOptions @root.dieTypeChoices selected=trait.dieType}}
+            </select>
+            <input type="number" class="dlc-die-mod" name="{{trait.modifierPath}}"
+              value="{{trait.modifier}}" {{#unless @root.editable}}disabled{{/unless}} />
+          </div>
+        </header>
+
+        {{#if trait.aptitudes.length}}
+        <ul class="dlc-aptitudes">
+          {{#each trait.aptitudes as |apt|}}
+          <li class="dlc-aptitude" data-apt-level="{{apt.level}}">
+            <button type="button" class="dlc-roll-btn dlc-apt-roll {{#unless apt.level}}dlc-unskilled{{/unless}}"
+              data-action="rollAptitude"
+              data-trait-id="{{apt.traitId}}"
+              data-aptitude-id="{{apt.id}}">
+              {{localize apt.label}}
+            </button>
+            <input type="number" class="dlc-apt-level" name="{{apt.path}}" min="0"
+              value="{{apt.level}}" {{#unless @root.editable}}disabled{{/unless}} />
+          </li>
+          {{/each}}
+        </ul>
+        {{/if}}
+      </section>
+      {{/each}}
+    </div>
+    {{/each}}
+  </div>
+</section>

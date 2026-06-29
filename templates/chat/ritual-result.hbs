@@ -1,0 +1,52 @@
+{{!-- Chat card: Shaman ritual result / favor spend. --}}
+<div class="dlc-chat-card dlc-ritual-result">
+  <header class="dlc-chat-header">
+    <span class="dlc-actor-name">{{actorName}}</span>
+    {{#if spendOnly}}
+    <span class="dlc-chat-verb">{{localize "DEADLANDS.Shaman.Chat.SpendHeader"}}</span>
+    {{else}}
+    <span class="dlc-chat-verb">{{localize "DEADLANDS.Shaman.Chat.RitualHeader"}}</span>
+    {{/if}}
+    <span class="dlc-favor-name">{{favorName}}</span>
+  </header>
+
+  {{#unless spendOnly}}
+  <div class="dlc-roll-summary">
+    <span class="dlc-roll-total {{#if bust}}dlc-bust{{else if favorGranted}}dlc-success{{else}}dlc-failure{{/if}}">
+      {{#if bust}}{{localize "DEADLANDS.Roll.Bust"}}
+      {{else}}{{rollResult.total}}{{/if}}
+    </span>
+    {{#if rollResult.raises}}
+    <span class="dlc-raises">+{{rollResult.raises}} {{localize "DEADLANDS.Roll.Raises"}}</span>
+    {{/if}}
+  </div>
+  {{/unless}}
+
+  <div class="dlc-ritual-outcome">
+    {{#if bust}}
+    <p class="dlc-bust-msg">{{localize "DEADLANDS.Shaman.Chat.Bust"}}</p>
+    {{#if manitouDamage}}
+    <p class="dlc-manitou-msg">
+      {{localize "DEADLANDS.Shaman.Chat.ManitouAttack"}}
+      {{#if manitouDamage.shamanWins}}
+      — <span class="dlc-success">{{localize "DEADLANDS.Shaman.Chat.ManitouRepelled"}}</span>
+      {{else}}
+      — <span class="dlc-failure">{{localize "DEADLANDS.Shaman.Chat.ManitouDamage"}}: {{manitouDamage.damage}}</span>
+      {{/if}}
+    </p>
+    {{/if}}
+    {{else if spendOnly}}
+    <p class="dlc-success-msg">
+      {{localize "DEADLANDS.Shaman.Chat.FavorGranted"}} ({{localize "DEADLANDS.Shaman.Chat.Cost"}}: {{cost}})
+    </p>
+    {{else if favorGranted}}
+    <p class="dlc-success-msg">
+      {{localize "DEADLANDS.Shaman.Chat.FavorGranted"}}
+    </p>
+    {{else}}
+    <p>
+      {{localize "DEADLANDS.Shaman.Chat.AppeasementEarned"}}: <strong>{{earned}}</strong>
+    </p>
+    {{/if}}
+  </div>
+</div>

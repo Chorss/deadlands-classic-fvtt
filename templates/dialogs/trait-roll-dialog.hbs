@@ -1,0 +1,31 @@
+{{!-- Trait / Aptitude roll dialog: TN, flat modifier, white chip spend. --}}
+<form class="dlc-roll-dialog">
+  <div class="dlc-roll-dialog-label">{{label}}</div>
+
+  {{#if unskilled}}
+  <p class="dlc-unskilled-warn">{{localize 'DEADLANDS.Roll.Unskilled'}} (−4)</p>
+  {{/if}}
+
+  <div class="form-group">
+    <label for="dlc-tn">{{localize 'DEADLANDS.Dialog.TraitRoll.TN'}}</label>
+    <select id="dlc-tn" name="tn">
+      {{#each tnChoices as |choice|}}
+      <option value="{{choice.value}}" {{#if choice.default}}selected{{/if}}>
+        {{choice.value}} — {{localize choice.label}}
+      </option>
+      {{/each}}
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="dlc-mod">{{localize 'DEADLANDS.Dialog.TraitRoll.Modifier'}}</label>
+    <input id="dlc-mod" type="number" name="modifier" value="0" />
+  </div>
+
+  {{#if maxWhite}}
+  <div class="form-group">
+    <label for="dlc-white">{{localize 'DEADLANDS.Dialog.TraitRoll.WhiteChips'}} ({{maxWhite}})</label>
+    <input id="dlc-white" type="number" name="whiteChips" value="0" min="0" max="{{maxWhite}}" />
+  </div>
+  {{/if}}
+</form>

@@ -1,0 +1,27 @@
+{
+  "name": "deadlands-classic-fvtt",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Community-maintained Foundry VTT game system for Deadlands Classic.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Chorss/deadlands-classic-fvtt.git"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "lint": "biome check",
+    "fmt": "biome format --write",
+    "verify": "node tools/verify-documenttypes.mjs",
+    "pack": "fvtt package pack --in packs/_source --out packs",
+    "unpack": "fvtt package unpack --in packs --out packs/_source"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.12",
+    "@foundryvtt/foundryvtt-cli": "^1.0.6"
+  }
+}

@@ -1,0 +1,50 @@
+{{!--
+  Wound-locations widget — 8-slot body chart.
+
+  Context (prepared by BaseCharacterSheet#prepareWounds):
+    woundLocations: Array<{
+      id, label, severity (0–5), severityLabel, isLimb, isMaimed,
+      pips: Array<{ filled: boolean }>, path
+    }>
+    wind: { value, max }
+    windedClass: "dlc-winded" | ""
+
+  Mechanics: dlc p.133 (locations), p.139 (severity), p.141 (Wind/Winded).
+--}}
+<section class="dlc-wound-section">
+  <h3 class="dlc-section-heading">{{localize "DEADLANDS.Sheet.Section.Wounds"}}</h3>
+
+  {{!-- Wind bar --}}
+  <div class="dlc-wind-bar {{wounds.windedClass}}">
+    <label class="dlc-wind-label">{{localize "DEADLANDS.Sheet.Wind"}}</label>
+    <div class="dlc-wind-track">
+      <input
+        type="number"
+        class="dlc-wind-value"
+        name="system.wind.value"
+        value="{{wounds.wind.value}}"
+        min="0"
+        max="{{wounds.wind.max}}"
+        data-dtype="Number"
+      />
+      <span class="dlc-wind-sep">/</span>
+      <span class="dlc-wind-max">{{wounds.wind.max}}</span>
+      {{#if wounds.windedClass}}<span class="dlc-winded-badge">{{localize "DEADLANDS.Wound.Winded"}}</span>{{/if}}
+    </div>
+  </div>
+
+  {{!-- 8-slot wound track --}}
+  <div class="dlc-wound-locations">
+    {{#each wounds.woundLocations}}
+    <div class="dlc-wound-slot dlc-wound-{{id}} {{#if isMaimed}}dlc-maimed{{/if}}" data-location="{{id}}">
+      <div class="dlc-wound-pips">
+        {{#each pips}}<span class="dlc-wound-pip {{#if filled}}dlc-pip-filled{{/if}}"></span>{{/each}}
+      </div>
+      <div class="dlc-wound-info">
+        <span class="dlc-wound-loc-label">{{localize label}}</span>
+        {{#if severity}}<span class="dlc-wound-severity-label">{{localize severityLabel}}</span>{{/if}}
+      </div>
+    </div>
+    {{/each}}
+  </div>
+</section>

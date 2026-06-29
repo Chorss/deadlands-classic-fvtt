@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# Pre-commit hook: syntax check for .mjs / .json, manifest sanity when
+# system.json or lang/*.json is staged. Opt-in once per clone:
+#
+#   git config core.hooksPath .githooks
+
+set -eu
+
+STAGED=$(git diff --cached --name-only --diff-filter=ACMR || true)
+[ -z "$STAGED" ] && exit 0
+
+fail() { echo "pre-commit: $1" >&2; exit 1; }
+
+while IFS= read -r f; do
+  [ -f "$f" ] || continue
+  case "$f" in
+    *.mjs)
+      node --check "$f" || fail "syntax error in $f"
+      ;;
+    *.json)
+      node -e "JSON.parse(require('fs').readFileSync(process.argv[1],'utf8'))" "$f" \
+        || fail "invalid JSON in $f"
+      ;;
+  esac
+done <<< "$STAGED"
+
+if echo "$STAGED" | grep -qE '^(system\.json|lang/.*\.json)$'; then
+  node tools/verify-documenttypes.mjs || fail "verify-documenttypes failed"
+fi
+
+exit 0

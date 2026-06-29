@@ -1,0 +1,23 @@
+{{!-- Dialog: invoke a miracle (Blessed). --}}
+<form class="dlc-dialog-form">
+  <p class="dlc-dialog-intro">
+    {{localize "DEADLANDS.Blessed.Dialog.InvokeIntro"}}: <strong>{{miracleName}}</strong>
+    ({{localize "DEADLANDS.Blessed.MiracleTable.TN"}}: {{tn}})
+  </p>
+
+  <div class="dlc-form-row">
+    <label for="modifier">{{localize "DEADLANDS.Dialog.Modifier"}}</label>
+    <input type="number" id="modifier" name="modifier" value="0" />
+  </div>
+
+  {{#if maxWhite}}
+  <div class="dlc-form-row">
+    <label for="whiteChips">
+      {{localize "DEADLANDS.Dialog.WhiteChips"}}
+      ({{localize "DEADLANDS.Blessed.Dialog.Available"}}: {{maxWhite}})
+    </label>
+    <input type="number" id="whiteChips" name="whiteChips"
+      min="0" max="{{maxWhite}}" value="0" />
+  </div>
+  {{/if}}
+</form>

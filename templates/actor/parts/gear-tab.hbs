@@ -1,0 +1,72 @@
+{{!-- Gear: armor, general gear, ammo, edges & hindrances. --}}
+<section class="tab dlc-gear {{tab.cssClass}}" data-group="sheet" data-tab="gear">
+  <div class="dlc-gear-group">
+    <h2 class="dlc-section-title">{{localize 'DEADLANDS.Sheet.Section.Armor'}}</h2>
+    {{#if items.armor.length}}
+    <ul class="dlc-item-list">
+      {{#each items.armor as |item|}}
+      <li class="dlc-item" data-item-id="{{item.id}}">
+        <img class="dlc-item-img" src="{{item.img}}" alt="{{item.name}}" />
+        <span class="dlc-item-name">{{item.name}}</span>
+      </li>
+      {{/each}}
+    </ul>
+    {{else}}<p class="dlc-empty">{{localize 'DEADLANDS.Sheet.Empty.Armor'}}</p>{{/if}}
+  </div>
+
+  <div class="dlc-gear-group">
+    <h2 class="dlc-section-title">{{localize 'DEADLANDS.Sheet.Section.Gear'}}</h2>
+    {{#if items.gear.length}}
+    <ul class="dlc-item-list">
+      {{#each items.gear as |item|}}
+      <li class="dlc-item" data-item-id="{{item.id}}">
+        <img class="dlc-item-img" src="{{item.img}}" alt="{{item.name}}" />
+        <span class="dlc-item-name">{{item.name}}</span>
+      </li>
+      {{/each}}
+    </ul>
+    {{else}}<p class="dlc-empty">{{localize 'DEADLANDS.Sheet.Empty.Gear'}}</p>{{/if}}
+  </div>
+
+  <div class="dlc-gear-group">
+    <h2 class="dlc-section-title">{{localize 'DEADLANDS.Sheet.Section.Ammo'}}</h2>
+    {{#if items.ammo.length}}
+    <ul class="dlc-item-list">
+      {{#each items.ammo as |item|}}
+      <li class="dlc-item" data-item-id="{{item.id}}">
+        <img class="dlc-item-img" src="{{item.img}}" alt="{{item.name}}" />
+        <span class="dlc-item-name">{{item.name}}</span>
+      </li>
+      {{/each}}
+    </ul>
+    {{else}}<p class="dlc-empty">{{localize 'DEADLANDS.Sheet.Empty.Ammo'}}</p>{{/if}}
+  </div>
+
+  <div class="dlc-gear-group">
+    <h2 class="dlc-section-title">{{localize 'DEADLANDS.Sheet.Section.Edges'}}</h2>
+    {{#if items.edge.length}}
+    <ul class="dlc-item-list">
+      {{#each items.edge as |item|}}
+      <li class="dlc-item" data-item-id="{{item.id}}">
+        <img class="dlc-item-img" src="{{item.img}}" alt="{{item.name}}" />
+        <span class="dlc-item-name">{{item.name}}</span>
+      </li>
+      {{/each}}
+    </ul>
+    {{else}}<p class="dlc-empty">{{localize 'DEADLANDS.Sheet.Empty.Edges'}}</p>{{/if}}
+  </div>
+
+  <div class="dlc-gear-group">
+    <h2 class="dlc-section-title">{{localize 'DEADLANDS.Sheet.Section.Hindrances'}}</h2>
+    {{#if items.hindrance.length}}
+    <ul class="dlc-item-list">
+      {{#each items.hindrance as |item|}}
+      <li class="dlc-item" data-item-id="{{item.id}}">
+        <img class="dlc-item-img" src="{{item.img}}" alt="{{item.name}}" />
+        <span class="dlc-item-name">{{item.name}}</span>
+      </li>
+      {{/each}}
+    </ul>
+    {{else}}<p class="dlc-empty">{{localize 'DEADLANDS.Sheet.Empty.Hindrances'}}</p>{{/if}}
+  </div>
+</section>

@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# commit-msg hook: reject `Co-Authored-By: Claude` (or other AI-tool) trailers.
+#
+# Policy (see .claude/rules/commits.md): commits on this repo are authored
+# solely by the maintainer, regardless of who drafted the change.
+#
+# Enable once per clone:
+#   git config core.hooksPath .githooks
+
+set -eu
+
+MSG_FILE="${1:-}"
+[ -n "$MSG_FILE" ] && [ -f "$MSG_FILE" ] || exit 0
+
+if grep -qiE '^Co-Authored-By:.*(Claude|noreply@anthropic)' "$MSG_FILE"; then
+  cat >&2 <<'EOF'
+commit-msg: rejected — message contains a "Co-Authored-By: Claude ..." trailer.
+
+Repo policy: commits are authored solely by the maintainer, regardless of
+who drafted the change. See .claude/rules/commits.md.
+
+Remove the trailer and try again.
+EOF
+  exit 1
+fi
+
+exit 0

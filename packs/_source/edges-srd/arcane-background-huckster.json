@@ -1,0 +1,16 @@
+{
+  "_id": "abHuckster001",
+  "name": "Arcane Background: Huckster",
+  "type": "edge",
+  "img": "icons/magic/control/debuff-chains-blue.webp",
+  "system": {
+    "cost": 3,
+    "category": "arcane",
+    "requirements": [],
+    "description": "<p>Grants the Hexslingin' aptitude and access to hex items. Roll hexslingin' using the hex's associated Trait die type vs. TN 5. On success draw 5 cards (+1/raise) from the Action Deck and form the best poker hand; the hand must meet the hex's minimum requirement. A Black Joker (or Red Joker with hexslingin' &lt; 3) triggers a Backlash roll on the Extended Backlash Table (hnh p.101-102). A bust on the hexslingin' roll also triggers Backlash.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

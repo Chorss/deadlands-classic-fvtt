@@ -1,0 +1,84 @@
+{{!-- Miracles tab: faith aptitude, sin state, miracle list. --}}
+<section class="tab dlc-miracles {{tab.cssClass}}" data-group="sheet" data-tab="miracles">
+
+  {{!-- Faith aptitude --}}
+  <div class="dlc-faith">
+    <h2 class="dlc-section-title">{{localize "DEADLANDS.Blessed.Faith.Label"}}</h2>
+    <div class="dlc-faith-row">
+      <label>{{localize "DEADLANDS.Blessed.Faith.Level"}}</label>
+      <input type="number" min="0" name="{{faith.levelPath}}"
+        value="{{faith.level}}" {{#unless editable}}disabled{{/unless}} />
+      <label>{{localize "DEADLANDS.Blessed.Faith.Modifier"}}</label>
+      <input type="number" name="{{faith.modifierPath}}"
+        value="{{faith.modifier}}" {{#unless editable}}disabled{{/unless}} />
+    </div>
+  </div>
+
+  {{!-- Sin state --}}
+  {{#if sinState.denied}}
+  <div class="dlc-sin-denied">
+    <p class="dlc-warning">
+      {{localize "DEADLANDS.Blessed.Sin.DeniedLabel"}} — {{sinState.denialLabel}}
+    </p>
+  </div>
+  {{/if}}
+
+  {{!-- Sin tracker buttons (GM/owner only) --}}
+  {{#if editable}}
+  <div class="dlc-sin-controls">
+    <h2 class="dlc-section-title">{{localize "DEADLANDS.Blessed.Sin.Label"}}</h2>
+    <div class="dlc-sin-buttons">
+      {{#each sinSeverities as |sev|}}
+      <button type="button" class="dlc-sin-btn dlc-sin-{{sev}}"
+        data-action="trackSin" data-severity="{{sev}}">
+        {{localize (concat "DEADLANDS.Blessed.Sin." (capitalize sev))}}
+      </button>
+      {{/each}}
+    </div>
+  </div>
+  {{/if}}
+
+  {{!-- Miracle list --}}
+  <div class="dlc-miracle-list">
+    <h2 class="dlc-section-title">{{localize "DEADLANDS.Blessed.Section.Miracles"}}</h2>
+    {{#if miracles.length}}
+    <table class="dlc-miracle-table">
+      <thead>
+        <tr>
+          <th>{{localize "DEADLANDS.Blessed.MiracleTable.Name"}}</th>
+          <th>{{localize "DEADLANDS.Blessed.MiracleTable.TN"}}</th>
+          <th>{{localize "DEADLANDS.Blessed.MiracleTable.Speed"}}</th>
+          <th>{{localize "DEADLANDS.Blessed.MiracleTable.Duration"}}</th>
+          <th>{{localize "DEADLANDS.Blessed.MiracleTable.Range"}}</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each miracles as |m|}}
+        <tr class="dlc-miracle-row" data-miracle-id="{{m.id}}">
+          <td class="dlc-miracle-name">
+            <img class="dlc-item-img" src="{{m.img}}" alt="{{m.name}}" />
+            {{m.name}}
+          </td>
+          <td>{{m.tn}}</td>
+          <td>{{m.speed}}</td>
+          <td>{{m.duration}}</td>
+          <td>{{m.range}}</td>
+          <td class="dlc-miracle-actions">
+            {{#if @root.editable}}
+            <button type="button" class="dlc-invoke-btn"
+              data-action="invokeMiracle" data-miracle-id="{{m.id}}">
+              {{localize "DEADLANDS.Blessed.Invoke.Button"}}
+            </button>
+            {{/if}}
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    {{else}}
+    <p class="dlc-empty">{{localize "DEADLANDS.Sheet.Empty.Miracles"}}</p>
+    {{/if}}
+  </div>
+
+</section>

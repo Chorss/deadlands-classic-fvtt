@@ -1,0 +1,11 @@
+{{!-- Biography: ProseMirror rich-text editor over system.biography. --}}
+<section class="tab dlc-bio {{tab.cssClass}}" data-group="sheet" data-tab="bio">
+  {{#if editable}}
+  <prose-mirror name="system.biography" button="true" editable="true" toggled="false"
+    value="{{system.biography}}">
+    {{{enrichedBiography}}}
+  </prose-mirror>
+  {{else}}
+  <div class="dlc-bio-readonly">{{{enrichedBiography}}}</div>
+  {{/if}}
+</section>

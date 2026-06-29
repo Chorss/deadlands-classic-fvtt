@@ -1,0 +1,88 @@
+{{!-- Chat card: Mad Scientist blueprint / construction / malfunction result. --}}
+<div class="dlc-chat-card dlc-gizmo-result">
+  <header class="dlc-chat-header">
+    <span class="dlc-actor-name">{{actorName}}</span>
+    {{#if (eq phase "blueprint")}}
+    <span class="dlc-chat-verb">{{localize "DEADLANDS.MadScientist.Chat.BlueprintHeader"}}</span>
+    {{else if (eq phase "construction")}}
+    <span class="dlc-chat-verb">{{localize "DEADLANDS.MadScientist.Chat.ConstructHeader"}}</span>
+    {{else}}
+    <span class="dlc-chat-verb">{{localize "DEADLANDS.MadScientist.Chat.UseHeader"}}</span>
+    {{/if}}
+    <span class="dlc-gizmo-name">{{gizmoName}}</span>
+  </header>
+
+  {{!-- Blueprint phase --}}
+  {{#if (eq phase "blueprint")}}
+  <div class="dlc-roll-summary">
+    <span class="dlc-roll-total {{#if rollResult.bust}}dlc-bust{{else if blueprintSucceeds}}dlc-success{{else}}dlc-failure{{/if}}">
+      {{#if rollResult.bust}}{{localize "DEADLANDS.Roll.Bust"}}{{else}}{{rollResult.total}}{{/if}}
+    </span>
+  </div>
+
+  {{#if drawn.length}}
+  <div class="dlc-drawn-cards">
+    <span class="dlc-label">{{localize "DEADLANDS.MadScientist.Chat.CardsDrawn"}}:</span>
+    <ul class="dlc-card-row">
+      {{#each drawn as |card|}}
+      <li class="dlc-drawn-card {{#if card.joker}}dlc-joker dlc-joker-{{card.joker}}{{/if}}">
+        {{#if card.joker}}★ {{card.joker}}{{else}}{{card.rank}}{{card.suit}}{{/if}}
+      </li>
+      {{/each}}
+    </ul>
+    {{#if handResult}}
+    <p>{{localize "DEADLANDS.MadScientist.Chat.Hand"}}: <strong>{{localize (concat "DEADLANDS.Huckster.Hand." (capitalize handResult.handKey))}}</strong></p>
+    {{/if}}
+    {{#if minHandKey}}
+    <p>{{localize "DEADLANDS.MadScientist.Chat.MinRequired"}}: {{localize minHandKey}}</p>
+    {{/if}}
+  </div>
+  {{/if}}
+
+  {{#if blueprintSucceeds}}
+  <p class="dlc-success-msg">{{localize "DEADLANDS.MadScientist.Chat.BlueprintSuccess"}}</p>
+  {{else}}
+  <p class="dlc-fail-msg">{{localize "DEADLANDS.MadScientist.Chat.BlueprintFail"}}</p>
+  {{/if}}
+
+  {{#if madness}}
+  <p class="dlc-madness-warning">⚠ {{localize "DEADLANDS.MadScientist.Chat.MadnessTriggered"}}</p>
+  {{/if}}
+  {{/if}}
+
+  {{!-- Construction phase --}}
+  {{#if (eq phase "construction")}}
+  <div class="dlc-roll-summary">
+    <span class="dlc-roll-total {{#if constructionSucceeds}}dlc-success{{else}}dlc-failure{{/if}}">
+      {{#if rollResult.bust}}{{localize "DEADLANDS.Roll.Bust"}}{{else}}{{rollResult.total}}{{/if}}
+    </span>
+  </div>
+  {{#if constructionSucceeds}}
+  <p class="dlc-success-msg">
+    {{localize "DEADLANDS.MadScientist.Chat.ConstructSuccess"}}
+    — {{localize "DEADLANDS.MadScientist.GizmoTable.Reliability"}}: <strong>{{reliability}}</strong>
+  </p>
+  {{else}}
+  <p class="dlc-fail-msg">{{localize "DEADLANDS.MadScientist.Chat.ConstructFail"}}</p>
+  {{/if}}
+  {{/if}}
+
+  {{!-- Malfunction / use phase --}}
+  {{#if (eq phase "malfunction")}}
+  <div class="dlc-malfunction">
+    <p>
+      {{localize "DEADLANDS.MadScientist.Chat.MalfunctionRoll"}}: <strong>{{d20}}</strong>
+      / {{localize "DEADLANDS.MadScientist.GizmoTable.Reliability"}}: {{reliability}}
+    </p>
+    {{#if malfunction}}
+    <p class="dlc-bust-msg">
+      ⚠ {{localize "DEADLANDS.MadScientist.Chat.Malfunction"}}
+      — {{localize (concat "DEADLANDS.MadScientist.Malfunction." (capitalize severity))}}
+    </p>
+    {{else}}
+    <p class="dlc-success-msg">{{localize "DEADLANDS.MadScientist.Chat.NoMalfunction"}}</p>
+    {{/if}}
+  </div>
+  {{/if}}
+
+</div>

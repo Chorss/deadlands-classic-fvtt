@@ -18,7 +18,7 @@ A community-maintained Foundry VTT game system for **Deadlands Classic** (Weird 
 - **Exploding Dice (Aces)** — Roll maximum on any die? Pick it up and roll again, partner.
 - **Dice Pools with Take-Highest** — Trait rolls keep the single best exploded die, not a sum.
 - **Poker-Card Initiative** — Draw from a 54-card Action Deck (52 + 2 Jokers) for dramatic, unpredictable turn order. Suit tiebreakers, Red Joker bonus, Black Joker backlash.
-- **Fate Chips (White / Red / Blue / Legend)** — Four-tier chip economy drawn blind from a shared Fate Pot. Legend chips are the only way to reroll a Bust.
+- **Fate Chips (White / Red / Blue / Legend)** — Four-color chip economy drawn blind from a shared Fate Pot. Legend chips are the only way to reroll a Bust.
 - **Location-Based Wounds** — 8 hit locations (Noggin, Upper/Lower Guts, Gizzards, both Arms, both Legs) rolled on 1d20 with 5 severity tiers (Light → Maimed).
 - **Wind** — Secondary stamina pool driving fatigue, fear and non-lethal damage.
 - **Arcane Backgrounds:**

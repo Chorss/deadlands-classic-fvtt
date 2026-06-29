@@ -27,8 +27,8 @@ This project adheres to the [Contributor Covenant Code of Conduct](CODE_OF_CONDU
 
 ### Prerequisites
 
-- [Foundry VTT](https://foundryvtt.com/) (license required), version 13.351 or higher
-- [Node.js](https://nodejs.org/) v18+ (for any build tooling)
+- [Foundry VTT](https://foundryvtt.com/) (license required), **V14+** (V13 not supported; verified 14.364)
+- [Node.js](https://nodejs.org/) **24+** (required by Foundry V14)
 - [Git](https://git-scm.com/)
 
 ### Steps
@@ -58,26 +58,20 @@ This project adheres to the [Contributor Covenant Code of Conduct](CODE_OF_CONDU
 
 ```
 deadlands-classic-fvtt/
-├── .github/                    # GitHub configuration
-│   ├── ISSUE_TEMPLATE/         # Issue templates
-│   └── PULL_REQUEST_TEMPLATE.md
-├── lang/                       # Localization files (e.g., en.json)
-├── module/                     # ES module source files
-│   ├── actors/                 # Actor document classes & sheets
-│   ├── items/                  # Item document classes & sheets
-│   ├── dice/                   # Dice rolling logic (Aces, raises)
-│   ├── cards/                  # Poker-card initiative deck
-│   └── deadlands-classic.mjs   # Main entry point
-├── styles/                     # CSS/LESS stylesheets
-├── templates/                  # Handlebars HTML templates
-│   ├── actors/
-│   └── items/
-├── packs/                      # Compendium pack data
-├── system.json                 # Foundry VTT manifest
-├── CHANGELOG.md
-├── CONTRIBUTING.md
-├── LICENSE
-└── README.md
+├── module/
+│   ├── deadlands-classic.mjs   # entry — init/ready hooks, registries wired here
+│   ├── core/                   # archetype-agnostic: dice, cards, chips, wounds, registries, documents, items
+│   └── archetypes/             # self-contained per-archetype modules (_base/ + cowboy/, huckster/, …, _overlays/harrowed/, npc/, mook/)
+├── templates/                  # Handlebars partials per sheet section
+├── styles/                     # CSS entry + partials
+├── lang/                       # en.json, pl.json (EN/PL key parity mandatory)
+├── packs/                      # compendium packs — built from packs/_source/ via `fvtt package pack`
+├── tools/                      # repo tooling (verify-documenttypes.mjs, …)
+├── tests/                      # node:test unit tests for pure core logic
+├── docs/                       # implementation-plan.md, notes.md
+├── .github/                    # issue templates + PULL_REQUEST_TEMPLATE.md
+├── system.json                 # Foundry VTT manifest (documentTypes, V14)
+└── CHANGELOG.md, CONTRIBUTING.md, LICENSE, README.md
 ```
 
 ---
@@ -101,7 +95,7 @@ deadlands-classic-fvtt/
 
 ### PR Checklist
 
-- [ ] Code tested locally in Foundry VTT V13
+- [ ] Code tested locally in Foundry VTT V14
 - [ ] No unrelated files changed
 - [ ] CHANGELOG.md updated under `[Unreleased]`
 - [ ] `system.json` version bumped if this is a release PR
@@ -111,10 +105,11 @@ deadlands-classic-fvtt/
 ## Code Style Guidelines
 
 - **JavaScript:** ES2022+, ES modules (`.mjs`). No CommonJS `require()`.
-- **Formatting:** 2-space indentation, single quotes for strings.
-- **Naming:** `camelCase` for variables/functions, `PascalCase` for classes.
+- **Formatting:** run `npm run fmt` (Biome owns indentation, quotes, etc.); `npm run lint` to check.
+- **Naming:** `camelCase` for variables/functions, `PascalCase` for classes. Full casing matrix in `.claude/rules/naming.md`.
 - **Comments:** Only when the *why* is non-obvious — not what the code does.
-- **No build step required** for core functionality. Keep tooling optional.
+- **No build step** for core code (`.mjs` runs directly). Compendium packs are built from `packs/_source/` via `fvtt package pack`.
+- **Commits:** conventional-commit prefixes (`feat:`/`fix:`/`docs:`/`chore:`/`refactor:`/`test:`). Do **not** add a `Co-Authored-By: Claude` trailer — `.githooks/commit-msg` rejects it. Run `git config core.hooksPath .githooks` once per clone to enable the hooks.
 
 ---
 

@@ -1,0 +1,108 @@
+/* ── Fate Chips ─────────────────────────────────────────────── */
+
+.dlc-chip-row {
+  display: flex;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+.dlc-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  min-width: 3.5rem;
+  border: 1px solid var(--dlc-chip-border, #666);
+}
+
+.dlc-chip-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.dlc-chip input[type="number"] {
+  width: 3rem;
+  text-align: center;
+  border: none;
+  background: transparent;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+/* Colors */
+.dlc-chip-white  { background: #f0ede8; color: #333; --dlc-chip-border: #bbb; }
+.dlc-chip-red    { background: #c0392b; color: #fff; --dlc-chip-border: #8e1b14; }
+.dlc-chip-blue   { background: #2980b9; color: #fff; --dlc-chip-border: #1a5e8a; }
+.dlc-chip-legend { background: #8e44ad; color: #fff; --dlc-chip-border: #5e2d7a; }
+
+/* ── Roll dialog ────────────────────────────────────────────── */
+
+.dlc-roll-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.4rem 0;
+  min-width: 220px;
+}
+
+.dlc-roll-dialog-label {
+  font-weight: bold;
+  font-size: 1rem;
+  text-align: center;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--color-border-light-tertiary, #ccc);
+  margin-bottom: 0.2rem;
+}
+
+.dlc-unskilled-warn {
+  color: var(--color-level-warning, #c0392b);
+  font-size: 0.85rem;
+  text-align: center;
+  margin: 0;
+}
+
+/* ── Trait roll buttons ─────────────────────────────────────── */
+
+.dlc-roll-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  width: 100%;
+}
+
+.dlc-roll-btn:hover {
+  color: var(--color-border-highlight, #ff6400);
+  text-shadow: 0 0 4px var(--color-shadow-primary, rgba(0,0,0,.4));
+}
+
+/* ── Chat roll card ─────────────────────────────────────────── */
+
+.dlc-roll-card {
+  border: 1px solid var(--color-border-light-tertiary, #ccc);
+  border-radius: 4px;
+  padding: 0.4rem 0.6rem;
+  margin: 0.2rem 0;
+}
+
+.dlc-roll-label    { font-weight: bold; margin-bottom: 0.3rem; }
+.dlc-roll-dice     { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.2rem; }
+.dlc-die           { display: inline-block; background: #eee; border: 1px solid #aaa; border-radius: 3px; padding: 1px 5px; font-size: 0.9rem; }
+.dlc-ace           { color: goldenrod; }
+.dlc-tn            { color: #666; font-size: 0.85rem; }
+.dlc-modifier      { font-size: 0.85rem; }
+.dlc-roll-outcome  { font-weight: bold; margin-top: 0.2rem; }
+
+.dlc-success .dlc-roll-outcome { color: #27ae60; }
+.dlc-bust    .dlc-roll-outcome { color: #c0392b; }
+.dlc-fail    .dlc-roll-outcome { color: #888; }
+.dlc-damage  .dlc-roll-outcome { color: #c0392b; }
+.dlc-armor   { font-size: 0.8rem; color: #666; }
