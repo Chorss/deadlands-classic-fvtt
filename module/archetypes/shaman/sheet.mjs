@@ -108,11 +108,14 @@ export class ShamanSheet extends BaseCharacterSheet {
       return;
     }
 
-    const content = await foundry.applications.handlebars.renderTemplate(`${DIALOG_ROOT}/ritual-dialog.hbs`, {
-      favorName: favorItem.name,
-      ritualTN: favorItem.system.ritualTN,
-      ritualTypeLabel: `DEADLANDS.Shaman.RitualType.${_toPascal(favorItem.system.ritualType)}`,
-    });
+    const content = await foundry.applications.handlebars.renderTemplate(
+      `${DIALOG_ROOT}/ritual-dialog.hbs`,
+      {
+        favorName: favorItem.name,
+        ritualTN: favorItem.system.ritualTN,
+        ritualTypeLabel: `DEADLANDS.Shaman.RitualType.${_toPascal(favorItem.system.ritualType)}`,
+      }
+    );
 
     const params = await foundry.applications.api.DialogV2.prompt({
       window: {

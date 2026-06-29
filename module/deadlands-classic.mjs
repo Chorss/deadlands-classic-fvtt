@@ -132,6 +132,54 @@ Hooks.once("ready", () => {
 
 // ── Combat tracker — replace numeric initiative values with card labels ──────
 
+function _renderInitiativeLabel(row, combatant) {
+  const initContainer = row.querySelector(".token-initiative");
+  if (!initContainer) {
+    return;
+  }
+  const card = combatant.highestCard;
+  if (!card) {
+    return;
+  }
+
+  const input = initContainer.querySelector(".initiative-input");
+  if (input) {
+    input.style.display = "none";
+  }
+
+  let label = initContainer.querySelector(".dlc-initiative-label");
+  if (!label) {
+    label = document.createElement("span");
+    label.classList.add("dlc-initiative-label", "dlc-initiative-card");
+    initContainer.appendChild(label);
+  }
+  label.textContent = DeadlandsCombat.cardLabel(card);
+  label.classList.toggle("dlc-initiative-red-joker", card.joker === "red");
+  label.classList.toggle("dlc-initiative-black-joker", card.joker === "black");
+}
+
+function _renderHandButton(row, combatant) {
+  const canSee = game.user.isGM || combatant.actor?.isOwner;
+  if (!canSee || !combatant.hand.length) {
+    return;
+  }
+  const controls = row.querySelector(".combatant-controls");
+  if (!controls) {
+    return;
+  }
+
+  const btn = document.createElement("a");
+  btn.classList.add("dlc-hand-btn");
+  btn.setAttribute("aria-label", game.i18n.localize("DEADLANDS.Combat.Hand.Open"));
+  btn.title = game.i18n.localize("DEADLANDS.Combat.Hand.Open");
+  btn.innerHTML = '<i class="fas fa-hand"></i>';
+  btn.addEventListener("click", (ev) => {
+    ev.preventDefault();
+    CombatantHandDialog.open(combatant);
+  });
+  controls.prepend(btn);
+}
+
 Hooks.on("renderCombatTracker", (_app, html) => {
   const combat = game.combat;
   if (!combat) {
@@ -142,47 +190,7 @@ Hooks.on("renderCombatTracker", (_app, html) => {
     if (!row) {
       continue;
     }
-
-    // Replace numeric initiative value with a card label.
-    // V14 uses .token-initiative > input.initiative-input instead of .combatant-initiative.
-    const initContainer = row.querySelector(".token-initiative");
-    if (initContainer) {
-      const card = combatant.highestCard;
-      if (card) {
-        const input = initContainer.querySelector(".initiative-input");
-        if (input) {
-          input.style.display = "none";
-        }
-        let label = initContainer.querySelector(".dlc-initiative-label");
-        if (!label) {
-          label = document.createElement("span");
-          label.classList.add("dlc-initiative-label", "dlc-initiative-card");
-          initContainer.appendChild(label);
-        }
-        label.textContent = DeadlandsCombat.cardLabel(card);
-        label.classList.toggle("dlc-initiative-red-joker", card.joker === "red");
-        label.classList.toggle("dlc-initiative-black-joker", card.joker === "black");
-      }
-    }
-
-    // "Show hand" button — visible only to the owner or GM when cards are held.
-    const canSee = game.user.isGM || combatant.actor?.isOwner;
-    if (!canSee || !combatant.hand.length) {
-      continue;
-    }
-    const controls = row.querySelector(".combatant-controls");
-    if (!controls) {
-      continue;
-    }
-    const btn = document.createElement("a");
-    btn.classList.add("dlc-hand-btn");
-    btn.setAttribute("aria-label", game.i18n.localize("DEADLANDS.Combat.Hand.Open"));
-    btn.title = game.i18n.localize("DEADLANDS.Combat.Hand.Open");
-    btn.innerHTML = '<i class="fas fa-hand"></i>';
-    btn.addEventListener("click", (ev) => {
-      ev.preventDefault();
-      CombatantHandDialog.open(combatant);
-    });
-    controls.prepend(btn);
+    _renderInitiativeLabel(row, combatant);
+    _renderHandButton(row, combatant);
   }
 });

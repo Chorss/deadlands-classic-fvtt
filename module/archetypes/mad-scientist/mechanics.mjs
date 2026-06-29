@@ -72,7 +72,10 @@ export async function deviseBlueprint(actor, gizmoItem, opts = {}) {
   const dieCount = Math.max(1, scienceLevel);
   const blueprintTN = 5; // Fair (5) — dlc p.168.
 
-  const rollResult = rollExplodingPool(dieCount, cognitionDie, { modifier: modifier + scienceMod, tn: blueprintTN });
+  const rollResult = rollExplodingPool(dieCount, cognitionDie, {
+    modifier: modifier + scienceMod,
+    tn: blueprintTN,
+  });
 
   const succeeded = !rollResult.bust && rollResult.total >= blueprintTN;
   let drawn = [];
@@ -142,7 +145,10 @@ export async function constructGizmo(actor, gizmoItem, opts = {}) {
   const dieCount = Math.max(1, tinkerinLevel);
   const constructionTN = gizmoItem.system.constructionTN ?? 5;
 
-  const rollResult = rollExplodingPool(dieCount, deftnessDie, { modifier: modifier + tinkerinMod, tn: constructionTN });
+  const rollResult = rollExplodingPool(dieCount, deftnessDie, {
+    modifier: modifier + tinkerinMod,
+    tn: constructionTN,
+  });
 
   const succeeded = !rollResult.bust && rollResult.total >= constructionTN;
   // Start from blueprint-derived reliability (already includes blueprint raises). dlc p.170.
@@ -213,13 +219,16 @@ async function _rollMadnessTable(actor) {
     MADNESS_TABLE.find((e) => e.roll === roll) ?? MADNESS_TABLE[MADNESS_TABLE.length - 1];
 
   await ChatMessage.create({
-    content: await foundry.applications.handlebars.renderTemplate("systems/deadlands-classic/templates/chat/madness-result.hbs", {
-      actorName: actor.name,
-      roll,
-      key: entry.key,
-      labelKey: `DEADLANDS.MadScientist.Madness.${_toPascal(entry.key)}.Label`,
-      noteKey: `DEADLANDS.MadScientist.Madness.${_toPascal(entry.key)}.Note`,
-    }),
+    content: await foundry.applications.handlebars.renderTemplate(
+      "systems/deadlands-classic/templates/chat/madness-result.hbs",
+      {
+        actorName: actor.name,
+        roll,
+        key: entry.key,
+        labelKey: `DEADLANDS.MadScientist.Madness.${_toPascal(entry.key)}.Label`,
+        noteKey: `DEADLANDS.MadScientist.Madness.${_toPascal(entry.key)}.Note`,
+      }
+    ),
     whisper: ChatMessage.getWhisperRecipients("GM"),
     speaker: ChatMessage.getSpeaker({ actor }),
   });

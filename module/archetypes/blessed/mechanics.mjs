@@ -136,14 +136,17 @@ async function _sendMiracleMessage(actor, miracleItem, rollResult, meta) {
 
 /** Post the sin resolution to chat (whisper to GM). */
 async function _sendSinMessage(actor, severity, spiritRoll, faithLost, denialLabel) {
-  const content = await foundry.applications.handlebars.renderTemplate("systems/deadlands-classic/templates/chat/sin-result.hbs", {
-    actorName: actor.name,
-    severity,
-    spiritRoll,
-    faithLost,
-    denialLabel,
-    sinTN: SIN_TNS[severity],
-  });
+  const content = await foundry.applications.handlebars.renderTemplate(
+    "systems/deadlands-classic/templates/chat/sin-result.hbs",
+    {
+      actorName: actor.name,
+      severity,
+      spiritRoll,
+      faithLost,
+      denialLabel,
+      sinTN: SIN_TNS[severity],
+    }
+  );
 
   await ChatMessage.create({
     content,

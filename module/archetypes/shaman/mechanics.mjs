@@ -53,7 +53,10 @@ export async function performRitual(actor, favorItem, opts = {}) {
   const traitDie = actor.system.traits?.[associatedTrait]?.dieType ?? "d6";
   const tn = favorItem.system.ritualTN ?? 5;
 
-  const rollResult = rollExplodingPool(Math.max(1, ritualLevel), traitDie, { modifier: modifier + ritualMod, tn });
+  const rollResult = rollExplodingPool(Math.max(1, ritualLevel), traitDie, {
+    modifier: modifier + ritualMod,
+    tn,
+  });
 
   if (rollResult.bust) {
     // Bust → manitou attacks. ghost-dancers p.57.
@@ -155,7 +158,10 @@ async function _resolveManitouAttack(actor) {
   // Shaman defends with ritual level × spirit die (dlc p.185: may use ritual instead of faith).
   const { level: ritualLevel = 0 } = actor.system.ritual ?? {};
   const spiritDie = actor.system.traits?.spirit?.dieType ?? "d6";
-  const shamanRoll = rollExplodingPool(Math.max(1, ritualLevel), spiritDie, { modifier: 0, tn: manitouSpirit });
+  const shamanRoll = rollExplodingPool(Math.max(1, ritualLevel), spiritDie, {
+    modifier: 0,
+    tn: manitouSpirit,
+  });
 
   // Manitou wins if shaman fails to beat manitouSpirit. ghost-dancers p.57.
   const shamanWins = !shamanRoll.bust && shamanRoll.total >= manitouSpirit;

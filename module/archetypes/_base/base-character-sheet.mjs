@@ -35,12 +35,15 @@ const TN_CHOICES = [
  * @returns {Promise<{tn:number, modifier:number, whiteSpend:number}|null>}
  */
 async function _showRollDialog({ label, maxWhite, unskilled = false }) {
-  const content = await foundry.applications.handlebars.renderTemplate(`${DIALOG_ROOT}/trait-roll-dialog.hbs`, {
-    label,
-    maxWhite,
-    unskilled,
-    tnChoices: TN_CHOICES,
-  });
+  const content = await foundry.applications.handlebars.renderTemplate(
+    `${DIALOG_ROOT}/trait-roll-dialog.hbs`,
+    {
+      label,
+      maxWhite,
+      unskilled,
+      tnChoices: TN_CHOICES,
+    }
+  );
 
   return foundry.applications.api.DialogV2.prompt({
     window: { title: game.i18n.localize("DEADLANDS.Dialog.TraitRoll.Title") },
