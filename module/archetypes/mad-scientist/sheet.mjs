@@ -8,9 +8,9 @@
  * @license MIT
  */
 
-import { BaseCharacterSheet } from "../_base/base-character-sheet.mjs";
-import { deviseBlueprint, constructGizmo, checkMalfunction } from "./mechanics.mjs";
 import { POKER_HAND_RANKS } from "../../core/dice/poker-hand-evaluator.mjs";
+import { BaseCharacterSheet } from "../_base/base-character-sheet.mjs";
+import { checkMalfunction, constructGizmo, deviseBlueprint } from "./mechanics.mjs";
 
 const TEMPLATE_ROOT = "systems/deadlands-classic/templates/actor/parts";
 const DIALOG_ROOT = "systems/deadlands-classic/templates/dialogs";
@@ -41,7 +41,12 @@ export class MadScientistSheet extends BaseCharacterSheet {
   static TABS = {
     sheet: {
       tabs: [
-        { id: "traits", group: "sheet", icon: "fas fa-dice-d20", label: "DEADLANDS.Sheet.Tab.Traits" },
+        {
+          id: "traits",
+          group: "sheet",
+          icon: "fas fa-dice-d20",
+          label: "DEADLANDS.Sheet.Tab.Traits",
+        },
         { id: "combat", group: "sheet", icon: "fas fa-gun", label: "DEADLANDS.Sheet.Tab.Combat" },
         { id: "gizmos", group: "sheet", icon: "fas fa-cog", label: "DEADLANDS.Sheet.Tab.Gizmos" },
         { id: "gear", group: "sheet", icon: "fas fa-box", label: "DEADLANDS.Sheet.Tab.Gear" },
@@ -58,7 +63,7 @@ export class MadScientistSheet extends BaseCharacterSheet {
     context.madScience = this.#prepareMadScience();
     context.tinkerin = this.#prepareTinkerin();
     context.blueprintHandChoices = Object.fromEntries(
-      POKER_HAND_RANKS.map((k) => [k, `DEADLANDS.Huckster.Hand.${_toPascal(k)}`]),
+      POKER_HAND_RANKS.map((k) => [k, `DEADLANDS.Huckster.Hand.${_toPascal(k)}`])
     );
     return context;
   }
@@ -106,17 +111,23 @@ export class MadScientistSheet extends BaseCharacterSheet {
   // ── Action handlers ──────────────────────────────────────────────────────────
 
   /** @this {MadScientistSheet} */
-  static async #onDeviseBlueprint(event, target) {
+  static async #onDeviseBlueprint(_event, target) {
     const gizmoId = target.dataset.gizmoId;
     const gizmoItem = this.document.items.get(gizmoId);
-    if (!gizmoItem) return;
+    if (!gizmoItem) {
+      return;
+    }
 
     const content = await renderTemplate(`${DIALOG_ROOT}/devise-blueprint-dialog.hbs`, {
       gizmoName: gizmoItem.name,
     });
 
     const params = await foundry.applications.api.DialogV2.prompt({
-      window: { title: game.i18n.format("DEADLANDS.MadScientist.Dialog.BlueprintTitle", { gizmo: gizmoItem.name }) },
+      window: {
+        title: game.i18n.format("DEADLANDS.MadScientist.Dialog.BlueprintTitle", {
+          gizmo: gizmoItem.name,
+        }),
+      },
       content,
       ok: {
         label: game.i18n.localize("DEADLANDS.MadScientist.Dialog.Devise"),
@@ -127,15 +138,19 @@ export class MadScientistSheet extends BaseCharacterSheet {
       },
     });
 
-    if (!params) return;
+    if (!params) {
+      return;
+    }
     await deviseBlueprint(this.document, gizmoItem, { modifier: params.modifier });
   }
 
   /** @this {MadScientistSheet} */
-  static async #onConstructGizmo(event, target) {
+  static async #onConstructGizmo(_event, target) {
     const gizmoId = target.dataset.gizmoId;
     const gizmoItem = this.document.items.get(gizmoId);
-    if (!gizmoItem) return;
+    if (!gizmoItem) {
+      return;
+    }
 
     const content = await renderTemplate(`${DIALOG_ROOT}/devise-blueprint-dialog.hbs`, {
       gizmoName: gizmoItem.name,
@@ -144,7 +159,11 @@ export class MadScientistSheet extends BaseCharacterSheet {
     });
 
     const params = await foundry.applications.api.DialogV2.prompt({
-      window: { title: game.i18n.format("DEADLANDS.MadScientist.Dialog.ConstructTitle", { gizmo: gizmoItem.name }) },
+      window: {
+        title: game.i18n.format("DEADLANDS.MadScientist.Dialog.ConstructTitle", {
+          gizmo: gizmoItem.name,
+        }),
+      },
       content,
       ok: {
         label: game.i18n.localize("DEADLANDS.MadScientist.Dialog.Construct"),
@@ -155,15 +174,19 @@ export class MadScientistSheet extends BaseCharacterSheet {
       },
     });
 
-    if (!params) return;
+    if (!params) {
+      return;
+    }
     await constructGizmo(this.document, gizmoItem, { modifier: params.modifier });
   }
 
   /** @this {MadScientistSheet} */
-  static async #onUseGizmo(event, target) {
+  static async #onUseGizmo(_event, target) {
     const gizmoId = target.dataset.gizmoId;
     const gizmoItem = this.document.items.get(gizmoId);
-    if (!gizmoItem) return;
+    if (!gizmoItem) {
+      return;
+    }
     await checkMalfunction(this.document, gizmoItem);
   }
 }

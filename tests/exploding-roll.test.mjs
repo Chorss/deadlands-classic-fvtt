@@ -8,7 +8,7 @@ import { describe, it } from "node:test";
 import { rollExplodingPool } from "../module/core/dice/exploding-roll.mjs";
 
 /** Build a deterministic RNG that returns values from a fixed sequence. */
-function makeRng(...values) {
+function _makeRng(...values) {
   let i = 0;
   // Convert face-value to [0,1) as the code does: 1 + floor(rng()*faces) = value
   // So rng() = (value - 1) / faces (for faces, use the last die we set up)

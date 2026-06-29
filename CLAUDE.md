@@ -159,3 +159,4 @@ The `/verify-system` slash command wraps both in a one-paragraph report.
 
 @.claude/rules/commits.md
 @.claude/rules/naming.md
+@.claude/rules/code-quality.md

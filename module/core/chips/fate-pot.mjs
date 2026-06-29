@@ -56,7 +56,9 @@ export const FatePotModel = globalThis.foundry
 export function drawBlindPure(pot, n, rng = Math.random) {
   const pool = [];
   for (const [color, count] of Object.entries(pot)) {
-    for (let i = 0; i < count; i++) pool.push(color);
+    for (let i = 0; i < count; i++) {
+      pool.push(color);
+    }
   }
 
   const drawn = [];
@@ -175,8 +177,9 @@ export class FatePot {
     for (const actor of pcs) {
       const drawn = await FatePot.drawBlind(chipsPerPlayer);
       const delta = {};
-      for (const color of drawn)
+      for (const color of drawn) {
         delta[`system.chips.${color}`] = (actor.system.chips[color] ?? 0) + 1;
+      }
       await actor.update(delta);
       log.push(`${actor.name}: ${drawn.join(", ")}`);
     }

@@ -42,8 +42,12 @@ const RANK_NUMS = (() => {
  * @returns {number}
  */
 export function cardValue(card) {
-  if (card.joker === "red") return 999;
-  if (card.joker === "black") return 998;
+  if (card.joker === "red") {
+    return 999;
+  }
+  if (card.joker === "black") {
+    return 998;
+  }
   const rank = RANK_NUMS[card.rank] ?? 0;
   const suit = DEADLANDS.CARD_SUITS[card.suit]?.precedence ?? 0;
   return rank * 10 + suit;
@@ -66,8 +70,12 @@ export function compareCards(a, b) {
  * @returns {string}
  */
 export function cardLabelRaw(card) {
-  if (card.joker === "red") return "Red Joker";
-  if (card.joker === "black") return "Black Joker";
+  if (card.joker === "red") {
+    return "Red Joker";
+  }
+  if (card.joker === "black") {
+    return "Black Joker";
+  }
   const suit = card.suit.charAt(0).toUpperCase() + card.suit.slice(1);
   return `${card.rank} of ${suit}`;
 }
@@ -113,7 +121,9 @@ export function shuffleDeck(cards, rng = Math.random) {
  * @returns {number}
  */
 export function quicknessCardCount({ bust, raises }) {
-  if (bust) return 0;
+  if (bust) {
+    return 0;
+  }
   return Math.min(DEADLANDS.MAX_ACTION_CARDS, 1 + raises);
 }
 
@@ -147,7 +157,9 @@ export class ActionDeck {
    */
   static async initialize(combat, _rng = Math.random) {
     const existing = this.getState(combat);
-    if (existing) return existing;
+    if (existing) {
+      return existing;
+    }
     const state = {
       drawPile: shuffleDeck(buildFullDeck(), _rng),
       reshuffleAtRoundEnd: false,
@@ -165,7 +177,9 @@ export class ActionDeck {
    * @returns {Promise<object[]>} dealt cards
    */
   static async deal(combat, count, _rng = Math.random) {
-    if (count <= 0) return [];
+    if (count <= 0) {
+      return [];
+    }
     const state = this.getState(combat) ?? (await this.initialize(combat, _rng));
     const drawPile = [...state.drawPile];
     if (drawPile.length < count) {
@@ -195,7 +209,9 @@ export class ActionDeck {
    */
   static async maybeReshuffleAtRoundEnd(combat, _rng = Math.random) {
     const state = this.getState(combat);
-    if (!state?.reshuffleAtRoundEnd) return false;
+    if (!state?.reshuffleAtRoundEnd) {
+      return false;
+    }
     await combat.setFlag(FLAG_SCOPE, FLAG_KEY, {
       drawPile: shuffleDeck(buildFullDeck(), _rng),
       reshuffleAtRoundEnd: false,

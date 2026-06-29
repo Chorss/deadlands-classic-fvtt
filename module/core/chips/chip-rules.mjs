@@ -37,8 +37,12 @@ export function canSpend(
   color,
   { available = 0, isBust = false, higherAlreadySpent = false } = {}
 ) {
-  if (!CHIP_COLORS[color]) return { can: false, reason: "DEADLANDS.ChipRule.Unknown" };
-  if (available <= 0) return { can: false, reason: "DEADLANDS.ChipRule.NoneLeft" };
+  if (!CHIP_COLORS[color]) {
+    return { can: false, reason: "DEADLANDS.ChipRule.Unknown" };
+  }
+  if (available <= 0) {
+    return { can: false, reason: "DEADLANDS.ChipRule.NoneLeft" };
+  }
 
   // During bust only Legend (reroll) is valid. dlc p.148.
   if (isBust && color !== "legend") {
@@ -95,7 +99,9 @@ export function applyChipCap(currentChips, incoming) {
  */
 export async function executeSpend(actor, color, { mode = "normal", rollType = "trait" } = {}) {
   const current = actor.system.chips[color] ?? 0;
-  if (current <= 0) throw new Error(`Actor has no ${color} chips to spend.`);
+  if (current <= 0) {
+    throw new Error(`Actor has no ${color} chips to spend.`);
+  }
 
   // Deduct from actor.
   await actor.update({ [`system.chips.${color}`]: current - 1 });

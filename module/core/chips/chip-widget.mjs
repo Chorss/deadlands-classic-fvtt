@@ -43,9 +43,13 @@ export async function grantChips(actor, colors) {
     const key = `system.chips.${color}`;
     update[key] = (update[key] ?? actor.system.chips[color] ?? 0) + 1;
   }
-  if (bpGained > 0) update["system.bounty"] = (actor.system.bounty ?? 0) + bpGained;
+  if (bpGained > 0) {
+    update["system.bounty"] = (actor.system.bounty ?? 0) + bpGained;
+  }
 
-  if (Object.keys(update).length) await actor.update(update);
+  if (Object.keys(update).length) {
+    await actor.update(update);
+  }
   return { kept, bpGained };
 }
 

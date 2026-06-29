@@ -194,14 +194,22 @@ export async function checkMalfunction(actor, gizmoItem) {
     severity = _malfunctionSeverity(d6Result);
   }
 
-  await _sendMalfunctionMessage(actor, gizmoItem, { d20, malfunction, severity, d6Result, reliability });
+  await _sendMalfunctionMessage(actor, gizmoItem, {
+    d20,
+    malfunction,
+    severity,
+    d6Result,
+    reliability,
+  });
   return { malfunction, severity, d20 };
 }
 
 // ── Internal helpers ──────────────────────────────────────────────────────────
 
 async function _drawCards(count) {
-  if (game.combat) return ActionDeck.deal(game.combat, count);
+  if (game.combat) {
+    return ActionDeck.deal(game.combat, count);
+  }
   return shuffleDeck(buildFullDeck()).slice(0, count);
 }
 
@@ -211,19 +219,17 @@ async function _drawCards(count) {
  */
 async function _rollMadnessTable(actor) {
   const roll = Math.ceil(Math.random() * 20);
-  const entry = MADNESS_TABLE.find((e) => e.roll === roll) ?? MADNESS_TABLE[MADNESS_TABLE.length - 1];
+  const entry =
+    MADNESS_TABLE.find((e) => e.roll === roll) ?? MADNESS_TABLE[MADNESS_TABLE.length - 1];
 
   await ChatMessage.create({
-    content: await renderTemplate(
-      "systems/deadlands-classic/templates/chat/madness-result.hbs",
-      {
-        actorName: actor.name,
-        roll,
-        key: entry.key,
-        labelKey: `DEADLANDS.MadScientist.Madness.${_toPascal(entry.key)}.Label`,
-        noteKey: `DEADLANDS.MadScientist.Madness.${_toPascal(entry.key)}.Note`,
-      },
-    ),
+    content: await renderTemplate("systems/deadlands-classic/templates/chat/madness-result.hbs", {
+      actorName: actor.name,
+      roll,
+      key: entry.key,
+      labelKey: `DEADLANDS.MadScientist.Madness.${_toPascal(entry.key)}.Label`,
+      noteKey: `DEADLANDS.MadScientist.Madness.${_toPascal(entry.key)}.Note`,
+    }),
     whisper: ChatMessage.getWhisperRecipients("GM"),
     speaker: ChatMessage.getSpeaker({ actor }),
   });
@@ -236,8 +242,12 @@ async function _rollMadnessTable(actor) {
  * 2–5 → Major; 6–10 → Minor; 11–12 → Catastrophic.
  */
 function _malfunctionSeverity(d6total) {
-  if (d6total <= 5) return "major";
-  if (d6total <= 10) return "minor";
+  if (d6total <= 5) {
+    return "major";
+  }
+  if (d6total <= 10) {
+    return "minor";
+  }
   return "catastrophic";
 }
 
@@ -256,7 +266,7 @@ async function _sendBlueprintMessage(actor, gizmoItem, rollResult, drawn, handRe
       minHandKey: gizmoItem.system.blueprintHand
         ? `DEADLANDS.Huckster.Hand.${_toPascal(gizmoItem.system.blueprintHand)}`
         : null,
-    },
+    }
   );
   await ChatMessage.create({ content, speaker: ChatMessage.getSpeaker({ actor }) });
 }
@@ -271,7 +281,7 @@ async function _sendConstructionMessage(actor, gizmoItem, rollResult, meta) {
       rollResult,
       constructionSucceeds: meta.succeeded,
       reliability: meta.reliability,
-    },
+    }
   );
   await ChatMessage.create({ content, speaker: ChatMessage.getSpeaker({ actor }) });
 }
@@ -284,7 +294,7 @@ async function _sendMalfunctionMessage(actor, gizmoItem, meta) {
       gizmoName: gizmoItem.name,
       phase: "malfunction",
       ...meta,
-    },
+    }
   );
   await ChatMessage.create({ content, speaker: ChatMessage.getSpeaker({ actor }) });
 }

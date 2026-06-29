@@ -165,7 +165,7 @@ async function _postGutsChat({
 
   let scartHtml = "";
   if (scartEntry) {
-    const effectLabel = game.i18n.localize(`DEADLANDS.Scart.${toPascal(scartEntry.key)}`);
+    const effectLabel = game.i18n.localize(`DEADLANDS.Scart.${toPascal(scartEntry.key)}.Label`);
     const gmNote = game.i18n.localize(`DEADLANDS.Scart.${toPascal(scartEntry.key)}.Note`);
     const windStr =
       windLost > 0

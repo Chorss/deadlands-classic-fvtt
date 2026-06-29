@@ -24,7 +24,9 @@ import { HIT_LOCATION_TABLE } from "../config.mjs";
 export function resolveHitLocation(d20, sideD = 1, raiseOffset = 0) {
   const clamped = Math.min(20, Math.max(1, d20 + raiseOffset));
   const entry = HIT_LOCATION_TABLE.find((e) => clamped >= e.min && clamped <= e.max);
-  if (!entry) return "upperGuts"; // fallback — should never happen
+  if (!entry) {
+    return "upperGuts"; // fallback — should never happen
+  }
 
   if (entry.location === "legs") {
     return sideD % 2 === 0 ? "rightLeg" : "leftLeg";

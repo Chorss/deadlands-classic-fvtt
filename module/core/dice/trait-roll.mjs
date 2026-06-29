@@ -23,48 +23,52 @@ import { rollExplodingPool } from "./exploding-roll.mjs";
  * @returns {Promise<import("./exploding-roll.mjs").PoolResult>}
  */
 export async function rollTrait(actorOrParams, traitId, options = {}) {
-  let dieCount, dieType, modifier, tn, label;
+  const params =
+    actorOrParams && typeof actorOrParams === "object" && "dieCount" in actorOrParams
+      ? _paramsFromRaw(actorOrParams)
+      : _paramsFromActor(actorOrParams, traitId, options);
 
-  if (actorOrParams && typeof actorOrParams === "object" && "dieCount" in actorOrParams) {
-    // Signature A
-    ({ dieCount, dieType, modifier = 0, tn = 5, label } = actorOrParams);
-    label ??= `${dieCount}${dieType}`;
+  const result = rollExplodingPool(params.dieCount, params.dieType, {
+    modifier: params.modifier,
+    tn: params.tn,
+  });
+  await _postChatMessage(result, params.label, params.tn);
+  return result;
+}
+
+/** Build roll params from a raw parameter object (Signature A — testing / console). */
+function _paramsFromRaw({ dieCount, dieType, modifier = 0, tn = 5, label }) {
+  return { dieCount, dieType, modifier, tn, label: label ?? `${dieCount}${dieType}` };
+}
+
+/** Build roll params from an actor + traitId (Signature B — sheet integration). */
+function _paramsFromActor(actor, traitId, options) {
+  const trait = actor.system.traits[traitId];
+  const aptId = options.aptitudeId;
+  const extraDice = options.extraDice ?? 0;
+  const woundMod = actor.system.woundModifier ?? 0; // dlc p.140
+  const baseMod = (options.modifier ?? 0) + (trait.modifier ?? 0) + woundMod;
+
+  let dieCount, modifier, label;
+  const dieType = trait.dieType;
+  const tn = options.tn ?? 5;
+
+  if (aptId) {
+    const aptLevel = trait.aptitudes[aptId]?.level ?? 0;
+    const unskilled = aptLevel === 0; // dlc p.29: no aptitude = 1 die, −4 modifier
+    dieCount = (unskilled ? 1 : aptLevel) + extraDice;
+    modifier = baseMod + (unskilled ? -4 : 0);
+    const unskilledSuffix = unskilled ? ` [${game.i18n.localize("DEADLANDS.Roll.Unskilled")}]` : "";
+    const aptLabel = game.i18n.localize(`DEADLANDS.Aptitude.${toPascal(aptId)}.Label`);
+    label = `${game.i18n.localize(`DEADLANDS.Trait.${toPascal(traitId)}.Label`)} / ${aptLabel} (${dieCount}${dieType})${unskilledSuffix}`;
   } else {
-    // Signature B
-    const actor = actorOrParams;
-    const trait = actor.system.traits[traitId];
-    const aptId = options.aptitudeId;
-
-    dieType = trait.dieType;
-    const extraDice = options.extraDice ?? 0; // white chip bonus dice
-    if (aptId) {
-      const aptLevel = trait.aptitudes[aptId]?.level ?? 0;
-      const unskilled = aptLevel === 0; // dlc p.29: no aptitude = 1 die, -4 modifier
-      dieCount = (unskilled ? 1 : aptLevel) + extraDice;
-      const unskilledPenalty = unskilled ? -4 : 0;
-      const woundMod = actor.system.woundModifier ?? 0; // highest wound penalty. dlc p.140.
-      modifier = (options.modifier ?? 0) + (trait.modifier ?? 0) + unskilledPenalty + woundMod;
-      if (unskilled) label += ` [${game.i18n.localize("DEADLANDS.Roll.Unskilled")}]`;
-    } else {
-      // Pure trait roll: trait level is the die count. dlc p.27.
-      dieCount = (trait.dieCount ?? 1) + extraDice;
-      const woundMod = actor.system.woundModifier ?? 0; // dlc p.140.
-      modifier = (options.modifier ?? 0) + (trait.modifier ?? 0) + woundMod;
-    }
-    tn = options.tn ?? 5;
-
-    const traitKey = `DEADLANDS.Trait.${toPascal(traitId)}.Label`;
-    const traitLabel = game.i18n.localize(traitKey);
-    const aptLabel = aptId
-      ? ` / ${game.i18n.localize(`DEADLANDS.Aptitude.${toPascal(aptId)}.Label`)}`
-      : "";
-    label = `${traitLabel}${aptLabel} (${dieCount}${dieType})`;
+    // Pure trait roll: trait die count. dlc p.27
+    dieCount = (trait.dieCount ?? 1) + extraDice;
+    modifier = baseMod;
+    label = `${game.i18n.localize(`DEADLANDS.Trait.${toPascal(traitId)}.Label`)} (${dieCount}${dieType})`;
   }
 
-  const result = rollExplodingPool(dieCount, dieType, { modifier, tn });
-
-  await _postChatMessage(result, label, tn);
-  return result;
+  return { dieCount, dieType, modifier, tn, label };
 }
 
 /**

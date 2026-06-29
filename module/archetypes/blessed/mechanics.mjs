@@ -64,7 +64,9 @@ export async function invokeMiracle(actor, miracleItem, opts = {}) {
     tn,
   });
 
-  await _sendMiracleMessage(actor, miracleItem, rollResult, { miraculSucceeds: !rollResult.bust && rollResult.total >= tn });
+  await _sendMiracleMessage(actor, miracleItem, rollResult, {
+    miraculSucceeds: !rollResult.bust && rollResult.total >= tn,
+  });
 
   if (rollResult.bust) {
     // Bust on a faith roll = lose 1 faith if not already at 0. dlc p.177.
@@ -106,7 +108,9 @@ export async function trackSin(actor, severity = "minor") {
   });
 
   const faithLost = spiritRoll.bust || spiritRoll.total < sinTN;
-  if (faithLost) await _applyFaithLoss(actor);
+  if (faithLost) {
+    await _applyFaithLoss(actor);
+  }
 
   await _sendSinMessage(actor, severity, spiritRoll, faithLost, denialLabel);
 }
@@ -116,7 +120,9 @@ export async function trackSin(actor, severity = "minor") {
 /** Subtract 1 from faith level, floor at 0. dlc p.177. */
 async function _applyFaithLoss(actor) {
   const current = actor.system.faith?.level ?? 0;
-  if (current <= 0) return;
+  if (current <= 0) {
+    return;
+  }
   await actor.update({ "system.faith.level": current - 1 });
 }
 
@@ -129,7 +135,7 @@ async function _sendMiracleMessage(actor, miracleItem, rollResult, meta) {
       miracleName: miracleItem.name,
       rollResult,
       miracleSucceeds: meta.miraculSucceeds,
-    },
+    }
   );
 
   await ChatMessage.create({
@@ -140,17 +146,14 @@ async function _sendMiracleMessage(actor, miracleItem, rollResult, meta) {
 
 /** Post the sin resolution to chat (whisper to GM). */
 async function _sendSinMessage(actor, severity, spiritRoll, faithLost, denialLabel) {
-  const content = await renderTemplate(
-    "systems/deadlands-classic/templates/chat/sin-result.hbs",
-    {
-      actorName: actor.name,
-      severity,
-      spiritRoll,
-      faithLost,
-      denialLabel,
-      sinTN: SIN_TNS[severity],
-    },
-  );
+  const content = await renderTemplate("systems/deadlands-classic/templates/chat/sin-result.hbs", {
+    actorName: actor.name,
+    severity,
+    spiritRoll,
+    faithLost,
+    denialLabel,
+    sinTN: SIN_TNS[severity],
+  });
 
   await ChatMessage.create({
     content,

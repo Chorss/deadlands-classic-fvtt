@@ -8,7 +8,7 @@
  */
 
 import { BaseCharacterSheet } from "../_base/base-character-sheet.mjs";
-import { invokeMiracle, trackSin, SIN_TNS, SIN_DENIAL_LABELS } from "./mechanics.mjs";
+import { invokeMiracle, SIN_DENIAL_LABELS, trackSin } from "./mechanics.mjs";
 
 const TEMPLATE_ROOT = "systems/deadlands-classic/templates/actor/parts";
 const DIALOG_ROOT = "systems/deadlands-classic/templates/dialogs";
@@ -38,9 +38,19 @@ export class BlessedSheet extends BaseCharacterSheet {
   static TABS = {
     sheet: {
       tabs: [
-        { id: "traits", group: "sheet", icon: "fas fa-dice-d20", label: "DEADLANDS.Sheet.Tab.Traits" },
+        {
+          id: "traits",
+          group: "sheet",
+          icon: "fas fa-dice-d20",
+          label: "DEADLANDS.Sheet.Tab.Traits",
+        },
         { id: "combat", group: "sheet", icon: "fas fa-gun", label: "DEADLANDS.Sheet.Tab.Combat" },
-        { id: "miracles", group: "sheet", icon: "fas fa-cross", label: "DEADLANDS.Sheet.Tab.Miracles" },
+        {
+          id: "miracles",
+          group: "sheet",
+          icon: "fas fa-cross",
+          label: "DEADLANDS.Sheet.Tab.Miracles",
+        },
         { id: "gear", group: "sheet", icon: "fas fa-box", label: "DEADLANDS.Sheet.Tab.Gear" },
         { id: "bio", group: "sheet", icon: "fas fa-feather", label: "DEADLANDS.Sheet.Tab.Bio" },
       ],
@@ -89,7 +99,7 @@ export class BlessedSheet extends BaseCharacterSheet {
     return {
       denied,
       severity,
-      denialLabel: denied ? SIN_DENIAL_LABELS[severity] ?? "" : "",
+      denialLabel: denied ? (SIN_DENIAL_LABELS[severity] ?? "") : "",
       sinPending: this.document.system.sinPending ?? false,
     };
   }
@@ -97,10 +107,12 @@ export class BlessedSheet extends BaseCharacterSheet {
   // ── Action handlers ──────────────────────────────────────────────────────────
 
   /** @this {BlessedSheet} */
-  static async #onInvokeMiracle(event, target) {
+  static async #onInvokeMiracle(_event, target) {
     const miracleId = target.dataset.miracleId;
     const miracleItem = this.document.items.get(miracleId);
-    if (!miracleItem) return;
+    if (!miracleItem) {
+      return;
+    }
 
     const maxWhite = this.document.system.chips?.white ?? 0;
     const content = await renderTemplate(`${DIALOG_ROOT}/invoke-miracle-dialog.hbs`, {
@@ -110,7 +122,11 @@ export class BlessedSheet extends BaseCharacterSheet {
     });
 
     const params = await foundry.applications.api.DialogV2.prompt({
-      window: { title: game.i18n.format("DEADLANDS.Blessed.Dialog.InvokeTitle", { miracle: miracleItem.name }) },
+      window: {
+        title: game.i18n.format("DEADLANDS.Blessed.Dialog.InvokeTitle", {
+          miracle: miracleItem.name,
+        }),
+      },
       content,
       ok: {
         label: game.i18n.localize("DEADLANDS.Blessed.Dialog.Invoke"),
@@ -124,11 +140,16 @@ export class BlessedSheet extends BaseCharacterSheet {
       },
     });
 
-    if (!params) return;
+    if (!params) {
+      return;
+    }
 
     if (params.whiteSpend > 0) {
       await this.document.update({
-        "system.chips.white": Math.max(0, (this.document.system.chips?.white ?? 0) - params.whiteSpend),
+        "system.chips.white": Math.max(
+          0,
+          (this.document.system.chips?.white ?? 0) - params.whiteSpend
+        ),
       });
     }
 
@@ -139,7 +160,7 @@ export class BlessedSheet extends BaseCharacterSheet {
   }
 
   /** @this {BlessedSheet} */
-  static async #onTrackSin(event, target) {
+  static async #onTrackSin(_event, target) {
     const severity = target.dataset.severity ?? "minor";
     await trackSin(this.document, severity);
   }

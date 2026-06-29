@@ -6,8 +6,8 @@
  * are verified manually via Playwright in the dev world.
  */
 
-import { describe, it } from "node:test";
 import assert from "node:assert/strict";
+import { describe, it } from "node:test";
 
 // ── Blessed: sin TNs ──────────────────────────────────────────────────────────
 
@@ -96,8 +96,12 @@ describe("Malfunction trigger (dlc p.247)", () => {
 describe("Malfunction severity from 2d6 (dlc p.247)", () => {
   // 2–5 → Major; 6–10 → Minor; 11–12 → Catastrophic. dlc p.247.
   function malfunctionSeverity(total) {
-    if (total <= 5) return "major";
-    if (total <= 10) return "minor";
+    if (total <= 5) {
+      return "major";
+    }
+    if (total <= 10) {
+      return "minor";
+    }
     return "catastrophic";
   }
 
@@ -117,7 +121,9 @@ describe("Manitou opposed roll raises (ghost-dancers p.57)", () => {
    * manitou raises = floor((spirit - shamanTotal) / 5), min 0.
    */
   function manitouRaises(manitouSpirit, shamanTotal) {
-    if (shamanTotal >= manitouSpirit) return 0;
+    if (shamanTotal >= manitouSpirit) {
+      return 0;
+    }
     return Math.max(0, Math.floor((manitouSpirit - shamanTotal) / 5));
   }
 

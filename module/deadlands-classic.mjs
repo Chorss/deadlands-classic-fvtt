@@ -128,18 +128,28 @@ Hooks.once("ready", () => {
 
 Hooks.on("renderCombatTracker", (_app, html) => {
   const combat = game.combat;
-  if (!combat) return;
+  if (!combat) {
+    return;
+  }
   for (const combatant of combat.combatants) {
     const row = html.querySelector(`[data-combatant-id="${combatant.id}"]`);
-    if (!row) continue;
+    if (!row) {
+      continue;
+    }
     const initEl = row.querySelector(".combatant-initiative");
-    if (!initEl) continue;
+    if (!initEl) {
+      continue;
+    }
     const card = combatant.highestCard;
     if (card) {
       initEl.textContent = DeadlandsCombat.cardLabel(card);
       initEl.classList.add("dlc-initiative-card");
-      if (card.joker === "red") initEl.classList.add("dlc-initiative-red-joker");
-      if (card.joker === "black") initEl.classList.add("dlc-initiative-black-joker");
+      if (card.joker === "red") {
+        initEl.classList.add("dlc-initiative-red-joker");
+      }
+      if (card.joker === "black") {
+        initEl.classList.add("dlc-initiative-black-joker");
+      }
     }
   }
 });

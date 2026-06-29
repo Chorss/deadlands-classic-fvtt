@@ -28,7 +28,9 @@ import { rollExplodingPool } from "../dice/exploding-roll.mjs";
  * @returns {number} — wound count (may be 0)
  */
 export function woundsFromDamage(damageTotal, size = 6) {
-  if (damageTotal <= 0 || size <= 0) return 0;
+  if (damageTotal <= 0 || size <= 0) {
+    return 0;
+  }
   return Math.floor(damageTotal / size);
 }
 
@@ -62,9 +64,15 @@ export function windDiceCount(woundAmount) {
  * @returns {number} — Wind points lost this round (0 if no bleed)
  */
 export function getBleedingRate(severity, isLimb = false) {
-  if (severity >= 5 && isLimb) return 3; // Maimed limb
-  if (severity >= 4) return 2; // Critical
-  if (severity >= 3) return 1; // Serious
+  if (severity >= 5 && isLimb) {
+    return 3; // Maimed limb
+  }
+  if (severity >= 4) {
+    return 2; // Critical
+  }
+  if (severity >= 3) {
+    return 1; // Serious
+  }
   return 0;
 }
 

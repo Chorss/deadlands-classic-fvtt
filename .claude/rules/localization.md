@@ -24,6 +24,28 @@ Both files MUST have identical key sets. `.claude/hooks/post-write.sh` and `.git
 - Sheet/UI strings: `DEADLANDS.Sheet.<Context>.<Label>`.
 - Chat / roll messages: `DEADLANDS.Chat.*`.
 
+## Klucze z podkluczami — obowiązkowe `.Label`
+
+Foundry parsuje płaskie klucze JSON do zagnieżdżonego obiektu w runtime. Jeśli klucz `FOO.Bar`
+jest stringiem i jednocześnie istnieje klucz `FOO.Bar.Note`, Foundry rzuci
+`TypeError: Cannot set property 'Note' on string` przy starcie.
+
+**Zasada:** jeśli koncepcja ma podklucze (`.Note`, `.Description`, `.Hint`, itp.),
+etykieta idzie pod `.Label` — nigdy gołym kluczem.
+
+```jsonc
+// ❌ ZŁE — "DEADLANDS.Scart.Uneasy" jest jednocześnie stringiem i prefixem
+"DEADLANDS.Scart.Uneasy": "Uneasy",
+"DEADLANDS.Scart.Uneasy.Note": "Loses next Action Card."
+
+// ✅ DOBRE
+"DEADLANDS.Scart.Uneasy.Label": "Uneasy",
+"DEADLANDS.Scart.Uneasy.Note": "Loses next Action Card."
+```
+
+`tools/verify-documenttypes.mjs` wykrywa te konflikty i blokuje commit.
+Ale lepiej stosować zasadę od razu niż liczyć na narzędzie.
+
 ## Adding a new string
 
 Both `en.json` AND `pl.json` get the same key in the same commit — partial commits are rejected by the hook. Use `{placeholder}`-style interpolation (`game.i18n.format(key, {title})`); avoid string concatenation at call sites.

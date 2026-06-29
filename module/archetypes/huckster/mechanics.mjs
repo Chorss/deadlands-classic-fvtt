@@ -97,8 +97,11 @@ export async function castHex(actor, hexItem, opts = {}) {
   const hasBlackJoker = drawn.some((c) => c.joker === "black");
   const hasRedJoker = drawn.some((c) => c.joker === "red");
   let backlashTrigger = null;
-  if (hasBlackJoker) backlashTrigger = "blackJoker";
-  else if (hasRedJoker && hexslinging < 3) backlashTrigger = "redJoker";
+  if (hasBlackJoker) {
+    backlashTrigger = "blackJoker";
+  } else if (hasRedJoker && hexslinging < 3) {
+    backlashTrigger = "redJoker";
+  }
 
   // 4. Evaluate the best poker hand from the drawn cards (jokers are wild).
   const handResult = evaluateHand(drawn);
@@ -141,7 +144,9 @@ export async function castHex(actor, hexItem, opts = {}) {
 
 /** Draw `count` cards from the active combat's Action Deck; fall back to a fresh deck. */
 async function _drawCards(count) {
-  if (game.combat) return ActionDeck.deal(game.combat, count);
+  if (game.combat) {
+    return ActionDeck.deal(game.combat, count);
+  }
   return shuffleDeck(buildFullDeck()).slice(0, count);
 }
 
@@ -162,7 +167,7 @@ async function _resolveBacklash(actor, hexItem) {
       entryKey: `DEADLANDS.Huckster.Backlash.${_toPascal(entry.key)}.Label`,
       noteKey: `DEADLANDS.Huckster.Backlash.${_toPascal(entry.key)}.Note`,
       hexSucceeds: entry.hexSucceeds,
-    },
+    }
   );
 
   await ChatMessage.create({
@@ -176,12 +181,8 @@ async function _resolveBacklash(actor, hexItem) {
 
 /** Post the hex cast result to chat. */
 async function _sendCastMessage(actor, hexItem, rollResult, drawn, handResult, meta) {
-  const handKey = handResult
-    ? `DEADLANDS.Huckster.Hand.${_toPascal(handResult.handKey)}`
-    : null;
-  const minHandKey = meta.minHand
-    ? `DEADLANDS.Huckster.Hand.${_toPascal(meta.minHand)}`
-    : null;
+  const handKey = handResult ? `DEADLANDS.Huckster.Hand.${_toPascal(handResult.handKey)}` : null;
+  const minHandKey = meta.minHand ? `DEADLANDS.Huckster.Hand.${_toPascal(meta.minHand)}` : null;
 
   const drawnWithLabels = drawn.map((c) => ({
     ...c,
@@ -203,7 +204,7 @@ async function _sendCastMessage(actor, hexItem, rollResult, drawn, handResult, m
       hexSucceeds: meta.hexSucceeds ?? false,
       backlashTrigger: meta.backlashTrigger ?? null,
       bust: meta.bust ?? false,
-    },
+    }
   );
 
   await ChatMessage.create({
