@@ -19,13 +19,12 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const REPO_ROOT = path.resolve(
-  path.dirname(fileURLToPath(import.meta.url)),
-  "..",
-);
+const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 function collectFiles(dir, ext) {
-  if (!fs.existsSync(dir)) return [];
+  if (!fs.existsSync(dir)) {
+    return [];
+  }
   return fs
     .readdirSync(dir, { recursive: true, withFileTypes: true })
     .filter((e) => e.isFile() && e.name.endsWith(ext))
@@ -45,7 +44,9 @@ for (const file of hbsFiles) {
   const src = fs.readFileSync(file, "utf8");
   for (const match of src.matchAll(classRe)) {
     for (const token of match[1].split(/\s+/)) {
-      if (!token.startsWith("dlc-")) continue;
+      if (!token.startsWith("dlc-")) {
+        continue;
+      }
       if (tokenRe.test(token)) {
         dynamicFragments.add(token);
       } else {
@@ -74,20 +75,24 @@ if (missing.length === 0) {
   console.log(`audit-css OK — ${usedClasses.size} classes, all covered.`);
   if (dynamicFragments.size > 0) {
     console.log(
-      `  note: ${dynamicFragments.size} dynamic fragments skipped (handlebars expressions):`,
+      `  note: ${dynamicFragments.size} dynamic fragments skipped (handlebars expressions):`
     );
-    for (const f of [...dynamicFragments].sort()) console.log(`    ${f}`);
+    for (const f of [...dynamicFragments].sort()) {
+      console.log(`    ${f}`);
+    }
   }
   process.exit(0);
 }
 
 console.error(
-  `audit-css FAILED — ${missing.length} class(es) used in templates but missing from styles/:\n`,
+  `audit-css FAILED — ${missing.length} class(es) used in templates but missing from styles/:\n`
 );
-for (const c of missing) console.error(`  .${c}`);
+for (const c of missing) {
+  console.error(`  .${c}`);
+}
 if (dynamicFragments.size > 0) {
   console.error(
-    `\n  note: ${dynamicFragments.size} dynamic fragments not checked (handlebars expressions).`,
+    `\n  note: ${dynamicFragments.size} dynamic fragments not checked (handlebars expressions).`
   );
 }
 process.exit(1);
