@@ -8,8 +8,8 @@
  * @license MIT
  */
 
-/** The six Medicine Ways. ghost-dancers p.61. */
-const MEDICINE_WAYS = ["earth", "water", "fire", "air", "spirit", "guardian"];
+/** The six Medicine Ways. ghost-dancers p.58. */
+const MEDICINE_WAYS = ["blessing", "earth", "ghost", "trickster", "visionseeking", "war"];
 
 /**
  * Ritual types available as Aptitude concentrations. ghost-dancers p.71-76.
