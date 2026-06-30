@@ -1,0 +1,14 @@
+{
+  "_id": "hind003BadEarsSl",
+  "name": "Bad Ears",
+  "type": "hindrance",
+  "img": "icons/magic/perception/silhouette-stealth-shadow.webp",
+  "system": {
+    "points": 3,
+    "description": "<p>3 pts: –2 to hearing-based Cognition rolls. 5 pts: stone deaf, no hearing at all. dlc p.53.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

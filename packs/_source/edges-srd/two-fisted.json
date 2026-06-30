@@ -1,0 +1,16 @@
+{
+  "_id": "edge029TwoFisted",
+  "name": "Two-Fisted",
+  "type": "edge",
+  "img": "icons/skills/melee/blade-tips-double-blue.webp",
+  "system": {
+    "cost": 3,
+    "category": "",
+    "requirements": [],
+    "description": "<p>Negates the –4 off-hand penalty. The –2 penalty for simultaneously wielding two weapons still applies. dlc p.69.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

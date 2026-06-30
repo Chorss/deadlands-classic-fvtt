@@ -1,0 +1,16 @@
+{
+  "_id": "edge030VetWrdWst",
+  "name": "Veteran o' the Weird West",
+  "type": "edge",
+  "img": "icons/environment/wilderness/camp-improvised.webp",
+  "system": {
+    "cost": 0,
+    "category": "",
+    "requirements": ["Marshal assigns backstory consequences"],
+    "description": "<p>Grants 15 extra character creation points (spendable on Edges, Aptitudes, or Traits at normal cost). The Marshal assigns haunting narrative consequences drawn from the character's backstory. dlc p.70.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

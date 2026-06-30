@@ -1,0 +1,16 @@
+{
+  "_id": "edge024SenseODir",
+  "name": "Sense o' Direction",
+  "type": "edge",
+  "img": "icons/tools/navigation/compass-plain-blue.webp",
+  "system": {
+    "cost": 1,
+    "category": "",
+    "requirements": [],
+    "description": "<p>Fair (TN 5) Cognition roll to determine compass direction; Hard (TN 9) Smarts roll also reveals approximate time of day. dlc p.68.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

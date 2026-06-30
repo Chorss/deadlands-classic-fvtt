@@ -1,0 +1,16 @@
+{
+  "_id": "edge015LevelHead",
+  "name": "Level-Headed",
+  "type": "edge",
+  "img": "icons/skills/trades/academics-investigation-study-blue.webp",
+  "system": {
+    "cost": 5,
+    "category": "",
+    "requirements": [],
+    "description": "<p>Immediately after drawing Action Cards, discard the lowest card and draw a replacement. A black Joker drawn on the first draw cannot be replaced. dlc p.66.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

@@ -72,6 +72,7 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
     actions: {
       rollTrait: BaseCharacterSheet.#onRollTrait,
       rollAptitude: BaseCharacterSheet.#onRollAptitude,
+      dominionRoll: BaseCharacterSheet.#onDominionRoll,
     },
   };
 
@@ -81,6 +82,9 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
     tabs: { template: `${TEMPLATE_ROOT}/tabs.hbs` },
     traits: { template: `${TEMPLATE_ROOT}/traits-tab.hbs` },
     combat: { template: `${TEMPLATE_ROOT}/combat-tab.hbs` },
+    // harrowed part is always declared so V14 ApplicationV2 renders it;
+    // the tab nav entry is added conditionally in _prepareContext.
+    harrowed: { template: `${TEMPLATE_ROOT}/harrowed-tab.hbs` },
     gear: { template: `${TEMPLATE_ROOT}/gear-tab.hbs` },
     bio: { template: `${TEMPLATE_ROOT}/bio-tab.hbs` },
   };
@@ -96,6 +100,15 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
           label: "DEADLANDS.Sheet.Tab.Traits",
         },
         { id: "combat", group: "sheet", icon: "fas fa-gun", label: "DEADLANDS.Sheet.Tab.Combat" },
+        // harrowed is always declared in TABS so V14 ApplicationV2 builds its
+        // state; the nav entry is removed from context.tabs when the overlay is
+        // inactive, so the skull tab only appears for Harrowed characters.
+        {
+          id: "harrowed",
+          group: "sheet",
+          icon: "fas fa-skull",
+          label: "DEADLANDS.Harrowed.Sheet.Tab.Label",
+        },
         { id: "gear", group: "sheet", icon: "fas fa-box", label: "DEADLANDS.Sheet.Tab.Gear" },
         { id: "bio", group: "sheet", icon: "fas fa-feather", label: "DEADLANDS.Sheet.Tab.Bio" },
       ],
@@ -110,7 +123,6 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
     context.system = this.document.system;
     context.config = DEADLANDS;
     context.editable = this.isEditable;
-    context.tabs = this._prepareTabs("sheet");
     context.traitGroups = this.#prepareTraits();
     context.dieTypeChoices = Object.fromEntries(DEADLANDS.DIE_TYPES.map((d) => [d, d]));
     context.wounds = this.#prepareWounds();
@@ -121,6 +133,15 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
       rollData: this.document.getRollData(),
       relativeTo: this.document,
     });
+
+    // Harrowed overlay — build tabs first, then remove the harrowed nav entry
+    // when the overlay is inactive so the skull tab only shows for Harrowed PCs.
+    context.harrowed = this.#prepareHarrowed();
+    context.tabs = this._prepareTabs("sheet");
+    if (!context.harrowed.isHarrowed) {
+      delete context.tabs.harrowed;
+    }
+
     return context;
   }
 
@@ -224,6 +245,22 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
     return byType;
   }
 
+  // ── Harrowed overlay ─────────────────────────────────────────────────────
+
+  /** Harrowed view model for the overlay tab. */
+  #prepareHarrowed() {
+    const h = this.document.system.harrowed;
+    if (!h) {
+      return { isHarrowed: false, dominion: {}, powers: [], coup: [] };
+    }
+    return {
+      isHarrowed: h.isHarrowed ?? false,
+      dominion: h.dominion ?? {},
+      powers: h.harrowedPowers ?? [],
+      coup: h.countingCoup ?? [],
+    };
+  }
+
   // ── Roll action handlers ──────────────────────────────────────────────────
 
   /**
@@ -251,6 +288,15 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
       modifier: params.modifier,
       extraDice: params.whiteSpend,
     });
+  }
+
+  /**
+   * Dominion Roll — Spirit vs manitou contest, once per session. bod p.62/p.80.
+   * @this {BaseCharacterSheet}
+   */
+  static async #onDominionRoll(_event, _target) {
+    const { dominionRoll } = await import("../_overlays/harrowed/mechanics.mjs");
+    await dominionRoll(this.document);
   }
 
   /**

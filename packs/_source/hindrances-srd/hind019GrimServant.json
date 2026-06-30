@@ -1,0 +1,14 @@
+{
+  "_id": "hind019GrimSrvnt",
+  "name": "Grim Servant o' Death",
+  "type": "hindrance",
+  "img": "icons/magic/death/skull-horned-goat-purple.webp",
+  "system": {
+    "points": 5,
+    "description": "<p>Constantly targeted for violence; frequently jailed or on the run; lawmen are hostile by default toward this character. dlc p.56.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

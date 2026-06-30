@@ -1,0 +1,14 @@
+{
+  "_id": "hind010CautiousS",
+  "name": "Cautious",
+  "type": "hindrance",
+  "img": "icons/magic/symbols/question-stone-yellow.webp",
+  "system": {
+    "points": 3,
+    "description": "<p>Must plan extensively before any action; compulsive planner who will not act without sufficient reconnaissance and preparation. dlc p.54.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

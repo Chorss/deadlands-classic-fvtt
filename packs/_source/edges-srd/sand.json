@@ -1,0 +1,16 @@
+{
+  "_id": "edge023SandEdgeP",
+  "name": "Sand",
+  "type": "edge",
+  "img": "icons/skills/wounds/anatomy-organ-heart-red.webp",
+  "system": {
+    "cost": 1,
+    "category": "",
+    "requirements": [],
+    "description": "<p>Each level adds +1 to stun and recovery rolls made during combat. dlc p.68.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

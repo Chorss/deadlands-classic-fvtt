@@ -1,0 +1,14 @@
+{
+  "_id": "hind002AllThmbSl",
+  "name": "All Thumbs",
+  "type": "hindrance",
+  "img": "icons/tools/hand/wrench-steel-grey.webp",
+  "system": {
+    "points": 2,
+    "description": "<p>Scientific and mechanical Aptitudes cost double to raise; –2 to all machinery use and repair rolls. dlc p.52.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

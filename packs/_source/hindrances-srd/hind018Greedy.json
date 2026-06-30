@@ -1,0 +1,14 @@
+{
+  "_id": "hind018GreedySlg",
+  "name": "Greedy",
+  "type": "hindrance",
+  "img": "icons/commodities/currency/coin-stack-gold.webp",
+  "system": {
+    "points": 2,
+    "description": "<p>Will do almost anything for money or power; roleplaying obligation to prioritize personal gain in every decision. dlc p.55.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

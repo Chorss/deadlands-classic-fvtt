@@ -1,0 +1,16 @@
+{
+  "_id": "edge011GiftOfGab",
+  "name": "Gift of Gab",
+  "type": "edge",
+  "img": "icons/skills/social/diplomacy-handshake.webp",
+  "system": {
+    "cost": 1,
+    "category": "",
+    "requirements": [],
+    "description": "<p>After a few minutes of conversation, the character gains an effective oral skill of 1 in any spoken language. dlc p.65.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

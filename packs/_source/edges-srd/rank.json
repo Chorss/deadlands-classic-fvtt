@@ -1,0 +1,16 @@
+{
+  "_id": "edge021RankEdgeP",
+  "name": "Rank",
+  "type": "edge",
+  "img": "icons/environment/people/infantry-armored.webp",
+  "system": {
+    "cost": 1,
+    "category": "",
+    "requirements": ["Military service or Marshal approval"],
+    "description": "<p>Military rank with commensurate authority: 1=Private/Corporal, 2=Sergeant, 3=Lieutenant/Captain, 4=Major/Colonel, 5=General. Includes an implicit 5-point Obligation. dlc p.67.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

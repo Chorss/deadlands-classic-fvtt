@@ -1,0 +1,14 @@
+{
+  "_id": "hind008BigUnSlug",
+  "name": "Big 'Un",
+  "type": "hindrance",
+  "img": "icons/magic/control/buff-strength-muscle-pink.webp",
+  "system": {
+    "points": 1,
+    "description": "<p>1 pt: +1 Size, –1 Pace step, max Nimbleness d10. 2 pts: +2 Size, –2 Pace steps, max Nimbleness d8. dlc p.53.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

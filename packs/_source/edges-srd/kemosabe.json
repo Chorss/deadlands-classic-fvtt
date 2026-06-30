@@ -1,0 +1,16 @@
+{
+  "_id": "edge013Kemosabes",
+  "name": "Kemosabe",
+  "type": "edge",
+  "img": "icons/skills/social/diplomacy-unity-alliance.webp",
+  "system": {
+    "cost": 1,
+    "category": "",
+    "requirements": [],
+    "description": "<p>Familiarity with a culture and casual contacts within it. Costs 2 for culturally distant pairings (e.g. Anglo/Indian, Chinese/Western), 1 for closer ones (e.g. Sioux/Comanche). dlc p.65.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

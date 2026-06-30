@@ -1,0 +1,14 @@
+{
+  "_id": "hind047SqueakySl",
+  "name": "Squeaky",
+  "type": "hindrance",
+  "img": "icons/magic/sonic/wave-ring-teal.webp",
+  "system": {
+    "points": 2,
+    "description": "<p>–2 to any test of wills the character initiates using voice; can defend against such rolls normally. dlc p.60.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

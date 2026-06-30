@@ -1,0 +1,14 @@
+{
+  "_id": "hind031LocoSlugS",
+  "name": "Loco",
+  "type": "hindrance",
+  "img": "icons/magic/nature/lightning-bolt-strike-teal.webp",
+  "system": {
+    "points": 1,
+    "description": "<p>Mental illness (1–5 pts); –2 (minor) or –4 (major) to relevant Trait rolls when near the source of the condition; value set by severity and encounter frequency. dlc p.57.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

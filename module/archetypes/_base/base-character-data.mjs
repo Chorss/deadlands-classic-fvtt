@@ -22,6 +22,7 @@ import {
   WOUND_MAX,
   WOUND_PENALTIES,
 } from "../../core/config.mjs";
+import { OverlayRegistry } from "../../core/overlay-registry.mjs";
 
 /** Numeric face value of a die-type string ("d8" → 8). */
 function dieFace(dieType) {
@@ -65,7 +66,7 @@ export class BaseCharacterDataModel extends foundry.abstract.TypeDataModel {
       });
     }
 
-    return {
+    const base = {
       biography: new f.HTMLField(),
       traits: new f.SchemaField(traitFields),
       wounds: new f.SchemaField(woundFields),
@@ -88,6 +89,18 @@ export class BaseCharacterDataModel extends foundry.abstract.TypeDataModel {
       // Highest current wound penalty, computed in prepareDerivedData (read-only).
       woundModifier: new f.NumberField({ integer: true, initial: 0 }),
     };
+
+    // Merge extra fields from every registered overlay (e.g. harrowed.*).
+    // All overlay manifests are imported before the init hook fires, and
+    // defineSchema() is called lazily on first document instantiation — so the
+    // registry is already populated at this point. bod p.10-12, dlc p.194.
+    for (const overlay of OverlayRegistry.all()) {
+      if (typeof overlay.schemaFields === "function") {
+        Object.assign(base, overlay.schemaFields());
+      }
+    }
+
+    return base;
   }
 
   /** Recompute derived secondary stats after base data + active effects. */

@@ -451,5 +451,31 @@
   "DEADLANDS.MadScientist.Madness.Dementia.Note": "Severe cognitive decline — GM determines the specific manifestation.",
 
   "DEADLANDS.Dialog.Modifier": "Modifier",
-  "DEADLANDS.Dialog.WhiteChips": "White chips to spend"
+  "DEADLANDS.Dialog.WhiteChips": "White chips to spend",
+
+  "DEADLANDS.Harrowed.Label": "Harrowed",
+  "DEADLANDS.Harrowed.Sheet.Tab.Label": "Harrowed",
+  "DEADLANDS.Harrowed.IsHarrowed.Label": "Harrowed",
+  "DEADLANDS.Harrowed.Warn.NotHarrowed": "This character is not Harrowed.",
+  "DEADLANDS.Harrowed.Activated": "{name} has returned from beyond the pale.",
+
+  "DEADLANDS.Harrowed.Dominion.Label": "Dominion",
+  "DEADLANDS.Harrowed.Dominion.SpiritControl": "Spirit Control",
+  "DEADLANDS.Harrowed.Dominion.LastRoll": "Last Roll",
+  "DEADLANDS.Harrowed.Dominion.PCTotal": "Your total",
+  "DEADLANDS.Harrowed.Dominion.NpcTotal": "Manitou total",
+  "DEADLANDS.Harrowed.Dominion.Roll.Button": "Dominion Roll",
+  "DEADLANDS.Harrowed.Dominion.Roll.Title": "Dominion Roll",
+  "DEADLANDS.Harrowed.Dominion.RollResult": "Your roll: {pcTotal} vs Manitou: {npcTotal}",
+  "DEADLANDS.Harrowed.Dominion.NewControl": "Spirit Control now: {value}",
+  "DEADLANDS.Harrowed.Dominion.PCWins": "Your spirit holds — you control your body today.",
+  "DEADLANDS.Harrowed.Dominion.ManitouWins": "The manitou wins — you lose control!",
+  "DEADLANDS.Harrowed.Dominion.NoChange": "Neither side prevails — no change in Dominion.",
+
+  "DEADLANDS.Harrowed.Powers.Label": "Harrowed Powers",
+  "DEADLANDS.Harrowed.Powers.Level": "Level",
+  "DEADLANDS.Harrowed.Powers.Empty": "No Harrowed powers.",
+
+  "DEADLANDS.Harrowed.CountingCoup.Label": "Counting Coup",
+  "DEADLANDS.Harrowed.CountingCoup.Empty": "No coup powers yet."
 }

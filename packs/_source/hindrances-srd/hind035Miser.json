@@ -1,0 +1,14 @@
+{
+  "_id": "hind035MiserSlug",
+  "name": "Miser",
+  "type": "hindrance",
+  "img": "icons/commodities/currency/coin-stack-gold.webp",
+  "system": {
+    "points": 3,
+    "description": "<p>Can only purchase the cheapest available gear; must haggle over every purchase and refuses to part with money willingly. dlc p.58.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

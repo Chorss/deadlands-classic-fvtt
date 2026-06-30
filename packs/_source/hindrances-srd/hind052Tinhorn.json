@@ -1,0 +1,14 @@
+{
+  "_id": "hind052TinhornSl",
+  "name": "Tinhorn",
+  "type": "hindrance",
+  "img": "icons/equipment/head/hat-brimmed-brown.webp",
+  "system": {
+    "points": 2,
+    "description": "<p>Brags about back-East ways; frontier folk dislike and distrust this character due to perceived condescension. dlc p.61.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

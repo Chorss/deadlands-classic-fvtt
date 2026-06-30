@@ -1,0 +1,14 @@
+{
+  "_id": "hind053TuckerdSl",
+  "name": "Tuckered",
+  "type": "hindrance",
+  "img": "icons/magic/time/clock-analog-grey.webp",
+  "system": {
+    "points": 1,
+    "description": "<p>–1 Wind per point taken (1–5 pts); minimum Wind is 4. dlc p.61.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

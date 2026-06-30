@@ -1,0 +1,16 @@
+{
+  "_id": "edge016LightSlpr",
+  "name": "Light Sleeper",
+  "type": "edge",
+  "img": "icons/magic/perception/eye-ringed-green.webp",
+  "system": {
+    "cost": 1,
+    "category": "",
+    "requirements": [],
+    "description": "<p>+2 to Cognition rolls when required to wake quickly in an emergency. dlc p.66.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

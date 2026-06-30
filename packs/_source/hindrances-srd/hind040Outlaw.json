@@ -1,0 +1,14 @@
+{
+  "_id": "hind040OutlawSlg",
+  "name": "Outlaw",
+  "type": "hindrance",
+  "img": "icons/skills/melee/hand-grip-sword-red.webp",
+  "system": {
+    "points": 1,
+    "description": "<p>Lawbreaker by nature (1–5 pts); value based on severity, ranging from petty theft (1) to cold-blooded killer known to all lawmen (5). dlc p.59.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

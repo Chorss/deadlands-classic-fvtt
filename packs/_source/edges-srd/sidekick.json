@@ -1,0 +1,16 @@
+{
+  "_id": "edge025SidekickP",
+  "name": "Sidekick",
+  "type": "edge",
+  "img": "icons/environment/people/group.webp",
+  "system": {
+    "cost": 5,
+    "category": "",
+    "requirements": ["Marshal creates NPC companion"],
+    "description": "<p>Character begins with a loyal NPC companion created and controlled by the Marshal. dlc p.68.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

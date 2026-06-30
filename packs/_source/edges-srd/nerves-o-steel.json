@@ -1,0 +1,16 @@
+{
+  "_id": "edge019NervsStEl",
+  "name": "Nerves o' Steel",
+  "type": "edge",
+  "img": "icons/magic/defensive/shield-barrier-deflect-gold.webp",
+  "system": {
+    "cost": 1,
+    "category": "",
+    "requirements": [],
+    "description": "<p>When the character fails a Guts check and would be forced to flee, may choose to stand ground instead. All other failure penalties (Fright effects, etc.) still apply. dlc p.67.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

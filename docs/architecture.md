@@ -58,3 +58,89 @@ major version bump).
 `dlc` p.194: any PC can become Harrowed — an overlay on a normal character, not a separate actor
 type. A "Harrowed" sheet tab is injected when `system.harrowed.isHarrowed === true`; the nightly Dominion
 roll (opposed Spirit + each side's current Dominion — `dlc` p.195) is an `OverlayRegistry` hook, not a new sheet.
+
+---
+
+## Dependency diagram
+
+```
+  ┌─────────────────────────────────────────────────────────────────────┐
+  │                    module/core/                                     │
+  │                                                                     │
+  │  dice/   cards/   chips/   wounds/   config.mjs   overlay-registry │
+  │                                                                     │
+  │          ArchetypeRegistry ◄──────────────────────────────────────┐ │
+  │          ItemRegistry      ◄──────────────────────────────────────┤ │
+  │          OverlayRegistry   ◄──────────────────────────────────────┤ │
+  └──────────────────────────────────────────────────────────────────┼──┘
+                    ▲                                                 │
+                    │ depends on core                                 │
+  ┌─────────────────┴────────────────────────────────────────────────┤
+  │  module/archetypes/                                              │
+  │                                                                  │
+  │  cowboy/manifest.mjs   ─── ArchetypeRegistry.register({...})  ──┤
+  │  huckster/manifest.mjs ─── ArchetypeRegistry.register({...})  ──┤
+  │  blessed/manifest.mjs  ─── ArchetypeRegistry.register({...})  ──┤
+  │  shaman/manifest.mjs   ─── ArchetypeRegistry.register({...})  ──┤
+  │  mad-scientist/        ─── ArchetypeRegistry.register({...})  ──┤
+  │  npc/  mook/           ─── ArchetypeRegistry.register({...})  ──┤
+  │                                                                  │
+  │  huckster/manifest.mjs ─── ItemRegistry.register({id:"hex"})  ──┤
+  │  blessed/  shaman/     ─── ItemRegistry.register(...)         ──┤
+  │  mad-scientist/        ─── ItemRegistry.register(...)         ──┤
+  │  core/items/           ─── ItemRegistry.register(edge, ...)   ──┤
+  │                                                                  │
+  │  _overlays/harrowed/   ─── OverlayRegistry.register({...})   ──┘
+  └──────────────────────────────────────────────────────────────────┘
+                    │
+                    ▼ init hook
+  ┌─────────────────────────────────────────────────────────────────────┐
+  │  CONFIG.Actor.dataModels = ArchetypeRegistry.dataModels()           │
+  │  CONFIG.Item.dataModels  = ItemRegistry.dataModels()                │
+  │  DocumentSheetConfig.registerSheet(Actor, ...)  per archetype       │
+  │  game.deadlandsClassic = { archetypes, items, overlays, dice, … }  │
+  └─────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Public API and SemVer policy
+
+The following form the **stable public surface** that expansion modules and macros may depend on.
+Changes to these are **breaking** and trigger a major version bump.
+
+### `game.deadlandsClassic` namespace
+
+| Key | Type | Description |
+|---|---|---|
+| `.archetypes` | `ArchetypeRegistry` | Register and look up archetypes |
+| `.items` | `ItemRegistry` | Register and look up item types |
+| `.overlays` | `OverlayRegistry` | Register and look up overlays (Harrowed, etc.) |
+| `.dice` | `object` | `rollExplodingPool`, `rollTrait`, `rollDamage`, `rollGutsCheck` |
+| `.cards` | `object` | `ActionDeck`, `CombatantHandDialog`, combat classes |
+| `.chips` | `object` | `FatePot`, `canSpend`, `executeSpend`, `grantChips`, `spendChip` |
+| `.wounds` | `object` | `woundsFromDamage`, `applyWounds`, `drawHitLocation`, etc. |
+
+### Custom hooks (cancelable `pre*`, reactive `post*`)
+
+All hooks are namespaced `deadlandsClassic.<event>` (dot-separated, `lowerCamelCase` event segment).
+
+| Hook | When | Cancelable |
+|---|---|---|
+| `deadlandsClassic.preTraitRoll` | Before a trait/aptitude roll resolves | ✓ |
+| `deadlandsClassic.chipSpent` | After a Fate Chip is spent | — |
+| `deadlandsClassic.woundApplied` | After wounds are written to the actor | — |
+
+### Registry contracts
+
+`ArchetypeDefinition`, `ItemDefinition`, `OverlayDefinition` — see the JSDoc in each registry file.
+These interfaces are stable; adding an optional field is non-breaking, removing or renaming one is breaking.
+
+### Versioning
+
+This system follows **Semantic Versioning** (`MAJOR.MINOR.PATCH`):
+- **MAJOR** — breaking change to the public API (registry contracts, hook names, `game.deadlandsClassic` keys).
+- **MINOR** — new capabilities added in a backward-compatible way (new registry field, new hook, new pack).
+- **PATCH** — backward-compatible bug fixes, balance tweaks, i18n additions.
+
+Expansion modules should pin to a compatible range (e.g. `^0.2.0`) in their `manifest.json`.

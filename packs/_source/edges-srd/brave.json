@@ -1,0 +1,16 @@
+{
+  "_id": "edge004BraveEdge",
+  "name": "Brave",
+  "type": "edge",
+  "img": "icons/skills/melee/hand-grip-sword-orange.webp",
+  "system": {
+    "cost": 2,
+    "category": "",
+    "requirements": [],
+    "description": "<p>+2 to all Guts checks. dlc p.64.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

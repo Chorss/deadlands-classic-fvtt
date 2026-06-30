@@ -1,0 +1,14 @@
+{
+  "_id": "hind005BadLuckSl",
+  "name": "Bad Luck",
+  "type": "hindrance",
+  "img": "icons/cards/spades/ace.webp",
+  "system": {
+    "points": 5,
+    "description": "<p>Going bust always produces the absolute worst possible result instead of a merely bad one. dlc p.53.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

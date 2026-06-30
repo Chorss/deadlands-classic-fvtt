@@ -1,0 +1,16 @@
+{
+  "_id": "edge009FleetFoot",
+  "name": "Fleet-Footed",
+  "type": "edge",
+  "img": "icons/skills/movement/feet-winged-boots-brown.webp",
+  "system": {
+    "cost": 1,
+    "category": "",
+    "requirements": [],
+    "description": "<p>Each level adds +1 to base Pace above the character's Nimbleness die type. dlc p.65.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

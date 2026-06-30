@@ -1,0 +1,14 @@
+{
+  "_id": "hind036NightTerr",
+  "name": "Night Terrors",
+  "type": "hindrance",
+  "img": "icons/magic/symbols/moon-crescent-glowing-grey.webp",
+  "system": {
+    "points": 5,
+    "description": "<p>Spirit TN 7 each session; failure = lose lowest Fate Chip, bust = lose highest Fate Chip; vivid nightmares may contain Marshal-provided clues. dlc p.58.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

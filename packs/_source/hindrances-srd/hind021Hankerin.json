@@ -1,0 +1,14 @@
+{
+  "_id": "hind021HankerinS",
+  "name": "Hankerin'",
+  "type": "hindrance",
+  "img": "icons/consumables/drinks/alcohol-spirits-brown.webp",
+  "system": {
+    "points": 1,
+    "description": "<p>1 pt: –2 to Mental skills if substance is unavailable for 24 hours. 3 pts: –4 to Mental and Corporeal Traits if unavailable for 48 hours. dlc p.56.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

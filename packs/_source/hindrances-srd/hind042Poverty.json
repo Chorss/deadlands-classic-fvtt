@@ -1,0 +1,14 @@
+{
+  "_id": "hind042PovertySl",
+  "name": "Poverty",
+  "type": "hindrance",
+  "img": "icons/commodities/currency/coin-plain-grey.webp",
+  "system": {
+    "points": 3,
+    "description": "<p>Starts with $50 instead of normal starting funds; compulsively spends money and can never accumulate significant savings. dlc p.59.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

@@ -1,0 +1,14 @@
+{
+  "_id": "hind024HiFalutIn",
+  "name": "High-Falutin'",
+  "type": "hindrance",
+  "img": "icons/equipment/head/hat-brimmed-brown.webp",
+  "system": {
+    "points": 2,
+    "description": "<p>–2 to friendly Persuasion rolls toward those perceived as lower class; acts as a social snob. dlc p.56.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

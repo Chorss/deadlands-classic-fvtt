@@ -1,0 +1,14 @@
+{
+  "_id": "hind014DbtThomas",
+  "name": "Doubting Thomas",
+  "type": "hindrance",
+  "img": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
+  "system": {
+    "points": 3,
+    "description": "<p>Always seeks mundane explanations for supernatural events; roleplaying constraint that makes the character refuse to accept the Weird West at face value. dlc p.54.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

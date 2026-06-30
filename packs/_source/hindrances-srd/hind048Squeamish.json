@@ -1,0 +1,14 @@
+{
+  "_id": "hind048SqueamshS",
+  "name": "Squeamish",
+  "type": "hindrance",
+  "img": "icons/magic/life/heart-cross-red.webp",
+  "system": {
+    "points": 3,
+    "description": "<p>–2 to Guts checks triggered by gory or disturbing scenes. dlc p.61.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

@@ -29,7 +29,31 @@ A community-maintained Foundry VTT game system for **Deadlands Classic** (Weird 
 - **Harrowed Overlay** — Any PC can come back from the dead. Harrowed is an overlay applicable to *any* archetype, not a separate actor type.
 - **Full Actor Support** — Cowboys, Hucksters, Shamans, Blessed, Mad Scientists, NPCs and Mooks.
 - **Core Item Types** — Weapons, Armor, Gear, Edges, Hindrances, Ammo. (Archetype-specific items — Hexes, Miracles, Favors, Gizmos — registered by their archetype modules.)
-- **Localization** — English and Polish supported from v0.1.
+- **Localization** — English and Polish supported from v0.1. Polish terminology follows the official MAG translation canon ("Wygrzebany", "Dominacja", "Kanciarz", etc.).
+- **Content Packs** — `edges-srd` (31 edges from dlc p.63-70), `hindrances-srd` (58 hindrances from dlc p.52-62), `hit-location` RollTable (1d20), `archetype-examples` (one example actor per type).
+
+---
+
+## Feature status (v0.2.0)
+
+| Feature | Status |
+|---|---|
+| Exploding dice, trait/aptitude rolls | ✅ |
+| Fate Chips (White/Red/Blue/Legend) | ✅ |
+| Poker-card initiative (Action Deck) | ✅ |
+| Location-based wounds + Wind | ✅ |
+| Guts check + Scart Table | ✅ |
+| Huckster (hex casting, poker hand eval) | ✅ |
+| Shaman (rituals, favors) | ✅ |
+| Blessed (miracles, sin mechanic) | ✅ |
+| Mad Scientist (gizmos, blueprint + reliability) | ✅ |
+| Harrowed overlay (Dominion Roll) | ✅ |
+| Edges + Hindrances packs (89 entries) | ✅ |
+| Hit Location RollTable | ✅ |
+| Archetype example actors | ✅ |
+| EN/PL localization | ✅ |
+| Hell on Earth Classic | ⏳ v2+ |
+| Lost Colony Classic | ⏳ v2+ |
 
 ---
 

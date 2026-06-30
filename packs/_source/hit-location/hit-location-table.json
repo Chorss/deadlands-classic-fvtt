@@ -1,0 +1,63 @@
+{
+  "_id": "hitLocationTable01",
+  "name": "Hit Location (1d20)",
+  "img": "icons/svg/target.svg",
+  "formula": "1d20",
+  "replacement": true,
+  "displayRoll": true,
+  "description": "Roll 1d20 to determine hit location. On Legs or Arms, roll any die: even = right, odd = left. Each raise on the attack lets the attacker shift the result ±1. dlc p.133.",
+  "results": [
+    {
+      "_id": "hlResult0001",
+      "type": 0,
+      "text": "Legs (left or right — roll any die: even=right, odd=left)",
+      "img": "icons/svg/target.svg",
+      "range": [1, 4],
+      "drawn": false
+    },
+    {
+      "_id": "hlResult0005",
+      "type": 0,
+      "text": "Lower Guts",
+      "img": "icons/svg/target.svg",
+      "range": [5, 9],
+      "drawn": false
+    },
+    {
+      "_id": "hlResult0010",
+      "type": 0,
+      "text": "Gizzards (heart/vitals — Critical wounds count double)",
+      "img": "icons/svg/target.svg",
+      "range": [10, 10],
+      "drawn": false
+    },
+    {
+      "_id": "hlResult0011",
+      "type": 0,
+      "text": "Arms (left or right — roll any die: even=right, odd=left)",
+      "img": "icons/svg/target.svg",
+      "range": [11, 14],
+      "drawn": false
+    },
+    {
+      "_id": "hlResult0015",
+      "type": 0,
+      "text": "Upper Guts (chest / torso)",
+      "img": "icons/svg/target.svg",
+      "range": [15, 19],
+      "drawn": false
+    },
+    {
+      "_id": "hlResult0020",
+      "type": 0,
+      "text": "Noggin (head — wind damage instead of wound)",
+      "img": "icons/svg/target.svg",
+      "range": [20, 20],
+      "drawn": false
+    }
+  ],
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

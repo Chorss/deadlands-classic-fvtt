@@ -1,0 +1,14 @@
+{
+  "_id": "hind009BlodThrst",
+  "name": "Bloodthirsty",
+  "type": "hindrance",
+  "img": "icons/weapons/daggers/dagger-dripping-red.webp",
+  "system": {
+    "points": 2,
+    "description": "<p>Rarely takes prisoners; enjoys confrontations; roleplaying obligation to seek violent resolutions to problems. dlc p.54.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

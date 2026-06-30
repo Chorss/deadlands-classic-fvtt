@@ -1,0 +1,14 @@
+{
+  "_id": "hind025IllitrSlg",
+  "name": "Illiterate",
+  "type": "hindrance",
+  "img": "icons/sundries/books/book-worn-brown-red.webp",
+  "system": {
+    "points": 3,
+    "description": "<p>Cannot read or write in any language. dlc p.57.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

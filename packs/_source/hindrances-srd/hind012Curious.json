@@ -1,0 +1,14 @@
+{
+  "_id": "hind012CuriousSl",
+  "name": "Curious",
+  "type": "hindrance",
+  "img": "icons/magic/symbols/question-stone-yellow.webp",
+  "system": {
+    "points": 3,
+    "description": "<p>Must investigate every mystery regardless of danger; Moxie TN 5 to resist the compulsion to act on curiosity. dlc p.54.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

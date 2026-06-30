@@ -1,0 +1,16 @@
+{
+  "_id": "edge002Belongins",
+  "name": "Belongin's",
+  "type": "edge",
+  "img": "icons/commodities/currency/coin-embossed-crown-gold.webp",
+  "system": {
+    "cost": 1,
+    "category": "",
+    "requirements": [],
+    "description": "<p>Grants a one-time item or cash at character creation; value scales with cost (1=$500 goods to 5=$50,000 or a relic-level item). dlc p.63.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

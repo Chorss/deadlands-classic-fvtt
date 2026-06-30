@@ -1,0 +1,14 @@
+{
+  "_id": "hind006BigBrtchs",
+  "name": "Big Britches",
+  "type": "hindrance",
+  "img": "icons/equipment/chest/breastplate-banded-steel.webp",
+  "system": {
+    "points": 3,
+    "description": "<p>Must never turn down a challenge; severely overconfident roleplaying constraint that can lead the character into dangerous situations. dlc p.53.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

@@ -1,0 +1,14 @@
+{
+  "_id": "hind029LameSlugS",
+  "name": "Lame",
+  "type": "hindrance",
+  "img": "icons/equipment/hand/cane.webp",
+  "system": {
+    "points": 3,
+    "description": "<p>3 pts: –2 Pace, –2 to dodge and mobility rolls. 5 pts: Pace 2 with crutches (1 without), –4 to dodge and mobility rolls. dlc p.57.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

@@ -1,0 +1,14 @@
+{
+  "_id": "hind050SuperstiS",
+  "name": "Superstitious",
+  "type": "hindrance",
+  "img": "icons/magic/symbols/rune-sigil-black-pink.webp",
+  "system": {
+    "points": 2,
+    "description": "<p>Must live by signs, omens, and superstitions; roleplaying obligation to observe folk rituals and avoid bad omens even at cost of efficiency. dlc p.61.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

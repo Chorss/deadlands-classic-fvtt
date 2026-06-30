@@ -1,0 +1,16 @@
+{
+  "_id": "edge012KeenSense",
+  "name": "Keen",
+  "type": "edge",
+  "img": "icons/magic/perception/eye-slit-orange.webp",
+  "system": {
+    "cost": 3,
+    "category": "",
+    "requirements": [],
+    "description": "<p>+2 to Cognition, search, trackin', or scrutinize rolls involving raw sensory detection (sight, sound, smell, or taste). dlc p.65.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

@@ -1,0 +1,14 @@
+{
+  "_id": "hind023HeroicSlg",
+  "name": "Heroic",
+  "type": "hindrance",
+  "img": "icons/magic/holy/angel-wings-gold.webp",
+  "system": {
+    "points": 3,
+    "description": "<p>Cannot refuse a plea for help under any circumstances; must attempt to aid anyone in need regardless of personal risk. dlc p.56.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

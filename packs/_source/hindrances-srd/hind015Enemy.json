@@ -1,0 +1,14 @@
+{
+  "_id": "hind015EnemySlug",
+  "name": "Enemy",
+  "type": "hindrance",
+  "img": "icons/magic/symbols/target-reticle-red.webp",
+  "system": {
+    "points": 1,
+    "description": "<p>Has a persistent enemy; point value (1–5) is set by the enemy's relative power and how frequently they appear. dlc p.54.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

@@ -1,0 +1,16 @@
+{
+  "_id": "edge005BrawnyEdg",
+  "name": "Brawny",
+  "type": "edge",
+  "img": "icons/skills/melee/hand-grip-hammer-spiked-blue.webp",
+  "system": {
+    "cost": 3,
+    "category": "",
+    "requirements": ["Strength 2d8+", "Not Big 'Un Hindrance"],
+    "description": "<p>+1 to Size. Requires Strength 2d8+; mutually exclusive with the Big 'Un Hindrance. dlc p.64.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

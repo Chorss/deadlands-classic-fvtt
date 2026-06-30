@@ -1,0 +1,14 @@
+{
+  "_id": "hind049StubbornS",
+  "name": "Stubborn",
+  "type": "hindrance",
+  "img": "icons/magic/symbols/forbidden-rune-red.webp",
+  "system": {
+    "points": 2,
+    "description": "<p>Must do things his own way; holds out until everyone agrees with him or a major concession is offered. dlc p.61.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

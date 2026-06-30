@@ -1,0 +1,14 @@
+{
+  "_id": "hind051ThinSkndS",
+  "name": "Thin-Skinned",
+  "type": "hindrance",
+  "img": "icons/magic/control/debuff-weakness-broken-bones-white.webp",
+  "system": {
+    "points": 3,
+    "description": "<p>Wound penalty increases by 1 whenever wounded (stacks with existing wound penalties). dlc p.61.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

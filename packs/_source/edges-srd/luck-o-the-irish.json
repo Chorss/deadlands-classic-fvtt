@@ -1,0 +1,16 @@
+{
+  "_id": "edge017LuckOIrsh",
+  "name": "Luck o' the Irish",
+  "type": "edge",
+  "img": "icons/magic/symbols/clover-luck-white-green.webp",
+  "system": {
+    "cost": 5,
+    "category": "",
+    "requirements": [],
+    "description": "<p>Draw one extra Fate Chip at the start of each session. That chip may be spent normally but cannot be converted to Bounty Points. dlc p.67.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

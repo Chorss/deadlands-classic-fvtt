@@ -1,0 +1,16 @@
+{
+  "_id": "edge007DontRiled",
+  "name": "Don't Get 'Im Riled",
+  "type": "edge",
+  "img": "icons/skills/melee/blood-slash-foam-red.webp",
+  "system": {
+    "cost": 2,
+    "category": "",
+    "requirements": [],
+    "description": "<p>Add Xd4 to hand-to-hand damage rolls, where X equals the character's highest current wound penalty (excluding abilities that negate penalties). dlc p.64.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

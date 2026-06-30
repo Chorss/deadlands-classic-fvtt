@@ -1,0 +1,14 @@
+{
+  "_id": "hind045SelfRghts",
+  "name": "Self-Righteous",
+  "type": "hindrance",
+  "img": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
+  "system": {
+    "points": 3,
+    "description": "<p>Believes all actions serve a greater cause; never backs down from convictions regardless of evidence or consequences. dlc p.60.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

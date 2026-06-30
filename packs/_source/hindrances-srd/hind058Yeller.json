@@ -1,0 +1,14 @@
+{
+  "_id": "hind058YellerSlg",
+  "name": "Yeller",
+  "type": "hindrance",
+  "img": "icons/magic/symbols/question-stone-yellow.webp",
+  "system": {
+    "points": 5,
+    "description": "<p>–2 to Guts checks and –2 to Persuasion with those who have no respect for cowardice. dlc p.62.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}
