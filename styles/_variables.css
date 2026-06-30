@@ -3,7 +3,37 @@
  * Imported first so downstream partials can rely on them.
  */
 
-@import url("https://fonts.googleapis.com/css2?family=Rye&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap");
+@font-face {
+  font-family: "Rye";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/Rye-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Libre Baskerville";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/LibreBaskerville-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Libre Baskerville";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../fonts/LibreBaskerville-Bold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Libre Baskerville";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/LibreBaskerville-Italic.woff2") format("woff2");
+}
 
 :root {
   /* ── Palette ─────────────────────────────────────────────────────────────── */
