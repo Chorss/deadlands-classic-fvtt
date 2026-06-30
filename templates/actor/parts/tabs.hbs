@@ -2,7 +2,7 @@
 <nav class="sheet-tabs tabs dlc-tabs" data-group="sheet">
   {{#each tabs}}
   <a class="item {{this.cssClass}}" data-action="tab" data-group="{{this.group}}" data-tab="{{this.id}}">
-    {{#if this.icon}}<i class="{{this.icon}}"></i>{{/if}}
+    {{#if this.icon}}<i class="{{this.icon}}" aria-hidden="true"></i>{{/if}}
     <span>{{localize this.label}}</span>
   </a>
   {{/each}}

@@ -5,11 +5,11 @@
   <div class="dlc-hexslingin">
     <h2 class="dlc-section-title">{{localize "DEADLANDS.Huckster.Hexslingin.Label"}}</h2>
     <div class="dlc-hexslingin-row">
-      <label>{{localize "DEADLANDS.Huckster.Hexslingin.Level"}}</label>
-      <input type="number" min="0" name="{{hexslingin.levelPath}}"
+      <label for="dlc-hexslingin-level">{{localize "DEADLANDS.Huckster.Hexslingin.Level"}}</label>
+      <input type="number" id="dlc-hexslingin-level" min="0" name="{{hexslingin.levelPath}}"
         value="{{hexslingin.level}}" {{#unless editable}}disabled{{/unless}} />
-      <label>{{localize "DEADLANDS.Huckster.Hexslingin.Modifier"}}</label>
-      <input type="number" name="{{hexslingin.modifierPath}}"
+      <label for="dlc-hexslingin-mod">{{localize "DEADLANDS.Huckster.Hexslingin.Modifier"}}</label>
+      <input type="number" id="dlc-hexslingin-mod" name="{{hexslingin.modifierPath}}"
         value="{{hexslingin.modifier}}" {{#unless editable}}disabled{{/unless}} />
     </div>
   </div>

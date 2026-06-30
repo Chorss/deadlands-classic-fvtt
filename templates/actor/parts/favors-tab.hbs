@@ -5,11 +5,11 @@
   <div class="dlc-ritual">
     <h2 class="dlc-section-title">{{localize "DEADLANDS.Shaman.Ritual.Label"}}</h2>
     <div class="dlc-ritual-row">
-      <label>{{localize "DEADLANDS.Shaman.Ritual.Level"}}</label>
-      <input type="number" min="0" name="{{ritual.levelPath}}"
+      <label for="dlc-ritual-level">{{localize "DEADLANDS.Shaman.Ritual.Level"}}</label>
+      <input type="number" id="dlc-ritual-level" min="0" name="{{ritual.levelPath}}"
         value="{{ritual.level}}" {{#unless editable}}disabled{{/unless}} />
-      <label>{{localize "DEADLANDS.Shaman.Ritual.Modifier"}}</label>
-      <input type="number" name="{{ritual.modifierPath}}"
+      <label for="dlc-ritual-mod">{{localize "DEADLANDS.Shaman.Ritual.Modifier"}}</label>
+      <input type="number" id="dlc-ritual-mod" name="{{ritual.modifierPath}}"
         value="{{ritual.modifier}}" {{#unless editable}}disabled{{/unless}} />
     </div>
   </div>
@@ -18,8 +18,8 @@
   <div class="dlc-appeasement">
     <h2 class="dlc-section-title">{{localize "DEADLANDS.Shaman.Appeasement.Label"}}</h2>
     <div class="dlc-appeasement-row">
-      <label>{{localize "DEADLANDS.Shaman.GuardianSpirit.Label"}}</label>
-      <input type="number" min="0" max="5" name="system.guardianSpirit"
+      <label for="dlc-guardian-spirit">{{localize "DEADLANDS.Shaman.GuardianSpirit.Label"}}</label>
+      <input type="number" id="dlc-guardian-spirit" min="0" max="5" name="system.guardianSpirit"
         value="{{guardianSpirit}}" {{#unless editable}}disabled{{/unless}} />
       {{#if guardianSpirit}}
       <span class="dlc-appeasement-pool">

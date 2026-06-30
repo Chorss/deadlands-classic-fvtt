@@ -5,8 +5,8 @@
     <ul class="dlc-chip-row">
       {{#each chips as |chip|}}
       <li class="dlc-chip dlc-chip-{{chip.color}}">
-        <span class="dlc-chip-label">{{localize chip.label}}</span>
-        <input type="number" min="0" name="{{chip.path}}" value="{{chip.value}}"
+        <label class="dlc-chip-label" for="dlc-chip-{{chip.color}}">{{localize chip.label}}</label>
+        <input type="number" id="dlc-chip-{{chip.color}}" min="0" name="{{chip.path}}" value="{{chip.value}}"
           {{#unless @root.editable}}disabled{{/unless}} />
       </li>
       {{/each}}
@@ -20,6 +20,7 @@
       <div class="dlc-wind-track">
         <input type="number" class="dlc-wind-value" name="system.wind.value"
           value="{{wounds.wind.value}}" min="0" max="{{wounds.wind.max}}" data-dtype="Number"
+          aria-label="{{localize 'DEADLANDS.Sheet.Wind'}}"
           {{#unless @root.editable}}disabled{{/unless}} />
         <span class="dlc-wind-sep">/</span>
         <span class="dlc-wind-max">{{wounds.wind.max}}</span>
@@ -37,7 +38,8 @@
           {{#each wound.pips}}<span class="dlc-wound-pip {{#if filled}}dlc-pip-filled{{/if}}"></span>{{/each}}
         </div>
         <input type="number" class="dlc-wound-sev" min="0" max="5" name="{{wound.path}}"
-          value="{{wound.severity}}" {{#unless @root.editable}}disabled{{/unless}} />
+          value="{{wound.severity}}" {{#unless @root.editable}}disabled{{/unless}}
+          aria-label="{{localize wound.label}} {{localize 'DEADLANDS.Sheet.Aria.WoundSeverity'}}" />
         {{#if wound.severity}}<span class="dlc-wound-severity">{{localize wound.severityLabel}}</span>{{/if}}
       </li>
       {{/each}}

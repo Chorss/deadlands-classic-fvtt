@@ -19,7 +19,9 @@ export class DeadlandsActor extends Actor {
    */
   _onCreate(data, options, userId) {
     super._onCreate(data, options, userId);
-    if (userId !== game.userId) return;
+    if (userId !== game.userId) {
+      return;
+    }
     const wind = this.system.wind;
     if (wind && wind.value === 0 && wind.max > 0) {
       this.update({ "system.wind.value": wind.max });

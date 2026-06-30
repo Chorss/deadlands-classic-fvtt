@@ -25,6 +25,12 @@
   "DEADLANDS.Sheet.Grit": "Hart",
   "DEADLANDS.Sheet.Bounty": "Nagroda",
 
+  "DEADLANDS.Sheet.Aria.DieCount": "Liczba kości",
+  "DEADLANDS.Sheet.Aria.DieType": "Typ kości",
+  "DEADLANDS.Sheet.Aria.DieModifier": "Modyfikator",
+  "DEADLANDS.Sheet.Aria.AptitudeLevel": "Poziom umiejętności",
+  "DEADLANDS.Sheet.Aria.WoundSeverity": "Poziom ran",
+
   "DEADLANDS.Sheet.Tab.Traits": "Cechy",
   "DEADLANDS.Sheet.Tab.Combat": "Walka",
   "DEADLANDS.Sheet.Tab.Gear": "Ekwipunek",

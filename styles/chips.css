@@ -37,7 +37,7 @@
 /* Colors */
 .dlc-chip-white  { background: #f0ede8; color: #333; --dlc-chip-border: #bbb; }
 .dlc-chip-red    { background: #c0392b; color: #fff; --dlc-chip-border: #8e1b14; }
-.dlc-chip-blue   { background: #2980b9; color: #fff; --dlc-chip-border: #1a5e8a; }
+.dlc-chip-blue   { background: #1a6fa8; color: #fff; --dlc-chip-border: #12527c; }
 .dlc-chip-legend { background: #8e44ad; color: #fff; --dlc-chip-border: #5e2d7a; }
 
 /* ── Roll dialog ────────────────────────────────────────────── */
@@ -96,13 +96,13 @@
 .dlc-roll-label    { font-weight: bold; margin-bottom: 0.3rem; }
 .dlc-roll-dice     { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.2rem; }
 .dlc-die           { display: inline-block; background: #eee; border: 1px solid #aaa; border-radius: 3px; padding: 1px 5px; font-size: 0.9rem; }
-.dlc-ace           { color: goldenrod; }
+.dlc-ace           { color: #b8860b; }
 .dlc-tn            { color: #666; font-size: 0.85rem; }
 .dlc-modifier      { font-size: 0.85rem; }
 .dlc-roll-outcome  { font-weight: bold; margin-top: 0.2rem; }
 
 .dlc-success .dlc-roll-outcome { color: #27ae60; }
 .dlc-bust    .dlc-roll-outcome { color: #c0392b; }
-.dlc-fail    .dlc-roll-outcome { color: #888; }
+.dlc-fail    .dlc-roll-outcome { color: #767676; }
 .dlc-damage  .dlc-roll-outcome { color: #c0392b; }
 .dlc-armor   { font-size: 0.8rem; color: #666; }

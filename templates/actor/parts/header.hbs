@@ -4,7 +4,9 @@
 
   <div class="dlc-header-main">
     <input class="dlc-charname" type="text" name="name" value="{{actor.name}}"
-      placeholder="{{localize 'DEADLANDS.Sheet.NamePlaceholder'}}" {{#unless editable}}disabled{{/unless}} />
+      placeholder="{{localize 'DEADLANDS.Sheet.NamePlaceholder'}}"
+      aria-label="{{localize 'DEADLANDS.Sheet.NamePlaceholder'}}"
+      {{#unless editable}}disabled{{/unless}} />
 
     <div class="dlc-secondary">
       <label class="dlc-stat dlc-wind">

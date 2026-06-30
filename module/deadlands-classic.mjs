@@ -180,7 +180,10 @@ function _renderHandButton(row, combatant) {
   btn.classList.add("dlc-hand-btn");
   btn.setAttribute("aria-label", game.i18n.localize("DEADLANDS.Combat.Hand.Open"));
   btn.title = game.i18n.localize("DEADLANDS.Combat.Hand.Open");
-  btn.innerHTML = '<i class="fas fa-hand"></i>';
+  const icon = document.createElement("i");
+  icon.className = "fas fa-hand";
+  icon.setAttribute("aria-hidden", "true");
+  btn.append(icon);
   btn.addEventListener("click", (ev) => {
     ev.preventDefault();
     CombatantHandDialog.open(combatant);

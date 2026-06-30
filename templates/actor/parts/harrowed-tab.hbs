@@ -18,14 +18,14 @@
     <h2 class="dlc-section-title">{{localize "DEADLANDS.Harrowed.Dominion.Label"}}</h2>
     <div class="dlc-dominion-row">
       <div class="dlc-dominion-control">
-        <label>{{localize "DEADLANDS.Harrowed.Dominion.SpiritControl"}}</label>
-        <input type="number" min="0" name="system.harrowed.dominion.spiritControl"
+        <label for="dlc-dominion-spirit">{{localize "DEADLANDS.Harrowed.Dominion.SpiritControl"}}</label>
+        <input type="number" id="dlc-dominion-spirit" min="0" name="system.harrowed.dominion.spiritControl"
           value="{{harrowed.dominion.spiritControl}}"
           {{#unless editable}}disabled{{/unless}} />
       </div>
       <button type="button" class="dlc-dominion-roll-btn" data-action="dominionRoll"
         aria-label="{{localize 'DEADLANDS.Harrowed.Dominion.Roll.Button'}}">
-        <i class="fas fa-dice-d6"></i>
+        <i class="fas fa-dice-d6" aria-hidden="true"></i>
         {{localize "DEADLANDS.Harrowed.Dominion.Roll.Button"}}
       </button>
     </div>

@@ -5,19 +5,19 @@
   <div class="dlc-mad-science-aptitudes">
     <h2 class="dlc-section-title">{{localize "DEADLANDS.MadScientist.Aptitudes.Label"}}</h2>
     <div class="dlc-aptitude-row">
-      <label>{{localize "DEADLANDS.MadScientist.MadScience.Label"}}</label>
-      <input type="number" min="0" name="{{madScience.levelPath}}"
+      <label for="dlc-mad-science-level">{{localize "DEADLANDS.MadScientist.MadScience.Label"}}</label>
+      <input type="number" id="dlc-mad-science-level" min="0" name="{{madScience.levelPath}}"
         value="{{madScience.level}}" {{#unless editable}}disabled{{/unless}} />
-      <label>{{localize "DEADLANDS.MadScientist.MadScience.Modifier"}}</label>
-      <input type="number" name="{{madScience.modifierPath}}"
+      <label for="dlc-mad-science-mod">{{localize "DEADLANDS.MadScientist.MadScience.Modifier"}}</label>
+      <input type="number" id="dlc-mad-science-mod" name="{{madScience.modifierPath}}"
         value="{{madScience.modifier}}" {{#unless editable}}disabled{{/unless}} />
     </div>
     <div class="dlc-aptitude-row">
-      <label>{{localize "DEADLANDS.MadScientist.Tinkerin.Label"}}</label>
-      <input type="number" min="0" name="{{tinkerin.levelPath}}"
+      <label for="dlc-tinkerin-level">{{localize "DEADLANDS.MadScientist.Tinkerin.Label"}}</label>
+      <input type="number" id="dlc-tinkerin-level" min="0" name="{{tinkerin.levelPath}}"
         value="{{tinkerin.level}}" {{#unless editable}}disabled{{/unless}} />
-      <label>{{localize "DEADLANDS.MadScientist.Tinkerin.Modifier"}}</label>
-      <input type="number" name="{{tinkerin.modifierPath}}"
+      <label for="dlc-tinkerin-mod">{{localize "DEADLANDS.MadScientist.Tinkerin.Modifier"}}</label>
+      <input type="number" id="dlc-tinkerin-mod" name="{{tinkerin.modifierPath}}"
         value="{{tinkerin.modifier}}" {{#unless editable}}disabled{{/unless}} />
     </div>
   </div>

@@ -25,6 +25,12 @@
   "DEADLANDS.Sheet.Grit": "Grit",
   "DEADLANDS.Sheet.Bounty": "Bounty",
 
+  "DEADLANDS.Sheet.Aria.DieCount": "Die Count",
+  "DEADLANDS.Sheet.Aria.DieType": "Die Type",
+  "DEADLANDS.Sheet.Aria.DieModifier": "Modifier",
+  "DEADLANDS.Sheet.Aria.AptitudeLevel": "Aptitude Level",
+  "DEADLANDS.Sheet.Aria.WoundSeverity": "Wound Severity",
+
   "DEADLANDS.Sheet.Tab.Traits": "Traits",
   "DEADLANDS.Sheet.Tab.Combat": "Combat",
   "DEADLANDS.Sheet.Tab.Gear": "Gear",

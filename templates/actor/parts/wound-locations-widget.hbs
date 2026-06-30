@@ -16,10 +16,11 @@
 
   {{!-- Wind bar --}}
   <div class="dlc-wind-bar {{wounds.windedClass}}">
-    <label class="dlc-wind-label">{{localize "DEADLANDS.Sheet.Wind"}}</label>
+    <label class="dlc-wind-label" for="dlc-wind-widget">{{localize "DEADLANDS.Sheet.Wind"}}</label>
     <div class="dlc-wind-track">
       <input
         type="number"
+        id="dlc-wind-widget"
         class="dlc-wind-value"
         name="system.wind.value"
         value="{{wounds.wind.value}}"

@@ -16,12 +16,15 @@
           </h3>
           <div class="dlc-trait-die">
             <input type="number" class="dlc-die-count" name="{{trait.dieCountPath}}" min="1"
-              value="{{trait.dieCount}}" {{#unless @root.editable}}disabled{{/unless}} />
-            <select class="dlc-die-type" name="{{trait.dieTypePath}}" {{#unless @root.editable}}disabled{{/unless}}>
+              value="{{trait.dieCount}}" {{#unless @root.editable}}disabled{{/unless}}
+              aria-label="{{localize trait.label}} {{localize 'DEADLANDS.Sheet.Aria.DieCount'}}" />
+            <select class="dlc-die-type" name="{{trait.dieTypePath}}" {{#unless @root.editable}}disabled{{/unless}}
+              aria-label="{{localize trait.label}} {{localize 'DEADLANDS.Sheet.Aria.DieType'}}">
               {{selectOptions @root.dieTypeChoices selected=trait.dieType}}
             </select>
             <input type="number" class="dlc-die-mod" name="{{trait.modifierPath}}"
-              value="{{trait.modifier}}" {{#unless @root.editable}}disabled{{/unless}} />
+              value="{{trait.modifier}}" {{#unless @root.editable}}disabled{{/unless}}
+              aria-label="{{localize trait.label}} {{localize 'DEADLANDS.Sheet.Aria.DieModifier'}}" />
           </div>
         </header>
 
@@ -36,7 +39,8 @@
               {{localize apt.label}}
             </button>
             <input type="number" class="dlc-apt-level" name="{{apt.path}}" min="0"
-              value="{{apt.level}}" {{#unless @root.editable}}disabled{{/unless}} />
+              value="{{apt.level}}" {{#unless @root.editable}}disabled{{/unless}}
+              aria-label="{{localize apt.label}} {{localize 'DEADLANDS.Sheet.Aria.AptitudeLevel'}}" />
           </li>
           {{/each}}
         </ul>

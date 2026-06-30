@@ -5,11 +5,11 @@
   <div class="dlc-faith">
     <h2 class="dlc-section-title">{{localize "DEADLANDS.Blessed.Faith.Label"}}</h2>
     <div class="dlc-faith-row">
-      <label>{{localize "DEADLANDS.Blessed.Faith.Level"}}</label>
-      <input type="number" min="0" name="{{faith.levelPath}}"
+      <label for="dlc-faith-level">{{localize "DEADLANDS.Blessed.Faith.Level"}}</label>
+      <input type="number" id="dlc-faith-level" min="0" name="{{faith.levelPath}}"
         value="{{faith.level}}" {{#unless editable}}disabled{{/unless}} />
-      <label>{{localize "DEADLANDS.Blessed.Faith.Modifier"}}</label>
-      <input type="number" name="{{faith.modifierPath}}"
+      <label for="dlc-faith-mod">{{localize "DEADLANDS.Blessed.Faith.Modifier"}}</label>
+      <input type="number" id="dlc-faith-mod" name="{{faith.modifierPath}}"
         value="{{faith.modifier}}" {{#unless editable}}disabled{{/unless}} />
     </div>
   </div>
