@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Pre-commit hook: syntax check for .mjs / .json, manifest sanity when
-# system.json or lang/*.json is staged. Opt-in once per clone:
+# Pre-commit hook: Biome lint, syntax check for .mjs / .json, manifest sanity
+# when system.json or lang/*.json is staged. Opt-in once per clone:
 #
 #   git config core.hooksPath .githooks
 
@@ -10,6 +10,8 @@ STAGED=$(git diff --cached --name-only --diff-filter=ACMR || true)
 [ -z "$STAGED" ] && exit 0
 
 fail() { echo "pre-commit: $1" >&2; exit 1; }
+
+npm run lint 2>&1 || fail "biome check failed — run: npx biome check --write --unsafe"
 
 while IFS= read -r f; do
   [ -f "$f" ] || continue
