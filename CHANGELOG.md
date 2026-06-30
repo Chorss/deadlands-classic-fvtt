@@ -15,6 +15,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.3.0] — 2026-06-30
+
+### Fixed
+- **Phase 13 — Localization audit complete.** All `localize()` call-sites
+  verified; PL terminology aligned with MAG translation canon across all
+  archetypes ("Kanciarz", "Świątobliwy", "Wygrzebany", "Szton Losu", etc.);
+  `verify-documenttypes` confirms full EN/PL key parity.
+- Correct Shaman Medicine Way i18n keys to match *Ghost Dancers* p.58.
+- Initialise `wind.value` to `wind.max` on first actor creation (was left at 0).
+- WCAG AA accessibility pass — sepia/red contrast ratios corrected, keyboard
+  navigation, `aria-label` on body-location icons and chip widget.
+
+### Changed
+- Add `.playwright-mcp/` and root `*.png` to `.gitignore`.
+
+### Documentation
+- `README.md`: "Development Tooling" section (PhpStorm, Claude Code, Biome,
+  node:test); link to `CHANGELOG.md` in Contributing section.
+
 ## [0.2.0] — 2026-06-30
 
 ### Added
@@ -78,6 +97,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `CombatantHandDialog` and initiative-value path corrections after V14 runtime testing.
 - Multiple V14 API compatibility fixes across archetype sheets and mechanics.
 
-[Unreleased]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.2.0...HEAD
+[Unreleased]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.3.0...HEAD
+[0.3.0]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.2.0...0.3.0
 [0.2.0]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.1.0...0.2.0
 [0.1.0]: https://github.com/Chorss/deadlands-classic-fvtt/releases/tag/0.1.0
