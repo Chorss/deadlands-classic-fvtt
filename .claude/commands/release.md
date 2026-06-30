@@ -171,7 +171,11 @@ node -e '
     fs.writeFileSync(f, JSON.stringify(j, null, 2) + "\n");
   }
 ' "{NEXT}"
+npx biome check --write --unsafe system.json
 ```
+
+> `JSON.stringify` expands inline arrays to multi-line; Biome must re-format `system.json`
+> after the bump or `biome check` will fail in CI.
 
 ### 5b. Update CHANGELOG.md
 
