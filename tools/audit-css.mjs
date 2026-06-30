@@ -35,7 +35,8 @@ function collectFiles(dir, ext) {
 // --- collect classes from templates ---
 const hbsFiles = collectFiles(path.join(REPO_ROOT, "templates"), ".hbs");
 const classRe = /class="([^"]+)"/g;
-const tokenRe = /\{\{[^}]+\}\}/g; // handlebars expression
+// No `g` flag here — test() with a stateful regex alternates true/false (lastIndex bug).
+const tokenRe = /\{\{[^}]+\}\}/;
 
 const usedClasses = new Set();
 const dynamicFragments = new Set();

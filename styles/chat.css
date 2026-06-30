@@ -1,0 +1,134 @@
+/* Deadlands Classic — chat card styles (roll results, archetype results). */
+
+/* ── Shared chat card wrapper ─────────────────────────────────────────────── */
+
+.dlc-chat-card {
+  font-family: var(--dlc-font-body);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.dlc-chat-header {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.3rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--dlc-color-gold);
+}
+
+.dlc-actor-name {
+  font-family: var(--dlc-font-display);
+  font-size: 0.85rem;
+  color: var(--dlc-color-gold);
+}
+
+.dlc-chat-verb {
+  font-size: 0.8rem;
+  color: var(--dlc-color-muted);
+}
+
+/* ── Roll result block ────────────────────────────────────────────────────── */
+
+.dlc-chat-roll {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.dlc-roll-summary {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.dlc-roll-total {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--dlc-color-gold);
+}
+
+.dlc-raises {
+  font-size: 0.8rem;
+  color: #2ecc71;
+}
+
+/* ── Outcome messages ─────────────────────────────────────────────────────── */
+
+.dlc-success-msg {
+  color: #2ecc71;
+  font-weight: bold;
+  font-size: 0.85rem;
+}
+
+.dlc-fail-msg,
+.dlc-failure {
+  color: var(--dlc-color-blood);
+  font-weight: bold;
+  font-size: 0.85rem;
+}
+
+.dlc-bust-msg {
+  color: var(--dlc-color-blood);
+  font-weight: bold;
+  font-style: italic;
+  font-size: 0.85rem;
+}
+
+/* ── Archetype-specific chat messages ─────────────────────────────────────── */
+
+/* Backlash (Huckster) */
+.dlc-backlash-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.dlc-backlash-header {
+  font-family: var(--dlc-font-display);
+  font-size: 0.85rem;
+  color: var(--dlc-color-blood);
+}
+
+.dlc-backlash-entry {
+  font-size: 0.8rem;
+}
+
+.dlc-backlash-result {
+  font-weight: bold;
+}
+
+.dlc-backlash-roll {
+  font-size: 0.75rem;
+  color: var(--dlc-color-muted);
+}
+
+.dlc-backlash-note {
+  font-size: 0.75rem;
+  font-style: italic;
+  color: var(--dlc-color-muted);
+}
+
+.dlc-backlash-succeeds {
+  color: #2ecc71;
+  font-size: 0.8rem;
+}
+
+.dlc-backlash-tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid var(--dlc-color-blood);
+  color: var(--dlc-color-blood);
+}
+
+/* Manitou contest (Shaman) */
+.dlc-manitou-msg {
+  font-style: italic;
+  color: var(--dlc-color-muted);
+  font-size: 0.8rem;
+  margin-top: 0.2rem;
+}

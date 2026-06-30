@@ -66,7 +66,7 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
   /** @inheritDoc */
   static DEFAULT_OPTIONS = {
     classes: ["deadlands-classic", "sheet", "actor"],
-    position: { width: 740, height: 720 },
+    position: { width: 740, height: 720, top: 60, left: 120 },
     window: { resizable: true },
     form: { submitOnChange: true, closeOnSubmit: false },
     actions: {
@@ -75,6 +75,11 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
       dominionRoll: BaseCharacterSheet.#onDominionRoll,
     },
   };
+
+  /** Use actor name as window title (avoids redundant "Type: Name" pattern). */
+  get title() {
+    return this.document.name;
+  }
 
   /** @inheritDoc */
   static PARTS = {

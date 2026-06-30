@@ -1,0 +1,88 @@
+/* Deadlands Classic — dialog styles (roll, cast-hex, invoke-miracle, combatant-hand). */
+
+/* ── Generic dialog form ──────────────────────────────────────────────────── */
+
+.dlc-dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.25rem;
+}
+
+.dlc-dialog-intro {
+  font-size: 0.85rem;
+  color: var(--dlc-color-muted);
+  margin-bottom: 0.25rem;
+}
+
+.dlc-dialog-sub {
+  font-size: 0.75rem;
+  color: var(--dlc-color-muted);
+  font-style: italic;
+}
+
+/* ── Cast-hex dialog ──────────────────────────────────────────────────────── */
+
+.dlc-cast-hex-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.dlc-chip-avail {
+  font-size: 0.75rem;
+  color: var(--dlc-color-muted);
+}
+
+/* ── Chips section in combat tab ──────────────────────────────────────────── */
+
+.dlc-chips {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dlc-section-gap);
+}
+
+/* ── Combatant hand dialog (action deck) ──────────────────────────────────── */
+
+.dlc-combatant-hand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.dlc-play-card {
+  font-size: 0.75rem;
+  padding: 2px 8px;
+}
+
+.dlc-sleeve-card,
+.dlc-sleeved {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 3px 6px;
+  border: 1px dashed var(--dlc-color-gold);
+  border-radius: var(--dlc-radius);
+}
+
+.dlc-sleeved-label {
+  font-size: 0.75rem;
+  font-style: italic;
+  color: var(--dlc-color-muted);
+}
+
+/* ── Spend button (favors, chips) ────────────────────────────────────────── */
+
+.dlc-spend-btn {
+  font-size: 0.7rem;
+  padding: 1px 6px;
+  cursor: pointer;
+  background: none;
+  border: 1px solid var(--dlc-color-gold);
+  border-radius: var(--dlc-radius);
+  color: var(--dlc-color-gold);
+}
+
+.dlc-spend-btn:hover {
+  background: var(--dlc-color-gold-dim);
+}

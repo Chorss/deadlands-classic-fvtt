@@ -1,0 +1,96 @@
+/* Deadlands Classic — Blessed archetype styles (miracles, faith, sin tracker). */
+
+/* ── Miracles tab ─────────────────────────────────────────────────────────── */
+
+.dlc-miracles {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dlc-section-gap);
+}
+
+.dlc-miracle-table,
+.dlc-miracle-list {
+  width: 100%;
+}
+
+.dlc-miracle-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 3px 4px;
+  border-radius: var(--dlc-radius);
+}
+
+.dlc-miracle-row:hover {
+  background: var(--dlc-color-gold-dim);
+}
+
+.dlc-miracle-name {
+  flex: 1;
+  font-size: 0.85rem;
+}
+
+.dlc-miracle-actions {
+  display: flex;
+  gap: 3px;
+}
+
+.dlc-invoke-btn {
+  font-size: 0.7rem;
+  padding: 1px 6px;
+}
+
+/* ── Miracle outcome ──────────────────────────────────────────────────────── */
+
+.dlc-miracle-result,
+.dlc-miracle-outcome {
+  font-size: 0.85rem;
+}
+
+/* ── Faith / sin tracker ──────────────────────────────────────────────────── */
+
+.dlc-faith {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.dlc-faith-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dlc-faith-kept {
+  color: #2ecc71;
+  font-size: 0.8rem;
+}
+
+.dlc-faith-lost {
+  color: var(--dlc-color-blood);
+  font-size: 0.8rem;
+}
+
+/* Sin controls */
+.dlc-sin-controls,
+.dlc-sin-buttons {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.dlc-sin-btn {
+  font-size: 0.7rem;
+  padding: 1px 6px;
+}
+
+.dlc-sin-denied  { color: var(--dlc-color-blood); font-style: italic; font-size: 0.75rem; }
+
+/* Sin severity tags — .dlc-sin-light / .dlc-sin-heavy / etc. */
+.dlc-sin-severity { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; }
+
+/* Sin result chat */
+.dlc-sin-result,
+.dlc-sin-details {
+  font-size: 0.8rem;
+}

@@ -1,0 +1,155 @@
+/* Deadlands Classic — Harrowed overlay styles (dominion, powers, counting coup). */
+
+/* ── Harrowed section ─────────────────────────────────────────────────────── */
+
+.dlc-harrowed {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dlc-section-gap);
+}
+
+.dlc-harrowed-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.dlc-harrowed-label {
+  font-family: var(--dlc-font-display);
+  font-size: 0.8rem;
+  color: var(--dlc-color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.dlc-harrowed-status {
+  font-size: 0.85rem;
+}
+
+.dlc-harrowed-toggle {
+  cursor: pointer;
+}
+
+/* ── Dominion ─────────────────────────────────────────────────────────────── */
+
+.dlc-dominion-control {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.dlc-dominion-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dlc-dominion-roll-btn {
+  font-size: 0.75rem;
+  padding: 2px 8px;
+}
+
+.dlc-dominion-last-roll {
+  font-size: 0.75rem;
+  color: var(--dlc-color-muted);
+}
+
+/* ── Harrowed powers list ─────────────────────────────────────────────────── */
+
+.dlc-powers-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dlc-power {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 3px 4px;
+  border-radius: var(--dlc-radius);
+}
+
+.dlc-power:hover {
+  background: var(--dlc-color-gold-dim);
+}
+
+.dlc-power-name {
+  flex: 1;
+  font-size: 0.85rem;
+}
+
+.dlc-power-kind {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: var(--dlc-color-muted);
+}
+
+.dlc-power-level {
+  font-size: 0.75rem;
+  color: var(--dlc-color-gold);
+}
+
+/* ── Counting coup ────────────────────────────────────────────────────────── */
+
+.dlc-coup-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dlc-coup-entry {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+  padding: 3px 4px;
+  font-size: 0.8rem;
+  border-radius: var(--dlc-radius);
+}
+
+.dlc-coup-source {
+  flex: 1;
+  color: var(--dlc-color-muted);
+}
+
+.dlc-coup-power {
+  font-style: italic;
+}
+
+.dlc-coup-taint {
+  color: var(--dlc-color-blood);
+  font-size: 0.75rem;
+}
+
+/* ── Chip badge (spending chips from Harrowed powers) ────────────────────── */
+
+.dlc-chip-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: bold;
+  padding: 1px 5px;
+  border-radius: 10px;
+  border: 1px solid currentColor;
+  color: var(--dlc-color-gold);
+}
+
+/* ── Harrowed card variant ───────────────────────────────────────────────── */
+
+/* dlc-card--red is a BEM modifier added conditionally via {{#if isRedJoker}} */
+.dlc-card--red {
+  border-color: #c0392b;
+  background: rgba(192, 57, 43, 0.15);
+}
+
+/* ── Last roll results ────────────────────────────────────────────────────── */
+
+.dlc-last-roll-label  { font-size: 0.7rem; color: var(--dlc-color-muted); }
+.dlc-last-roll-pc     { color: #2ecc71; }
+.dlc-last-roll-npc    { color: var(--dlc-color-blood); }
+.dlc-last-roll-outcome { font-weight: bold; }

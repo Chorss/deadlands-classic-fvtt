@@ -1,0 +1,169 @@
+/* Deadlands Classic — Huckster archetype styles (hexes, poker hand, backlash). */
+
+/* ── Hexes tab ────────────────────────────────────────────────────────────── */
+
+.dlc-hexes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dlc-section-gap);
+}
+
+.dlc-hex-table,
+.dlc-hex-list {
+  width: 100%;
+}
+
+.dlc-hex-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 3px 4px;
+  border-radius: var(--dlc-radius);
+}
+
+.dlc-hex-row:hover {
+  background: var(--dlc-color-gold-dim);
+}
+
+.dlc-hex-name {
+  flex: 1;
+  font-size: 0.85rem;
+}
+
+.dlc-hex-actions,
+.dlc-hex-cast {
+  display: flex;
+  gap: 3px;
+}
+
+.dlc-cast-btn {
+  font-size: 0.7rem;
+  padding: 1px 6px;
+}
+
+/* ── Hexslingin roll display ──────────────────────────────────────────────── */
+
+.dlc-hexslingin {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.dlc-hexslingin-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ── Poker hand — action cards in a horizontal row ───────────────────────── */
+
+.dlc-last-draw {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.dlc-drawn-cards,
+.dlc-cards-drawn {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.dlc-drawn-card,
+.dlc-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 6px;
+  border: 1px solid var(--dlc-color-gold);
+  border-radius: var(--dlc-radius);
+  font-size: 0.8rem;
+  background: var(--dlc-color-gold-dim);
+  cursor: default;
+  white-space: nowrap;
+}
+
+/* Suit colours — red suits vs black suits */
+.dlc-card-row {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.dlc-card-suit {
+  font-size: 1em;
+}
+
+/* Red suits (hearts ♥, diamonds ♦) */
+.dlc-card[data-suit="hearts"] .dlc-card-suit,
+.dlc-card[data-suit="diamonds"] .dlc-card-suit {
+  color: #c0392b;
+}
+
+/* Joker highlight */
+.dlc-card[data-joker="red"] {
+  border-color: #c0392b;
+  background: rgba(192, 57, 43, 0.15);
+}
+
+.dlc-card[data-joker="black"] {
+  border-color: #888;
+  background: rgba(40, 40, 40, 0.3);
+}
+
+.dlc-card-rank {
+  font-weight: bold;
+}
+
+.dlc-card-label {
+  font-size: 0.75rem;
+}
+
+.dlc-card-actions {
+  display: flex;
+  gap: 3px;
+}
+
+/* ── Backlash warning ─────────────────────────────────────────────────────── */
+
+.dlc-backlash-warning {
+  color: var(--dlc-color-blood);
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+/* ── Hex outcomes ─────────────────────────────────────────────────────────── */
+
+.dlc-hex-success,
+.dlc-hex-outcome { color: #2ecc71; }
+
+.dlc-hex-fail    { color: var(--dlc-color-blood); }
+
+/* ── Hand result (poker evaluation) ──────────────────────────────────────── */
+
+.dlc-hand-result,
+.dlc-hand-title {
+  font-family: var(--dlc-font-display);
+  font-size: 0.9rem;
+  color: var(--dlc-color-gold);
+}
+
+.dlc-hand-req,
+.dlc-hand-name,
+.dlc-hand-label {
+  font-size: 0.75rem;
+  color: var(--dlc-color-muted);
+}
+
+.dlc-hand-cards {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.dlc-hand-empty {
+  font-style: italic;
+  color: var(--dlc-color-muted);
+  font-size: 0.8rem;
+}
