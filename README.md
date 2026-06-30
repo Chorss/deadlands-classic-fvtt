@@ -96,6 +96,21 @@ V14 requires **Node.js 24**. No backwards-compatibility shims are shipped for ea
 
 ---
 
+## Development Tooling
+
+| Tool | Role |
+|------|------|
+| [PhpStorm](https://www.jetbrains.com/phpstorm/) | Primary IDE — JS/Handlebars support, integrated debugger |
+| [Claude Code](https://claude.ai/code) (Anthropic) | AI engineering assistant — architecture review, code generation, localization parity, rule verification against PDF sources |
+| [Biome](https://biomejs.dev/) | Formatter + linter (replaces ESLint + Prettier) |
+| [node:test](https://nodejs.org/api/test.html) | Unit tests for pure core logic |
+
+> AI tooling is used for **engineering acceleration**, not autonomous authorship.
+> All architectural decisions, mechanic interpretations, and design choices are
+> human-driven and verified against the official rulebook source.
+
+---
+
 ## Acknowledgements
 
 This project stands on the shoulders of giants. Deep gratitude to:
@@ -112,6 +127,8 @@ This project stands on the shoulders of giants. Deep gratitude to:
 We welcome contributions of all kinds — code, bug reports, documentation, translations, and playtesting feedback.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for full details on how to get involved.
+
+For a full version history, see [CHANGELOG.md](CHANGELOG.md).
 
 ---
 
