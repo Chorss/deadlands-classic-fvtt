@@ -1,0 +1,14 @@
+{
+  "_id": "hind055VengefulS",
+  "name": "Vengeful",
+  "type": "hindrance",
+  "img": "icons/magic/symbols/target-reticle-red.webp",
+  "system": {
+    "points": 3,
+    "description": "<p>Must always attempt to right any wrong committed against her, regardless of personal risk or practicality. dlc p.62.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

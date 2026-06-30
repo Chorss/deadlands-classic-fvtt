@@ -40,6 +40,10 @@ import {
   woundsFromDamage,
 } from "./core/wounds/wound-track.mjs";
 
+// Core item type registrations (edge, hindrance). Archetype-specific types
+// (hex, miracle, favor, gizmo) are registered by their archetype manifests.
+import "./core/items/core-items-manifest.mjs";
+
 // Archetype manifests self-register on import. Adding an archetype = one line here.
 import "./archetypes/cowboy/manifest.mjs";
 import "./archetypes/huckster/manifest.mjs";
@@ -48,6 +52,10 @@ import "./archetypes/shaman/manifest.mjs";
 import "./archetypes/mad-scientist/manifest.mjs";
 import "./archetypes/npc/manifest.mjs";
 import "./archetypes/mook/manifest.mjs";
+
+// Overlay manifests self-register on import. Overlays add NO documentType —
+// they contribute schema fields and a conditional sheet tab. dlc p.194.
+import "./archetypes/_overlays/harrowed/manifest.mjs";
 
 const SYSTEM_ID = "deadlands-classic";
 const LOG_PREFIX = `${SYSTEM_ID} |`;

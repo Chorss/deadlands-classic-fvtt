@@ -1,0 +1,14 @@
+{
+  "_id": "hind043RandySlug",
+  "name": "Randy",
+  "type": "hindrance",
+  "img": "icons/magic/symbols/heart-gold-red.webp",
+  "system": {
+    "points": 3,
+    "description": "<p>–4 to Persuasion with respectable people; known in every sporting establishment; respectable female characters suffer –4 with polite society. dlc p.60.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

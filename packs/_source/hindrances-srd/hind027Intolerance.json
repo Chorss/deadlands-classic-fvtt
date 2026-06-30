@@ -1,0 +1,14 @@
+{
+  "_id": "hind027IntolerSl",
+  "name": "Intolerance",
+  "type": "hindrance",
+  "img": "icons/magic/symbols/forbidden-rune-red.webp",
+  "system": {
+    "points": 1,
+    "description": "<p>Cannot cooperate with a specific group (1–3 pts); value is based on how frequently the group is encountered. dlc p.57.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

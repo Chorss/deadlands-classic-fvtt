@@ -1,0 +1,14 @@
+{
+  "_id": "hind004BadEyesSl",
+  "name": "Bad Eyes",
+  "type": "hindrance",
+  "img": "icons/magic/perception/eye-ringed-green.webp",
+  "system": {
+    "points": 3,
+    "description": "<p>3 pts: –2 to Trait/skill rolls beyond 20 yards. 5 pts: –4 beyond 20 yards. Spectacles reduce severity by one tier. dlc p.53.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

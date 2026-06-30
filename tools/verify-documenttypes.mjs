@@ -6,13 +6,11 @@
  *   - `system.json` parses and declares required fields (type, id, compatibility>=14)
  *   - `esmodules` / `styles` / `languages` paths exist on disk
  *   - Language files parse and keep matching key sets (no orphan EN or PL keys)
+ *   - `documentTypes.Actor` matches ArchetypeRegistry registrations (static grep)
+ *   - `documentTypes.Item` covers all ItemRegistry registrations (static grep)
  *
  * Used by: Claude Code PostToolUse hook, `/verify-system` slash command,
- *   `.githooks/pre-commit`, and eventually CI.
- *
- * TODO (Phase 1+): import `module/deadlands-classic.mjs` and compare
- *   `documentTypes` against ArchetypeRegistry / ItemRegistry. Registries are
- *   empty in Phase 0, so the comparison is deferred until they exist.
+ *   `.githooks/pre-commit`, and CI.
  */
 
 import fs from "node:fs";
@@ -129,6 +127,87 @@ if (en && pl) {
   if (missingEn.length) {
     err(`lang/en.json missing keys: ${summarize(missingEn)}`);
   }
+}
+
+// ── Registry vs documentTypes cross-check (static source analysis) ───────────
+//
+// We cannot import module/deadlands-classic.mjs in Node because it uses
+// browser globals (foundry, game, CONFIG, etc.). Instead, grep the source for
+// ArchetypeRegistry.register / ItemRegistry.register calls and extract the
+// `id:` field from the line immediately following each call. This is a
+// lightweight static check — it catches the most common drift (adding an
+// archetype file but forgetting to update system.json, or vice-versa).
+
+/** Extract the `id: "..."` from the lines immediately following a register call. */
+function extractIdFromLines(lines, callLine) {
+  for (let j = callLine + 1; j < Math.min(callLine + 6, lines.length); j++) {
+    const m = lines[j].match(/id:\s*["']([^"']+)["']/);
+    if (m) {
+      return m[1];
+    }
+  }
+  return null;
+}
+
+/** Collect all mjs files under dir recursively. */
+function collectMjsFiles(dir, acc = []) {
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      collectMjsFiles(full, acc);
+    } else if (entry.name.endsWith(".mjs")) {
+      acc.push(full);
+    }
+  }
+  return acc;
+}
+
+function grepRegisteredIds(registry) {
+  const moduleDir = path.join(REPO_ROOT, "module");
+  const pattern = new RegExp(`${registry}\\.register\\(`);
+  const ids = new Set();
+
+  for (const file of collectMjsFiles(moduleDir)) {
+    const lines = fs.readFileSync(file, "utf8").split("\n");
+    for (let i = 0; i < lines.length; i++) {
+      if (pattern.test(lines[i])) {
+        const id = extractIdFromLines(lines, i);
+        if (id) {
+          ids.add(id);
+        }
+      }
+    }
+  }
+
+  return ids;
+}
+
+if (manifest) {
+  const archetypeIds = grepRegisteredIds("ArchetypeRegistry");
+  const actorTypes = new Set(Object.keys(manifest.documentTypes?.Actor ?? {}));
+  for (const id of archetypeIds) {
+    if (!actorTypes.has(id)) {
+      err(`ArchetypeRegistry registers "${id}" but system.json documentTypes.Actor is missing it`);
+    }
+  }
+  for (const id of actorTypes) {
+    if (!archetypeIds.has(id)) {
+      err(
+        `system.json documentTypes.Actor has "${id}" but no ArchetypeRegistry.register call found`
+      );
+    }
+  }
+
+  const itemIds = grepRegisteredIds("ItemRegistry");
+  const itemTypes = new Set(Object.keys(manifest.documentTypes?.Item ?? {}));
+  for (const id of itemIds) {
+    if (!itemTypes.has(id)) {
+      err(`ItemRegistry registers "${id}" but system.json documentTypes.Item is missing it`);
+    }
+  }
+  // Note: documentTypes.Item may contain untyped items (weapon, armor, gear, ammo)
+  // that have no registered data model — that is intentional (plain TypeDataModel).
+  // We only flag Item types that ARE registered but missing from system.json.
 }
 
 if (errors.length) {

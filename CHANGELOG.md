@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.0] — 2026-06-30
+
+### Added
+- **Phase 11 — Harrowed overlay.** Any PC archetype can become Harrowed (dlc p.194, bod p.10-12).
+  Extra schema fields (`isHarrowed`, `dominion`, `harrowedPowers`, `countingCoup`) are merged into
+  every PC actor via `OverlayRegistry`. A "Harrowed" tab appears on the sheet when active.
+  Dominion Roll (`resolveDominionRoll`) is pure and fully unit-tested. EN/PL localization uses
+  "Wygrzebany" / "Dominacja" from the MAG Polish canon.
+- **Phase 12 — Content packs.** `hindrances-srd` (58 entries from dlc p.52-62, with exact PDF-verified
+  names: "Yeller" not "Yellow", "Geezer" not "Elderly"); `edges-srd` expanded to 31 entries from
+  dlc p.63-70 (Level-Headed, Nerves o' Steel, Arcane Background, etc.); `hit-location` RollTable (1d20,
+  dlc p.133); `archetype-examples` pack (one example actor per archetype).
+  New item data models: `EdgeDataModel`, `HindranceDataModel` (point-based, 1–5, matching dlc's
+  system instead of Minor/Major). Core item types registered in `ItemRegistry`.
+- **Phase 14 — Tooling & docs.** `verify-documenttypes.mjs` now cross-checks `documentTypes`
+  against static `ArchetypeRegistry` / `ItemRegistry` call-sites. `docs/architecture.md` extended
+  with dependency diagram, public API table, and SemVer policy. `docs/extending-archetypes.md`
+  (step-by-step tutorial for new archetypes). `docs/migration-policy.md` and
+  `tests/migration.test.mjs` (world-data migration contract).
+
+### Changed
+- `system.json` version bumped to `0.2.0`.
+
 ## [Unreleased]
 
 ### Added

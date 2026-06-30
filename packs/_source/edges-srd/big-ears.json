@@ -1,0 +1,16 @@
+{
+  "_id": "edge003BigEarsCo",
+  "name": "Big Ears",
+  "type": "edge",
+  "img": "icons/magic/sonic/bell-alarm-red-purple.webp",
+  "system": {
+    "cost": 1,
+    "category": "",
+    "requirements": [],
+    "description": "<p>+2 to Cognition rolls involving hearing. dlc p.63.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

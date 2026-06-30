@@ -1,0 +1,16 @@
+{
+  "_id": "edge014LawManEdg",
+  "name": "Law Man",
+  "type": "edge",
+  "img": "icons/skills/social/trading-justice-scale-gold.webp",
+  "system": {
+    "cost": 1,
+    "category": "",
+    "requirements": ["Marshal approval"],
+    "description": "<p>Law enforcement authority with growing jurisdiction: 1=deputized for a specific purpose, 3=county sheriff, 5=US Marshal or Texas Ranger. Includes an implicit 5-point Obligation. dlc p.65.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

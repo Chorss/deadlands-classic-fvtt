@@ -1,0 +1,14 @@
+{
+  "_id": "hind022HvySleepr",
+  "name": "Heavy Sleeper",
+  "type": "hindrance",
+  "img": "icons/magic/perception/silhouette-stealth-shadow.webp",
+  "system": {
+    "points": 1,
+    "description": "<p>–2 to Cognition rolls to wake in emergencies or when surprised during sleep. dlc p.56.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

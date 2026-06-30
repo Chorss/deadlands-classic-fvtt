@@ -1,0 +1,14 @@
+{
+  "_id": "hind017GeezerSlg",
+  "name": "Geezer",
+  "type": "hindrance",
+  "img": "icons/equipment/hand/cane.webp",
+  "system": {
+    "points": 3,
+    "description": "<p>3 pts: –2 Vigor and –2 Pace, +5 knowledge skill points at creation. 5 pts: –2 steps Vigor, –4 Pace, +10 knowledge points. dlc p.55.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

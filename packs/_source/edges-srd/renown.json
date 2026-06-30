@@ -1,0 +1,16 @@
+{
+  "_id": "edge022RenownEdg",
+  "name": "Renown",
+  "type": "edge",
+  "img": "icons/skills/social/symbol-pyramid-eye.webp",
+  "system": {
+    "cost": 1,
+    "category": "",
+    "requirements": [],
+    "description": "<p>Fame: 1=recognized in a small area or profession, 3=county-level celebrity, 5=known everywhere. Recognition check is TN 5 for most, TN 3 for those in the character's field. dlc p.68.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

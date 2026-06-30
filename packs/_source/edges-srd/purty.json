@@ -1,0 +1,16 @@
+{
+  "_id": "edge020PurtyEdge",
+  "name": "Purty",
+  "type": "edge",
+  "img": "icons/skills/social/thumbsup-approval-like.webp",
+  "system": {
+    "cost": 1,
+    "category": "",
+    "requirements": [],
+    "description": "<p>+2 to Persuasion rolls and other situations where physical appearance is relevant. dlc p.67.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

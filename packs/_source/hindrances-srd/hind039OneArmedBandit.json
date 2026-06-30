@@ -1,0 +1,14 @@
+{
+  "_id": "hind039OneArmdBn",
+  "name": "One-Armed Bandit",
+  "type": "hindrance",
+  "img": "icons/equipment/hand/gauntlet-steel-grey.webp",
+  "system": {
+    "points": 3,
+    "description": "<p>–4 to any skill or action requiring the use of two hands. dlc p.59.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

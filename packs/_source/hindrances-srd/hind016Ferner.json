@@ -1,0 +1,14 @@
+{
+  "_id": "hind016FernerSlg",
+  "name": "Ferner",
+  "type": "hindrance",
+  "img": "icons/environment/people/group.webp",
+  "system": {
+    "points": 3,
+    "description": "<p>Cultural outsider who suffers social prejudice; –4 to Persuasion rolls in the dominant culture. dlc p.55.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

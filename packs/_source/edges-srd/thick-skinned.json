@@ -1,0 +1,16 @@
+{
+  "_id": "edge027ThickSknE",
+  "name": "Thick-Skinned",
+  "type": "edge",
+  "img": "icons/magic/defensive/armor-stone-skin.webp",
+  "system": {
+    "cost": 3,
+    "category": "",
+    "requirements": [],
+    "description": "<p>Wound penalty reduced by 1 (e.g. a Serious wound penalty drops from –3 to –2). dlc p.69.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

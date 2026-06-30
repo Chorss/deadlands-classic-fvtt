@@ -1,0 +1,14 @@
+{
+  "_id": "hind037OathSlugS",
+  "name": "Oath",
+  "type": "hindrance",
+  "img": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
+  "system": {
+    "points": 1,
+    "description": "<p>Bound to fulfill a task or always react to specific conditions (1–5 pts); value based on frequency of obligation and personal risk involved. dlc p.58.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

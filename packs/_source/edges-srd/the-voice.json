@@ -1,0 +1,16 @@
+{
+  "_id": "edge031TheVoiceE",
+  "name": "\"The Voice\"",
+  "type": "edge",
+  "img": "icons/magic/sonic/scream-wail-shout-teal.webp",
+  "system": {
+    "cost": 1,
+    "category": "",
+    "requirements": [],
+    "description": "<p>+2 to social rolls for one voice type chosen at purchase: soothing (+2 Persuasion in calm situations), threatening (+2 overawe), or grating (+2 ridicule). Each type is purchased separately. dlc p.70.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

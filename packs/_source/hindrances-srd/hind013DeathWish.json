@@ -1,0 +1,14 @@
+{
+  "_id": "hind013DeathWish",
+  "name": "Death Wish",
+  "type": "hindrance",
+  "img": "icons/svg/skull.svg",
+  "system": {
+    "points": 5,
+    "description": "<p>Seeks death under a specific circumstance set at creation; the Marshal rewards extreme risks taken toward that goal. dlc p.54.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

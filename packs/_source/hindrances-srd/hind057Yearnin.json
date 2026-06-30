@@ -1,0 +1,14 @@
+{
+  "_id": "hind057YearninSl",
+  "name": "Yearnin'",
+  "type": "hindrance",
+  "img": "icons/magic/symbols/question-stone-yellow.webp",
+  "system": {
+    "points": 1,
+    "description": "<p>Has a difficult personal goal (1–5 pts); value based on danger and difficulty of pursuit; may be bought off with Bounty when the goal is finally achieved. dlc p.62.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

@@ -2,7 +2,7 @@
   "id": "deadlands-classic",
   "title": "Deadlands Classic",
   "description": "A community-driven Foundry VTT game system for Deadlands Classic (Weird West). Features exploding dice (Aces), poker-card initiative, Fate Chips (White/Red/Blue/Legend) and location-based wounds.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "system",
   "compatibility": {
     "minimum": "14",
@@ -76,6 +76,27 @@
       "label": "Edges",
       "path": "packs/edges-srd",
       "type": "Item",
+      "system": "deadlands-classic"
+    },
+    {
+      "name": "hindrances-srd",
+      "label": "Hindrances",
+      "path": "packs/hindrances-srd",
+      "type": "Item",
+      "system": "deadlands-classic"
+    },
+    {
+      "name": "hit-location",
+      "label": "Hit Location Table",
+      "path": "packs/hit-location",
+      "type": "RollTable",
+      "system": "deadlands-classic"
+    },
+    {
+      "name": "archetype-examples",
+      "label": "Archetype Examples",
+      "path": "packs/archetype-examples",
+      "type": "Actor",
       "system": "deadlands-classic"
     }
   ]

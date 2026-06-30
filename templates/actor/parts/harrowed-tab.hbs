@@ -1,0 +1,89 @@
+{{!-- Harrowed overlay tab — shown only when isHarrowed=true. dlc p.194-199. --}}
+<section class="tab dlc-harrowed {{tab.cssClass}}" data-group="sheet" data-tab="harrowed">
+
+  {{!-- Harrowed toggle --}}
+  <div class="dlc-harrowed-status">
+    <label class="dlc-harrowed-toggle">
+      <input type="checkbox" name="system.harrowed.isHarrowed"
+        {{#if harrowed.isHarrowed}}checked{{/if}}
+        {{#unless editable}}disabled{{/unless}} />
+      <span class="dlc-harrowed-label">{{localize "DEADLANDS.Harrowed.IsHarrowed.Label"}}</span>
+    </label>
+  </div>
+
+  {{#if harrowed.isHarrowed}}
+
+  {{!-- Dominion section. bod p.62, p.80-82. --}}
+  <div class="dlc-harrowed-section">
+    <h2 class="dlc-section-title">{{localize "DEADLANDS.Harrowed.Dominion.Label"}}</h2>
+    <div class="dlc-dominion-row">
+      <div class="dlc-dominion-control">
+        <label>{{localize "DEADLANDS.Harrowed.Dominion.SpiritControl"}}</label>
+        <input type="number" min="0" name="system.harrowed.dominion.spiritControl"
+          value="{{harrowed.dominion.spiritControl}}"
+          {{#unless editable}}disabled{{/unless}} />
+      </div>
+      <button type="button" class="dlc-dominion-roll-btn" data-action="dominionRoll"
+        aria-label="{{localize 'DEADLANDS.Harrowed.Dominion.Roll.Button'}}">
+        <i class="fas fa-dice-d6"></i>
+        {{localize "DEADLANDS.Harrowed.Dominion.Roll.Button"}}
+      </button>
+    </div>
+
+    {{!-- Last roll result display --}}
+    {{#if harrowed.dominion.lastRoll}}
+    <div class="dlc-dominion-last-roll">
+      <span class="dlc-last-roll-label">{{localize "DEADLANDS.Harrowed.Dominion.LastRoll"}}</span>
+      <span class="dlc-last-roll-pc">{{localize "DEADLANDS.Harrowed.Dominion.PCTotal"}}: {{harrowed.dominion.lastRoll.pcTotal}}</span>
+      <span class="dlc-last-roll-npc">{{localize "DEADLANDS.Harrowed.Dominion.NpcTotal"}}: {{harrowed.dominion.lastRoll.npcTotal}}</span>
+      {{#if (eq harrowed.dominion.lastRoll.winner "pc")}}
+        <span class="dlc-last-roll-outcome dlc-outcome-win">{{localize "DEADLANDS.Harrowed.Dominion.PCWins"}}</span>
+      {{else if (eq harrowed.dominion.lastRoll.winner "manitou")}}
+        <span class="dlc-last-roll-outcome dlc-outcome-loss">{{localize "DEADLANDS.Harrowed.Dominion.ManitouWins"}}</span>
+      {{else}}
+        <span class="dlc-last-roll-outcome dlc-outcome-neutral">{{localize "DEADLANDS.Harrowed.Dominion.NoChange"}}</span>
+      {{/if}}
+    </div>
+    {{/if}}
+  </div>
+
+  {{!-- Harrowed Powers. dlc p.196-199, bod p.19-60. --}}
+  <div class="dlc-harrowed-section">
+    <h2 class="dlc-section-title">{{localize "DEADLANDS.Harrowed.Powers.Label"}}</h2>
+    {{#if harrowed.powers.length}}
+    <ul class="dlc-powers-list">
+      {{#each harrowed.powers as |power|}}
+      <li class="dlc-power dlc-power-{{power.kind}}">
+        <span class="dlc-power-name">{{power.name}}</span>
+        <span class="dlc-power-level">{{localize "DEADLANDS.Harrowed.Powers.Level"}}: {{power.level}}</span>
+        <span class="dlc-power-kind dlc-chip-badge">{{power.kind}}</span>
+      </li>
+      {{/each}}
+    </ul>
+    {{else}}
+    <p class="dlc-empty">{{localize "DEADLANDS.Harrowed.Powers.Empty"}}</p>
+    {{/if}}
+  </div>
+
+  {{!-- Counting Coup. dlc p.198, bod p.70, p.100-102. --}}
+  <div class="dlc-harrowed-section">
+    <h2 class="dlc-section-title">{{localize "DEADLANDS.Harrowed.CountingCoup.Label"}}</h2>
+    {{#if harrowed.coup.length}}
+    <ul class="dlc-coup-list">
+      {{#each harrowed.coup as |coup|}}
+      <li class="dlc-coup-entry">
+        <span class="dlc-coup-source">{{coup.source}}</span>
+        <span class="dlc-coup-power">{{coup.power}}</span>
+        {{#if coup.taint}}
+        <span class="dlc-coup-taint dlc-warn">{{coup.taint}}</span>
+        {{/if}}
+      </li>
+      {{/each}}
+    </ul>
+    {{else}}
+    <p class="dlc-empty">{{localize "DEADLANDS.Harrowed.CountingCoup.Empty"}}</p>
+    {{/if}}
+  </div>
+
+  {{/if}}{{!-- /isHarrowed --}}
+</section>

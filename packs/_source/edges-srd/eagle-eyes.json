@@ -1,0 +1,16 @@
+{
+  "_id": "edge008EagleEyes",
+  "name": "Eagle Eyes",
+  "type": "edge",
+  "img": "icons/magic/perception/eye-ringed-glow-angry-small-teal.webp",
+  "system": {
+    "cost": 1,
+    "category": "",
+    "requirements": [],
+    "description": "<p>+2 to Cognition rolls to spot or notice things at a distance. dlc p.64.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

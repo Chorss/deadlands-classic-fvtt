@@ -1,0 +1,14 @@
+{
+  "_id": "hind033LyinEyeSl",
+  "name": "Lyin' Eyes",
+  "type": "hindrance",
+  "img": "icons/magic/perception/eye-ringed-red.webp",
+  "system": {
+    "points": 3,
+    "description": "<p>–4 to all bluff rolls; has an obvious tell that perceptive observers can notice. dlc p.58.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

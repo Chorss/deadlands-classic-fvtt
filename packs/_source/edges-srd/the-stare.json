@@ -1,0 +1,16 @@
+{
+  "_id": "edge026TheStareE",
+  "name": "\"The Stare\"",
+  "type": "edge",
+  "img": "icons/magic/perception/eye-slit-red-orange.webp",
+  "system": {
+    "cost": 1,
+    "category": "",
+    "requirements": [],
+    "description": "<p>+2 to overawe attacks against targets within approximately 30 feet who can meet the character's gaze. dlc p.69.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

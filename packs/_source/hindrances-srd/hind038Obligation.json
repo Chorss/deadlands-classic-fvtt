@@ -1,0 +1,14 @@
+{
+  "_id": "hind038ObligatSl",
+  "name": "Obligation",
+  "type": "hindrance",
+  "img": "icons/environment/people/group.webp",
+  "system": {
+    "points": 1,
+    "description": "<p>Must regularly attend to family, job, or duty (1–5 pts); value based on how demanding and frequently the obligation pulls the character away from adventuring. dlc p.59.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

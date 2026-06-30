@@ -1,0 +1,16 @@
+{
+  "_id": "edge006DineroEdg",
+  "name": "Dinero",
+  "type": "edge",
+  "img": "icons/commodities/currency/coin-embossed-ruby-gold.webp",
+  "system": {
+    "cost": 1,
+    "category": "",
+    "requirements": [],
+    "description": "<p>Always has access to extra funds; starting cash and periodic access scale with cost (1=$250 start/$100 extra per session to 5=$5,000 start/$10,000 extra). dlc p.64.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

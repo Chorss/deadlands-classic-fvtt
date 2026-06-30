@@ -1,0 +1,124 @@
+{
+  "_id": "exCowboy001",
+  "name": "Sheriff Bob Cole",
+  "type": "cowboy",
+  "img": "icons/environment/people/cowboy.webp",
+  "system": {
+    "traits": {
+      "deftness": {
+        "dieCount": 3,
+        "dieType": "d6",
+        "modifier": 0,
+        "aptitudes": {
+          "shootin": {
+            "level": 3
+          }
+        }
+      },
+      "nimbleness": {
+        "dieCount": 1,
+        "dieType": "d4",
+        "modifier": 0,
+        "aptitudes": {}
+      },
+      "quickness": {
+        "dieCount": 2,
+        "dieType": "d6",
+        "modifier": 0,
+        "aptitudes": {}
+      },
+      "strength": {
+        "dieCount": 1,
+        "dieType": "d4",
+        "modifier": 0,
+        "aptitudes": {}
+      },
+      "vigor": {
+        "dieCount": 2,
+        "dieType": "d8",
+        "modifier": 0,
+        "aptitudes": {}
+      },
+      "cognition": {
+        "dieCount": 1,
+        "dieType": "d4",
+        "modifier": 0,
+        "aptitudes": {}
+      },
+      "knowledge": {
+        "dieCount": 1,
+        "dieType": "d4",
+        "modifier": 0,
+        "aptitudes": {}
+      },
+      "mien": {
+        "dieCount": 2,
+        "dieType": "d6",
+        "modifier": 0,
+        "aptitudes": {}
+      },
+      "smarts": {
+        "dieCount": 1,
+        "dieType": "d4",
+        "modifier": 0,
+        "aptitudes": {}
+      },
+      "spirit": {
+        "dieCount": 1,
+        "dieType": "d4",
+        "modifier": 0,
+        "aptitudes": {}
+      }
+    },
+    "wounds": {
+      "noggin": {
+        "severity": 0
+      },
+      "upperGuts": {
+        "severity": 0
+      },
+      "lowerGuts": {
+        "severity": 0
+      },
+      "gizzards": {
+        "severity": 0
+      },
+      "leftArm": {
+        "severity": 0
+      },
+      "rightArm": {
+        "severity": 0
+      },
+      "leftLeg": {
+        "severity": 0
+      },
+      "rightLeg": {
+        "severity": 0
+      }
+    },
+    "wind": {
+      "value": 12,
+      "max": 12
+    },
+    "chips": {
+      "white": 3,
+      "red": 0,
+      "blue": 0,
+      "legend": 0
+    },
+    "pace": 6,
+    "size": 6,
+    "grit": 1,
+    "bounty": 0,
+    "woundModifier": 0,
+    "biography": ""
+  },
+  "items": [],
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {}
+}

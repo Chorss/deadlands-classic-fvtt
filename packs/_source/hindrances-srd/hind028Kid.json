@@ -1,0 +1,14 @@
+{
+  "_id": "hind028KidSlugSl",
+  "name": "Kid",
+  "type": "hindrance",
+  "img": "icons/environment/people/child.webp",
+  "system": {
+    "points": 2,
+    "description": "<p>2 pts (age 11–15): –1 step Strength and Knowledge (min d4). 4 pts (age 8–10): –2 steps both (min d4). Can buy off with Bounty as the character ages. dlc p.57.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

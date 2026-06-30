@@ -1,0 +1,14 @@
+{
+  "_id": "hind041PacifistS",
+  "name": "Pacifist",
+  "type": "hindrance",
+  "img": "icons/magic/holy/angel-wings-gold.webp",
+  "system": {
+    "points": 3,
+    "description": "<p>3 pts: will not kill unless absolutely unavoidable. 5 pts: will not kill under any circumstances, regardless of the situation. dlc p.59.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

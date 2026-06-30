@@ -451,5 +451,31 @@
   "DEADLANDS.MadScientist.Madness.Dementia.Note": "Poważny zanik funkcji poznawczych — MG określa konkretny przejaw.",
 
   "DEADLANDS.Dialog.Modifier": "Modyfikator",
-  "DEADLANDS.Dialog.WhiteChips": "Wydawane białe sztony"
+  "DEADLANDS.Dialog.WhiteChips": "Wydawane białe sztony",
+
+  "DEADLANDS.Harrowed.Label": "Wygrzebany",
+  "DEADLANDS.Harrowed.Sheet.Tab.Label": "Wygrzebany",
+  "DEADLANDS.Harrowed.IsHarrowed.Label": "Wygrzebany",
+  "DEADLANDS.Harrowed.Warn.NotHarrowed": "Ta postać nie jest Wygrzebana.",
+  "DEADLANDS.Harrowed.Activated": "{name} powrócił z zaświatów.",
+
+  "DEADLANDS.Harrowed.Dominion.Label": "Dominacja",
+  "DEADLANDS.Harrowed.Dominion.SpiritControl": "Kontrola Ducha",
+  "DEADLANDS.Harrowed.Dominion.LastRoll": "Ostatni rzut",
+  "DEADLANDS.Harrowed.Dominion.PCTotal": "Twój wynik",
+  "DEADLANDS.Harrowed.Dominion.NpcTotal": "Wynik Manitou",
+  "DEADLANDS.Harrowed.Dominion.Roll.Button": "Rzut Dominacji",
+  "DEADLANDS.Harrowed.Dominion.Roll.Title": "Rzut Dominacji",
+  "DEADLANDS.Harrowed.Dominion.RollResult": "Twój rzut: {pcTotal} vs Manitou: {npcTotal}",
+  "DEADLANDS.Harrowed.Dominion.NewControl": "Kontrola Ducha teraz: {value}",
+  "DEADLANDS.Harrowed.Dominion.PCWins": "Twój duch góruje — kontrolujesz swoje ciało.",
+  "DEADLANDS.Harrowed.Dominion.ManitouWins": "Manitou wygrywa — tracisz kontrolę!",
+  "DEADLANDS.Harrowed.Dominion.NoChange": "Żaden nie triumfuje — Dominacja bez zmian.",
+
+  "DEADLANDS.Harrowed.Powers.Label": "Moce Wygrzebanego",
+  "DEADLANDS.Harrowed.Powers.Level": "Poziom",
+  "DEADLANDS.Harrowed.Powers.Empty": "Brak mocy Wygrzebanego.",
+
+  "DEADLANDS.Harrowed.CountingCoup.Label": "Counting Coup",
+  "DEADLANDS.Harrowed.CountingCoup.Empty": "Brak zdobytych coup."
 }

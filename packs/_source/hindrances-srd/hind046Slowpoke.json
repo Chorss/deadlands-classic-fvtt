@@ -1,0 +1,14 @@
+{
+  "_id": "hind046SlowpokeS",
+  "name": "Slowpoke",
+  "type": "hindrance",
+  "img": "icons/equipment/foot/boots-leather-brown-grey.webp",
+  "system": {
+    "points": 1,
+    "description": "<p>–1 Pace per point taken (1–5 pts); minimum Pace is 2. dlc p.60.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

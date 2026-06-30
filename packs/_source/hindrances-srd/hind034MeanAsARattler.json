@@ -1,0 +1,14 @@
+{
+  "_id": "hind034MeanRttlr",
+  "name": "Mean as a Rattler",
+  "type": "hindrance",
+  "img": "icons/creatures/reptiles/snake-rattler-yellow.webp",
+  "system": {
+    "points": 2,
+    "description": "<p>–2 to friendly Persuasion; occasionally +2 to hostile Persuasion or overawe at the Marshal's discretion. dlc p.58.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

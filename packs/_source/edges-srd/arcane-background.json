@@ -1,0 +1,16 @@
+{
+  "_id": "edge001ArcnBkgnd",
+  "name": "Arcane Background",
+  "type": "edge",
+  "img": "icons/magic/symbols/circle-ouroboros.webp",
+  "system": {
+    "cost": 3,
+    "category": "",
+    "requirements": [],
+    "description": "<p>Grants access to one arcane tradition (huckster, mad scientist, blessed, or shaman). Required to acquire and use that tradition's powers. dlc p.63.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

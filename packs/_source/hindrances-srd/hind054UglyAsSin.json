@@ -1,0 +1,14 @@
+{
+  "_id": "hind054UglyAsSin",
+  "name": "Ugly As Sin",
+  "type": "hindrance",
+  "img": "icons/magic/symbols/forbidden-rune-red.webp",
+  "system": {
+    "points": 1,
+    "description": "<p>–2 to friendly Persuasion where looks matter; +2 to overawe and hostile Persuasion attempts. dlc p.61.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

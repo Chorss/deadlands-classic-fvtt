@@ -1,0 +1,14 @@
+{
+  "_id": "hind030LawOWestS",
+  "name": "Law o' the West",
+  "type": "hindrance",
+  "img": "icons/equipment/chest/jacket-leather-brown.webp",
+  "system": {
+    "points": 3,
+    "description": "<p>Must follow the Western honor code (no drawing first, no shooting backs, etc.); +2 to friendly Persuasion when this honor is known. dlc p.57.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

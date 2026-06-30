@@ -1,0 +1,16 @@
+{
+  "_id": "edge028TghAsNail",
+  "name": "Tough as Nails",
+  "type": "edge",
+  "img": "icons/tools/fasteners/nails-steel-brown.webp",
+  "system": {
+    "cost": 1,
+    "category": "",
+    "requirements": [],
+    "description": "<p>Each level adds +2 to the character's Wind total. dlc p.69.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

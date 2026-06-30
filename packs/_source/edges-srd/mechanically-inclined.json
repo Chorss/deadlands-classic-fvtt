@@ -1,0 +1,16 @@
+{
+  "_id": "edge018MechIncld",
+  "name": "Mechanically Inclined",
+  "type": "edge",
+  "img": "icons/skills/trades/smithing-anvil-brown.webp",
+  "system": {
+    "cost": 1,
+    "category": "",
+    "requirements": [],
+    "description": "<p>+2 to rolls involving fixing or understanding machinery, including tinkerin' and mad science rolls. dlc p.67.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

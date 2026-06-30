@@ -1,0 +1,16 @@
+{
+  "_id": "edge010FrndHiPlc",
+  "name": "Friends in High Places",
+  "type": "edge",
+  "img": "icons/skills/social/diplomacy-peace-alliance.webp",
+  "system": {
+    "cost": 1,
+    "category": "",
+    "requirements": [],
+    "description": "<p>Has influential NPC contacts who occasionally provide aid; point value reflects contact power and encounter frequency. dlc p.65.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

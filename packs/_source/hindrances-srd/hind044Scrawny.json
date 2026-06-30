@@ -1,0 +1,14 @@
+{
+  "_id": "hind044ScrawnySl",
+  "name": "Scrawny",
+  "type": "hindrance",
+  "img": "icons/magic/control/debuff-weakness-broken-bones-white.webp",
+  "system": {
+    "points": 5,
+    "description": "<p>–1 to Size; maximum Strength is d10. dlc p.60.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

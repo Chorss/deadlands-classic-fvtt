@@ -1,0 +1,14 @@
+{
+  "_id": "hind011CluelessS",
+  "name": "Clueless",
+  "type": "hindrance",
+  "img": "icons/magic/perception/eye-ringed-red.webp",
+  "system": {
+    "points": 3,
+    "description": "<p>–2 to all Cognition checks to notice things, including surprise checks. dlc p.54.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

@@ -1,0 +1,14 @@
+{
+  "_id": "hind032LoyalSlug",
+  "name": "Loyal",
+  "type": "hindrance",
+  "img": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
+  "system": {
+    "points": 3,
+    "description": "<p>Willingly risks life for friends; cannot abandon companions even at great personal risk or cost. dlc p.58.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

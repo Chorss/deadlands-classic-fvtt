@@ -1,0 +1,14 @@
+{
+  "_id": "hind001AilinSlug",
+  "name": "Ailin'",
+  "type": "hindrance",
+  "img": "icons/magic/life/heart-cross-red.webp",
+  "system": {
+    "points": 1,
+    "description": "<p>1 pt: –2 to Persuasion and Sneak. 3 pts: must make Vigor TN 5 each session or suffer –4 to all tasks. 5 pts: Vigor TN 7 each session or risk death. Set <em>points</em> to actual tier purchased. dlc p.52.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

@@ -1,0 +1,14 @@
+{
+  "_id": "hind056WantedSlg",
+  "name": "Wanted",
+  "type": "hindrance",
+  "img": "icons/skills/melee/hand-grip-sword-red.webp",
+  "system": {
+    "points": 1,
+    "description": "<p>Wanted by the law (1–5 pts): 1=petty/local, 2=prison-level, 3=bank robbery, 4=multi-state desperado, 5=wanted dead or alive nationwide. dlc p.62.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}

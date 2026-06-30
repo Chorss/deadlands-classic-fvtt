@@ -1,0 +1,14 @@
+{
+  "_id": "hind007BigMouthS",
+  "name": "Big Mouth",
+  "type": "hindrance",
+  "img": "icons/magic/sonic/wave-ring-teal.webp",
+  "system": {
+    "points": 3,
+    "description": "<p>Blurts out the posse's plans; NPCs who discover this won't trust the character a second time. dlc p.53.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": { "default": 0 },
+  "flags": {}
+}
