@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### Added
+
+### Changed
+
+### Fixed
+
 ## [0.2.0] — 2026-06-30
 
 ### Added
@@ -27,16 +35,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (step-by-step tutorial for new archetypes). `docs/migration-policy.md` and
   `tests/migration.test.mjs` (world-data migration contract).
 
-### Changed
-- `system.json` version bumped to `0.2.0`.
-
-## [Unreleased]
-
-### Added
-
-### Changed
-
 ### Fixed
+- Sync `package.json` version to `0.2.0` (was incorrectly left at `0.1.0`).
+
+### Changed
+- `system.json` and `package.json` versions bumped to `0.2.0`.
 
 ## [0.1.0] — 2026-06-29
 
@@ -75,5 +78,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `CombatantHandDialog` and initiative-value path corrections after V14 runtime testing.
 - Multiple V14 API compatibility fixes across archetype sheets and mechanics.
 
-[Unreleased]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.1.0...HEAD
+[Unreleased]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.2.0...HEAD
+[0.2.0]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.1.0...0.2.0
 [0.1.0]: https://github.com/Chorss/deadlands-classic-fvtt/releases/tag/0.1.0
