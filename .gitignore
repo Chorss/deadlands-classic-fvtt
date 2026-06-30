@@ -73,3 +73,6 @@ docs/*.pl.md
 test-results/
 playwright-report/
 .playwright/
+.playwright-mcp/
+# Root-level screenshots from manual test sessions.
+/*.png
