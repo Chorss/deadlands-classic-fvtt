@@ -1,0 +1,64 @@
+/* Deadlands Classic — design tokens.
+ * All dlc-* components reference these custom properties.
+ * Imported first so downstream partials can rely on them.
+ */
+
+@font-face {
+  font-family: "Rye";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/Rye-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Libre Baskerville";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/LibreBaskerville-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Libre Baskerville";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../fonts/LibreBaskerville-Bold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Libre Baskerville";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/LibreBaskerville-Italic.woff2") format("woff2");
+}
+
+:root {
+  /* ── Palette ─────────────────────────────────────────────────────────────── */
+  --dlc-color-gold:       #c8a44b; /* warm gold — focus ring, dividers, accents */
+  --dlc-color-gold-dim:   rgba(200, 164, 75, 0.15);
+  --dlc-color-dark:       #1a0e00; /* deep saddle-brown (text on light bg) */
+  --dlc-color-paper:      #f4eed4; /* parchment — section headers, labels */
+  --dlc-color-blood:      #8b1a1a; /* wound red */
+  --dlc-color-blood-dim:  rgba(139, 26, 26, 0.12);
+  --dlc-color-muted:      #6b5c3e; /* secondary / placeholder text */
+
+  /* ── Typography ──────────────────────────────────────────────────────────── */
+  --dlc-font-display: "Rye", Georgia, "Times New Roman", serif;
+  --dlc-font-body:    "Libre Baskerville", Georgia, serif;
+
+  /* ── Layout ──────────────────────────────────────────────────────────────── */
+  --dlc-portrait-size: 120px;
+  --dlc-sheet-gap:     0.75rem;
+  --dlc-section-gap:   0.5rem;
+  --dlc-radius:        4px;
+
+  /* ── Wounds / pips ───────────────────────────────────────────────────────── */
+  --dlc-pip-size:    10px;
+  --dlc-pip-empty:   #3a3a3a;
+  --dlc-pip-light:   #d4ac0d;   /* severity 1–2 — Light / Heavy */
+  --dlc-pip-serious: #e67e22;   /* severity 3–4 — Serious / Critical */
+  --dlc-pip-maimed:  #c0392b;   /* severity 5   — Maimed */
+}

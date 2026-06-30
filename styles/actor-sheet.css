@@ -1,0 +1,326 @@
+/* Deadlands Classic — actor sheet layout.
+ * Covers header, traits, aptitudes, gear, and shared item-list styles.
+ */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   HEADER
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.dlc-sheet-header {
+  display: grid;
+  grid-template-columns: var(--dlc-portrait-size) 1fr;
+  gap: var(--dlc-sheet-gap);
+  align-items: start;
+  padding-bottom: var(--dlc-sheet-gap);
+  border-bottom: 1px solid var(--dlc-color-gold);
+  margin-bottom: var(--dlc-sheet-gap);
+}
+
+.dlc-portrait {
+  width: var(--dlc-portrait-size);
+  height: var(--dlc-portrait-size);
+  object-fit: cover;
+  border-radius: var(--dlc-radius);
+  border: 2px solid var(--dlc-color-gold);
+  display: block;
+}
+
+.dlc-header-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.dlc-charname {
+  font-family: var(--dlc-font-display);
+  font-size: 1.1rem;
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid var(--dlc-color-gold);
+  background: transparent;
+  color: inherit;
+  padding: 2px 0;
+}
+
+.dlc-charname:focus {
+  outline: none;
+  border-bottom-color: var(--dlc-color-gold);
+  background: var(--dlc-color-gold-dim);
+}
+
+/* Secondary stats row (Wind / Pace / Size / Grit / Bounty) */
+.dlc-secondary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.dlc-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 44px;
+}
+
+.dlc-stat-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--dlc-color-muted);
+  white-space: nowrap;
+}
+
+.dlc-stat-pair {
+  display: flex;
+  align-items: baseline;
+  gap: 1px;
+}
+
+.dlc-stat-value {
+  width: 2.4rem;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.dlc-stat-max {
+  font-size: 0.8rem;
+  color: var(--dlc-color-muted);
+}
+
+/* Wind specifically */
+.dlc-wind {
+  min-width: 60px;
+}
+
+.dlc-wind-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  color: var(--dlc-color-muted);
+}
+
+.dlc-wind-value {
+  width: 2rem;
+  text-align: center;
+}
+
+.dlc-wind-max {
+  font-size: 0.8rem;
+  color: var(--dlc-color-muted);
+}
+
+.dlc-wind-sep {
+  color: var(--dlc-color-muted);
+  margin: 0 1px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TABS NAV
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.dlc-tabs {
+  display: flex;
+  gap: 2px;
+  border-bottom: 1px solid var(--dlc-color-gold);
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TRAITS TAB
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.dlc-traits {
+  padding: 0 0.25rem;
+}
+
+.dlc-trait-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+
+.dlc-trait-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.dlc-trait {
+  border-bottom: 1px solid var(--dlc-color-gold-dim);
+  padding-bottom: 0.4rem;
+}
+
+.dlc-trait-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.dlc-trait-name {
+  font-family: var(--dlc-font-display);
+  font-size: 0.85rem;
+  margin: 0;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Die notation: [count] [d6 ▼] [±mod] inline */
+.dlc-trait-die {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.dlc-die-count {
+  width: 2rem;
+  text-align: center;
+}
+
+.dlc-die-type {
+  max-width: 4rem;
+}
+
+.dlc-die-mod {
+  width: 2.4rem;
+  text-align: center;
+}
+
+/* Aptitudes list */
+.dlc-aptitudes {
+  list-style: none;
+  padding: 0;
+  margin: 0.2rem 0 0 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.dlc-aptitude,
+.dlc-aptitude-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 1px 0;
+  border-radius: 2px;
+}
+
+.dlc-aptitude:hover,
+.dlc-aptitude-row:hover {
+  background: var(--dlc-color-gold-dim);
+}
+
+.dlc-apt-roll {
+  flex: 1;
+  text-align: left;
+  font-size: 0.8rem;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: inherit;
+}
+
+.dlc-apt-roll:hover {
+  color: var(--dlc-color-gold);
+}
+
+.dlc-apt-level {
+  width: 2rem;
+  text-align: center;
+  font-size: 0.8rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ITEM LISTS (shared — gear, weapons, edges, hindrances)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.dlc-item-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.dlc-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 3px 4px;
+  border-radius: var(--dlc-radius);
+  transition: background 0.1s;
+}
+
+.dlc-item:hover {
+  background: var(--dlc-color-gold-dim);
+}
+
+.dlc-item-img {
+  width: 24px;
+  height: 24px;
+  object-fit: cover;
+  border-radius: 3px;
+  border: 1px solid var(--color-border-light-tertiary, #555);
+  flex-shrink: 0;
+}
+
+.dlc-item-name {
+  flex: 1;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.dlc-item-name:hover {
+  color: var(--dlc-color-gold);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   GEAR TAB
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.dlc-gear {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dlc-section-gap);
+}
+
+.dlc-gear-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   WEAPONS (combat tab)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.dlc-weapons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BIOGRAPHY TAB
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.dlc-bio {
+  padding: 0.25rem;
+}
+
+.dlc-bio-readonly {
+  font-family: var(--dlc-font-body);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}

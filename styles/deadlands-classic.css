@@ -1,14 +1,18 @@
-/* Deadlands Classic — entry stylesheet.
- *
- * Partial imports will be activated as modules come online:
- *   @import "./_variables.css";   (Phase 2 — theme tokens)
- *   @import "./_base.css";        (Phase 2)
- *   @import "./actor-sheet.css";  (Phase 2)
- *   @import "./item-sheet.css";   (Phase 5)
- *   @import "./combat.css";       (Phase 8)
- */
+/* Deadlands Classic — entry stylesheet. */
 
+@import "./_variables.css";
+@import "./_base.css";
 @import "./chips.css";
+@import "./actor-sheet.css";
+@import "./combat.css";
+@import "./item-sheet.css";
+@import "./archetypes/huckster.css";
+@import "./archetypes/blessed.css";
+@import "./archetypes/shaman.css";
+@import "./archetypes/mad-scientist.css";
+@import "./archetypes/harrowed.css";
+@import "./chat.css";
+@import "./dialogs.css";
 
 /* ── Accessibility ───────────────────────────────────────────────────────────
  * Visible focus indicators for keyboard navigation. Suppressed only for

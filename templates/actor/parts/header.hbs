@@ -12,7 +12,7 @@
       <label class="dlc-stat dlc-wind">
         <span class="dlc-stat-label">{{localize 'DEADLANDS.Sheet.Wind'}}</span>
         <span class="dlc-stat-pair">
-          <input type="number" name="system.wind.value" value="{{system.wind.value}}" {{#unless editable}}disabled{{/unless}} />
+          <span class="dlc-wind-value">{{system.wind.value}}</span>
           <span class="dlc-sep">/</span>
           <span class="dlc-stat-max">{{system.wind.max}}</span>
         </span>

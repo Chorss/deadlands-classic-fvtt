@@ -1,0 +1,91 @@
+/* Deadlands Classic — Shaman archetype styles (favors, appeasement, ritual). */
+
+/* ── Favors tab ───────────────────────────────────────────────────────────── */
+
+.dlc-favors {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dlc-section-gap);
+}
+
+.dlc-favor-table,
+.dlc-favor-list {
+  width: 100%;
+}
+
+.dlc-favor-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 3px 4px;
+  border-radius: var(--dlc-radius);
+}
+
+.dlc-favor-row:hover {
+  background: var(--dlc-color-gold-dim);
+}
+
+.dlc-favor-name {
+  flex: 1;
+  font-size: 0.85rem;
+}
+
+.dlc-favor-actions {
+  display: flex;
+  gap: 3px;
+}
+
+.dlc-use-btn {
+  font-size: 0.7rem;
+  padding: 1px 6px;
+}
+
+/* ── Appeasement pool ─────────────────────────────────────────────────────── */
+
+.dlc-appeasement {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.dlc-appeasement-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dlc-appeasement-pool {
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--dlc-color-gold);
+}
+
+.dlc-appeasement-note {
+  font-size: 0.75rem;
+  font-style: italic;
+  color: var(--dlc-color-muted);
+}
+
+/* ── Ritual ───────────────────────────────────────────────────────────────── */
+
+.dlc-ritual {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.dlc-ritual-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.dlc-ritual-btn {
+  font-size: 0.7rem;
+  padding: 1px 6px;
+}
+
+.dlc-ritual-result,
+.dlc-ritual-outcome {
+  font-size: 0.85rem;
+}

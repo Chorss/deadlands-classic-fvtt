@@ -9,8 +9,9 @@ Do not verbose-dump command outputs — surface only failures and their file:lin
 Execute in order, stopping at the first failure:
 
 1. `node tools/verify-documenttypes.mjs` — manifest structure + EN/PL key parity.
-2. `node --check module/deadlands-classic.mjs` and any other `.mjs` files under `module/` and `tools/` that have been edited since the last clean verify.
-3. `node --test tests/*.test.mjs` — smoke + unit tests.
+2. `node tools/audit-css.mjs` — CSS class coverage: every `dlc-*` class used in templates must have a rule in styles/.
+3. `node --check module/deadlands-classic.mjs` and any other `.mjs` files under `module/` and `tools/` that have been edited since the last clean verify.
+4. `node --test tests/*.test.mjs` — smoke + unit tests.
 
 Report format:
 - `verify-system OK` on success.

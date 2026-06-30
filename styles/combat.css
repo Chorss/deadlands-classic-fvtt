@@ -1,0 +1,196 @@
+/* Deadlands Classic — combat tab: wounds, wind bar, pip-dots. */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   COMBAT TAB ROOT
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.dlc-combat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dlc-sheet-gap);
+  padding: 0.25rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   WOUND TRACK
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.dlc-wounds {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dlc-section-gap);
+}
+
+/* 8-slot wound list: 2-column grid */
+.dlc-wound-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.3rem;
+}
+
+.dlc-wound {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 3px 5px;
+  border-radius: var(--dlc-radius);
+  border: 1px solid transparent;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.dlc-wound.dlc-maimed {
+  border-color: var(--dlc-color-blood);
+  background: var(--dlc-color-blood-dim);
+}
+
+.dlc-wound-label {
+  font-size: 0.75rem;
+  white-space: nowrap;
+  min-width: 5rem;
+  color: var(--dlc-color-muted);
+}
+
+/* Pip dots */
+.dlc-wound-pips {
+  display: flex;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.dlc-wound-pip {
+  display: inline-block;
+  width: var(--dlc-pip-size);
+  height: var(--dlc-pip-size);
+  border-radius: 50%;
+  background: var(--dlc-pip-empty);
+  border: 1px solid #555;
+  transition: background 0.1s;
+}
+
+.dlc-wound-pip.dlc-pip-filled {
+  background: var(--dlc-pip-light);
+  border-color: var(--dlc-pip-light);
+}
+
+/* Severity-aware pip colour — driven by wound severity class on the <li> */
+.dlc-wound[data-severity="3"] .dlc-wound-pip.dlc-pip-filled,
+.dlc-wound[data-severity="4"] .dlc-wound-pip.dlc-pip-filled {
+  background: var(--dlc-pip-serious);
+  border-color: var(--dlc-pip-serious);
+}
+
+.dlc-wound[data-severity="5"] .dlc-wound-pip.dlc-pip-filled {
+  background: var(--dlc-pip-maimed);
+  border-color: var(--dlc-pip-maimed);
+}
+
+/* Severity number input — small, tucked right */
+.dlc-wound-sev {
+  width: 2rem;
+  text-align: center;
+  font-size: 0.8rem;
+  margin-left: auto;
+}
+
+.dlc-wound-severity {
+  font-size: 0.7rem;
+  font-style: italic;
+  color: var(--dlc-color-blood);
+  white-space: nowrap;
+}
+
+/* Wound locations widget (standalone, used in some archetype sheets) */
+.dlc-wound-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dlc-section-gap);
+}
+
+.dlc-wound-locations {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.3rem;
+}
+
+.dlc-wound-slot {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 3px 5px;
+  border-radius: var(--dlc-radius);
+  border: 1px solid transparent;
+}
+
+.dlc-wound-slot.dlc-maimed {
+  border-color: var(--dlc-color-blood);
+  background: var(--dlc-color-blood-dim);
+}
+
+.dlc-wound-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.dlc-wound-loc-label {
+  font-size: 0.75rem;
+  color: var(--dlc-color-muted);
+}
+
+.dlc-wound-severity-label {
+  font-size: 0.65rem;
+  font-style: italic;
+  color: var(--dlc-color-blood);
+}
+
+/* Aliases used by wound-locations-widget.hbs */
+.dlc-wound-label,
+.dlc-wound-loc-label {
+  white-space: nowrap;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   WIND BAR
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.dlc-wind-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.dlc-wind-track {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.dlc-wind-track .dlc-wind-value {
+  width: 2.5rem;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.dlc-wind-track .dlc-wind-sep {
+  color: var(--dlc-color-muted);
+}
+
+.dlc-wind-track .dlc-wind-max {
+  font-size: 0.85rem;
+  color: var(--dlc-color-muted);
+}
+
+.dlc-winded-badge {
+  font-size: 0.7rem;
+  font-weight: bold;
+  color: var(--dlc-color-blood);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 1px 5px;
+  border: 1px solid var(--dlc-color-blood);
+  border-radius: var(--dlc-radius);
+}
