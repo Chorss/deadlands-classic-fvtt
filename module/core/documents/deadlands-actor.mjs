@@ -11,6 +11,22 @@
  */
 export class DeadlandsActor extends Actor {
   /**
+   * Initialise wind.value to wind.max on first creation so a new PC is not
+   * immediately Winded. prepareDerivedData computes wind.max from die faces;
+   * the schema default for wind.value is 0 and must be corrected here. dlc p.40.
+   *
+   * @override
+   */
+  _onCreate(data, options, userId) {
+    super._onCreate(data, options, userId);
+    if (userId !== game.userId) return;
+    const wind = this.system.wind;
+    if (wind && wind.value === 0 && wind.max > 0) {
+      this.update({ "system.wind.value": wind.max });
+    }
+  }
+
+  /**
    * Roll a Trait or Aptitude as an exploding dice pool.
    * Thin façade over `game.deadlandsClassic.dice.rollTrait` (wired in Phase 3/4).
    *
