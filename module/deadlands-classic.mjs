@@ -24,6 +24,7 @@ import { lookupScart, rollGutsCheck, scartDiceForTN } from "./core/dice/guts-che
 import { rollTrait } from "./core/dice/trait-roll.mjs";
 import { DeadlandsActor } from "./core/documents/deadlands-actor.mjs";
 import { DeadlandsItem } from "./core/documents/deadlands-item.mjs";
+import { applyFont, registerFontSettings, SETTING_KEY } from "./core/font-settings.mjs";
 import { ItemRegistry } from "./core/item-registry.mjs";
 import { OverlayRegistry } from "./core/overlay-registry.mjs";
 import { drawHitLocation, resolveHitLocation } from "./core/wounds/hit-location.mjs";
@@ -90,6 +91,10 @@ Hooks.once("init", () => {
 
   // Fate Pot world setting (4 integers — NOT Cards). dlc p.146. Plan §3.3.
   FatePot.registerSetting(SYSTEM_ID);
+
+  // Display-font picker — 4 bundled offline fonts, live CSS-var update.
+  registerFontSettings(SYSTEM_ID);
+  applyFont(game.settings.get(SYSTEM_ID, SETTING_KEY));
 
   // World-data migration version — seeded from day one so future schema changes
   // can run a guarded migration in `ready` without breaking existing worlds (plan §8).

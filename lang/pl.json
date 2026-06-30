@@ -2,6 +2,13 @@
   "DEADLANDS.System.Title": "Deadlands Classic",
   "DEADLANDS.System.Loaded": "System Deadlands Classic załadowany.",
 
+  "DEADLANDS.Settings.DisplayFont.Label": "Czcionka nagłówków",
+  "DEADLANDS.Settings.DisplayFont.Hint": "Czcionka używana w nagłówkach, nazwach cech i tytułach sekcji. Wszystkie warianty są dołączone offline.",
+  "DEADLANDS.Settings.DisplayFont.Rye": "Rye (Western)",
+  "DEADLANDS.Settings.DisplayFont.Arvo": "Arvo (Gazeta)",
+  "DEADLANDS.Settings.DisplayFont.Cinzel": "Cinzel (Klasyczna)",
+  "DEADLANDS.Settings.DisplayFont.System": "Domyślna Foundry",
+
   "TYPES.Actor.cowboy": "Kowboj",
   "TYPES.Actor.huckster": "Kanciarz",
   "TYPES.Actor.shaman": "Szaman",
