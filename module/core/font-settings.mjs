@@ -3,28 +3,26 @@
  * Four bundled offline fonts; no external network requests.
  */
 
-const SETTING_KEY = "displayFont";
+export const SETTING_KEY = "displayFont";
+
+const CSS_PROP = "--dlc-font-display";
 
 const FONT_STACKS = {
   rye: '"Rye", Georgia, "Times New Roman", serif',
   arvo: '"Arvo", Georgia, serif',
   cinzel: '"Cinzel", Georgia, serif',
-  system: "",
+  system: "system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
 };
 
 /**
  * Apply a font choice by updating the CSS custom property on <html>.
- * "system" removes the override so Foundry's own cascade takes over.
+ * Falls back to "rye" for unknown keys.
  *
  * @param {string} key - "rye" | "arvo" | "cinzel" | "system"
  */
 export function applyFont(key) {
   const stack = FONT_STACKS[key] ?? FONT_STACKS.rye;
-  if (stack) {
-    document.documentElement.style.setProperty("--dlc-font-display", stack);
-  } else {
-    document.documentElement.style.removeProperty("--dlc-font-display");
-  }
+  document.documentElement.style.setProperty(CSS_PROP, stack);
 }
 
 /**

@@ -24,7 +24,7 @@ import { lookupScart, rollGutsCheck, scartDiceForTN } from "./core/dice/guts-che
 import { rollTrait } from "./core/dice/trait-roll.mjs";
 import { DeadlandsActor } from "./core/documents/deadlands-actor.mjs";
 import { DeadlandsItem } from "./core/documents/deadlands-item.mjs";
-import { applyFont, registerFontSettings } from "./core/font-settings.mjs";
+import { applyFont, registerFontSettings, SETTING_KEY } from "./core/font-settings.mjs";
 import { ItemRegistry } from "./core/item-registry.mjs";
 import { OverlayRegistry } from "./core/overlay-registry.mjs";
 import { drawHitLocation, resolveHitLocation } from "./core/wounds/hit-location.mjs";
@@ -94,6 +94,7 @@ Hooks.once("init", () => {
 
   // Display-font picker — 4 bundled offline fonts, live CSS-var update.
   registerFontSettings(SYSTEM_ID);
+  applyFont(game.settings.get(SYSTEM_ID, SETTING_KEY));
 
   // World-data migration version — seeded from day one so future schema changes
   // can run a guarded migration in `ready` without breaking existing worlds (plan §8).
@@ -140,7 +141,6 @@ Hooks.once("init", () => {
 
 Hooks.once("ready", () => {
   console.log(`${LOG_PREFIX} ${game.i18n.localize("DEADLANDS.System.Loaded")}`);
-  applyFont(game.settings.get(SYSTEM_ID, "displayFont"));
 });
 
 // ── Combat tracker — replace numeric initiative values with card labels ──────
