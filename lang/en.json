@@ -2,6 +2,13 @@
   "DEADLANDS.System.Title": "Deadlands Classic",
   "DEADLANDS.System.Loaded": "Deadlands Classic system ready.",
 
+  "DEADLANDS.Settings.DisplayFont.Label": "Display font",
+  "DEADLANDS.Settings.DisplayFont.Hint": "Font used for headings, trait names and section titles. All options are bundled offline.",
+  "DEADLANDS.Settings.DisplayFont.Rye": "Rye (Western)",
+  "DEADLANDS.Settings.DisplayFont.Arvo": "Arvo (Gazette)",
+  "DEADLANDS.Settings.DisplayFont.Cinzel": "Cinzel (Classical)",
+  "DEADLANDS.Settings.DisplayFont.System": "Foundry default",
+
   "TYPES.Actor.cowboy": "Cowboy",
   "TYPES.Actor.huckster": "Huckster",
   "TYPES.Actor.shaman": "Shaman",

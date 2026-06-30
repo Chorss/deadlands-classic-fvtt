@@ -3,6 +3,8 @@
  * Imported first so downstream partials can rely on them.
  */
 
+/* ── Bundled fonts (all offline — no external network requests) ───────────── */
+
 @font-face {
   font-family: "Rye";
   font-style: normal;
@@ -33,6 +35,46 @@
   font-weight: 400;
   font-display: swap;
   src: url("../fonts/LibreBaskerville-Italic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Arvo";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/Arvo-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Arvo";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../fonts/Arvo-Bold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Arvo";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/Arvo-Italic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Cinzel";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/Cinzel-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Cinzel";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../fonts/Cinzel-Bold.woff2") format("woff2");
 }
 
 :root {
