@@ -20,34 +20,22 @@
   "documentTypes": {
     "Actor": {
       "cowboy": {
-        "htmlFields": [
-          "system.biography"
-        ]
+        "htmlFields": ["system.biography"]
       },
       "huckster": {
-        "htmlFields": [
-          "system.biography"
-        ]
+        "htmlFields": ["system.biography"]
       },
       "shaman": {
-        "htmlFields": [
-          "system.biography"
-        ]
+        "htmlFields": ["system.biography"]
       },
       "blessed": {
-        "htmlFields": [
-          "system.biography"
-        ]
+        "htmlFields": ["system.biography"]
       },
       "madScientist": {
-        "htmlFields": [
-          "system.biography"
-        ]
+        "htmlFields": ["system.biography"]
       },
       "npc": {
-        "htmlFields": [
-          "system.biography"
-        ]
+        "htmlFields": ["system.biography"]
       },
       "mook": {}
     },
@@ -56,46 +44,30 @@
       "armor": {},
       "gear": {},
       "edge": {
-        "htmlFields": [
-          "system.description"
-        ]
+        "htmlFields": ["system.description"]
       },
       "hindrance": {
-        "htmlFields": [
-          "system.description"
-        ]
+        "htmlFields": ["system.description"]
       },
       "ammo": {},
       "hex": {
-        "htmlFields": [
-          "system.description"
-        ]
+        "htmlFields": ["system.description"]
       },
       "miracle": {
-        "htmlFields": [
-          "system.description"
-        ]
+        "htmlFields": ["system.description"]
       },
       "favor": {
-        "htmlFields": [
-          "system.description"
-        ]
+        "htmlFields": ["system.description"]
       },
       "gizmo": {
-        "htmlFields": [
-          "system.description"
-        ]
+        "htmlFields": ["system.description"]
       }
     }
   },
   "initiative": "1d20",
   "primaryTokenAttribute": "wind.value",
-  "esmodules": [
-    "module/deadlands-classic.mjs"
-  ],
-  "styles": [
-    "styles/deadlands-classic.css"
-  ],
+  "esmodules": ["module/deadlands-classic.mjs"],
+  "styles": ["styles/deadlands-classic.css"],
   "languages": [
     {
       "lang": "en",
