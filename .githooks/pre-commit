@@ -28,4 +28,8 @@ if echo "$STAGED" | grep -qE '^(system\.json|lang/.*\.json)$'; then
   node tools/verify-documenttypes.mjs || fail "verify-documenttypes failed"
 fi
 
+if echo "$STAGED" | grep -qE '\.(hbs|css)$'; then
+  node tools/audit-css.mjs || fail "audit-css: CSS classes used in templates but missing from styles/ — add rules before committing"
+fi
+
 exit 0

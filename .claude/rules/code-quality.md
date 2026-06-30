@@ -143,6 +143,21 @@ Test names describe behaviour, not implementation:
 
 ---
 
+## 7. CSS/Template coverage rule
+
+**Every `dlc-*` class introduced in a `.hbs` template MUST have a corresponding CSS rule in `styles/`.**
+
+This is enforced by `tools/audit-css.mjs` (run via `/verify-system`, pre-commit hook on `.hbs`/`.css` changes, and CI). A commit that adds a template class without a CSS rule is rejected.
+
+**Workflow when adding a new template section:**
+1. Write the `.hbs` markup with `dlc-*` classes.
+2. Immediately add matching rules to the appropriate `styles/*.css` file.
+3. Run `node tools/audit-css.mjs` — must exit 0 before committing.
+
+Dynamic Handlebars fragments (e.g. `dlc-chip-{{color}}`) are exempt from static checking but must be documented in a CSS comment listing the possible values.
+
+---
+
 ## Language
 
 All identifiers, comments, and string literals in `.mjs` files are in **English**.
