@@ -275,7 +275,7 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
   static async #onRollTrait(_event, target) {
     const traitId = target.dataset.traitId;
     const label = game.i18n.localize(`DEADLANDS.Trait.${toPascal(traitId)}.Label`);
-    const maxWhite = this.document.system.chips.white ?? 0;
+    const maxWhite = this.document.system.chips?.white ?? 0;
 
     const params = await _showRollDialog({ label, maxWhite });
     if (!params) {
@@ -284,7 +284,7 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
 
     if (params.whiteSpend > 0) {
       await this.document.update({
-        "system.chips.white": Math.max(0, this.document.system.chips.white - params.whiteSpend),
+        "system.chips.white": Math.max(0, maxWhite - params.whiteSpend),
       });
     }
 
@@ -316,7 +316,7 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
     const unskilled = aptLevel === 0; // dlc p.29 — unskilled: 1 die, -4 modifier
 
     const label = game.i18n.localize(`DEADLANDS.Aptitude.${toPascal(aptitudeId)}.Label`);
-    const maxWhite = this.document.system.chips.white ?? 0;
+    const maxWhite = this.document.system.chips?.white ?? 0;
 
     const params = await _showRollDialog({ label, maxWhite, unskilled });
     if (!params) {
@@ -325,7 +325,7 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
 
     if (params.whiteSpend > 0) {
       await this.document.update({
-        "system.chips.white": Math.max(0, this.document.system.chips.white - params.whiteSpend),
+        "system.chips.white": Math.max(0, maxWhite - params.whiteSpend),
       });
     }
 
