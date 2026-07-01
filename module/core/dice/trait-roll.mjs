@@ -32,7 +32,7 @@ export async function rollTrait(actorOrParams, traitId, options = {}) {
     modifier: params.modifier,
     tn: params.tn,
   });
-  await _postChatMessage(result, params.label, params.tn);
+  await _postChatMessage(result, params.label, params.tn, params.actor);
   return result;
 }
 
@@ -68,15 +68,16 @@ function _paramsFromActor(actor, traitId, options) {
     label = `${game.i18n.localize(`DEADLANDS.Trait.${toPascal(traitId)}.Label`)} (${dieCount}${dieType})`;
   }
 
-  return { dieCount, dieType, modifier, tn, label };
+  return { dieCount, dieType, modifier, tn, label, actor };
 }
 
 /**
  * @param {import("./exploding-roll.mjs").PoolResult} result
  * @param {string} label
  * @param {number} tn
+ * @param {Actor} [actor]
  */
-async function _postChatMessage(result, label, tn) {
+async function _postChatMessage(result, label, tn, actor) {
   const diceStr = result.dice
     .map((d) => {
       const ace = d.aces > 0 ? `<span class="dlc-ace" title="Aces: ${d.aces}">⚡</span>` : "";
@@ -111,5 +112,9 @@ async function _postChatMessage(result, label, tn) {
   <div class="dlc-roll-outcome">${outcomeText}</div>
 </div>`;
 
-  await ChatMessage.create({ content, style: CONST.CHAT_MESSAGE_STYLES.OTHER });
+  await ChatMessage.create({
+    content,
+    style: CONST.CHAT_MESSAGE_STYLES.OTHER,
+    ...(actor ? { speaker: ChatMessage.getSpeaker({ actor }) } : {}),
+  });
 }
