@@ -9,7 +9,9 @@
  */
 
 import { POKER_HAND_RANKS } from "../../core/dice/poker-hand-evaluator.mjs";
+import { toPascal } from "../../core/utils.mjs";
 import { BaseCharacterSheet } from "../_base/base-character-sheet.mjs";
+import { HARROWED_SHEET_PART, HARROWED_SHEET_TAB } from "../_overlays/harrowed/sheet-tab.mjs";
 import { checkMalfunction, constructGizmo, deviseBlueprint } from "./mechanics.mjs";
 
 const TEMPLATE_ROOT = "systems/deadlands-classic/templates/actor/parts";
@@ -33,6 +35,7 @@ export class MadScientistSheet extends BaseCharacterSheet {
     traits: { template: `${TEMPLATE_ROOT}/traits-tab.hbs` },
     combat: { template: `${TEMPLATE_ROOT}/combat-tab.hbs` },
     gizmos: { template: `${TEMPLATE_ROOT}/gizmos-tab.hbs` },
+    harrowed: HARROWED_SHEET_PART,
     gear: { template: `${TEMPLATE_ROOT}/gear-tab.hbs` },
     bio: { template: `${TEMPLATE_ROOT}/bio-tab.hbs` },
   };
@@ -49,6 +52,7 @@ export class MadScientistSheet extends BaseCharacterSheet {
         },
         { id: "combat", group: "sheet", icon: "fas fa-gun", label: "DEADLANDS.Sheet.Tab.Combat" },
         { id: "gizmos", group: "sheet", icon: "fas fa-cog", label: "DEADLANDS.Sheet.Tab.Gizmos" },
+        HARROWED_SHEET_TAB,
         { id: "gear", group: "sheet", icon: "fas fa-box", label: "DEADLANDS.Sheet.Tab.Gear" },
         { id: "bio", group: "sheet", icon: "fas fa-feather", label: "DEADLANDS.Sheet.Tab.Bio" },
       ],
@@ -63,7 +67,7 @@ export class MadScientistSheet extends BaseCharacterSheet {
     context.madScience = this.#prepareMadScience();
     context.tinkerin = this.#prepareTinkerin();
     context.blueprintHandChoices = Object.fromEntries(
-      POKER_HAND_RANKS.map((k) => [k, `DEADLANDS.Huckster.Hand.${_toPascal(k)}`])
+      POKER_HAND_RANKS.map((k) => [k, `DEADLANDS.Huckster.Hand.${toPascal(k)}`])
     );
     return context;
   }
@@ -76,7 +80,7 @@ export class MadScientistSheet extends BaseCharacterSheet {
         name: g.name,
         img: g.img,
         blueprintHand: g.system.blueprintHand,
-        handLabel: `DEADLANDS.Huckster.Hand.${_toPascal(g.system.blueprintHand)}`,
+        handLabel: `DEADLANDS.Huckster.Hand.${toPascal(g.system.blueprintHand)}`,
         constructionTN: g.system.constructionTN,
         reliability: g.system.reliability,
         powerType: g.system.powerType,
@@ -195,8 +199,4 @@ export class MadScientistSheet extends BaseCharacterSheet {
     }
     await checkMalfunction(this.document, gizmoItem);
   }
-}
-
-function _toPascal(str) {
-  return str ? str.charAt(0).toUpperCase() + str.slice(1) : "";
 }

@@ -123,3 +123,27 @@ export async function executeSpend(actor, color, { mode = "normal", rollType = "
 
   return { color, mode, marshalDraw };
 }
+
+/**
+ * Spend N white chips at once (extra dice on a roll). dlc p.26, p.147.
+ * White chips are unlimited per action, but every spent chip still returns
+ * to the pot like any other color — no Marshal's Tithe, no bust/one-per-
+ * action gating (those apply to red/blue/legend only).
+ *
+ * Reads the actor's live chip count here, at spend time, rather than trusting
+ * a count captured before an awaited dialog — a stale pre-dialog count would
+ * silently clobber any chip change made while the dialog was open.
+ *
+ * @param {Actor} actor
+ * @param {number} requested — raw whiteSpend value from the roll dialog
+ * @returns {Promise<number>} the clamped amount actually spent
+ */
+export async function executeWhiteSpend(actor, requested) {
+  const current = actor.system.chips?.white ?? 0;
+  const spend = Math.min(Math.max(0, requested), current);
+  if (spend > 0) {
+    await actor.update({ "system.chips.white": current - spend });
+    await FatePot.returnToPool("white", spend);
+  }
+  return spend;
+}

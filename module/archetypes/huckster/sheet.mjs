@@ -7,8 +7,11 @@
  * @license MIT
  */
 
+import { executeWhiteSpend } from "../../core/chips/chip-rules.mjs";
 import { POKER_HAND_RANKS } from "../../core/dice/poker-hand-evaluator.mjs";
+import { toPascal } from "../../core/utils.mjs";
 import { BaseCharacterSheet } from "../_base/base-character-sheet.mjs";
+import { HARROWED_SHEET_PART, HARROWED_SHEET_TAB } from "../_overlays/harrowed/sheet-tab.mjs";
 import { castHex } from "./mechanics.mjs";
 
 const TEMPLATE_ROOT = "systems/deadlands-classic/templates/actor/parts";
@@ -30,6 +33,7 @@ export class HucksterSheet extends BaseCharacterSheet {
     traits: { template: `${TEMPLATE_ROOT}/traits-tab.hbs` },
     combat: { template: `${TEMPLATE_ROOT}/combat-tab.hbs` },
     hexes: { template: `${TEMPLATE_ROOT}/hexes-tab.hbs` },
+    harrowed: HARROWED_SHEET_PART,
     gear: { template: `${TEMPLATE_ROOT}/gear-tab.hbs` },
     bio: { template: `${TEMPLATE_ROOT}/bio-tab.hbs` },
   };
@@ -51,6 +55,7 @@ export class HucksterSheet extends BaseCharacterSheet {
           icon: "fas fa-hat-wizard",
           label: "DEADLANDS.Sheet.Tab.Hexes",
         },
+        HARROWED_SHEET_TAB,
         { id: "gear", group: "sheet", icon: "fas fa-box", label: "DEADLANDS.Sheet.Tab.Gear" },
         { id: "bio", group: "sheet", icon: "fas fa-feather", label: "DEADLANDS.Sheet.Tab.Bio" },
       ],
@@ -66,10 +71,7 @@ export class HucksterSheet extends BaseCharacterSheet {
     context.lastDraw = this.document.system.lastDraw ?? [];
     context.backlashPending = this.document.system.backlashPending ?? false;
     context.pokerHandChoices = Object.fromEntries(
-      POKER_HAND_RANKS.map((k) => [
-        k,
-        `DEADLANDS.Huckster.Hand.${k.charAt(0).toUpperCase() + k.slice(1)}`,
-      ])
+      POKER_HAND_RANKS.map((k) => [k, `DEADLANDS.Huckster.Hand.${toPascal(k)}`])
     );
     return context;
   }
@@ -83,9 +85,9 @@ export class HucksterSheet extends BaseCharacterSheet {
         name: hex.name,
         img: hex.img,
         trait: hex.system.trait,
-        traitLabel: `DEADLANDS.Trait.${_toPascal(hex.system.trait)}.Label`,
+        traitLabel: `DEADLANDS.Trait.${toPascal(hex.system.trait)}.Label`,
         hand: hex.system.hand,
-        handLabel: `DEADLANDS.Huckster.Hand.${_toPascal(hex.system.hand)}`,
+        handLabel: `DEADLANDS.Huckster.Hand.${toPascal(hex.system.hand)}`,
         speed: hex.system.speed,
         duration: hex.system.duration,
         range: hex.system.range,
@@ -116,7 +118,7 @@ export class HucksterSheet extends BaseCharacterSheet {
       return;
     }
 
-    const maxWhite = this.document.system.chips.white ?? 0;
+    const maxWhite = this.document.system.chips?.white ?? 0;
     const content = await foundry.applications.handlebars.renderTemplate(
       `${DIALOG_ROOT}/cast-hex-dialog.hbs`,
       {
@@ -146,19 +148,11 @@ export class HucksterSheet extends BaseCharacterSheet {
       return;
     }
 
-    if (params.whiteSpend > 0) {
-      await this.document.update({
-        "system.chips.white": Math.max(0, this.document.system.chips.white - params.whiteSpend),
-      });
-    }
+    const whiteSpend = await executeWhiteSpend(this.document, params.whiteSpend);
 
     await castHex(this.document, hexItem, {
       modifier: params.modifier,
-      whiteSpend: params.whiteSpend,
+      whiteSpend,
     });
   }
-}
-
-function _toPascal(str) {
-  return str ? str.charAt(0).toUpperCase() + str.slice(1) : "";
 }

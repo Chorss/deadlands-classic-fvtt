@@ -13,6 +13,7 @@
 import { ActionDeck, buildFullDeck, shuffleDeck } from "../../core/cards/action-deck.mjs";
 import { rollExplodingPool } from "../../core/dice/exploding-roll.mjs";
 import { evaluateHand, meetsMinHand } from "../../core/dice/poker-hand-evaluator.mjs";
+import { toPascal } from "../../core/utils.mjs";
 
 /**
  * Extended Backlash Table — d20 roll per entry. `hnh` p.101-102.
@@ -159,8 +160,8 @@ async function _resolveBacklash(actor, hexItem) {
       actorName: actor.name,
       hexName: hexItem.name,
       roll,
-      entryKey: `DEADLANDS.Huckster.Backlash.${_toPascal(entry.key)}.Label`,
-      noteKey: `DEADLANDS.Huckster.Backlash.${_toPascal(entry.key)}.Note`,
+      entryKey: `DEADLANDS.Huckster.Backlash.${toPascal(entry.key)}.Label`,
+      noteKey: `DEADLANDS.Huckster.Backlash.${toPascal(entry.key)}.Note`,
       hexSucceeds: entry.hexSucceeds,
     }
   );
@@ -176,14 +177,14 @@ async function _resolveBacklash(actor, hexItem) {
 
 /** Post the hex cast result to chat. */
 async function _sendCastMessage(actor, hexItem, rollResult, drawn, handResult, meta) {
-  const handKey = handResult ? `DEADLANDS.Huckster.Hand.${_toPascal(handResult.handKey)}` : null;
-  const minHandKey = meta.minHand ? `DEADLANDS.Huckster.Hand.${_toPascal(meta.minHand)}` : null;
+  const handKey = handResult ? `DEADLANDS.Huckster.Hand.${toPascal(handResult.handKey)}` : null;
+  const minHandKey = meta.minHand ? `DEADLANDS.Huckster.Hand.${toPascal(meta.minHand)}` : null;
 
   const drawnWithLabels = drawn.map((c) => ({
     ...c,
     label: c.joker
-      ? game.i18n.localize(`DEADLANDS.Combat.Card.${_toPascal(c.joker)}Joker`)
-      : `${c.rank} ${game.i18n.localize(`DEADLANDS.Combat.Card.Suit.${_toPascal(c.suit)}`)}`,
+      ? game.i18n.localize(`DEADLANDS.Combat.Card.${toPascal(c.joker)}Joker`)
+      : `${c.rank} ${game.i18n.localize(`DEADLANDS.Combat.Card.Suit.${toPascal(c.suit)}`)}`,
   }));
 
   const content = await foundry.applications.handlebars.renderTemplate(
@@ -217,8 +218,4 @@ async function _sendHexSuccessFollowup(actor, hexItem) {
     }),
     speaker: ChatMessage.getSpeaker({ actor }),
   });
-}
-
-function _toPascal(str) {
-  return str ? str.charAt(0).toUpperCase() + str.slice(1) : "";
 }

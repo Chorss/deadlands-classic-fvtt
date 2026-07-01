@@ -13,7 +13,54 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Deduplicated the local `_toPascal` reimplementations in the Huckster,
+  Shaman, and Mad Scientist archetypes into the shared `core/utils.mjs`
+  `toPascal`.
+- Deduplicated the Fate Pot / Action Deck promise-chain mutex into a shared
+  `core/async-queue.mjs` `KeyedAsyncQueue`, which also prunes idle per-key
+  entries instead of growing `ActionDeck`'s per-combat map unboundedly.
+
 ### Fixed
+
+- **Dominion Roll** (Harrowed) threw for every character — `rollExplodingPool`
+  was called with an options object instead of positional arguments.
+- **Roll Trait/Aptitude** threw for NPC and Mook actors, which have no
+  `system.chips` in their schema.
+- The **Harrowed sheet tab** silently disappeared for Huckster, Shaman,
+  Blessed, and Mad Scientist characters — `ApplicationV2` doesn't merge
+  `static PARTS`/`TABS` across the class hierarchy the way it does
+  `DEFAULT_OPTIONS`, so each archetype's full override dropped the tab.
+- **Blessed sin/faith-denial** was never enforced — a character denied by
+  their patron could still invoke miracles freely; the denial-expiry field
+  was never written. Now a hard block per fb p.103-104, lifted automatically
+  once `game.time.worldTime` passes the computed expiry.
+- **White-chip overspend** — a stale dialog value greater than the actor's
+  real white-chip count granted free extra dice with no error. Now clamped
+  to the actual chip count before rolling.
+- **Fate Pot / Action Deck race condition** — overlapping async read-modify-
+  write calls on the same client could silently lose a chip or duplicate a
+  dealt card. Serialized via a promise-chain mutex.
+- **White-chip spend used a stale pre-dialog count** — Roll Trait, Roll
+  Aptitude, Cast Hex, and Invoke Miracle all captured the actor's white-chip
+  count before showing the (async) roll dialog, then wrote that stale value
+  back on submit, silently clobbering any chip change made while the dialog
+  was open. Spent white chips were also never returned to the Fate Pot,
+  contradicting dlc p.26. Both now go through a single `executeWhiteSpend`
+  helper that reads the live count and returns spent chips to the pot.
+- **Guts wound-pool consolidation** (tracked in `docs/notes.md`) — gizzards,
+  upper guts, and lower guts were three independent severity pools, so damage
+  could be spread across them to dodge the Maimed threshold, contradicting
+  dlc p.139. Now pooled (capped at 5) for wound-penalty purposes.
+- **Bleeding drain (`tickBleeding`) ignored the guts pool** — after the guts
+  wound-pool consolidation above, bleeding was still computed per individual
+  guts sub-location, so a pooled Critical/Maimed guts wound could drain 0
+  Wind per round instead of the correct amount. Now uses the shared pool
+  (dlc p.142).
+- Hardcoded, non-localized sin-denial duration strings in the Blessed
+  archetype.
+- Trait/Aptitude chat cards didn't identify which actor rolled.
+- An unhandled promise rejection if the initial `wind.value` update failed
+  on actor creation.
 
 ## [0.3.2] — 2026-07-01
 

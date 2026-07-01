@@ -7,8 +7,10 @@
  * @license MIT
  */
 
+import { executeWhiteSpend } from "../../core/chips/chip-rules.mjs";
 import { BaseCharacterSheet } from "../_base/base-character-sheet.mjs";
-import { invokeMiracle, SIN_DENIAL_LABELS, trackSin } from "./mechanics.mjs";
+import { HARROWED_SHEET_PART, HARROWED_SHEET_TAB } from "../_overlays/harrowed/sheet-tab.mjs";
+import { invokeMiracle, isMiracleAccessDenied, sinDenialLabel, trackSin } from "./mechanics.mjs";
 
 const TEMPLATE_ROOT = "systems/deadlands-classic/templates/actor/parts";
 const DIALOG_ROOT = "systems/deadlands-classic/templates/dialogs";
@@ -30,6 +32,7 @@ export class BlessedSheet extends BaseCharacterSheet {
     traits: { template: `${TEMPLATE_ROOT}/traits-tab.hbs` },
     combat: { template: `${TEMPLATE_ROOT}/combat-tab.hbs` },
     miracles: { template: `${TEMPLATE_ROOT}/miracles-tab.hbs` },
+    harrowed: HARROWED_SHEET_PART,
     gear: { template: `${TEMPLATE_ROOT}/gear-tab.hbs` },
     bio: { template: `${TEMPLATE_ROOT}/bio-tab.hbs` },
   };
@@ -51,6 +54,7 @@ export class BlessedSheet extends BaseCharacterSheet {
           icon: "fas fa-cross",
           label: "DEADLANDS.Sheet.Tab.Miracles",
         },
+        HARROWED_SHEET_TAB,
         { id: "gear", group: "sheet", icon: "fas fa-box", label: "DEADLANDS.Sheet.Tab.Gear" },
         { id: "bio", group: "sheet", icon: "fas fa-feather", label: "DEADLANDS.Sheet.Tab.Bio" },
       ],
@@ -95,11 +99,11 @@ export class BlessedSheet extends BaseCharacterSheet {
 
   #prepareSinState() {
     const severity = this.document.system.faithDeniedSeverity ?? "none";
-    const denied = severity !== "none";
+    const denied = isMiracleAccessDenied(this.document);
     return {
       denied,
       severity,
-      denialLabel: denied ? (SIN_DENIAL_LABELS[severity] ?? "") : "",
+      denialLabel: denied ? sinDenialLabel(severity) : "",
       sinPending: this.document.system.sinPending ?? false,
     };
   }
@@ -147,18 +151,11 @@ export class BlessedSheet extends BaseCharacterSheet {
       return;
     }
 
-    if (params.whiteSpend > 0) {
-      await this.document.update({
-        "system.chips.white": Math.max(
-          0,
-          (this.document.system.chips?.white ?? 0) - params.whiteSpend
-        ),
-      });
-    }
+    const whiteSpend = await executeWhiteSpend(this.document, params.whiteSpend);
 
     await invokeMiracle(this.document, miracleItem, {
       modifier: params.modifier,
-      whiteSpend: params.whiteSpend,
+      whiteSpend,
     });
   }
 

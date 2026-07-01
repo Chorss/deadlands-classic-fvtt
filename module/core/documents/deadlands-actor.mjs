@@ -24,7 +24,9 @@ export class DeadlandsActor extends Actor {
     }
     const wind = this.system.wind;
     if (wind && wind.value === 0 && wind.max > 0) {
-      this.update({ "system.wind.value": wind.max });
+      this.update({ "system.wind.value": wind.max }).catch((err) =>
+        console.error("DeadlandsActor#_onCreate: failed to initialise wind.value", err)
+      );
     }
   }
 

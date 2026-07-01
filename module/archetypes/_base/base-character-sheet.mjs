@@ -10,8 +10,10 @@
  * @license MIT
  */
 
+import { executeWhiteSpend } from "../../core/chips/chip-rules.mjs";
 import { APTITUDES, DEADLANDS, TRAITS } from "../../core/config.mjs";
 import { toPascal } from "../../core/utils.mjs";
+import { HARROWED_SHEET_PART, HARROWED_SHEET_TAB } from "../_overlays/harrowed/sheet-tab.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -89,7 +91,7 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
     combat: { template: `${TEMPLATE_ROOT}/combat-tab.hbs` },
     // harrowed part is always declared so V14 ApplicationV2 renders it;
     // the tab nav entry is added conditionally in _prepareContext.
-    harrowed: { template: `${TEMPLATE_ROOT}/harrowed-tab.hbs` },
+    harrowed: HARROWED_SHEET_PART,
     gear: { template: `${TEMPLATE_ROOT}/gear-tab.hbs` },
     bio: { template: `${TEMPLATE_ROOT}/bio-tab.hbs` },
   };
@@ -108,12 +110,7 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
         // harrowed is always declared in TABS so V14 ApplicationV2 builds its
         // state; the nav entry is removed from context.tabs when the overlay is
         // inactive, so the skull tab only appears for Harrowed characters.
-        {
-          id: "harrowed",
-          group: "sheet",
-          icon: "fas fa-skull",
-          label: "DEADLANDS.Harrowed.Sheet.Tab.Label",
-        },
+        HARROWED_SHEET_TAB,
         { id: "gear", group: "sheet", icon: "fas fa-box", label: "DEADLANDS.Sheet.Tab.Gear" },
         { id: "bio", group: "sheet", icon: "fas fa-feather", label: "DEADLANDS.Sheet.Tab.Bio" },
       ],
@@ -275,23 +272,19 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
   static async #onRollTrait(_event, target) {
     const traitId = target.dataset.traitId;
     const label = game.i18n.localize(`DEADLANDS.Trait.${toPascal(traitId)}.Label`);
-    const maxWhite = this.document.system.chips.white ?? 0;
+    const maxWhite = this.document.system.chips?.white ?? 0;
 
     const params = await _showRollDialog({ label, maxWhite });
     if (!params) {
       return;
     }
 
-    if (params.whiteSpend > 0) {
-      await this.document.update({
-        "system.chips.white": Math.max(0, this.document.system.chips.white - params.whiteSpend),
-      });
-    }
+    const whiteSpend = await executeWhiteSpend(this.document, params.whiteSpend);
 
     await game.deadlandsClassic.dice.rollTrait(this.document, traitId, {
       tn: params.tn,
       modifier: params.modifier,
-      extraDice: params.whiteSpend,
+      extraDice: whiteSpend,
     });
   }
 
@@ -316,24 +309,20 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
     const unskilled = aptLevel === 0; // dlc p.29 — unskilled: 1 die, -4 modifier
 
     const label = game.i18n.localize(`DEADLANDS.Aptitude.${toPascal(aptitudeId)}.Label`);
-    const maxWhite = this.document.system.chips.white ?? 0;
+    const maxWhite = this.document.system.chips?.white ?? 0;
 
     const params = await _showRollDialog({ label, maxWhite, unskilled });
     if (!params) {
       return;
     }
 
-    if (params.whiteSpend > 0) {
-      await this.document.update({
-        "system.chips.white": Math.max(0, this.document.system.chips.white - params.whiteSpend),
-      });
-    }
+    const whiteSpend = await executeWhiteSpend(this.document, params.whiteSpend);
 
     await game.deadlandsClassic.dice.rollTrait(this.document, traitId, {
       aptitudeId,
       tn: params.tn,
       modifier: params.modifier,
-      extraDice: params.whiteSpend,
+      extraDice: whiteSpend,
     });
   }
 }

@@ -25,6 +25,7 @@ import { ActionDeck, buildFullDeck, shuffleDeck } from "../../core/cards/action-
 import { rollExplodingPool } from "../../core/dice/exploding-roll.mjs";
 import { evaluateHand, meetsMinHand } from "../../core/dice/poker-hand-evaluator.mjs";
 import { GIZMO_CONSTRUCTION_TABLE } from "../../core/items/gizmo-data.mjs";
+import { toPascal } from "../../core/utils.mjs";
 
 /**
  * Madness Table — d20 roll. dlc p.250.
@@ -225,8 +226,8 @@ async function _rollMadnessTable(actor) {
         actorName: actor.name,
         roll,
         key: entry.key,
-        labelKey: `DEADLANDS.MadScientist.Madness.${_toPascal(entry.key)}.Label`,
-        noteKey: `DEADLANDS.MadScientist.Madness.${_toPascal(entry.key)}.Note`,
+        labelKey: `DEADLANDS.MadScientist.Madness.${toPascal(entry.key)}.Label`,
+        noteKey: `DEADLANDS.MadScientist.Madness.${toPascal(entry.key)}.Note`,
       }
     ),
     whisper: ChatMessage.getWhisperRecipients("GM"),
@@ -263,7 +264,7 @@ async function _sendBlueprintMessage(actor, gizmoItem, rollResult, drawn, handRe
       blueprintSucceeds: meta.handMeets,
       madness: meta.madness,
       minHandKey: gizmoItem.system.blueprintHand
-        ? `DEADLANDS.Huckster.Hand.${_toPascal(gizmoItem.system.blueprintHand)}`
+        ? `DEADLANDS.Huckster.Hand.${toPascal(gizmoItem.system.blueprintHand)}`
         : null,
     }
   );
@@ -296,8 +297,4 @@ async function _sendMalfunctionMessage(actor, gizmoItem, meta) {
     }
   );
   await ChatMessage.create({ content, speaker: ChatMessage.getSpeaker({ actor }) });
-}
-
-function _toPascal(str) {
-  return str ? str.charAt(0).toUpperCase() + str.slice(1) : "";
 }
