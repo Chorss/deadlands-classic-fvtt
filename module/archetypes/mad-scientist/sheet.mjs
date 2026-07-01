@@ -9,6 +9,7 @@
  */
 
 import { POKER_HAND_RANKS } from "../../core/dice/poker-hand-evaluator.mjs";
+import { toPascal } from "../../core/utils.mjs";
 import { BaseCharacterSheet } from "../_base/base-character-sheet.mjs";
 import { HARROWED_SHEET_PART, HARROWED_SHEET_TAB } from "../_overlays/harrowed/sheet-tab.mjs";
 import { checkMalfunction, constructGizmo, deviseBlueprint } from "./mechanics.mjs";
@@ -66,7 +67,7 @@ export class MadScientistSheet extends BaseCharacterSheet {
     context.madScience = this.#prepareMadScience();
     context.tinkerin = this.#prepareTinkerin();
     context.blueprintHandChoices = Object.fromEntries(
-      POKER_HAND_RANKS.map((k) => [k, `DEADLANDS.Huckster.Hand.${_toPascal(k)}`])
+      POKER_HAND_RANKS.map((k) => [k, `DEADLANDS.Huckster.Hand.${toPascal(k)}`])
     );
     return context;
   }
@@ -79,7 +80,7 @@ export class MadScientistSheet extends BaseCharacterSheet {
         name: g.name,
         img: g.img,
         blueprintHand: g.system.blueprintHand,
-        handLabel: `DEADLANDS.Huckster.Hand.${_toPascal(g.system.blueprintHand)}`,
+        handLabel: `DEADLANDS.Huckster.Hand.${toPascal(g.system.blueprintHand)}`,
         constructionTN: g.system.constructionTN,
         reliability: g.system.reliability,
         powerType: g.system.powerType,
@@ -198,8 +199,4 @@ export class MadScientistSheet extends BaseCharacterSheet {
     }
     await checkMalfunction(this.document, gizmoItem);
   }
-}
-
-function _toPascal(str) {
-  return str ? str.charAt(0).toUpperCase() + str.slice(1) : "";
 }

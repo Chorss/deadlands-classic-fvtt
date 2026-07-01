@@ -8,6 +8,7 @@
  */
 
 import { POKER_HAND_RANKS } from "../../core/dice/poker-hand-evaluator.mjs";
+import { toPascal } from "../../core/utils.mjs";
 import { BaseCharacterSheet } from "../_base/base-character-sheet.mjs";
 import { HARROWED_SHEET_PART, HARROWED_SHEET_TAB } from "../_overlays/harrowed/sheet-tab.mjs";
 import { castHex } from "./mechanics.mjs";
@@ -69,10 +70,7 @@ export class HucksterSheet extends BaseCharacterSheet {
     context.lastDraw = this.document.system.lastDraw ?? [];
     context.backlashPending = this.document.system.backlashPending ?? false;
     context.pokerHandChoices = Object.fromEntries(
-      POKER_HAND_RANKS.map((k) => [
-        k,
-        `DEADLANDS.Huckster.Hand.${k.charAt(0).toUpperCase() + k.slice(1)}`,
-      ])
+      POKER_HAND_RANKS.map((k) => [k, `DEADLANDS.Huckster.Hand.${toPascal(k)}`])
     );
     return context;
   }
@@ -86,9 +84,9 @@ export class HucksterSheet extends BaseCharacterSheet {
         name: hex.name,
         img: hex.img,
         trait: hex.system.trait,
-        traitLabel: `DEADLANDS.Trait.${_toPascal(hex.system.trait)}.Label`,
+        traitLabel: `DEADLANDS.Trait.${toPascal(hex.system.trait)}.Label`,
         hand: hex.system.hand,
-        handLabel: `DEADLANDS.Huckster.Hand.${_toPascal(hex.system.hand)}`,
+        handLabel: `DEADLANDS.Huckster.Hand.${toPascal(hex.system.hand)}`,
         speed: hex.system.speed,
         duration: hex.system.duration,
         range: hex.system.range,
@@ -163,8 +161,4 @@ export class HucksterSheet extends BaseCharacterSheet {
       whiteSpend,
     });
   }
-}
-
-function _toPascal(str) {
-  return str ? str.charAt(0).toUpperCase() + str.slice(1) : "";
 }

@@ -8,6 +8,7 @@
  * @license MIT
  */
 
+import { toPascal } from "../../core/utils.mjs";
 import { BaseCharacterSheet } from "../_base/base-character-sheet.mjs";
 import { HARROWED_SHEET_PART, HARROWED_SHEET_TAB } from "../_overlays/harrowed/sheet-tab.mjs";
 import { performRitual, spendFavor } from "./mechanics.mjs";
@@ -80,9 +81,9 @@ export class ShamanSheet extends BaseCharacterSheet {
         name: f.name,
         img: f.img,
         medicine: f.system.medicine,
-        medicineLabel: `DEADLANDS.Shaman.Medicine.${_toPascal(f.system.medicine)}`,
+        medicineLabel: `DEADLANDS.Shaman.Medicine.${toPascal(f.system.medicine)}`,
         ritualType: f.system.ritualType,
-        ritualTypeLabel: `DEADLANDS.Shaman.RitualType.${_toPascal(f.system.ritualType)}`,
+        ritualTypeLabel: `DEADLANDS.Shaman.RitualType.${toPascal(f.system.ritualType)}`,
         appeasementCost: f.system.appeasementCost,
         ritualTN: f.system.ritualTN,
         speed: f.system.speed,
@@ -116,7 +117,7 @@ export class ShamanSheet extends BaseCharacterSheet {
       {
         favorName: favorItem.name,
         ritualTN: favorItem.system.ritualTN,
-        ritualTypeLabel: `DEADLANDS.Shaman.RitualType.${_toPascal(favorItem.system.ritualType)}`,
+        ritualTypeLabel: `DEADLANDS.Shaman.RitualType.${toPascal(favorItem.system.ritualType)}`,
       }
     );
 
@@ -149,8 +150,4 @@ export class ShamanSheet extends BaseCharacterSheet {
     }
     await spendFavor(this.document, favorItem);
   }
-}
-
-function _toPascal(str) {
-  return str ? str.charAt(0).toUpperCase() + str.slice(1) : "";
 }
