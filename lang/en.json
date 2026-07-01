@@ -329,6 +329,7 @@
   "DEADLANDS.Blessed.Sin.Major": "Major Sin",
   "DEADLANDS.Blessed.Sin.Mortal": "Mortal Sin",
   "DEADLANDS.Blessed.Sin.DeniedLabel": "Miracles denied by patron until",
+  "DEADLANDS.Blessed.Warn.AccessDenied": "{name}'s patron denies access to miracles ({label}).",
   "DEADLANDS.Blessed.Section.Miracles": "Known Miracles",
   "DEADLANDS.Blessed.MiracleTable.Name": "Name",
   "DEADLANDS.Blessed.MiracleTable.TN": "TN",

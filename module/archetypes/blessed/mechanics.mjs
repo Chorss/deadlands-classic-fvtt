@@ -37,6 +37,35 @@ export const SIN_DENIAL_LABELS = {
   mortal: "1 week",
 };
 
+/**
+ * Sin severity → miracle access denial duration in seconds (game.time.worldTime
+ * units), matching SIN_DENIAL_LABELS. fb p.103-104 (Crime & Punishment table).
+ * @type {Record<string, number>}
+ */
+const SECONDS_PER_HOUR = 3600;
+export const SIN_DENIAL_SECONDS = {
+  minor: SECONDS_PER_HOUR,
+  major: SECONDS_PER_HOUR * 24,
+  mortal: SECONDS_PER_HOUR * 24 * 7,
+};
+
+/**
+ * Whether the patron currently denies this actor access to miracles/gifts.
+ * fb p.104: denial lifts automatically once its duration elapses — no
+ * atonement roll or action is required to end it early.
+ *
+ * @param {Actor} actor
+ * @returns {boolean}
+ */
+export function isMiracleAccessDenied(actor) {
+  const severity = actor.system.faithDeniedSeverity ?? "none";
+  if (severity === "none") {
+    return false;
+  }
+  const until = actor.system.faithDeniedUntil ?? 0;
+  return (game.time?.worldTime ?? 0) < until;
+}
+
 // ── Miracle invocation workflow ───────────────────────────────────────────────
 
 /**
@@ -48,6 +77,22 @@ export const SIN_DENIAL_LABELS = {
  * @returns {Promise<void>}
  */
 export async function invokeMiracle(actor, miracleItem, opts = {}) {
+  if (isMiracleAccessDenied(actor)) {
+    ui.notifications.warn(
+      game.i18n.format("DEADLANDS.Blessed.Warn.AccessDenied", {
+        name: actor.name,
+        label: SIN_DENIAL_LABELS[actor.system.faithDeniedSeverity] ?? "",
+      })
+    );
+    return;
+  }
+
+  // Denial window elapsed but the flag/timestamp weren't cleared yet — lift it
+  // now instead of leaving stale state on the actor. fb p.104 (automatic lift).
+  if ((actor.system.faithDeniedSeverity ?? "none") !== "none") {
+    await actor.update({ "system.faithDeniedSeverity": "none", "system.faithDeniedUntil": 0 });
+  }
+
   const modifier = opts.modifier ?? 0;
   const whiteSpend = opts.whiteSpend ?? 0;
 
@@ -83,6 +128,7 @@ export async function invokeMiracle(actor, miracleItem, opts = {}) {
 export async function trackSin(actor, severity = "minor") {
   const sinTN = SIN_TNS[severity] ?? 5;
   const denialLabel = SIN_DENIAL_LABELS[severity] ?? "1 hour";
+  const denialSeconds = SIN_DENIAL_SECONDS[severity] ?? SIN_DENIAL_SECONDS.minor;
 
   const traitData = actor.system.traits?.spirit;
   const spiritDie = traitData?.dieType ?? "d6";
@@ -91,6 +137,7 @@ export async function trackSin(actor, severity = "minor") {
   // Patron immediately denies miracle access for the duration. fb p.103-104.
   await actor.update({
     "system.faithDeniedSeverity": severity,
+    "system.faithDeniedUntil": (game.time?.worldTime ?? 0) + denialSeconds,
     "system.sinPending": false,
   });
 
