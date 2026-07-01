@@ -150,18 +150,18 @@ export class BlessedSheet extends BaseCharacterSheet {
       return;
     }
 
-    if (params.whiteSpend > 0) {
+    // Clamp to the actor's real white-chip count — the dialog's max is
+    // advisory only, so a stale form value must not grant free extra dice.
+    const whiteSpend = Math.min(Math.max(0, params.whiteSpend), maxWhite);
+    if (whiteSpend > 0) {
       await this.document.update({
-        "system.chips.white": Math.max(
-          0,
-          (this.document.system.chips?.white ?? 0) - params.whiteSpend
-        ),
+        "system.chips.white": maxWhite - whiteSpend,
       });
     }
 
     await invokeMiracle(this.document, miracleItem, {
       modifier: params.modifier,
-      whiteSpend: params.whiteSpend,
+      whiteSpend,
     });
   }
 
