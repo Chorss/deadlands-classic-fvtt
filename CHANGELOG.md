@@ -13,7 +13,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Deduplicated the local `_toPascal` reimplementations in the Huckster,
+  Shaman, and Mad Scientist archetypes into the shared `core/utils.mjs`
+  `toPascal`.
+
 ### Fixed
+
+- **Dominion Roll** (Harrowed) threw for every character — `rollExplodingPool`
+  was called with an options object instead of positional arguments.
+- **Roll Trait/Aptitude** threw for NPC and Mook actors, which have no
+  `system.chips` in their schema.
+- The **Harrowed sheet tab** silently disappeared for Huckster, Shaman,
+  Blessed, and Mad Scientist characters — `ApplicationV2` doesn't merge
+  `static PARTS`/`TABS` across the class hierarchy the way it does
+  `DEFAULT_OPTIONS`, so each archetype's full override dropped the tab.
+- **Blessed sin/faith-denial** was never enforced — a character denied by
+  their patron could still invoke miracles freely; the denial-expiry field
+  was never written. Now a hard block per fb p.103-104, lifted automatically
+  once `game.time.worldTime` passes the computed expiry.
+- **White-chip overspend** — a stale dialog value greater than the actor's
+  real white-chip count granted free extra dice with no error. Now clamped
+  to the actual chip count before rolling.
+- **Fate Pot / Action Deck race condition** — overlapping async read-modify-
+  write calls on the same client could silently lose a chip or duplicate a
+  dealt card. Serialized via a promise-chain mutex.
+- **Guts wound-pool consolidation** (tracked in `docs/notes.md`) — gizzards,
+  upper guts, and lower guts were three independent severity pools, so damage
+  could be spread across them to dodge the Maimed threshold, contradicting
+  dlc p.139. Now pooled (capped at 5) for wound-penalty purposes.
+- Hardcoded, non-localized sin-denial duration strings in the Blessed
+  archetype.
+- Trait/Aptitude chat cards didn't identify which actor rolled.
+- An unhandled promise rejection if the initial `wind.value` update failed
+  on actor creation.
 
 ## [0.3.2] — 2026-07-01
 
