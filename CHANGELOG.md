@@ -15,6 +15,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.3.2] — 2026-07-01
+
+### Fixed
+- `system.json` reformatted with Biome after the 0.3.1 version bump (inline
+  arrays were left multi-line, causing `biome check` drift).
+
+### Changed
+- `/release` skill now re-runs Biome format on `system.json` after bumping
+  the version, preventing the same drift in future releases.
+- Pre-commit hook now runs `biome check` in addition to existing checks.
+
 ## [0.3.1] — 2026-06-30
 
 ### Added
@@ -112,7 +123,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `CombatantHandDialog` and initiative-value path corrections after V14 runtime testing.
 - Multiple V14 API compatibility fixes across archetype sheets and mechanics.
 
-[Unreleased]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.3.1...HEAD
+[Unreleased]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.3.2...HEAD
+[0.3.2]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.3.1...0.3.2
 [0.3.1]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.3.0...0.3.1
 [0.3.0]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.2.0...0.3.0
 [0.2.0]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.1.0...0.2.0
