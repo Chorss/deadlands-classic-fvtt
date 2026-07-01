@@ -75,6 +75,20 @@ export function drawBlindPure(pot, n, rng = Math.random) {
 // ── FatePot class — Foundry-integrated ───────────────────────────────────────
 
 export class FatePot {
+  // Serializes every read-modify-write on this client so two overlapping async
+  // calls (e.g. a chip return racing a Marshal's Tithe draw) can't interleave
+  // between their `await` points and lose an update. Does not protect against
+  // a genuinely simultaneous write from a *different* client/browser — that
+  // would need a GM-owned, socket-serialized queue (bigger change, tracked in
+  // docs/bug-audit-2026-07-01.md as a known follow-up, not fixed here).
+  static #queue = Promise.resolve();
+
+  static #enqueue(task) {
+    const result = FatePot.#queue.then(task, task);
+    FatePot.#queue = result.catch(() => {});
+    return result;
+  }
+
   /** Register the world setting. Call from `init` hook. */
   static registerSetting(systemId = SYSTEM_ID) {
     game.settings.register(systemId, SETTING_KEY, {
@@ -96,10 +110,22 @@ export class FatePot {
     return { white: pot.white, red: pot.red, blue: pot.blue, legend: pot.legend };
   }
 
-  /** @param {{ white?:number, red?:number, blue?:number, legend?:number }} patch */
-  static async patch(patch) {
-    const current = FatePot.getData();
-    await game.settings.set(SYSTEM_ID, SETTING_KEY, { ...current, ...patch });
+  /**
+   * Apply a patch to the pot, read-modify-write inside the serialized queue so
+   * the read always sees this client's most recent write (see `#queue`).
+   *
+   * @param {{ white?:number, red?:number, blue?:number, legend?:number } |
+   *          ((current: {white:number,red:number,blue:number,legend:number}) => object)} patchOrUpdater
+   *   A plain patch object, or a function of the freshest current data — use
+   *   the function form whenever the patch depends on the current value
+   *   (e.g. an increment), so the read happens inside the serialized section.
+   */
+  static async patch(patchOrUpdater) {
+    return FatePot.#enqueue(async () => {
+      const current = FatePot.getData();
+      const delta = typeof patchOrUpdater === "function" ? patchOrUpdater(current) : patchOrUpdater;
+      await game.settings.set(SYSTEM_ID, SETTING_KEY, { ...current, ...delta });
+    });
   }
 
   /**
@@ -107,7 +133,9 @@ export class FatePot {
    * Only the GM should call this (start-of-campaign / reset).
    */
   static async reset() {
-    await game.settings.set(SYSTEM_ID, SETTING_KEY, { ...FATE_POT_SEED });
+    return FatePot.#enqueue(async () => {
+      await game.settings.set(SYSTEM_ID, SETTING_KEY, { ...FATE_POT_SEED });
+    });
   }
 
   /**
@@ -117,8 +145,12 @@ export class FatePot {
    * @returns {Promise<string[]>} colors drawn
    */
   static async drawBlind(n, _rng = Math.random) {
-    const { drawn, remaining } = drawBlindPure(FatePot.getData(), n, _rng);
-    await FatePot.patch(remaining);
+    let drawn;
+    await FatePot.patch((current) => {
+      const result = drawBlindPure(current, n, _rng);
+      drawn = result.drawn;
+      return result.remaining;
+    });
     return drawn;
   }
 
@@ -128,8 +160,7 @@ export class FatePot {
    * @param {number} [n=1]
    */
   static async returnToPool(color, n = 1) {
-    const current = FatePot.getData();
-    await FatePot.patch({ [color]: (current[color] ?? 0) + n });
+    await FatePot.patch((current) => ({ [color]: (current[color] ?? 0) + n }));
   }
 
   /**
@@ -138,8 +169,7 @@ export class FatePot {
    * @param {number} [n=1]
    */
   static async discard(color, n = 1) {
-    const current = FatePot.getData();
-    await FatePot.patch({ [color]: Math.max(0, (current[color] ?? 0) - n) });
+    await FatePot.patch((current) => ({ [color]: Math.max(0, (current[color] ?? 0) - n) }));
   }
 
   /**

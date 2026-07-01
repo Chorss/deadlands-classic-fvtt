@@ -141,6 +141,24 @@ const FLAG_KEY = "deckState";
  * Avoids the native Cards API, which has no bridge to Combatant#initiative.
  */
 export class ActionDeck {
+  // Serializes every read-modify-write per combat on this client, keyed by
+  // combat id, so overlapping async calls (e.g. two deal() calls fired close
+  // together) can't interleave between their `await` points and clobber each
+  // other's draw pile. Does not protect against a genuinely simultaneous
+  // write from a *different* client/browser — see the equivalent note on
+  // FatePot in module/core/chips/fate-pot.mjs.
+  static #queues = new Map();
+
+  static #enqueue(combat, task) {
+    const prior = ActionDeck.#queues.get(combat.id) ?? Promise.resolve();
+    const result = prior.then(task, task);
+    ActionDeck.#queues.set(
+      combat.id,
+      result.catch(() => {})
+    );
+    return result;
+  }
+
   /**
    * @param {Combat} combat
    * @returns {DeckState|null}
@@ -156,6 +174,11 @@ export class ActionDeck {
    * @returns {Promise<DeckState>}
    */
   static async initialize(combat, _rng = Math.random) {
+    return ActionDeck.#enqueue(combat, () => ActionDeck.#initializeUnsafe(combat, _rng));
+  }
+
+  /** @param {Combat} combat @param {() => number} _rng */
+  static async #initializeUnsafe(combat, _rng) {
     const existing = this.getState(combat);
     if (existing) {
       return existing;
@@ -180,14 +203,16 @@ export class ActionDeck {
     if (count <= 0) {
       return [];
     }
-    const state = this.getState(combat) ?? (await this.initialize(combat, _rng));
-    const drawPile = [...state.drawPile];
-    if (drawPile.length < count) {
-      drawPile.push(...shuffleDeck(buildFullDeck(), _rng));
-    }
-    const dealt = drawPile.splice(0, count);
-    await combat.setFlag(FLAG_SCOPE, FLAG_KEY, { ...state, drawPile });
-    return dealt;
+    return ActionDeck.#enqueue(combat, async () => {
+      const state = this.getState(combat) ?? (await this.#initializeUnsafe(combat, _rng));
+      const drawPile = [...state.drawPile];
+      if (drawPile.length < count) {
+        drawPile.push(...shuffleDeck(buildFullDeck(), _rng));
+      }
+      const dealt = drawPile.splice(0, count);
+      await combat.setFlag(FLAG_SCOPE, FLAG_KEY, { ...state, drawPile });
+      return dealt;
+    });
   }
 
   /**
@@ -196,8 +221,10 @@ export class ActionDeck {
    * @param {Combat} combat
    */
   static async markReshuffleAtRoundEnd(combat) {
-    const state = this.getState(combat) ?? (await this.initialize(combat));
-    await combat.setFlag(FLAG_SCOPE, FLAG_KEY, { ...state, reshuffleAtRoundEnd: true });
+    return ActionDeck.#enqueue(combat, async () => {
+      const state = this.getState(combat) ?? (await this.#initializeUnsafe(combat, Math.random));
+      await combat.setFlag(FLAG_SCOPE, FLAG_KEY, { ...state, reshuffleAtRoundEnd: true });
+    });
   }
 
   /**
@@ -208,14 +235,16 @@ export class ActionDeck {
    * @returns {Promise<boolean>}
    */
   static async maybeReshuffleAtRoundEnd(combat, _rng = Math.random) {
-    const state = this.getState(combat);
-    if (!state?.reshuffleAtRoundEnd) {
-      return false;
-    }
-    await combat.setFlag(FLAG_SCOPE, FLAG_KEY, {
-      drawPile: shuffleDeck(buildFullDeck(), _rng),
-      reshuffleAtRoundEnd: false,
+    return ActionDeck.#enqueue(combat, async () => {
+      const state = this.getState(combat);
+      if (!state?.reshuffleAtRoundEnd) {
+        return false;
+      }
+      await combat.setFlag(FLAG_SCOPE, FLAG_KEY, {
+        drawPile: shuffleDeck(buildFullDeck(), _rng),
+        reshuffleAtRoundEnd: false,
+      });
+      return true;
     });
-    return true;
   }
 }
