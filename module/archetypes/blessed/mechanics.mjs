@@ -28,18 +28,30 @@ export const SIN_TNS = {
 };
 
 /**
- * Sin severity → description of the miracle access denial duration. fb p.103-104.
+ * Sin severity → i18n key describing the miracle access denial duration.
+ * fb p.103-104. Values are localized via {@link sinDenialLabel}, not read
+ * directly — this repo requires no hardcoded UI strings.
  * @type {Record<string, string>}
  */
-export const SIN_DENIAL_LABELS = {
-  minor: "1 hour",
-  major: "1 day",
-  mortal: "1 week",
+export const SIN_DENIAL_LABEL_KEYS = {
+  minor: "DEADLANDS.Blessed.Sin.Duration.Minor",
+  major: "DEADLANDS.Blessed.Sin.Duration.Major",
+  mortal: "DEADLANDS.Blessed.Sin.Duration.Mortal",
 };
 
 /**
+ * Localized denial-duration label for a sin severity, or "" if unknown.
+ * @param {string} severity — "minor" | "major" | "mortal"
+ * @returns {string}
+ */
+export function sinDenialLabel(severity) {
+  const key = SIN_DENIAL_LABEL_KEYS[severity];
+  return key ? game.i18n.localize(key) : "";
+}
+
+/**
  * Sin severity → miracle access denial duration in seconds (game.time.worldTime
- * units), matching SIN_DENIAL_LABELS. fb p.103-104 (Crime & Punishment table).
+ * units), matching SIN_DENIAL_LABEL_KEYS. fb p.103-104 (Crime & Punishment table).
  * @type {Record<string, number>}
  */
 const SECONDS_PER_HOUR = 3600;
@@ -81,7 +93,7 @@ export async function invokeMiracle(actor, miracleItem, opts = {}) {
     ui.notifications.warn(
       game.i18n.format("DEADLANDS.Blessed.Warn.AccessDenied", {
         name: actor.name,
-        label: SIN_DENIAL_LABELS[actor.system.faithDeniedSeverity] ?? "",
+        label: sinDenialLabel(actor.system.faithDeniedSeverity),
       })
     );
     return;
@@ -127,7 +139,7 @@ export async function invokeMiracle(actor, miracleItem, opts = {}) {
  */
 export async function trackSin(actor, severity = "minor") {
   const sinTN = SIN_TNS[severity] ?? 5;
-  const denialLabel = SIN_DENIAL_LABELS[severity] ?? "1 hour";
+  const denialLabel = sinDenialLabel(severity) || sinDenialLabel("minor");
   const denialSeconds = SIN_DENIAL_SECONDS[severity] ?? SIN_DENIAL_SECONDS.minor;
 
   const traitData = actor.system.traits?.spirit;

@@ -9,7 +9,7 @@
 
 import { BaseCharacterSheet } from "../_base/base-character-sheet.mjs";
 import { HARROWED_SHEET_PART, HARROWED_SHEET_TAB } from "../_overlays/harrowed/sheet-tab.mjs";
-import { invokeMiracle, isMiracleAccessDenied, SIN_DENIAL_LABELS, trackSin } from "./mechanics.mjs";
+import { invokeMiracle, isMiracleAccessDenied, sinDenialLabel, trackSin } from "./mechanics.mjs";
 
 const TEMPLATE_ROOT = "systems/deadlands-classic/templates/actor/parts";
 const DIALOG_ROOT = "systems/deadlands-classic/templates/dialogs";
@@ -102,7 +102,7 @@ export class BlessedSheet extends BaseCharacterSheet {
     return {
       denied,
       severity,
-      denialLabel: denied ? (SIN_DENIAL_LABELS[severity] ?? "") : "",
+      denialLabel: denied ? sinDenialLabel(severity) : "",
       sinPending: this.document.system.sinPending ?? false,
     };
   }
