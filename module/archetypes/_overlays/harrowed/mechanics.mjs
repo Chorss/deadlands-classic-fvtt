@@ -84,11 +84,11 @@ export async function dominionRoll(actor) {
   const pcDominion = harrowed.dominion.spiritControl ?? 0;
 
   // PC rolls Spirit (exploding). bod p.62.
-  const pcResult = rollExplodingPool({ dieCount, dieType, modifier: 0, tn: 5 });
+  const pcResult = rollExplodingPool(dieCount, dieType, { modifier: 0, tn: 5 });
 
   // Manitou rolls Spirit — treated as fixed die (same die type as PC Spirit,
   // dieCount 1, Manitou has no Aptitudes). bod p.80.
-  const manitouResult = rollExplodingPool({ dieCount: 1, dieType, modifier: 0, tn: 5 });
+  const manitouResult = rollExplodingPool(1, dieType, { modifier: 0, tn: 5 });
   // Dominion pool = Spirit die count; PC + Manitou hold complementary shares.
   // bod p.12: "the hero and the manitou start with half the total number of
   // Dominion points."
