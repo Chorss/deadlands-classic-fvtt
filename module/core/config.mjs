@@ -185,14 +185,17 @@ export const WOUND_PENALTIES = {
 /**
  * Wound-track slots (8). Limbs are split Left/Right (a design decision, not a
  * raw table row — `dlc` p.133). `limb: true` marks locations that go unusable
- * when Maimed (arm = no hand, leg = halved Pace).
- * @type {Record<string, { limb?: boolean, side?: "left" | "right" }>}
+ * when Maimed (arm = no hand, leg = halved Pace). `gutsGroup: true` marks the
+ * three locations that share a single accumulation pool for severity/penalty
+ * purposes: "wounds taken to the gizzards and upper and lower guts add to
+ * those in the guts area" (`dlc` p.139) — see wound-track.mjs's `gutsTotal`.
+ * @type {Record<string, { limb?: boolean, side?: "left" | "right", gutsGroup?: boolean }>}
  */
 export const HIT_LOCATIONS = {
   noggin: {},
-  upperGuts: {},
-  lowerGuts: {},
-  gizzards: {},
+  upperGuts: { gutsGroup: true },
+  lowerGuts: { gutsGroup: true },
+  gizzards: { gutsGroup: true },
   leftArm: { limb: true, side: "left" },
   rightArm: { limb: true, side: "right" },
   leftLeg: { limb: true, side: "left" },

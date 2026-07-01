@@ -22,6 +22,7 @@ import {
 import {
   accumulateWounds,
   getBleedingRate,
+  gutsTotal,
   highestWoundPenalty,
   windDiceCount,
   woundsFromDamage,
@@ -104,6 +105,33 @@ describe("getBleedingRate (dlc p.142)", () => {
   });
 });
 
+// ── gutsTotal (dlc p.139) ─────────────────────────────────────────────────────
+
+describe("gutsTotal (dlc p.139)", () => {
+  it("sums gizzards/upperGuts/lowerGuts into one pool", () => {
+    const wounds = {
+      upperGuts: { severity: 2 },
+      lowerGuts: { severity: 1 },
+      gizzards: { severity: 0 },
+    };
+    assert.equal(gutsTotal(wounds), 3);
+  });
+
+  it("caps the pooled total at WOUND_MAX (5)", () => {
+    const wounds = {
+      upperGuts: { severity: 4 },
+      lowerGuts: { severity: 4 },
+      gizzards: { severity: 0 },
+    };
+    assert.equal(gutsTotal(wounds), 5);
+  });
+
+  it("ignores non-guts locations", () => {
+    const wounds = { noggin: { severity: 5 }, upperGuts: { severity: 1 } };
+    assert.equal(gutsTotal(wounds), 1);
+  });
+});
+
 // ── highestWoundPenalty ───────────────────────────────────────────────────────
 
 describe("highestWoundPenalty", () => {
@@ -122,6 +150,18 @@ describe("highestWoundPenalty", () => {
       leftLeg: { severity: 0 },
     };
     assert.equal(highestWoundPenalty(wounds), 0);
+  });
+
+  it("pools guts sub-locations instead of treating them independently (dlc p.139)", () => {
+    // 4 lowerGuts + 4 upperGuts would each individually stay under Maimed (5),
+    // but the shared pool caps at 5 and must drive the penalty as Maimed.
+    const wounds = {
+      noggin: { severity: 0 },
+      lowerGuts: { severity: 4 },
+      upperGuts: { severity: 4 },
+      gizzards: { severity: 0 },
+    };
+    assert.equal(highestWoundPenalty(wounds), highestWoundPenalty({ noggin: { severity: 5 } }));
   });
 });
 

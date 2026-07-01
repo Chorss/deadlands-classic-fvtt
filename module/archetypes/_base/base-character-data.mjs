@@ -14,15 +14,9 @@
  * @license MIT
  */
 
-import {
-  APTITUDES,
-  DIE_TYPES,
-  HIT_LOCATIONS,
-  TRAITS,
-  WOUND_MAX,
-  WOUND_PENALTIES,
-} from "../../core/config.mjs";
+import { APTITUDES, DIE_TYPES, HIT_LOCATIONS, TRAITS, WOUND_MAX } from "../../core/config.mjs";
 import { OverlayRegistry } from "../../core/overlay-registry.mjs";
+import { highestWoundPenalty } from "../../core/wounds/wound-track.mjs";
 
 /** Numeric face value of a die-type string ("d8" → 8). */
 function dieFace(dieType) {
@@ -111,14 +105,9 @@ export class BaseCharacterDataModel extends foundry.abstract.TypeDataModel {
     // Pace = Nimbleness die value. dlc p.40. (Edges/Hindrances adjust via AE.)
     this.pace = dieFace(this.traits.nimbleness?.dieType);
 
-    // Wound penalty = the single highest wound level, NOT the sum. dlc p.140.
-    let highest = 0;
-    for (const slot of Object.values(this.wounds)) {
-      if (slot.severity > highest) {
-        highest = slot.severity;
-      }
-    }
-    this.woundModifier = WOUND_PENALTIES[highest] ?? 0;
+    // Wound penalty = the single highest wound level, NOT the sum, with the
+    // three guts sub-locations pooled as one severity. dlc p.139-140.
+    this.woundModifier = highestWoundPenalty(this.wounds);
   }
 
   /**

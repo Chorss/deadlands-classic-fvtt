@@ -4,6 +4,8 @@
  * Mechanics verified against dlc p.138-142:
  *   - Wounds per hit = floor(damage / size). dlc p.138.
  *   - Wounds accumulate (ADD) per location; cap 5 (Maimed). dlc p.139.
+ *   - Gizzards/upperGuts/lowerGuts share one accumulation pool for severity
+ *     purposes — see `gutsTotal`. dlc p.139 (docs/notes.md, resolved).
  *   - Wind per hit = woundAmount × 1d6 open-ended; minimum 1d6 even with 0 wounds. dlc p.141.
  *   - Wind ≤ 0 → Winded (no initiative cards, no actions). dlc p.141.
  *   - Bleeding per round: Serious −1 Wind, Critical −2 Wind, Maimed limb −3 Wind. dlc p.142.
@@ -15,8 +17,10 @@
  * @license MIT
  */
 
-import { WOUND_MAX, WOUND_PENALTIES } from "../config.mjs";
+import { HIT_LOCATIONS, WOUND_MAX, WOUND_PENALTIES } from "../config.mjs";
 import { rollExplodingPool } from "../dice/exploding-roll.mjs";
+
+const GUTS_LOCATIONS = Object.keys(HIT_LOCATIONS).filter((id) => HIT_LOCATIONS[id].gutsGroup);
 
 // ── Pure helpers ─────────────────────────────────────────────────────────────
 
@@ -77,17 +81,33 @@ export function getBleedingRate(severity, isLimb = false) {
 }
 
 /**
- * The highest wound penalty across all locations. dlc p.140.
+ * Combined severity across the shared guts pool (gizzards + upperGuts +
+ * lowerGuts), capped at WOUND_MAX. dlc p.139: wounds to any of the three
+ * accumulate together rather than as three independent 0-5 pools.
+ *
+ * @param {Record<string, { severity: number }>} woundLocations
+ * @returns {number} — 0-5
+ */
+export function gutsTotal(woundLocations) {
+  const sum = GUTS_LOCATIONS.reduce((s, loc) => s + (woundLocations[loc]?.severity ?? 0), 0);
+  return Math.min(WOUND_MAX, sum);
+}
+
+/**
+ * The highest wound penalty across all locations. dlc p.140. The three guts
+ * sub-locations count as one shared pool (see `gutsTotal`) rather than three
+ * independent severities, matching dlc p.139.
  * Used by prepareDerivedData as `woundModifier`.
  *
  * @param {Record<string, { severity: number }>} woundLocations
  * @returns {number} — penalty (0 or negative)
  */
 export function highestWoundPenalty(woundLocations) {
-  const maxSeverity = Object.values(woundLocations).reduce(
-    (max, loc) => Math.max(max, loc.severity ?? 0),
-    0
-  );
+  const pooledGuts = gutsTotal(woundLocations);
+  const maxSeverity = Object.entries(woundLocations).reduce((max, [id, loc]) => {
+    const severity = GUTS_LOCATIONS.includes(id) ? pooledGuts : (loc.severity ?? 0);
+    return Math.max(max, severity);
+  }, 0);
   return WOUND_PENALTIES[maxSeverity] ?? 0;
 }
 
