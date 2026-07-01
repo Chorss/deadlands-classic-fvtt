@@ -9,6 +9,7 @@
  */
 
 import { BaseCharacterSheet } from "../_base/base-character-sheet.mjs";
+import { HARROWED_SHEET_PART, HARROWED_SHEET_TAB } from "../_overlays/harrowed/sheet-tab.mjs";
 import { performRitual, spendFavor } from "./mechanics.mjs";
 
 const TEMPLATE_ROOT = "systems/deadlands-classic/templates/actor/parts";
@@ -31,6 +32,7 @@ export class ShamanSheet extends BaseCharacterSheet {
     traits: { template: `${TEMPLATE_ROOT}/traits-tab.hbs` },
     combat: { template: `${TEMPLATE_ROOT}/combat-tab.hbs` },
     favors: { template: `${TEMPLATE_ROOT}/favors-tab.hbs` },
+    harrowed: HARROWED_SHEET_PART,
     gear: { template: `${TEMPLATE_ROOT}/gear-tab.hbs` },
     bio: { template: `${TEMPLATE_ROOT}/bio-tab.hbs` },
   };
@@ -52,6 +54,7 @@ export class ShamanSheet extends BaseCharacterSheet {
           icon: "fas fa-feather-alt",
           label: "DEADLANDS.Sheet.Tab.Favors",
         },
+        HARROWED_SHEET_TAB,
         { id: "gear", group: "sheet", icon: "fas fa-box", label: "DEADLANDS.Sheet.Tab.Gear" },
         { id: "bio", group: "sheet", icon: "fas fa-feather", label: "DEADLANDS.Sheet.Tab.Bio" },
       ],

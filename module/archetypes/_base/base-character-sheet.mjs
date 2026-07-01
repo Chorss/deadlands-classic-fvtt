@@ -12,6 +12,7 @@
 
 import { APTITUDES, DEADLANDS, TRAITS } from "../../core/config.mjs";
 import { toPascal } from "../../core/utils.mjs";
+import { HARROWED_SHEET_PART, HARROWED_SHEET_TAB } from "../_overlays/harrowed/sheet-tab.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -89,7 +90,7 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
     combat: { template: `${TEMPLATE_ROOT}/combat-tab.hbs` },
     // harrowed part is always declared so V14 ApplicationV2 renders it;
     // the tab nav entry is added conditionally in _prepareContext.
-    harrowed: { template: `${TEMPLATE_ROOT}/harrowed-tab.hbs` },
+    harrowed: HARROWED_SHEET_PART,
     gear: { template: `${TEMPLATE_ROOT}/gear-tab.hbs` },
     bio: { template: `${TEMPLATE_ROOT}/bio-tab.hbs` },
   };
@@ -108,12 +109,7 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
         // harrowed is always declared in TABS so V14 ApplicationV2 builds its
         // state; the nav entry is removed from context.tabs when the overlay is
         // inactive, so the skull tab only appears for Harrowed characters.
-        {
-          id: "harrowed",
-          group: "sheet",
-          icon: "fas fa-skull",
-          label: "DEADLANDS.Harrowed.Sheet.Tab.Label",
-        },
+        HARROWED_SHEET_TAB,
         { id: "gear", group: "sheet", icon: "fas fa-box", label: "DEADLANDS.Sheet.Tab.Gear" },
         { id: "bio", group: "sheet", icon: "fas fa-feather", label: "DEADLANDS.Sheet.Tab.Bio" },
       ],

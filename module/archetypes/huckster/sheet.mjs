@@ -9,6 +9,7 @@
 
 import { POKER_HAND_RANKS } from "../../core/dice/poker-hand-evaluator.mjs";
 import { BaseCharacterSheet } from "../_base/base-character-sheet.mjs";
+import { HARROWED_SHEET_PART, HARROWED_SHEET_TAB } from "../_overlays/harrowed/sheet-tab.mjs";
 import { castHex } from "./mechanics.mjs";
 
 const TEMPLATE_ROOT = "systems/deadlands-classic/templates/actor/parts";
@@ -30,6 +31,7 @@ export class HucksterSheet extends BaseCharacterSheet {
     traits: { template: `${TEMPLATE_ROOT}/traits-tab.hbs` },
     combat: { template: `${TEMPLATE_ROOT}/combat-tab.hbs` },
     hexes: { template: `${TEMPLATE_ROOT}/hexes-tab.hbs` },
+    harrowed: HARROWED_SHEET_PART,
     gear: { template: `${TEMPLATE_ROOT}/gear-tab.hbs` },
     bio: { template: `${TEMPLATE_ROOT}/bio-tab.hbs` },
   };
@@ -51,6 +53,7 @@ export class HucksterSheet extends BaseCharacterSheet {
           icon: "fas fa-hat-wizard",
           label: "DEADLANDS.Sheet.Tab.Hexes",
         },
+        HARROWED_SHEET_TAB,
         { id: "gear", group: "sheet", icon: "fas fa-box", label: "DEADLANDS.Sheet.Tab.Gear" },
         { id: "bio", group: "sheet", icon: "fas fa-feather", label: "DEADLANDS.Sheet.Tab.Bio" },
       ],
