@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+### Fixed
+
+## [0.3.3] — 2026-07-01
+
+### Changed
+
 - Deduplicated the local `_toPascal` reimplementations in the Huckster,
   Shaman, and Mad Scientist archetypes into the shared `core/utils.mjs`
   `toPascal`.
@@ -170,7 +176,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `CombatantHandDialog` and initiative-value path corrections after V14 runtime testing.
 - Multiple V14 API compatibility fixes across archetype sheets and mechanics.
 
-[Unreleased]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.3.2...HEAD
+[Unreleased]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.3.3...HEAD
+[0.3.3]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.3.2...0.3.3
 [0.3.2]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.3.1...0.3.2
 [0.3.1]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.3.0...0.3.1
 [0.3.0]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.2.0...0.3.0
