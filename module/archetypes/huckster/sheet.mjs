@@ -7,6 +7,7 @@
  * @license MIT
  */
 
+import { executeWhiteSpend } from "../../core/chips/chip-rules.mjs";
 import { POKER_HAND_RANKS } from "../../core/dice/poker-hand-evaluator.mjs";
 import { toPascal } from "../../core/utils.mjs";
 import { BaseCharacterSheet } from "../_base/base-character-sheet.mjs";
@@ -147,14 +148,7 @@ export class HucksterSheet extends BaseCharacterSheet {
       return;
     }
 
-    // Clamp to the actor's real white-chip count — the dialog's max is
-    // advisory only, so a stale form value must not grant free extra dice.
-    const whiteSpend = Math.min(Math.max(0, params.whiteSpend), maxWhite);
-    if (whiteSpend > 0) {
-      await this.document.update({
-        "system.chips.white": maxWhite - whiteSpend,
-      });
-    }
+    const whiteSpend = await executeWhiteSpend(this.document, params.whiteSpend);
 
     await castHex(this.document, hexItem, {
       modifier: params.modifier,

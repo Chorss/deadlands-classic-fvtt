@@ -111,6 +111,29 @@ export function highestWoundPenalty(woundLocations) {
   return WOUND_PENALTIES[maxSeverity] ?? 0;
 }
 
+/**
+ * Total bleeding Wind drain per round across all wound locations. dlc p.142.
+ * The three guts sub-locations count once, via the shared pool (see
+ * `gutsTotal`), rather than each contributing its own bleed rate — matching
+ * how `highestWoundPenalty` already treats them as one location, and
+ * avoiding triple-counting a single pooled wound.
+ *
+ * @param {Record<string, { severity: number }>} woundLocations
+ * @returns {number} total Wind lost this round (>= 0)
+ */
+export function totalBleedingRate(woundLocations) {
+  let total = 0;
+  for (const [locId, locData] of Object.entries(woundLocations)) {
+    if (GUTS_LOCATIONS.includes(locId)) {
+      continue;
+    }
+    const isLimb = locId.endsWith("Arm") || locId.endsWith("Leg");
+    total += getBleedingRate(locData.severity ?? 0, isLimb);
+  }
+  total += getBleedingRate(gutsTotal(woundLocations), false);
+  return total;
+}
+
 // ── Foundry-integrated ────────────────────────────────────────────────────────
 
 /**
@@ -154,13 +177,7 @@ export async function applyWounds(actor, location, damageTotal, { _rng = Math.ra
  * @returns {Promise<number>} total Wind lost this tick
  */
 export async function tickBleeding(actor) {
-  const locations = actor.system.wounds ?? {};
-  let totalDrain = 0;
-
-  for (const [locId, locData] of Object.entries(locations)) {
-    const isLimb = locId.endsWith("Arm") || locId.endsWith("Leg");
-    totalDrain += getBleedingRate(locData.severity ?? 0, isLimb);
-  }
+  const totalDrain = totalBleedingRate(actor.system.wounds ?? {});
 
   if (totalDrain > 0) {
     const current = actor.system.wind?.value ?? 0;

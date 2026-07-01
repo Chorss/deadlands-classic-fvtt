@@ -14,6 +14,7 @@
  * @license MIT
  */
 
+import { KeyedAsyncQueue } from "../async-queue.mjs";
 import { DEADLANDS } from "../config.mjs";
 
 // ── Pure helpers (no Foundry dependency — safe to call from unit tests) ──────
@@ -147,16 +148,10 @@ export class ActionDeck {
   // other's draw pile. Does not protect against a genuinely simultaneous
   // write from a *different* client/browser — see the equivalent note on
   // FatePot in module/core/chips/fate-pot.mjs.
-  static #queues = new Map();
+  static #mutex = new KeyedAsyncQueue();
 
   static #enqueue(combat, task) {
-    const prior = ActionDeck.#queues.get(combat.id) ?? Promise.resolve();
-    const result = prior.then(task, task);
-    ActionDeck.#queues.set(
-      combat.id,
-      result.catch(() => {})
-    );
-    return result;
+    return ActionDeck.#mutex.enqueue(combat.id, task);
   }
 
   /**

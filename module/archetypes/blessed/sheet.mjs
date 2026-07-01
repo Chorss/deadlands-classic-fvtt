@@ -7,6 +7,7 @@
  * @license MIT
  */
 
+import { executeWhiteSpend } from "../../core/chips/chip-rules.mjs";
 import { BaseCharacterSheet } from "../_base/base-character-sheet.mjs";
 import { HARROWED_SHEET_PART, HARROWED_SHEET_TAB } from "../_overlays/harrowed/sheet-tab.mjs";
 import { invokeMiracle, isMiracleAccessDenied, sinDenialLabel, trackSin } from "./mechanics.mjs";
@@ -150,14 +151,7 @@ export class BlessedSheet extends BaseCharacterSheet {
       return;
     }
 
-    // Clamp to the actor's real white-chip count — the dialog's max is
-    // advisory only, so a stale form value must not grant free extra dice.
-    const whiteSpend = Math.min(Math.max(0, params.whiteSpend), maxWhite);
-    if (whiteSpend > 0) {
-      await this.document.update({
-        "system.chips.white": maxWhite - whiteSpend,
-      });
-    }
+    const whiteSpend = await executeWhiteSpend(this.document, params.whiteSpend);
 
     await invokeMiracle(this.document, miracleItem, {
       modifier: params.modifier,

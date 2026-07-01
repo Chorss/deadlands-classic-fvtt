@@ -24,6 +24,7 @@ import {
   getBleedingRate,
   gutsTotal,
   highestWoundPenalty,
+  totalBleedingRate,
   windDiceCount,
   woundsFromDamage,
 } from "../module/core/wounds/wound-track.mjs";
@@ -162,6 +163,34 @@ describe("highestWoundPenalty", () => {
       gizzards: { severity: 0 },
     };
     assert.equal(highestWoundPenalty(wounds), highestWoundPenalty({ noggin: { severity: 5 } }));
+  });
+});
+
+// ── totalBleedingRate (dlc p.142) ───────────────────────────────────────────────
+
+describe("totalBleedingRate (dlc p.142)", () => {
+  it("sums independent bleed rates for non-guts locations", () => {
+    const wounds = {
+      leftArm: { severity: 3 }, // Serious → 1
+      noggin: { severity: 4 }, // Critical → 2
+    };
+    assert.equal(totalBleedingRate(wounds), 3);
+  });
+
+  it("counts the guts pool once instead of per sub-location", () => {
+    // 4 lowerGuts + 4 upperGuts pool to 5 (Maimed cap, dlc p.139) — bleeding
+    // must charge that ONE pooled severity once, not 2-3x per sub-location.
+    const wounds = {
+      lowerGuts: { severity: 4 },
+      upperGuts: { severity: 4 },
+      gizzards: { severity: 0 },
+    };
+    assert.equal(totalBleedingRate(wounds), getBleedingRate(5, false));
+  });
+
+  it("returns 0 when nothing bleeds", () => {
+    const wounds = { noggin: { severity: 1 }, upperGuts: { severity: 0 } };
+    assert.equal(totalBleedingRate(wounds), 0);
   });
 });
 

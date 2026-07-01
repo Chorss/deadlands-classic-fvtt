@@ -17,6 +17,7 @@
  * @license MIT
  */
 
+import { KeyedAsyncQueue } from "../async-queue.mjs";
 import { CHIP_COLORS, FATE_POT_SEED } from "../config.mjs";
 
 const SYSTEM_ID = "deadlands-classic";
@@ -74,19 +75,19 @@ export function drawBlindPure(pot, n, rng = Math.random) {
 
 // ── FatePot class — Foundry-integrated ───────────────────────────────────────
 
+const QUEUE_KEY = "pot";
+
 export class FatePot {
   // Serializes every read-modify-write on this client so two overlapping async
   // calls (e.g. a chip return racing a Marshal's Tithe draw) can't interleave
   // between their `await` points and lose an update. Does not protect against
   // a genuinely simultaneous write from a *different* client/browser — that
   // would need a GM-owned, socket-serialized queue (bigger change, tracked in
-  // docs/bug-audit-2026-07-01.md as a known follow-up, not fixed here).
-  static #queue = Promise.resolve();
+  // docs/notes.md as a known follow-up, not fixed here).
+  static #mutex = new KeyedAsyncQueue();
 
   static #enqueue(task) {
-    const result = FatePot.#queue.then(task, task);
-    FatePot.#queue = result.catch(() => {});
-    return result;
+    return FatePot.#mutex.enqueue(QUEUE_KEY, task);
   }
 
   /** Register the world setting. Call from `init` hook. */

@@ -10,6 +10,7 @@
  * @license MIT
  */
 
+import { executeWhiteSpend } from "../../core/chips/chip-rules.mjs";
 import { APTITUDES, DEADLANDS, TRAITS } from "../../core/config.mjs";
 import { toPascal } from "../../core/utils.mjs";
 import { HARROWED_SHEET_PART, HARROWED_SHEET_TAB } from "../_overlays/harrowed/sheet-tab.mjs";
@@ -278,14 +279,7 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
       return;
     }
 
-    // Clamp to the actor's real white-chip count — the dialog's max is
-    // advisory only, so a stale form value must not grant free extra dice.
-    const whiteSpend = Math.min(Math.max(0, params.whiteSpend), maxWhite);
-    if (whiteSpend > 0) {
-      await this.document.update({
-        "system.chips.white": maxWhite - whiteSpend,
-      });
-    }
+    const whiteSpend = await executeWhiteSpend(this.document, params.whiteSpend);
 
     await game.deadlandsClassic.dice.rollTrait(this.document, traitId, {
       tn: params.tn,
@@ -322,14 +316,7 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
       return;
     }
 
-    // Clamp to the actor's real white-chip count — the dialog's max is
-    // advisory only, so a stale form value must not grant free extra dice.
-    const whiteSpend = Math.min(Math.max(0, params.whiteSpend), maxWhite);
-    if (whiteSpend > 0) {
-      await this.document.update({
-        "system.chips.white": maxWhite - whiteSpend,
-      });
-    }
+    const whiteSpend = await executeWhiteSpend(this.document, params.whiteSpend);
 
     await game.deadlandsClassic.dice.rollTrait(this.document, traitId, {
       aptitudeId,
