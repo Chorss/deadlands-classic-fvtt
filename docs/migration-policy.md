@@ -25,9 +25,13 @@ game.settings.register(SYSTEM_ID, "migrationVersion", {
 });
 ```
 
-In the `ready` hook a migration guard reads this value and runs any pending migrations:
+A `ready`-hook migration guard that reads this value and runs pending migrations is **not
+implemented yet** — it will be added together with the first real migration, alongside
+`module/core/migration.mjs` (see §Migration table shape below). Today the system's `ready`
+hook only logs. The planned shape of the guard:
 
 ```js
+// Planned — to be added when the first migration ships.
 Hooks.once("ready", () => {
   const worldVersion = game.settings.get(SYSTEM_ID, "migrationVersion");
   if (worldVersion === "") {
@@ -72,7 +76,7 @@ Each migration pass iterates:
 3. `game.items` — world-level items (compendium imports).
 4. Scene tokens — `scene.tokens.map(t => t.actor)`.
 
-The `ready` hook guard ensures migrations only run once per world.
+The planned `ready`-hook guard (above) will ensure migrations only run once per world.
 
 ## Backward compatibility promise
 
@@ -92,3 +96,7 @@ in `CHANGELOG.md`.
 |---|---|
 | 0.1.0 | Initial release — no migration needed |
 | 0.2.0 | Harrowed overlay fields added (self-migrating via `initial:` defaults) |
+| 0.3.0 | Localization audit, accessibility pass, `wind.value` init fix — no schema changes, no migration needed |
+| 0.3.1 | Font picker (world setting), CSS layer, `audit-css` tooling — no schema changes, no migration needed |
+| 0.3.2 | Formatting/tooling fixes only — no schema changes, no migration needed |
+| 0.3.3 | Bug-audit hotfixes (rolls, chips, wounds, concurrency) + internal dedupe — no schema changes, no migration needed |
