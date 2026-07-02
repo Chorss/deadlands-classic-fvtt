@@ -44,14 +44,14 @@ The only interface core cares about:
   dataModel: typeof foundry.abstract.TypeDataModel,
   sheetClass: typeof foundry.applications.sheets.ActorSheetV2,
   mechanics?: object,            // optional archetype-specific callbacks
-  defaultIcon: string,
+  defaultIcon?: string,
   htmlFields?: string[]          // for system.json documentTypes
 }
 ```
 
-This contract, the `deadlandsClassic.*` hooks, and the `game.deadlandsClassic` namespace are the
-**public API** that expansion modules bind to — treat them as stable (SemVer; a breaking change = a
-major version bump).
+This contract and the `game.deadlandsClassic` namespace are the **public API** that expansion
+modules bind to — treat them as stable (SemVer; a breaking change = a major version bump). Custom
+`deadlandsClassic.*` hooks are reserved for this surface but not emitted yet (see below).
 
 ## Harrowed = overlay, not archetype
 
@@ -67,7 +67,8 @@ roll (opposed Spirit + each side's current Dominion — `dlc` p.195) is an `Over
   ┌─────────────────────────────────────────────────────────────────────┐
   │                    module/core/                                     │
   │                                                                     │
-  │  dice/   cards/   chips/   wounds/   config.mjs   overlay-registry │
+  │  dice/  cards/  chips/  wounds/  documents/  items/  config.mjs    │
+  │  async-queue.mjs  utils.mjs  font-settings.mjs  overlay-registry    │
   │                                                                     │
   │          ArchetypeRegistry ◄──────────────────────────────────────┐ │
   │          ItemRegistry      ◄──────────────────────────────────────┤ │
@@ -113,19 +114,28 @@ Changes to these are **breaking** and trigger a major version bump.
 
 | Key | Type | Description |
 |---|---|---|
+| `.id` | `string` | System id (`"deadlands-classic"`) |
+| `.config` | `object` | Aggregated `DEADLANDS` config constants (`module/core/config.mjs`) |
 | `.archetypes` | `ArchetypeRegistry` | Register and look up archetypes |
 | `.items` | `ItemRegistry` | Register and look up item types |
 | `.overlays` | `OverlayRegistry` | Register and look up overlays (Harrowed, etc.) |
-| `.dice` | `object` | `rollExplodingPool`, `rollTrait`, `rollDamage`, `rollGutsCheck` |
-| `.cards` | `object` | `ActionDeck`, `CombatantHandDialog`, combat classes |
-| `.chips` | `object` | `FatePot`, `canSpend`, `executeSpend`, `grantChips`, `spendChip` |
-| `.wounds` | `object` | `woundsFromDamage`, `applyWounds`, `drawHitLocation`, etc. |
+| `.dice` | `object` | `rollExplodingPool`, `rollTrait`, `rollDamage`, `rollGutsCheck`, `lookupScart`, `scartDiceForTN` |
+| `.cards` | `object` | `ActionDeck`, `CombatantHandDialog`, `DeadlandsCombat`, `DeadlandsCombatant` |
+| `.chips` | `object` | `FatePot`, `canSpend`, `executeSpend`, `grantChips`, `spendChip`, `drawForSession` |
+| `.wounds` | `object` | `woundsFromDamage`, `applyWounds`, `tickBleeding`, `getBleedingRate`, `highestWoundPenalty`, `drawHitLocation`, `resolveHitLocation`, `computeWindMax`, `isWinded`, `gutsWoundsFromNegativeWind` |
 
-### Custom hooks (cancelable `pre*`, reactive `post*`)
+Concurrency note: `FatePot` and `ActionDeck` serialize their read-modify-write operations through
+`module/core/async-queue.mjs` (`KeyedAsyncQueue`, a promise-chain mutex — one global key for the
+pot, one key per combat for the deck). This guards same-client races only; the cross-client race
+is tracked in `notes.md`.
 
-All hooks are namespaced `deadlandsClassic.<event>` (dot-separated, `lowerCamelCase` event segment).
+### Custom hooks (planned — none emitted yet)
 
-| Hook | When | Cancelable |
+As of 0.3.3 the system emits **no** custom hooks. The namespace `deadlandsClassic.<event>`
+(dot-separated, `lowerCamelCase` event segment; cancelable `pre*`, reactive `post*` — see
+`.claude/rules/naming.md`) is reserved for them. Planned surface:
+
+| Hook (planned) | When | Cancelable |
 |---|---|---|
 | `deadlandsClassic.preTraitRoll` | Before a trait/aptitude roll resolves | ✓ |
 | `deadlandsClassic.chipSpent` | After a Fate Chip is spent | — |
@@ -143,4 +153,4 @@ This system follows **Semantic Versioning** (`MAJOR.MINOR.PATCH`):
 - **MINOR** — new capabilities added in a backward-compatible way (new registry field, new hook, new pack).
 - **PATCH** — backward-compatible bug fixes, balance tweaks, i18n additions.
 
-Expansion modules should pin to a compatible range (e.g. `^0.2.0`) in their `manifest.json`.
+Expansion modules should pin to a compatible range (e.g. `^0.3.0`) in their `manifest.json`.
