@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Local Playwright E2E suite (`tests/e2e/`, `npm run test:e2e`) driving a real
+  Foundry instance: boot smoke, per-archetype sheet render (raw-i18n-key leak
+  check), click-to-roll flow, and a two-client GM-proxy race regression.
+  Local-only by design — CI cannot run licensed Foundry. Setup and usage:
+  `docs/testing-e2e.md`.
 - GM-proxy for shared-state writes (`module/core/gm-proxy.mjs`): Fate Pot and
   Action Deck mutations are dispatched as pure JSON op descriptors to the
   single active GM client over Foundry's native Queries API (`CONFIG.queries`
