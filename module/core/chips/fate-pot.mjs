@@ -19,6 +19,7 @@
 
 import { KeyedAsyncQueue } from "../async-queue.mjs";
 import { CHIP_COLORS, FATE_POT_SEED } from "../config.mjs";
+import { dispatchGmOp, registerGmOp } from "../gm-proxy.mjs";
 
 const SYSTEM_ID = "deadlands-classic";
 const SETTING_KEY = "fatePot";
@@ -73,17 +74,77 @@ export function drawBlindPure(pot, n, rng = Math.random) {
   return { drawn, remaining };
 }
 
+/** @throws {Error} when `color` is not a known chip color */
+function requireColor(color) {
+  if (!CHIP_COLORS[color]) {
+    throw new Error(`Unknown chip color "${color}".`);
+  }
+}
+
+/** @throws {Error} when `n` is not a positive integer */
+function requireCount(n) {
+  if (!Number.isInteger(n) || n <= 0) {
+    throw new Error(`Chip count must be a positive integer, got "${n}".`);
+  }
+}
+
+/**
+ * Apply one wire-protocol operation to a plain pot object. Pure — shared by
+ * the GM-side query handler and unit tests. Throws on any malformed op so a
+ * bad request from another client can never corrupt the pot.
+ *
+ * @param {{ white:number, red:number, blue:number, legend:number }} pot
+ * @param {{ op:"patch", patch:object } | { op:"drawBlind", n:number } |
+ *          { op:"returnToPool", color:string, n:number } |
+ *          { op:"discard", color:string, n:number } | { op:"reset" }} op
+ * @param {() => number} [rng] — injectable for deterministic tests
+ * @returns {{ pot: {white:number,red:number,blue:number,legend:number}, drawn?: string[] }}
+ */
+export function applyFatePotOp(pot, op, rng = Math.random) {
+  switch (op?.op) {
+    case "patch": {
+      const next = { ...pot };
+      for (const [color, value] of Object.entries(op.patch ?? {})) {
+        requireColor(color);
+        if (!Number.isInteger(value)) {
+          throw new Error(`Patch value for "${color}" must be an integer, got "${value}".`);
+        }
+        next[color] = Math.max(0, value);
+      }
+      return { pot: next };
+    }
+    case "drawBlind": {
+      requireCount(op.n);
+      const { drawn, remaining } = drawBlindPure(pot, op.n, rng);
+      return { pot: remaining, drawn };
+    }
+    case "returnToPool": {
+      requireColor(op.color);
+      requireCount(op.n);
+      return { pot: { ...pot, [op.color]: (pot[op.color] ?? 0) + op.n } };
+    }
+    case "discard": {
+      requireColor(op.color);
+      requireCount(op.n);
+      return { pot: { ...pot, [op.color]: Math.max(0, (pot[op.color] ?? 0) - op.n) } };
+    }
+    case "reset":
+      return { pot: { ...FATE_POT_SEED } };
+    default:
+      throw new Error(`Unknown Fate Pot op "${op?.op}".`);
+  }
+}
+
 // ── FatePot class — Foundry-integrated ───────────────────────────────────────
 
 const QUEUE_KEY = "pot";
+const FATE_POT_OP = `${SYSTEM_ID}.fatePotOp`;
 
 export class FatePot {
-  // Serializes every read-modify-write on this client so two overlapping async
-  // calls (e.g. a chip return racing a Marshal's Tithe draw) can't interleave
-  // between their `await` points and lose an update. Does not protect against
-  // a genuinely simultaneous write from a *different* client/browser — that
-  // would need a GM-owned, socket-serialized queue (bigger change, tracked in
-  // docs/notes.md as a known follow-up, not fixed here).
+  // All mutations route through the active GM's client (dispatchGmOp), where
+  // #executeOp serializes every read-modify-write in this queue — one writer
+  // for the whole world, so neither same-client nor cross-client concurrent
+  // spends can interleave and lose an update. See docs/notes.md.
   static #mutex = new KeyedAsyncQueue();
 
   static #enqueue(task) {
@@ -100,6 +161,34 @@ export class FatePot {
     });
   }
 
+  /**
+   * Register the GM-op query handler. Call from `init` hook on every client —
+   * User#query refuses to send a query name the caller has not registered.
+   */
+  static registerQueries() {
+    registerGmOp(FATE_POT_OP, (data, context) => FatePot.#executeOp(data, context));
+  }
+
+  /**
+   * GM-side op executor — the single serialized writer for the pot.
+   * @param {object} data — wire-protocol op (see applyFatePotOp)
+   * @param {{ user: User }} context — the requesting user
+   * @returns {Promise<{ pot: object, drawn?: string[] }>}
+   */
+  static async #executeOp(data, { user }) {
+    if (!game.user.isGM) {
+      throw new Error("Fate Pot ops must execute on a GM client.");
+    }
+    if (data?.op === "reset" && !user?.isGM) {
+      throw new Error("Only a GM may reset the Fate Pot.");
+    }
+    return FatePot.#enqueue(async () => {
+      const { pot, drawn } = applyFatePotOp(FatePot.getData(), data);
+      await game.settings.set(SYSTEM_ID, SETTING_KEY, pot);
+      return drawn === undefined ? { pot } : { pot, drawn };
+    });
+  }
+
   /** @returns {FatePotModel} current pot */
   static get() {
     return game.settings.get(SYSTEM_ID, SETTING_KEY);
@@ -112,46 +201,40 @@ export class FatePot {
   }
 
   /**
-   * Apply a patch to the pot, read-modify-write inside the serialized queue so
-   * the read always sees this client's most recent write (see `#queue`).
+   * Overwrite pot counts with the given absolute values (clamped ≥ 0), routed
+   * through the GM client like every other mutation.
    *
-   * @param {{ white?:number, red?:number, blue?:number, legend?:number } |
-   *          ((current: {white:number,red:number,blue:number,legend:number}) => object)} patchOrUpdater
-   *   A plain patch object, or a function of the freshest current data — use
-   *   the function form whenever the patch depends on the current value
-   *   (e.g. an increment), so the read happens inside the serialized section.
+   * Updater functions are no longer accepted — they can't cross the GM query
+   * wire. Increments/decrements go through the dedicated ops instead
+   * (`returnToPool`, `discard`, `drawBlind`).
+   *
+   * @param {{ white?:number, red?:number, blue?:number, legend?:number }} patch
    */
-  static async patch(patchOrUpdater) {
-    return FatePot.#enqueue(async () => {
-      const current = FatePot.getData();
-      const delta = typeof patchOrUpdater === "function" ? patchOrUpdater(current) : patchOrUpdater;
-      await game.settings.set(SYSTEM_ID, SETTING_KEY, { ...current, ...delta });
-    });
+  static async patch(patch) {
+    if (typeof patch === "function") {
+      throw new TypeError(
+        "FatePot.patch no longer accepts updater functions — use returnToPool/discard/drawBlind or pass a plain patch object."
+      );
+    }
+    await dispatchGmOp(FATE_POT_OP, { op: "patch", patch });
   }
 
   /**
-   * Reset pot to starting seed. dlc p.146.
-   * Only the GM should call this (start-of-campaign / reset).
+   * Reset pot to starting seed. dlc p.146. GM only (enforced on the GM side).
    */
   static async reset() {
-    return FatePot.#enqueue(async () => {
-      await game.settings.set(SYSTEM_ID, SETTING_KEY, { ...FATE_POT_SEED });
-    });
+    await dispatchGmOp(FATE_POT_OP, { op: "reset" });
   }
 
   /**
    * Draw n chips blind at random from the pot. dlc p.146.
+   * Randomness runs on the GM client; deterministic tests use
+   * `applyFatePotOp` / `drawBlindPure` directly.
    * @param {number} n
-   * @param {() => number} [_rng] injectable for tests
    * @returns {Promise<string[]>} colors drawn
    */
-  static async drawBlind(n, _rng = Math.random) {
-    let drawn;
-    await FatePot.patch((current) => {
-      const result = drawBlindPure(current, n, _rng);
-      drawn = result.drawn;
-      return result.remaining;
-    });
+  static async drawBlind(n) {
+    const { drawn } = await dispatchGmOp(FATE_POT_OP, { op: "drawBlind", n });
     return drawn;
   }
 
@@ -161,7 +244,7 @@ export class FatePot {
    * @param {number} [n=1]
    */
   static async returnToPool(color, n = 1) {
-    await FatePot.patch((current) => ({ [color]: (current[color] ?? 0) + n }));
+    await dispatchGmOp(FATE_POT_OP, { op: "returnToPool", color, n });
   }
 
   /**
@@ -170,7 +253,7 @@ export class FatePot {
    * @param {number} [n=1]
    */
   static async discard(color, n = 1) {
-    await FatePot.patch((current) => ({ [color]: Math.max(0, (current[color] ?? 0) - n) }));
+    await dispatchGmOp(FATE_POT_OP, { op: "discard", color, n });
   }
 
   /**
