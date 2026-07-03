@@ -92,6 +92,12 @@ Hooks.once("init", () => {
   // Fate Pot world setting (4 integers — NOT Cards). dlc p.146. Plan §3.3.
   FatePot.registerSetting(SYSTEM_ID);
 
+  // GM-proxy query handlers — shared-state ops (Fate Pot, Action Deck) execute
+  // on the single active GM client. Must register on EVERY client: User#query
+  // refuses to send a query name the caller has not registered itself.
+  FatePot.registerQueries();
+  ActionDeck.registerQueries();
+
   // Display-font picker — 4 bundled offline fonts, live CSS-var update.
   registerFontSettings(SYSTEM_ID);
   applyFont(game.settings.get(SYSTEM_ID, SETTING_KEY));
