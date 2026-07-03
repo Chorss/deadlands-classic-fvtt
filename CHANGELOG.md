@@ -11,9 +11,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- GM-proxy for shared-state writes (`module/core/gm-proxy.mjs`): Fate Pot and
+  Action Deck mutations are dispatched as pure JSON op descriptors to the
+  single active GM client over Foundry's native Queries API (`CONFIG.queries`
+  + `User#query`) and applied there through the existing `KeyedAsyncQueue` —
+  one serialized writer for the whole world. With no GM online the operation
+  is rejected with a localized warning (no local fallback).
+
 ### Changed
 
+- `FatePot.patch` accepts plain patch objects only — updater functions cannot
+  cross the GM query wire; use `returnToPool` / `discard` / `drawBlind`.
+- `ActionDeck.initialize` returns an `{ok, cardsRemaining}` summary instead of
+  the full deck state, so the draw-pile order never crosses the wire.
+
 ### Fixed
+
+- **Player-initiated chip spends and card deals failed server-side** — world-
+  setting writes require `SETTINGS_MODIFY` (default Assistant+) and Combat-flag
+  writes are GM-only, so every spend/deal from a player client was rejected by
+  the server (chip vanished from the actor, pot never updated). Now routed
+  through the GM proxy.
+- **Fate Pot / Action Deck cross-client race** — two clients writing the same
+  world setting or combat flag simultaneously could lose a chip or duplicate a
+  dealt card; the GM proxy serializes all writers (closes the follow-up in
+  `docs/notes.md`).
+- Chip spends now write the pot **before** deducting the actor's chips, so a
+  rejected pot write (e.g. no GM online) can no longer vanish a chip; roll
+  flows abort cleanly when the spend fails.
 
 ## [0.3.3] — 2026-07-01
 

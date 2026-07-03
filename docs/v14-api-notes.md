@@ -157,6 +157,40 @@ documents; there is no native `combatant.cards`. The Combat↔Cards initiative g
 the flag-based deck above). `Combat` is subclassed to `DeadlandsCombat` whose `rollInitiative()`
 deals cards instead of rolling 1d20; suit tiebreaker (♠>♥>♦>♣) via a numeric `sort` on `Combatant`.
 
+## Queries API (`User#query`) — GM-routed shared-state writes
+
+The GM proxy (`module/core/gm-proxy.mjs`) uses Foundry's native Queries API to execute Fate Pot /
+Action Deck mutations on the single active GM client. Facts below were verified against the local
+Foundry **14.364** installation source (`client/documents/user.mjs`,
+`client/documents/collections/users.mjs`, `common/constants.mjs`, server relay in
+`dist/components/activity.mjs`):
+
+- **Registration on every client.** `CONFIG.queries["<name>"] = handler` must run during `init` on
+  *all* clients — `User#query` throws `User query '<name>' is not registered` on the **calling**
+  client otherwise. Handlers execute only on the *target* user's client.
+- **Caller:** `targetUser.query(name, data, { timeout })`. Requires the `QUERY_USER` permission
+  (default role: PLAYER — all players have it). Throws if the target user is not active.
+- **Handler signature:** `handler(queryData, { timeout, user })` — `user` is the *requesting* User
+  document (usable for per-op permission gates). The return value travels back via socket ack, so
+  request and response must be **JSON-serializable**. A handler exception reaches the caller as
+  `new Error(reason)` — only the message string survives the wire, no stack/type.
+- **Always pass a `timeout`.** Without one the server never expires the query and the caller's
+  promise can hang forever (only a sender disconnect cleans it up).
+- **No `"socket": true` needed** — queries ride the core `userQuery` socket channel; the manifest
+  flag only gates the direct `system.<id>` namespace.
+- **`game.users.activeGM`** designates one GM deterministically on every client (highest role,
+  ties broken by id comparison) — safe to use as the single-writer target.
+- ⚠ **Multi-tab caveat:** the server emits a query to *every* socket of the target user; a GM
+  logged in from two tabs executes the handler twice (first ack wins, side effects double-apply).
+  Multi-tab GM sessions are unsupported.
+- **Self-dispatch:** a query to yourself round-trips the server — `dispatchGmOp` short-circuits
+  the `activeGM.isSelf` case to a local handler call instead.
+
+Server permissions this design works around (also verified in 14.364 source): world-scope
+`game.settings.set` requires `SETTINGS_MODIFY` (default: ASSISTANT), and non-GM `Combat` updates
+are whitelisted to `_id/round/turn/combatants` — `flags` writes from players are rejected.
+`Combatant` flags, by contrast, *are* owner-writable (that's why `setHand` needs no proxy).
+
 ## V13 → V14 breaking changes that affect us
 
 - `ApplicationV2` is the sheet framework we use; legacy `extends Application` is **deprecated** in V14 (removal targeted for a later major, not gone in 14.x). ProseMirror, not TinyMCE.
