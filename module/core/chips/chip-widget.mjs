@@ -10,7 +10,7 @@
 
 import { CHIP_COLORS } from "../config.mjs";
 import { toPascal } from "../utils.mjs";
-import { applyChipCap, canSpend, executeSpend } from "./chip-rules.mjs";
+import { applyChipCap, canSpend, executeSpend, executeWhiteSpend } from "./chip-rules.mjs";
 import { FatePot } from "./fate-pot.mjs";
 
 /**
@@ -79,10 +79,34 @@ export async function spendChip(actor, color, opts = {}) {
     return null;
   }
 
-  return executeSpend(actor, color, {
-    mode: opts.mode ?? "normal",
-    rollType: opts.rollType ?? "trait",
-  });
+  try {
+    return await executeSpend(actor, color, {
+      mode: opts.mode ?? "normal",
+      rollType: opts.rollType ?? "trait",
+    });
+  } catch (err) {
+    // The GM proxy has already shown a notification — log and abort.
+    console.error("deadlands-classic | Chip spend aborted:", err);
+    return null;
+  }
+}
+
+/**
+ * White-chip spend wrapper for roll flows: executes the spend, returning null
+ * when the GM-routed pot write fails so the caller can abort its roll (the
+ * proxy has already notified the user).
+ *
+ * @param {Actor} actor
+ * @param {number} requested — raw whiteSpend value from the roll dialog
+ * @returns {Promise<number|null>} chips actually spent, or null when the spend failed
+ */
+export async function tryWhiteSpend(actor, requested) {
+  try {
+    return await executeWhiteSpend(actor, requested);
+  } catch (err) {
+    console.error("deadlands-classic | White-chip spend aborted:", err);
+    return null;
+  }
 }
 
 // Re-export for convenience so callers can import from one place.

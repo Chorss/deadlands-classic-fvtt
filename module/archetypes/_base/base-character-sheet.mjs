@@ -10,7 +10,7 @@
  * @license MIT
  */
 
-import { executeWhiteSpend } from "../../core/chips/chip-rules.mjs";
+import { tryWhiteSpend } from "../../core/chips/chip-widget.mjs";
 import { APTITUDES, DEADLANDS, TRAITS } from "../../core/config.mjs";
 import { toPascal } from "../../core/utils.mjs";
 import { HARROWED_SHEET_PART, HARROWED_SHEET_TAB } from "../_overlays/harrowed/sheet-tab.mjs";
@@ -279,7 +279,10 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
       return;
     }
 
-    const whiteSpend = await executeWhiteSpend(this.document, params.whiteSpend);
+    const whiteSpend = await tryWhiteSpend(this.document, params.whiteSpend);
+    if (whiteSpend === null) {
+      return;
+    }
 
     await game.deadlandsClassic.dice.rollTrait(this.document, traitId, {
       tn: params.tn,
@@ -316,7 +319,10 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
       return;
     }
 
-    const whiteSpend = await executeWhiteSpend(this.document, params.whiteSpend);
+    const whiteSpend = await tryWhiteSpend(this.document, params.whiteSpend);
+    if (whiteSpend === null) {
+      return;
+    }
 
     await game.deadlandsClassic.dice.rollTrait(this.document, traitId, {
       aptitudeId,

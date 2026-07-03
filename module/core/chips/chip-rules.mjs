@@ -103,10 +103,9 @@ export async function executeSpend(actor, color, { mode = "normal", rollType = "
     throw new Error(`Actor has no ${color} chips to spend.`);
   }
 
-  // Deduct from actor.
-  await actor.update({ [`system.chips.${color}`]: current - 1 });
-
-  // Pot accounting.
+  // Pot accounting first — it routes through the GM proxy and is the step
+  // that can fail (e.g. no GM online). The chip leaves the actor only after
+  // the pot write succeeds, so a rejected pot op can't vanish the chip.
   let marshalDraw = null;
   if (color === "legend" && mode === "reroll") {
     // Permanent discard — "gone forever". dlc p.148.
@@ -120,6 +119,9 @@ export async function executeSpend(actor, color, { mode = "normal", rollType = "
       marshalDraw = await FatePot.marshalTithe();
     }
   }
+
+  // Deduct from actor.
+  await actor.update({ [`system.chips.${color}`]: current - 1 });
 
   return { color, mode, marshalDraw };
 }
@@ -142,8 +144,9 @@ export async function executeWhiteSpend(actor, requested) {
   const current = actor.system.chips?.white ?? 0;
   const spend = Math.min(Math.max(0, requested), current);
   if (spend > 0) {
-    await actor.update({ "system.chips.white": current - spend });
+    // Pot write first (GM-routed, can fail) — see executeSpend.
     await FatePot.returnToPool("white", spend);
+    await actor.update({ "system.chips.white": current - spend });
   }
   return spend;
 }
