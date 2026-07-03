@@ -154,6 +154,9 @@
   "DEADLANDS.ChipRule.BustOnlyLegend": "Only a Legend chip (reroll) can save a bust!",
   "DEADLANDS.ChipRule.OnePerAction": "Only one red, blue, or legend chip per action.",
 
+  "DEADLANDS.GmProxy.NoActiveGM": "This action requires an active Game Master — ask your GM to log in and try again.",
+  "DEADLANDS.GmProxy.QueryFailed": "The GM's client did not confirm the action — nothing was changed. Try again.",
+
   "DEADLANDS.Wound.Severity.None": "None",
   "DEADLANDS.Wound.Severity.Light": "Light",
   "DEADLANDS.Wound.Severity.Heavy": "Heavy",
