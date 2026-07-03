@@ -30,6 +30,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   compat shim — it runs locally against a snapshot and logs a compatibility
   warning; prefer `returnToPool` / `discard` / `drawBlind` for read-dependent
   changes.
+- README: structured the Screenshots section (planned captures in
+  `assets/screenshots/`, shipped in the release zip once present) and dropped
+  the stale version qualifier from the feature-status heading.
 - `ActionDeck.initialize` returns an `{ok, cardsRemaining}` summary instead of
   the full deck state, so the draw-pile order never crosses the wire.
 - The four copies of the white-chip spend-then-roll block (trait, aptitude, hex,

@@ -34,7 +34,7 @@ A community-maintained Foundry VTT game system for **Deadlands Classic** (Weird 
 
 ---
 
-## Feature status (v0.2.0)
+## Feature status
 
 | Feature | Status |
 |---|---|
@@ -58,6 +58,16 @@ A community-maintained Foundry VTT game system for **Deadlands Classic** (Weird 
 ---
 
 ## Screenshots
+
+Planned captures land in [`assets/screenshots/`](assets/screenshots/) — taken during local
+E2E sessions (see `docs/testing-e2e.md`):
+
+| File | Shows |
+|---|---|
+| `character-sheet.png` | Archetype character sheet (traits, aptitudes, chips) |
+| `combat-tracker-cards.png` | Combat tracker with Action Card initiative |
+| `chip-widget.png` | Fate Chip widget and chip spend |
+| `huckster-hex-casting.png` | Hex casting with poker-hand evaluation |
 
 > *Screenshots coming soon. Want to help? Submit a PR with a screenshot of the system in action!*
 
