@@ -166,11 +166,7 @@
   "DEADLANDS.Wound.Severity.Critical": "Critical",
   "DEADLANDS.Wound.Severity.Maimed": "Maimed",
 
-  "DEADLANDS.Wound.Applied": "{wounds} wound(s) to {location}. Wind −{wind}.",
   "DEADLANDS.Wound.Winded": "Winded! No actions this round.",
-  "DEADLANDS.Wound.BleedingTick": "Bleeding: −{drain} Wind.",
-  "DEADLANDS.Wound.MaimedLimb": "{location} is maimed — out of action.",
-  "DEADLANDS.Wound.WindRecovered": "Wind recovered to {value}/{max}.",
 
   "DEADLANDS.Guts.Label": "Guts Check",
   "DEADLANDS.Guts.Success": "Steeled nerves — no effect.",
@@ -214,8 +210,6 @@
   "DEADLANDS.Combat.Card.Rank.K": "King",
   "DEADLANDS.Combat.Card.Rank.A": "Ace",
 
-  "DEADLANDS.Combat.Initiative.Label": "Card Initiative",
-  "DEADLANDS.Combat.Initiative.Deal": "Deal Initiative Cards",
   "DEADLANDS.Combat.Initiative.Bust": "{name} went bust — no action cards this round!",
   "DEADLANDS.Combat.Initiative.BlackJoker": "{name} drew the Black Joker! Marshal draws a {chip} chip. Sleeve discarded. Deck reshuffles at round end.",
   "DEADLANDS.Combat.Initiative.BlackJokerNPC": "{name} drew the Black Joker! Sleeve discarded. Deck reshuffles at round end — no Fate Chip for the posse on an NPC draw.",

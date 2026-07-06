@@ -166,11 +166,7 @@
   "DEADLANDS.Wound.Severity.Critical": "Krytyczne",
   "DEADLANDS.Wound.Severity.Maimed": "Okaleczenie",
 
-  "DEADLANDS.Wound.Applied": "{wounds} rana(y) w {location}. Dech −{wind}.",
   "DEADLANDS.Wound.Winded": "Wyczerpany! Brak akcji w tej rundzie.",
-  "DEADLANDS.Wound.BleedingTick": "Krwawienie: −{drain} Dechu.",
-  "DEADLANDS.Wound.MaimedLimb": "{location} jest okaleczona — wyłączona z akcji.",
-  "DEADLANDS.Wound.WindRecovered": "Dech odzyskany: {value}/{max}.",
 
   "DEADLANDS.Guts.Label": "Test Odwagi",
   "DEADLANDS.Guts.Success": "Nerwy ze stali — brak efektu.",
@@ -214,8 +210,6 @@
   "DEADLANDS.Combat.Card.Rank.K": "Król",
   "DEADLANDS.Combat.Card.Rank.A": "As",
 
-  "DEADLANDS.Combat.Initiative.Label": "Inicjatywa kartami",
-  "DEADLANDS.Combat.Initiative.Deal": "Dobierz karty inicjatywy",
   "DEADLANDS.Combat.Initiative.Bust": "{name} ma niefarta — brak kart akcji w tej rundzie!",
   "DEADLANDS.Combat.Initiative.BlackJoker": "{name} dobił Czarnego Jokera! MG dobiera szton {chip}. Karta ze spodnika odrzucona. Talia przetasowywana na końcu rundy.",
   "DEADLANDS.Combat.Initiative.BlackJokerNPC": "{name} dobił Czarnego Jokera! Karta ze spodnika odrzucona. Talia przetasowywana na końcu rundy — brak sztonu dla drużyny przy dobraniu przez BN.",

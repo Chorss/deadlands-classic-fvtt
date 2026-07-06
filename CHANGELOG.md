@@ -13,6 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Removed the dead `wound-locations-widget.hbs` partial (never rendered — all
+  archetypes use the combat-tab wound list) with its widget-only CSS, and the
+  unused `DEADLANDS.Wound.{Applied,BleedingTick,MaimedLimb,WindRecovered}` and
+  `DEADLANDS.Combat.Initiative.{Label,Deal}` i18n keys.
+
 ### Fixed
 
 - **Fate Chips — "No Going Back"** (dlc p.148): `canSpend()` allowed unlimited
