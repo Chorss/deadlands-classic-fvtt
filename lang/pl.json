@@ -153,6 +153,7 @@
   "DEADLANDS.ChipRule.NoneLeft": "Brak sztonów w tym kolorze.",
   "DEADLANDS.ChipRule.BustOnlyLegend": "Tylko szton Legendy (przerzut) może uratować porażkę totalną!",
   "DEADLANDS.ChipRule.OnePerAction": "Tylko jeden czerwony, niebieski lub legendarny szton na akcję.",
+  "DEADLANDS.ChipRule.NoGoingBack": "Bez odwrotu: po wydaniu czerwonego, niebieskiego lub legendarnego sztonu nie można już wydać białego sztonu w tej akcji.",
 
   "DEADLANDS.Wound.Severity.None": "Brak",
   "DEADLANDS.Wound.Severity.Light": "Lekkie",

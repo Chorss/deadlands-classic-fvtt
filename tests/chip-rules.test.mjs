@@ -41,9 +41,10 @@ describe("canSpend", () => {
     }
   });
 
-  it("allows white even when higher already spent (unlimited)", () => {
+  it("blocks white once a red/blue/legend chip has been spent (No Going Back, dlc p.148)", () => {
     const r = canSpend("white", { available: 5, higherAlreadySpent: true });
-    assert.equal(r.can, true);
+    assert.equal(r.can, false);
+    assert.equal(r.reason, "DEADLANDS.ChipRule.NoGoingBack");
   });
 
   it("blocks unknown color", () => {

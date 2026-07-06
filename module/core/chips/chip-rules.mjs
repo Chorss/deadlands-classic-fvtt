@@ -3,6 +3,7 @@
  *
  * Rules verified against dlc p.146-148:
  *   - White: unlimited per action; +1 die per chip. dlc p.147.
+ *   - No Going Back: no more white chips once a red/blue/legend is spent. dlc p.148.
  *   - Red/Blue/Legend: max 1 per action. dlc p.147-148.
  *   - Bust: only Legend (reroll mode) may be spent. dlc p.148.
  *   - Spent chips return to pot. Exception: Legend Reroll → permanent discard. dlc p.26, p.148.
@@ -30,7 +31,9 @@ import { FatePot } from "./fate-pot.mjs";
  * @param {object} context
  * @param {number}  context.available   — how many chips of this color the actor has
  * @param {boolean} [context.isBust]    — true if the roll went bust
- * @param {boolean} [context.higherAlreadySpent] — true if red/blue/legend already spent this action
+ * @param {boolean} [context.higherAlreadySpent] — true if red/blue/legend already spent this
+ *   action. Gates both directions: a second red/blue/legend (max 1/action) and any further white
+ *   chip (No Going Back). dlc p.147-148.
  * @returns {SpendCheck}
  */
 export function canSpend(
@@ -52,6 +55,12 @@ export function canSpend(
   // Red / Blue / Legend: max 1 per action. dlc p.147-148.
   if (color !== "white" && higherAlreadySpent) {
     return { can: false, reason: "DEADLANDS.ChipRule.OnePerAction" };
+  }
+
+  // No Going Back: once a red/blue/legend chip is spent this action, no more
+  // white chips may be spent on it. dlc p.148.
+  if (color === "white" && higherAlreadySpent) {
+    return { can: false, reason: "DEADLANDS.ChipRule.NoGoingBack" };
   }
 
   return { can: true };

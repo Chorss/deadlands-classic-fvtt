@@ -15,6 +15,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **Fate Chips — "No Going Back"** (dlc p.148): `canSpend()` allowed unlimited
+  white chips even after a red, blue, or Legend chip had already been spent on
+  the same action. Added the missing gate and corrected the unit test that had
+  locked in the wrong behavior.
+
 ## [0.3.3] — 2026-07-01
 
 ### Changed

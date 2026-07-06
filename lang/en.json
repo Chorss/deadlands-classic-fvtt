@@ -153,6 +153,7 @@
   "DEADLANDS.ChipRule.NoneLeft": "No chips of that color remaining.",
   "DEADLANDS.ChipRule.BustOnlyLegend": "Only a Legend chip (reroll) can save a bust!",
   "DEADLANDS.ChipRule.OnePerAction": "Only one red, blue, or legend chip per action.",
+  "DEADLANDS.ChipRule.NoGoingBack": "No Going Back: once a red, blue, or Legend chip is spent, no more white chips may be spent this action.",
 
   "DEADLANDS.Wound.Severity.None": "None",
   "DEADLANDS.Wound.Severity.Light": "Light",
