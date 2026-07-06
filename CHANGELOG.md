@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `tools/audit-i18n.mjs` (`npm run audit:i18n`) — flags `DEADLANDS.*` keys used
+  in `module/` or `templates/` that don't exist in `lang/en.json`, the gap that
+  `verify-documenttypes.mjs` (EN/PL parity only) can't catch.
 - GM-proxy for shared-state writes (`module/core/gm-proxy.mjs`): Fate Pot and
   Action Deck mutations are dispatched as pure JSON op descriptors to the
   single active GM client over Foundry's native Queries API (`CONFIG.queries`
@@ -20,6 +23,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Removed the dead `wound-locations-widget.hbs` partial (never rendered — all
+  archetypes use the combat-tab wound list) with its widget-only CSS, and the
+  unused `DEADLANDS.Wound.{Applied,BleedingTick,MaimedLimb,WindRecovered}` and
+  `DEADLANDS.Combat.Initiative.{Label,Deal}` i18n keys.
 - `FatePot.patch` prefers a plain patch object (an updater function can't cross
   the GM query wire). The updater form is still accepted as a **deprecated**
   compat shim — it runs locally against a snapshot and logs a compatibility
@@ -33,6 +40,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **Fate Chips — "No Going Back"** (dlc p.148): `canSpend()` allowed unlimited
+  white chips even after a red, blue, or Legend chip had already been spent on
+  the same action. Added the missing gate and corrected the unit test that had
+  locked in the wrong behavior.
+- **Joker Fate-Chip draws are posse-only** (dlc p.118): a Red or Black Joker
+  drawn by the Marshal's own NPC no longer grants a chip — the Red Joker draw
+  is the drawing player's only, and the Black Joker's chip penalty applies only
+  when a player drew it. Extracted a pure, unit-tested `resolveJokerOutcome()`.
+- **Damage — Armor die-type reduction** (dlc p.136): `rollDamage()` only ever
+  applied Armor as a flat subtraction; the die-type step-down that heavy Armor
+  actually performs (e.g. 3d6 vs Armor 2 → 2d4) was an unimplemented
+  placeholder. It now takes `armorLevel` (die-type/count reduction) and
+  `lightArmorValue` (Light Armor flat subtraction) separately and applies them
+  in the correct order. The pure math is unit-tested against the rulebook's own
+  worked examples.
+- **Localization**: chat-card strings that were hardcoded in English — the
+  Aces tooltip, the "vs TN" total label (trait and Guts rolls), the damage
+  Armor reduction, and the "Marshal" session-draw label — now go through
+  `game.i18n` with EN/PL keys.
 - **Player-initiated chip spends and card deals failed server-side** — world-
   setting writes require `SETTINGS_MODIFY` (default Assistant+) and Combat-flag
   writes are GM-only, so every spend/deal from a player client was rejected by

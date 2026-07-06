@@ -20,7 +20,7 @@ import { grantChips } from "../chips/chip-widget.mjs";
 import { FatePot } from "../chips/fate-pot.mjs";
 import { DEADLANDS } from "../config.mjs";
 import { rollExplodingPool } from "../dice/exploding-roll.mjs";
-import { ActionDeck, quicknessCardCount } from "./action-deck.mjs";
+import { ActionDeck, quicknessCardCount, resolveJokerOutcome } from "./action-deck.mjs";
 
 export class DeadlandsCombat extends Combat {
   /**
@@ -96,37 +96,43 @@ export class DeadlandsCombat extends Combat {
   }
 
   /**
-   * Black Joker effects: discard sleeve, Marshal draws a chip, flag reshuffle.
-   * `dlc` p.118.
+   * Black Joker effects: always discard sleeve + flag reshuffle. The Marshal
+   * draws a chip only when a player-owned combatant drew it — an NPC's own
+   * Black Joker grants the posse nothing. `dlc` p.118.
    * @param {DeadlandsCombatant} combatant
    */
   async _applyBlackJoker(combatant) {
     await combatant.discardSleevedCard();
     await ActionDeck.markReshuffleAtRoundEnd(this);
-    const [chip] = await FatePot.drawBlind(1);
+
+    const isPosseDraw = combatant.actor?.hasPlayerOwner ?? false;
+    const { drawsChip, messageKey } = resolveJokerOutcome("black", isPosseDraw);
+    let chip = null;
+    if (drawsChip) {
+      [chip] = await FatePot.drawBlind(1);
+    }
     await this._postSystemMessage(
-      game.i18n.format("DEADLANDS.Combat.Initiative.BlackJoker", {
-        name: combatant.name,
-        chip: chip ?? "—",
-      })
+      game.i18n.format(messageKey, { name: combatant.name, chip: chip ?? "—" })
     );
   }
 
   /**
-   * Red Joker effect: the combatant draws a random Fate Chip from the pot.
-   * `dlc` p.118.
+   * Red Joker effect: a player-owned combatant draws a random Fate Chip from
+   * the pot. The Marshal's own NPC drawing it grants nothing. `dlc` p.118.
    * @param {DeadlandsCombatant} combatant
    */
   async _applyRedJoker(combatant) {
-    const [chip] = await FatePot.drawBlind(1);
-    if (chip && combatant.actor) {
-      await grantChips(combatant.actor, [chip]);
+    const isPosseDraw = combatant.actor?.hasPlayerOwner ?? false;
+    const { drawsChip, messageKey } = resolveJokerOutcome("red", isPosseDraw);
+    let chip = null;
+    if (drawsChip) {
+      [chip] = await FatePot.drawBlind(1);
+      if (chip && combatant.actor) {
+        await grantChips(combatant.actor, [chip]);
+      }
     }
     await this._postSystemMessage(
-      game.i18n.format("DEADLANDS.Combat.Initiative.RedJoker", {
-        name: combatant.name,
-        chip: chip ?? "—",
-      })
+      game.i18n.format(messageKey, { name: combatant.name, chip: chip ?? "—" })
     );
   }
 

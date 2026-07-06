@@ -129,6 +129,29 @@ export function quicknessCardCount({ bust, raises }) {
   return Math.min(DEADLANDS.MAX_ACTION_CARDS, 1 + raises);
 }
 
+/**
+ * Resolve a Joker's Fate-Chip side effect based on who drew it. `dlc` p.118:
+ * the chip draw is posse-only for both Jokers. A Red Joker drawn by a player
+ * grants that character a chip, but the Marshal's own NPC drawing it grants
+ * nothing. A Black Joker drawn by a player makes the Marshal draw a chip, but
+ * the Marshal's own NPC drawing it grants the posse nothing. The sleeve
+ * discard + round-end reshuffle of a Black Joker happen regardless of side.
+ *
+ * @param {"red"|"black"} joker
+ * @param {boolean} isPosseDraw — true if a player-owned actor drew the Joker
+ * @returns {{ drawsChip: boolean, messageKey: string }}
+ */
+export function resolveJokerOutcome(joker, isPosseDraw) {
+  if (joker === "red") {
+    return isPosseDraw
+      ? { drawsChip: true, messageKey: "DEADLANDS.Combat.Initiative.RedJoker" }
+      : { drawsChip: false, messageKey: "DEADLANDS.Combat.Initiative.RedJokerNPC" };
+  }
+  return isPosseDraw
+    ? { drawsChip: true, messageKey: "DEADLANDS.Combat.Initiative.BlackJoker" }
+    : { drawsChip: false, messageKey: "DEADLANDS.Combat.Initiative.BlackJokerNPC" };
+}
+
 // ── World-state (Foundry-dependent) ─────────────────────────────────────────
 
 const FLAG_SCOPE = "deadlands-classic";

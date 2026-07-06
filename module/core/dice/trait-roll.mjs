@@ -80,7 +80,8 @@ function _paramsFromActor(actor, traitId, options) {
 async function _postChatMessage(result, label, tn, actor) {
   const diceStr = result.dice
     .map((d) => {
-      const ace = d.aces > 0 ? `<span class="dlc-ace" title="Aces: ${d.aces}">⚡</span>` : "";
+      const aceTitle = game.i18n.format("DEADLANDS.Roll.AcesCount", { count: d.aces });
+      const ace = d.aces > 0 ? `<span class="dlc-ace" title="${aceTitle}">⚡</span>` : "";
       return `<span class="dlc-die">${d.total}${ace}</span>`;
     })
     .join(" ");
@@ -105,10 +106,11 @@ async function _postChatMessage(result, label, tn, actor) {
       ? ` <span class="dlc-modifier">${result.modifier > 0 ? "+" : ""}${result.modifier}</span>`
       : "";
 
+  const tnLabel = game.i18n.format("DEADLANDS.Roll.VersusTN", { tn });
   const content = `<div class="dlc-roll-card ${outcomeClass}">
   <header class="dlc-roll-label">${label}</header>
   <div class="dlc-roll-dice">${diceStr}</div>
-  <div class="dlc-roll-total">${result.highest}${modStr} <span class="dlc-tn">vs TN ${tn}</span></div>
+  <div class="dlc-roll-total">${result.highest}${modStr} <span class="dlc-tn">${tnLabel}</span></div>
   <div class="dlc-roll-outcome">${outcomeText}</div>
 </div>`;
 
