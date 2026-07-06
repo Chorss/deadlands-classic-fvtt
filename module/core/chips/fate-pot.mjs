@@ -128,6 +128,18 @@ export function applyFatePotOp(pot, op, rng = Math.random) {
       requireCount(op.n);
       return { pot: { ...pot, [op.color]: Math.max(0, (pot[op.color] ?? 0) - op.n) } };
     }
+    case "spendWithTithe": {
+      // Atomic red-chip spend: return the chip AND (optionally) draw the
+      // Marshal's Tithe in one transform, so a failure can never leave the pot
+      // inflated by the return without the matching draw. dlc p.26, p.148.
+      requireColor(op.color);
+      const returned = { ...pot, [op.color]: (pot[op.color] ?? 0) + 1 };
+      if (!op.tithe) {
+        return { pot: returned };
+      }
+      const { drawn, remaining } = drawBlindPure(returned, 1, rng);
+      return { pot: remaining, drawn };
+    }
     case "reset":
       return { pot: { ...FATE_POT_SEED } };
     default:
@@ -299,6 +311,22 @@ export class FatePot {
   static async marshalTithe() {
     const drawn = await FatePot.drawBlind(1);
     return drawn[0] ?? null;
+  }
+
+  /**
+   * Atomically return a spent chip to the pot and, if `tithe` is set, draw the
+   * Marshal's Tithe — both in a single GM-side write, so a mid-op failure can
+   * never leave the pot holding the returned chip without the matching draw.
+   * dlc p.26, p.148.
+   *
+   * @param {string} color — the spent chip's color
+   * @param {object} [opts]
+   * @param {boolean} [opts.tithe=false] — draw the Marshal's Tithe (red on trait/aptitude)
+   * @returns {Promise<string|null>} the Tithe color drawn, or null
+   */
+  static async spendWithTithe(color, { tithe = false } = {}) {
+    const { drawn } = await dispatchGmOp(FATE_POT_OP, { op: "spendWithTithe", color, tithe });
+    return drawn?.[0] ?? null;
   }
 
   /**

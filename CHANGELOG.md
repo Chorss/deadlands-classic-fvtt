@@ -55,6 +55,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   console. The GM client now runs `assertFatePotOpAuthorized` before applying any
   op — `reset`/`patch` are GM-only, a player's blind draw is capped at one chip
   (Tithe/Joker), and returns/discards can't exceed the per-actor chip cap.
+- **Red-chip spend is now atomic.** Spending a red chip was two separate GM ops
+  (return-to-pool, then the Marshal's Tithe draw); if the second failed, the pot
+  kept the returned chip with no matching draw and a retry inflated it further.
+  A single `spendWithTithe` op does both in one GM-side write.
 
 ## [0.3.3] — 2026-07-01
 

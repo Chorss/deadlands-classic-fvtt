@@ -111,13 +111,11 @@ export async function executeSpend(actor, color, { mode = "normal", rollType = "
     // Permanent discard — "gone forever". dlc p.148.
     await FatePot.discard("legend", 1);
   } else {
-    // All other spends return to pot. dlc p.26.
-    await FatePot.returnToPool(color, 1);
-
-    // Marshal's Tithe: only red, only on trait/aptitude rolls. dlc p.148.
-    if (color === "red" && (rollType === "trait" || rollType === "aptitude")) {
-      marshalDraw = await FatePot.marshalTithe();
-    }
+    // Return the chip to the pot and, for red on a trait/aptitude roll, draw
+    // the Marshal's Tithe — atomically, in one GM write, so a mid-op failure
+    // can't inflate the pot without the matching draw. dlc p.26, p.148.
+    const tithe = color === "red" && (rollType === "trait" || rollType === "aptitude");
+    marshalDraw = await FatePot.spendWithTithe(color, { tithe });
   }
 
   // Deduct from actor.

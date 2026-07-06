@@ -77,6 +77,34 @@ describe("applyFatePotOp", () => {
     });
   });
 
+  describe("spendWithTithe", () => {
+    it("returns the spent chip and draws nothing when tithe is false", () => {
+      const { pot: next, drawn } = applyFatePotOp(pot(), {
+        op: "spendWithTithe",
+        color: "red",
+        tithe: false,
+      });
+      assert.equal(next.red, 4); // 3 + 1 returned
+      assert.equal(drawn, undefined);
+    });
+
+    it("returns the chip and draws one Tithe chip in a single transform", () => {
+      const rng = () => 0; // deterministic — picks the first pool entry (white)
+      const { pot: next, drawn } = applyFatePotOp(
+        pot(),
+        { op: "spendWithTithe", color: "red", tithe: true },
+        rng
+      );
+      assert.equal(next.red, 4); // spent red returned
+      assert.equal(next.white, 4); // one white drawn as the Tithe
+      assert.deepEqual(drawn, ["white"]);
+    });
+
+    it("throws on an unknown color", () => {
+      assert.throws(() => applyFatePotOp(pot(), { op: "spendWithTithe", color: "gold" }), /color/);
+    });
+  });
+
   describe("reset", () => {
     it("returns the starting seed", () => {
       const { pot: next } = applyFatePotOp(pot(), { op: "reset" });
@@ -128,6 +156,12 @@ describe("assertFatePotOpAuthorized", () => {
 
   it("lets a GM draw in bulk", () => {
     assert.doesNotThrow(() => assertFatePotOpAuthorized({ op: "drawBlind", n: 50 }, asGM));
+  });
+
+  it("allows a player's own spendWithTithe", () => {
+    assert.doesNotThrow(() =>
+      assertFatePotOpAuthorized({ op: "spendWithTithe", color: "red", tithe: true }, asPlayer)
+    );
   });
 
   it("caps a player's returnToPool/discard at the chip limit", () => {
