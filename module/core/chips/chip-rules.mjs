@@ -107,28 +107,32 @@ export function applyChipCap(currentChips, incoming) {
  * @returns {Promise<{ color: string, mode: string, marshalDraw: string|null }>}
  */
 export async function executeSpend(actor, color, { mode = "normal", rollType = "trait" } = {}) {
-  const current = actor.system.chips[color] ?? 0;
-  if (current <= 0) {
+  const initial = actor.system.chips[color] ?? 0;
+  if (initial <= 0) {
     throw new Error(`Actor has no ${color} chips to spend.`);
   }
 
-  // Deduct from actor.
-  await actor.update({ [`system.chips.${color}`]: current - 1 });
-
-  // Pot accounting.
+  // Pot accounting first — it routes through the GM proxy and is the step
+  // that can fail (e.g. no GM online). The chip leaves the actor only after
+  // the pot write succeeds, so a rejected pot op can't vanish the chip.
   let marshalDraw = null;
   if (color === "legend" && mode === "reroll") {
     // Permanent discard — "gone forever". dlc p.148.
     await FatePot.discard("legend", 1);
   } else {
-    // All other spends return to pot. dlc p.26.
-    await FatePot.returnToPool(color, 1);
-
-    // Marshal's Tithe: only red, only on trait/aptitude rolls. dlc p.148.
-    if (color === "red" && (rollType === "trait" || rollType === "aptitude")) {
-      marshalDraw = await FatePot.marshalTithe();
-    }
+    // Return the chip to the pot and, for red on a trait/aptitude roll, draw
+    // the Marshal's Tithe — atomically, in one GM write, so a mid-op failure
+    // can't inflate the pot without the matching draw. dlc p.26, p.148.
+    const tithe = color === "red" && (rollType === "trait" || rollType === "aptitude");
+    marshalDraw = await FatePot.spendWithTithe(color, { tithe });
   }
+
+  // Re-read the live count: the GM round trip above can change the actor's
+  // chips mid-flight (e.g. the Marshal grants one, or a Joker draw resolves).
+  // Writing `initial - 1` from the pre-await snapshot would silently clobber
+  // that change, so base the deduction on the current value instead.
+  const current = actor.system.chips[color] ?? 0;
+  await actor.update({ [`system.chips.${color}`]: Math.max(0, current - 1) });
 
   return { color, mode, marshalDraw };
 }
@@ -148,11 +152,15 @@ export async function executeSpend(actor, color, { mode = "normal", rollType = "
  * @returns {Promise<number>} the clamped amount actually spent
  */
 export async function executeWhiteSpend(actor, requested) {
-  const current = actor.system.chips?.white ?? 0;
-  const spend = Math.min(Math.max(0, requested), current);
+  const available = actor.system.chips?.white ?? 0;
+  const spend = Math.min(Math.max(0, requested), available);
   if (spend > 0) {
-    await actor.update({ "system.chips.white": current - spend });
+    // Pot write first (GM-routed, can fail) — see executeSpend.
     await FatePot.returnToPool("white", spend);
+    // Re-read after the GM round trip so a concurrent grant isn't clobbered;
+    // the deduction is a delta off the current value, not the pre-await one.
+    const current = actor.system.chips?.white ?? 0;
+    await actor.update({ "system.chips.white": Math.max(0, current - spend) });
   }
   return spend;
 }

@@ -14,6 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `tools/audit-i18n.mjs` (`npm run audit:i18n`) — flags `DEADLANDS.*` keys used
   in `module/` or `templates/` that don't exist in `lang/en.json`, the gap that
   `verify-documenttypes.mjs` (EN/PL parity only) can't catch.
+- GM-proxy for shared-state writes (`module/core/gm-proxy.mjs`): Fate Pot and
+  Action Deck mutations are dispatched as pure JSON op descriptors to the
+  single active GM client over Foundry's native Queries API (`CONFIG.queries`
+  + `User#query`) and applied there through the existing `KeyedAsyncQueue` —
+  one serialized writer for the whole world. With no GM online the operation
+  is rejected with a localized warning (no local fallback).
 
 ### Changed
 
@@ -21,6 +27,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   archetypes use the combat-tab wound list) with its widget-only CSS, and the
   unused `DEADLANDS.Wound.{Applied,BleedingTick,MaimedLimb,WindRecovered}` and
   `DEADLANDS.Combat.Initiative.{Label,Deal}` i18n keys.
+- `FatePot.patch` prefers a plain patch object (an updater function can't cross
+  the GM query wire). The updater form is still accepted as a **deprecated**
+  compat shim — it runs locally against a snapshot and logs a compatibility
+  warning; prefer `returnToPool` / `discard` / `drawBlind` for read-dependent
+  changes.
+- `ActionDeck.initialize` returns an `{ok, cardsRemaining}` summary instead of
+  the full deck state, so the draw-pile order never crosses the wire.
+- The four copies of the white-chip spend-then-roll block (trait, aptitude, hex,
+  miracle) are consolidated into the single `runWithWhiteSpend` helper, so trait
+  and aptitude rolls now get the same refund-on-failure protection as casts.
 
 ### Fixed
 
@@ -43,6 +59,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Aces tooltip, the "vs TN" total label (trait and Guts rolls), the damage
   Armor reduction, and the "Marshal" session-draw label — now go through
   `game.i18n` with EN/PL keys.
+- **Player-initiated chip spends and card deals failed server-side** — world-
+  setting writes require `SETTINGS_MODIFY` (default Assistant+) and Combat-flag
+  writes are GM-only, so every spend/deal from a player client was rejected by
+  the server (chip vanished from the actor, pot never updated). Now routed
+  through the GM proxy.
+- **Fate Pot / Action Deck cross-client race** — two clients writing the same
+  world setting or combat flag simultaneously could lose a chip or duplicate a
+  dealt card; the GM proxy serializes all writers (closes the follow-up in
+  `docs/notes.md`).
+- Chip spends now write the pot **before** deducting the actor's chips, so a
+  rejected pot write (e.g. no GM online) can no longer vanish a chip; roll
+  flows abort cleanly when the spend fails.
+- **GM-op retries no longer double-apply.** A `User#query` timeout expires only
+  the caller's ack while the GM keeps running the handler, so the old
+  "nothing was changed — try again" message was false and a retry re-applied
+  the op. Each dispatch now carries a stable `opId`, handlers run through an
+  `OpDedupCache` on the GM client (retry collapses onto the first run), and the
+  query is retried once automatically. The `QueryFailed` message no longer
+  claims nothing changed.
+- **Silent GM-local failures now notify.** A failed op on the GM's own client
+  (the `gm.isSelf` path) previously threw with no user feedback, while the chip
+  spend/`tryWhiteSpend` catch blocks assumed the proxy had already notified. The
+  GM-local path now surfaces the same error notification as the remote path.
+- **Fate Pot ops are authorized per requesting user.** Only `reset` was GM-gated;
+  a player could `patch` the whole pot to zero or `drawBlind` it dry from the
+  console. The GM client now runs `assertFatePotOpAuthorized` before applying any
+  op — `reset`/`patch` are GM-only, a player's blind draw is capped at one chip
+  (Tithe/Joker), and returns/discards can't exceed the per-actor chip cap.
+- **Red-chip spend is now atomic.** Spending a red chip was two separate GM ops
+  (return-to-pool, then the Marshal's Tithe draw); if the second failed, the pot
+  kept the returned chip with no matching draw and a retry inflated it further.
+  A single `spendWithTithe` op does both in one GM-side write.
+- **Chip deduction no longer clobbers a concurrent grant.** `executeSpend` /
+  `executeWhiteSpend` wrote the actor's new chip count from a snapshot taken
+  before the GM round trip, so a chip the Marshal granted mid-spend was silently
+  overwritten. The write is now a delta off a fresh read taken right before it.
+- **A failed hex/miracle no longer eats white chips.** Casting a hex or invoking
+  a miracle spent the white chips *before* the GM-routed card deal, so a deal
+  that timed out or found no GM cost the player chips with no roll and leaked an
+  unhandled rejection. Both flows now run through `runWithWhiteSpend`, which
+  refunds the chips and notifies when the follow-up action throws.
+- **Action Deck no longer deals duplicate cards.** When the draw pile ran short
+  mid-round it was topped up with a whole fresh 54-card deck, so a card already
+  in a combatant's hand could be dealt again to another. Per dlc p.116 the deck
+  now recycles its own played (discard) pile back into the draw stock; a full
+  reshuffle is still reserved for the Black Joker. Round end retires the played
+  cards to the discard pile.
 
 ## [0.3.3] — 2026-07-01
 

@@ -6,7 +6,7 @@
 
 ## Context
 
-We are building a **game system** for Foundry VTT from scratch, supporting **Deadlands Classic 20th Anniversary Edition** (Weird West, 1876). The repository currently holds only metadata files (README, LICENSE, system.json, issue templates) — no code. We have two reference projects in the repo under `vendor/` (`vendor/DeadlandsClassic/` — Dulux-Oz, newer; `vendor/Deadlands-Classic/` — RhombusWeasel, older v9) plus the original rulebook PDF (413 pages). We do not copy code from the references (different licenses, different assumptions), but we learn from their patterns.
+We are building a **game system** for Foundry VTT from scratch, supporting **Deadlands Classic 20th Anniversary Edition** (Weird West, 1876). The repository now holds a full working system (~65 `.mjs` files under `module/`, plus templates, styles, compendium packs, and unit tests). We have two reference projects in the repo under `vendor/` (`vendor/DeadlandsClassic/` — Dulux-Oz, newer; `vendor/Deadlands-Classic/` — RhombusWeasel, older v9) plus the original rulebook PDF (413 pages). We do not copy code from the references (different licenses, different assumptions), but we learn from their patterns.
 
 **Why now, what for:** Previous attempts are abandoned or limited to older Foundry versions. We want a modern, community-developed system built on the V14+ API (TypeDataModel, ApplicationV2, documentTypes, ActiveEffect), released under MIT.
 
@@ -45,15 +45,9 @@ Each archetype = a **self-contained folder** with a manifest, data model, sheet,
 
 ```
 module/archetypes/
-├── _base/                       # Shared base
+├── _base/                       # Shared base (per-archetype logic lives in each archetype's mechanics.mjs)
 │   ├── base-character-data.mjs  # Traits, aptitudes, wounds, wind, chips, edges/hindrances
-│   ├── base-character-sheet.mjs # Shared sheet (tabs: Traits/Combat/Gear/Bio)
-│   └── mixins/                  # Composable mechanics modules
-│       ├── poker-caster.mjs     # For Huckster
-│       ├── ritual-caster.mjs    # For Shaman
-│       ├── miracle-invoker.mjs  # For Blessed
-│       ├── gizmo-builder.mjs    # For Mad Scientist
-│       └── harrowed-overlay.mjs # Harrowed — applicable to any PC
+│   └── base-character-sheet.mjs # Shared sheet (tabs: Traits/Combat/Gear/Bio)
 ├── cowboy/
 │   ├── manifest.mjs             # ArchetypeRegistry.register({...})
 │   ├── data.mjs                 # CowboyDataModel extends BaseCharacterDataModel
@@ -61,7 +55,7 @@ module/archetypes/
 │   ├── templates/cowboy.hbs     # (or reuse base)
 │   └── lang/{en,pl}.json        # Archetype-specific keys
 ├── huckster/
-│   ├── manifest.mjs             # Registers + wires in the poker-caster mixin
+│   ├── manifest.mjs             # Registers the archetype + the hex item type
 │   ├── data.mjs                 # + hexslingin' deck slot, backlash counter
 │   ├── sheet.mjs                # + "Hexes" tab with a "Cast" button
 │   ├── mechanics.mjs            # Cast-hex workflow: roll → draw → evaluate poker hand
@@ -158,13 +152,13 @@ export class ArchetypeRegistry {
 - `hindrance` — `value` (points gained), `category`, `effects[]`
 - `ammo` — tied to `ammoType`, tracked on the sheet (Ammo One/Two/Three as on the original sheet)
 
-### 3.6 Archetype-specific item types (in the archetype folders)
+### 3.6 Archetype-specific item types (data models in `core/items/`)
 - `hex` (Huckster) — `hand` (min poker hand), `trait`, `speed`, `duration`, `range`, `effect`
 - `miracle` (Blessed) — `tn`, `speed`, `duration`, `range`, `effect`, `sinSeverity`
 - `favor` (Shaman) — `appeasement`, `ritualType[]`, `duration`, `range`, `effect`
 - `gizmo` (Mad Scientist) — `theoryText`, `blueprintHand`, `constructionTN`, `reliability`, `malfunctionEffect`
 
-Each item type is registered through `ItemRegistry`, analogously to archetypes.
+The data models for these types live in `module/core/items/*.mjs` (`hex-data.mjs`, `miracle-data.mjs`, `favor-data.mjs`, `gizmo-data.mjs`); each archetype's manifest registers its type through `ItemRegistry`, while the `documentTypes` entries are declared statically in `system.json`.
 
 ---
 
@@ -180,13 +174,18 @@ deadlands-classic-fvtt/
 │   │   ├── item-registry.mjs
 │   │   ├── overlay-registry.mjs         # Harrowed & future overlays
 │   │   ├── config.mjs                   # DEADLANDS config obj (constants)
+│   │   ├── utils.mjs                    # Shared helpers (toPascal, …)
+│   │   ├── async-queue.mjs              # KeyedAsyncQueue — Fate Pot / Action Deck mutex
+│   │   ├── font-settings.mjs            # Display-font picker (system setting)
 │   │   ├── dice/
 │   │   │   ├── exploding-roll.mjs
 │   │   │   ├── trait-roll.mjs
 │   │   │   ├── damage-roll.mjs
+│   │   │   ├── guts-check.mjs
 │   │   │   └── poker-hand-evaluator.mjs
 │   │   ├── cards/
 │   │   │   ├── action-deck.mjs
+│   │   │   ├── combatant-hand-dialog.mjs
 │   │   │   ├── deadlands-combat.mjs     # Overrides Combat
 │   │   │   └── deadlands-combatant.mjs
 │   │   ├── chips/
@@ -200,30 +199,26 @@ deadlands-classic-fvtt/
 │   │   ├── documents/                   # Core doc overrides
 │   │   │   ├── deadlands-actor.mjs
 │   │   │   └── deadlands-item.mjs
-│   │   └── items/                       # Shared item types
-│   │       ├── weapon-data.mjs
-│   │       ├── armor-data.mjs
-│   │       ├── gear-data.mjs
+│   │   └── items/                       # Item-type data models
+│   │       ├── core-items-manifest.mjs  # Registers weapon/armor/gear/ammo
 │   │       ├── edge-data.mjs
 │   │       ├── hindrance-data.mjs
-│   │       └── ammo-data.mjs
-│   ├── archetypes/
-│   │   ├── _base/
-│   │   │   ├── base-character-data.mjs
-│   │   │   ├── base-character-sheet.mjs
-│   │   │   └── mixins/…
-│   │   ├── cowboy/
-│   │   ├── huckster/
-│   │   ├── shaman/
-│   │   ├── blessed/
-│   │   ├── mad-scientist/
-│   │   ├── _overlays/harrowed/
-│   │   ├── npc/                         # GM-controlled full NPC
-│   │   └── mook/                        # Simplified grunt
-│   └── ui/
-│       ├── fate-chip-widget.mjs
-│       ├── action-deck-tracker.mjs
-│       └── wound-locations-widget.mjs
+│   │       ├── hex-data.mjs
+│   │       ├── miracle-data.mjs
+│   │       ├── favor-data.mjs
+│   │       └── gizmo-data.mjs
+│   └── archetypes/
+│       ├── _base/
+│       │   ├── base-character-data.mjs
+│       │   └── base-character-sheet.mjs
+│       ├── cowboy/
+│       ├── huckster/
+│       ├── shaman/
+│       ├── blessed/
+│       ├── mad-scientist/
+│       ├── _overlays/harrowed/
+│       ├── npc/                         # GM-controlled full NPC
+│       └── mook/                        # Simplified grunt
 ├── templates/
 │   ├── actor/                           # Base + per-archetype overrides
 │   │   ├── parts/                       # Reusable HBS partials (traits, aptitudes, chips, wounds)
@@ -247,7 +242,7 @@ deadlands-classic-fvtt/
 │   ├── action-deck/                     # 54-card preset deck (Fate Pot is NOT a pack — it's a world setting, §3.3)
 │   ├── edges-srd/                       # Edge names + mechanical effects (no flavor copy)
 │   ├── hindrances-srd/
-│   ├── aptitudes/                       # Pre-populated aptitude list
+│   ├── hexes-srd/                       # Example hexes (mechanics only, no flavor copy)
 │   ├── hit-location/                    # RollTable
 │   └── archetype-examples/              # Example NPCs, one per archetype
 ├── icons/                               # SVG (cards, chips, wound severity, archetype icons)
@@ -257,9 +252,11 @@ deadlands-classic-fvtt/
 │   ├── architecture.md                  # registry pattern + contract (exists; diagram + SemVer in Phase 14)
 │   ├── v14-api-notes.md                 # V14 patterns (exists)
 │   ├── mechanics-reference.md           # mechanics paraphrase + page citations (exists)
-│   └── extending-archetypes.md          # How to add a new archetype (to be created)
+│   ├── extending-archetypes.md          # How to add a new archetype
+│   └── migration-policy.md              # World-data migration policy
 ├── tools/
-│   └── verify-documenttypes.mjs         # Sanity-check script: documentTypes == registered archetypes
+│   ├── verify-documenttypes.mjs         # Sanity-check script: documentTypes == registered archetypes
+│   └── audit-css.mjs                    # dlc-* class coverage audit (templates ↔ styles)
 ├── .github/
 └── CHANGELOG.md, README.md, CONTRIBUTING.md, LICENSE, SECURITY.md, CODE_OF_CONDUCT.md
 ```
@@ -395,6 +392,9 @@ Each phase ends with a **working, testable** system. After each file in a phase:
 - MCP servers available: after a session restart and approval, `mcp__playwright__*` and `mcp__context7__*` are visible in the tool list
 
 ### Phase 1 — Core foundations: config + registries (5-7 files)
+
+**Status:** ✅ **CLOSED** (shipped in 0.1.0).
+
 1. `module/core/config.mjs` — DEADLANDS constants: `TRAITS`, `APTITUDES` (grouped by trait), `CHIP_COLORS`, `WOUND_SEVERITIES`, `HIT_LOCATIONS`, `TNS`, `CARD_RANKS`, `CARD_SUITS`.
 2. `module/core/archetype-registry.mjs` — the Registry class.
 3. `module/core/item-registry.mjs` — analogously for items.
@@ -406,6 +406,9 @@ Each phase ends with a **working, testable** system. After each file in a phase:
 **Test:** the console `game.deadlandsClassic.archetypes.all()` returns `[]`. The system loads without errors.
 
 ### Phase 2 — Base character data + sheet (6-8 files)
+
+**Status:** ✅ **CLOSED** (shipped in 0.1.0).
+
 1. `module/archetypes/_base/base-character-data.mjs` — a TypeDataModel with all the common fields: 10 traits (each: `dieCount, dieType, modifier, aptitudes{}`), wounds per location (severity), wind (`value/max`), chips, grit, pace, size, bounty, biography, edges/hindrances list (items). **From the start:** `static migrateData(source)` (a stub) + `migrationVersion` in world settings — so that later schema changes (0.1→0.2) don't break existing worlds (see §8, migration risk).
 2. `module/archetypes/cowboy/data.mjs` — inherits from base, no extra schema.
 3. `module/archetypes/cowboy/manifest.mjs` — register.
@@ -418,6 +421,9 @@ Each phase ends with a **working, testable** system. After each file in a phase:
 **Test:** create an actor of type `cowboy`, the sheet opens, displays all 10 traits and 30+ aptitudes. Editing die/dieCount saves.
 
 ### Phase 3 — Core dice engine (3 files)
+
+**Status:** ✅ **CLOSED** (shipped in 0.1.0).
+
 1. `module/core/dice/exploding-roll.mjs` — the function `rollExplodingPool({dieCount, dieType, modifier, tn})`, postprocessing for bust/raises.
 2. `module/core/dice/trait-roll.mjs` — sends to chat with a result card (success/raises/bust).
 3. `module/core/dice/damage-roll.mjs` — integration with armor reduction.
@@ -425,6 +431,9 @@ Each phase ends with a **working, testable** system. After each file in a phase:
 **Test:** from the console: `game.deadlandsClassic.dice.rollTrait({dieCount: 4, dieType: "d8", tn: 5})` returns a result, a chat message appears. A max (8) explodes.
 
 ### Phase 4 — Actor sheet ↔ dice integration (2-3 files)
+
+**Status:** ✅ **CLOSED** (shipped in 0.1.0).
+
 1. Modify `base-character-sheet.mjs` — a trait/aptitude click listener → an aptitude-selection dialog → `trait-roll`.
 2. `templates/dialogs/trait-roll-dialog.hbs` — dialog: choosing chips (white/red/blue/legend), modifiers, TN.
 3. `styles/chips.css` — the chip-spend widget.
@@ -434,6 +443,9 @@ Each phase ends with a **working, testable** system. After each file in a phase:
 > **Dependency (resolved after the audit):** Phase 4 spends from the **player's own chips** (`system.chips`, available since Phase 2) — it does NOT require the pool. The central Fate Pot + the `canSpend` validation (limit 1/action red/blue, bust-block) come in Phase 5. That's why the Phase 4 test is achievable within the phase (the dialog for non-white chips can be disabled/stubbed at this stage).
 
 ### Phase 5 — Fate Pot & chip system (3-4 files)
+
+**Status:** ✅ **CLOSED** (shipped in 0.1.0).
+
 1. `module/core/chips/fate-pot.mjs` — the `FatePot` class over a **world setting** (`game.settings`, 4 integers `{white,red,blue,legend}`); registering the setting in `init`, the starting seed in `ready` (decision D2 — NOT Cards, NOT Actor).
 2. `module/core/chips/chip-widget.mjs` — a UI component in the sheet.
 3. `module/core/chips/chip-rules.mjs` — `canSpend(color, context)` (limit 1/action red/blue, bust-block, etc.).
@@ -443,6 +455,9 @@ Each phase ends with a **working, testable** system. After each file in a phase:
 **Test:** the "Draw Fate" command in the GM menu hands out 3 random chips to each PC. The counter in the sheets updates. You can spend a chip on a roll (white → +1 die to the pool).
 
 ### Phase 6 — Wounds, wind, hit locations (5-6 files)
+
+**Status:** ✅ **CLOSED** (shipped in 0.1.0).
+
 1. `module/core/wounds/wound-track.mjs` — the `WoundTrack` helper: `addWound(actor, location, severity)`, `healWound(...)`, the cumulative modifier computed in `prepareDerivedData` (code, not 8 independent AEs — §8). **Consumer:** extend `trait-roll` (Phase 3/4) with a `woundModifier` input so that wounds actually lower rolls — without that step nothing reads the wound ActiveEffects.
 2. `module/core/wounds/hit-location.mjs` — a rolltable helper + UI.
 3. `module/core/wounds/wind-calculator.mjs` — computes `wind.max` from Vigor+Spirit die values.
@@ -453,6 +468,9 @@ Each phase ends with a **working, testable** system. After each file in a phase:
 **Test:** roll damage from a weapon, the system draws a location, applies a wound of the appropriate severity. Wind max reloads after a Vigor/Spirit change.
 
 ### Phase 6A — Guts / fear checks (2-3 files) — THE CORE OF HORROR
+
+**Status:** ✅ **CLOSED** (shipped in 0.1.0).
+
 The fear mechanic was a gap in the original plan (added after the 2026-06-17 audit). Without it the system runs a generic Western, not Deadlands. **First verify the mechanic in `dlc` via `pdf-reference-lookup`** (the fear / Fear Level / Guts chapter) — don't code from memory.
 1. `module/core/dice/guts-check.mjs` — `gutsCheck(actor, {fearLevel, terror})`: a Guts roll (Spirit aptitude) vs TN from the fear level; postprocessing for the failure level.
 2. Integration: the effects of a failed Guts (e.g., loss of Wind, in the extreme a fear state as an ActiveEffect/condition on the token HUD).
@@ -461,11 +479,17 @@ The fear mechanic was a gap in the original plan (added after the 2026-06-17 aud
 **Test:** `gutsCheck(actor, {fearLevel: 3})` → a Guts roll, chat shows success/failure and the effect; a failed check subtracts Wind / applies a state.
 
 ### Phase 7 — NPC + Mook archetypes (3-4 files)
+
+**Status:** ✅ **CLOSED** (shipped in 0.1.0).
+
 Simpler than PCs. Mook = 1 wound track instead of 8; NPC = full but without chips.
 
 **Test:** create an `npc` and a `mook` actor; the NPC sheet opens with full traits but no chip widget; the mook has a single wound track. A trait roll works for both.
 
 ### Phase 8 — Action Deck & Combat (5-7 files)
+
+**Status:** ✅ **CLOSED** (shipped in 0.1.0).
+
 1. `module/core/cards/action-deck.mjs` — a wrapper around the Cards API.
 2. `module/core/cards/deadlands-combat.mjs` — `class DeadlandsCombat extends Combat` with `rollInitiative` dealing cards.
 3. `module/core/cards/deadlands-combatant.mjs` — tracks the hand, the sleeved card.
@@ -476,6 +500,9 @@ Simpler than PCs. Mook = 1 wound track instead of 8; NPC = full but without chip
 **Test:** start combat with 2 PCs + 2 mooks, the system deals cards (a Quickness roll vs TN 5 → 1 card + 1 per success and raise, max 5). Round-by-round: play the highest card. Red Joker → Fate Chip reward. Black Joker → penalty.
 
 ### Phase 9 — Huckster archetype + hexes (6-8 files)
+
+**Status:** ✅ **CLOSED** (shipped in 0.1.0).
+
 1. `module/archetypes/huckster/data.mjs` — extends base + `hexesLearned`, `lastDraw`, `backlashPending`.
 2. `module/archetypes/huckster/sheet.mjs` — adds a "Hexes" tab.
 3. `module/archetypes/huckster/mechanics.mjs` — `castHex(hex)`: roll hexslingin' → success → draw N cards → evaluate poker hand → apply effect.
@@ -488,6 +515,9 @@ Simpler than PCs. Mook = 1 wound track instead of 8; NPC = full but without chip
 **Test:** a PC with a Huckster sheet has a "Hexes" tab. Click "Cast Soul Blast" → a hexslingin' roll → a poker simulation → chat shows the result with the applied effect. Backlash if a Black Joker.
 
 ### Phase 10 — Blessed + Shaman + Mad Scientist (3 × 4-5 files)
+
+**Status:** ✅ **CLOSED** (shipped in 0.1.0).
+
 Analogous to Huckster, each in a separate folder. Archetype-specific mechanics:
 - **Blessed** — `miracles.mjs`: a Faith roll vs. the miracle TN; a sin tracker (loss of Faith).
 - **Shaman** — `favors.mjs`: a ritual roll → appeasement points → spend on a favor.
@@ -496,6 +526,9 @@ Analogous to Huckster, each in a separate folder. Archetype-specific mechanics:
 **Test:** each of the 3 archetypes has its own tab; after one example act of power (miracle/favor/gizmo) it runs the full flow to a chat-card. Blessed: the sin tracker grows after a failure. Shaman: appeasement accumulates and can be spent. Mad Scientist: a gizmo gets a reliability and a d20 roll on use.
 
 ### Phase 11 — Harrowed overlay (3-4 files)
+
+**Status:** ✅ **CLOSED** (shipped in 0.2.0).
+
 1. `module/archetypes/_overlays/harrowed/manifest.mjs` — `OverlayRegistry.register`.
 2. `data-schema.mjs` — extra fields: `isHarrowed: bool`, `dominion: {spiritControl, lastRoll}`, `harrowedPowers: []`, `countingCoup: {tally, deeds}`.
 3. `sheet-tab.mjs` — injects a "Harrowed" tab into the base sheet when `isHarrowed=true`.
@@ -504,6 +537,9 @@ Analogous to Huckster, each in a separate folder. Archetype-specific mechanics:
 **Test:** a PC with Harrowed activated has an extra tab with a dominion check. The dominion roll triggers **at the start of a session** (per game session, during sleep — NOT at the start of combat; `dlc` p.195/253).
 
 ### Phase 12 — Edges, Hindrances, Aptitudes content packs (2-3 files + data)
+
+**Status:** ✅ **CLOSED** (shipped in 0.2.0).
+
 1. Pack `packs/edges-srd/` — ~30 edges with names, costs, a short mechanical description (no copy-paste flavor from the PDF).
 2. `packs/hindrances-srd/` — ~40 hindrances.
 3. `packs/aptitudes/` — a list of aptitudes as JournalEntries or a RollTable to ease selection (optional).
@@ -514,11 +550,17 @@ Analogous to Huckster, each in a separate folder. Archetype-specific mechanics:
 **Test:** the pack builds via `fvtt package pack` from `packs/_source/`; after import, adding the "Level-Headed" edge to a PC adds a flag modifying initiative (a hook), and "Nerves o' Steel" adds an AE +1 to Guts.
 
 ### Phase 13 — Localization completion (full EN/PL) (1-2 files)
+
+**Status:** ✅ **CLOSED** (shipped in 0.3.0).
+
 A pass through all `localize()` calls and making sure the keys are in both files. **PL: we adopt the canon of the official MAG translation ("Martwe Ziemie", 2001) — we do NOT invent terms.** Sources in `deadlands-rules-ref`: `pg-pl` (core + archetypes), `char-sheet-pl` (sheet field labels → direct equivalents for `lang/pl.json`), the per-archetype companions (`hnh-pl`, `ghost-dancers-pl`, `law-dogs-pl`, `fb-pl`). Canonical terms: "Cecha" (Trait), "Umiejętność" (Aptitude), **"Szton Losu"** (Fate Chip; Legend = "Szton-Legenda"; colors "biały/czerwony/niebieski"), archetypes "Kowboj / **Kanciarz** (Huckster) / Szaman / **Świątobliwy** (Blessed) / Szalony Naukowiec / **Wygrzebany** (Harrowed)". Magic: "Kantowanie" (Hexslingin'), "Rytuały" (Rituals), "Przysługi" (Favors).
 
 **Test:** switching the language to `pl` swaps all visible strings (zero `DEADLANDS.*` keys in the DOM); the terms match the MAG canon; `verify-documenttypes` confirms EN/PL key parity.
 
 ### Phase 14 — Polish, release, CI (4-6 files)
+
+**Status:** ✅ **CLOSED** (delivered across 0.1.0-0.3.0 — `.github/workflows/ci.yml` in 0.1.0, tooling & docs in 0.2.0, the a11y pass in 0.3.0).
+
 1. ~~`.github/workflows/release.yml`~~ **ALREADY EXISTS** (built in the background of Phase 0.B; tag→ZIP→Release with a version guard). Here just end-to-end verification on a real tag. Add `.github/workflows/ci.yml` (lint + `node --test` + `verify-documenttypes`) — **without** Foundry E2E (see §8: CI can't run a licensed Foundry).
 2. `tools/verify-documenttypes.mjs` — extend: whether `system.json documentTypes` matches `ArchetypeRegistry.all()` + `ItemRegistry.all()`.
 3. `docs/architecture.md` — **extend the existing one** with a diagram + a description of the registry pattern; **document the registry/hooks/`game.deadlandsClassic` as a stable API with a SemVer policy** (extension modules depend on it — §8).
@@ -533,7 +575,7 @@ A pass through all `localize()` calls and making sure the keys are in both files
 ## 6. Important files to modify/create (list)
 
 **Exists in the repo after Phase 0.A (done ✅):**
-- `system.json` ✅ — V14 + `type: "system"` + `documentTypes` (7 actors, 6 items) + esmodules/styles/languages/empty packs
+- `system.json` ✅ — V14 + `type: "system"` + `documentTypes` (7 actors, 6 items at the time; now 7 actors, 10 items — `hex/miracle/favor/gizmo` added in Phases 9-10) + esmodules/styles/languages/empty packs
 - `README.md` ✅ — V14-only, Classic-only v1, feature list with Legend chip/Mad Scientist/Harrowed, 8 locations, MIT badge
 - `.gitignore` ✅ — added `.claude/settings.local.json`, `.claude/cache/`, `.claude/logs/`
 - `lang/en.json` + `lang/pl.json` ✅ — 15 paired starting keys
@@ -557,16 +599,14 @@ A pass through all `localize()` calls and making sure the keys are in both files
 - `.gitignore` ✅ — Claude + Playwright artifacts (`test-results/`, `playwright-report/`, `.playwright/`)
 - Memory: `architecture.md` ✅ (new), `dev_workflow.md` ✅ (new), update `game_mechanics.md` + `v14_api_notes.md`, `MEMORY.md` index extended
 
-**Pending in Phase 0.B nice-to-have (background of Phases 1-3 — ⏳ still open):**
-- The remaining slash commands: `/add-archetype`, `/add-item-type`, `/pdf`, `/phase-test`, `/foundry-link`, `/new-phase`
-- The remaining subagents: `foundry-v14-checker`, `archetype-scaffolder`, `foundry-test-runner`
-- `docs/claude-workflow.md`
-- `.github/workflows/ci.yml`
+**Phase 0.B nice-to-have — current state:**
+- Done ✅: `/add-archetype`, `/new-phase`, the `archetype-scaffolder` subagent, the `foundry-v14-checker` subagent, `.github/workflows/ci.yml`
+- Still open ⏳ (no real need arose): `/add-item-type`, `/pdf`, `/phase-test`, `/foundry-link`, the `foundry-test-runner` subagent, `docs/claude-workflow.md`
 
-**Doesn't exist (will be created in later phases):**
-- System code (Phases 1-13): all files under `module/core/`, `module/archetypes/`, `module/ui/`, `templates/`, the remaining `styles/*.css`, the compendium `packs/` (+ `packs/_source/` and the `fvtt package pack` build), the remaining tests
-- Docs (Phase 14): `docs/extending-archetypes.md`, `docs/migration-policy.md` (`docs/architecture.md`, `v14-api-notes.md`, `mechanics-reference.md` already exist)
-- CI test: `.github/workflows/ci.yml` — still pending (nice-to-have)
+**Created in later phases (✅ all exist now):**
+- System code (Phases 1-13): `module/core/`, `module/archetypes/`, `templates/`, `styles/*.css`, the compendium `packs/` (action-deck, archetype-examples, edges-srd, hexes-srd, hindrances-srd, hit-location; + `packs/_source/` and the `fvtt package pack` build), the unit tests. (`module/ui/` was never created and never will be — the widgets live in `module/core/`, e.g. `core/chips/chip-widget.mjs`.)
+- Docs (Phase 14): `docs/extending-archetypes.md` ✅, `docs/migration-policy.md` ✅ (`docs/architecture.md`, `v14-api-notes.md`, `mechanics-reference.md` existed earlier)
+- CI: `.github/workflows/ci.yml` ✅ (shipped in 0.1.0)
 
 **Created outside the original plan (✅, reconciled in §5 Phase 14):**
 - `.github/workflows/release.yml` ✅ — the full tag→ZIP→Release workflow (originally planned for Phase 14)
@@ -676,6 +716,9 @@ If the whole scenario passes without manual hacking — v0.1 is ready.
 | **0.1.0** | Phases 0-7 (core system, all base archetypes, Guts, no arcana) | ~28-35 coding sessions¹ |
 | **0.2.0** | Phases 8-12 (action deck, arcana, overlay, content packs) | +22-28 sessions |
 | **0.3.0** | Polish, CI, docs (phase 14), playtest fixes | +5 sessions |
+| **0.3.1** | Offline display-font picker, full CSS layer, `tools/audit-css.mjs` | shipped 2026-06-30 |
+| **0.3.2** | Release-tooling fixes (Biome format of `system.json`, `biome check` in pre-commit) | shipped 2026-07-01 |
+| **0.3.3** | Bug-audit hotfixes (Dominion Roll, stale chip-spend + race conditions, guts wound-pool, Harrowed tab) | shipped 2026-07-01 |
 | **1.0.0** | Stable, a 3-month bug-hunt, full PL localization (MAG canon) | +X |
 | **1.x** | Classic supplements (Smith & Robards, Book o' the Dead, etc.) as separate modules |
 | **2.0** | Hell on Earth Classic as a separate fork or module |
@@ -688,17 +731,8 @@ If the whole scenario passes without manual hacking — v0.1 is ready.
 
 ## 11. Immediate next step
 
-**Phase 0 closed ✅** (part A + part B essentials + tests/ stub + rules + MCP). The `phase-1/core-foundations` branch is active.
+**All phases 0-14 are closed ✅.** The system is at **0.3.3** on `main` (per-phase status markers in §5, release history in §10).
 
-**Active phase: Phase 1** — Core foundations (config + registries + base Actor/Item). Start with `module/core/config.mjs` (DEADLANDS constants).
+**Current focus: bug-hunting and playtesting toward 1.0.0.** Real play sessions surface the kind of defects the 0.3.x releases have been fixing (see the 0.3.x entries in `CHANGELOG.md`) — rule-fidelity drift, stale-state UI bugs, async race conditions. The working loop now is: playtest → issue → hotfix branch → PR → patch release.
 
-The file order for Phase 1:
-1. `module/core/config.mjs`
-2. `module/core/archetype-registry.mjs`
-3. `module/core/item-registry.mjs`
-4. `module/core/overlay-registry.mjs`
-5. `module/core/documents/deadlands-actor.mjs`
-6. `module/core/documents/deadlands-item.mjs`
-7. Update `module/deadlands-classic.mjs` — wiring in the registries
-
-Phase 0.B nice-to-haves (the remaining slash commands, subagents, `docs/claude-workflow.md`, `.github/workflows/ci.yml`) are added in the background during Phases 1-3, **when a real need arises** — don't get ahead of it.
+The Phase 0.B nice-to-haves that never proved necessary (`/add-item-type`, `/pdf`, `/phase-test`, `/foundry-link`, the `foundry-test-runner` subagent, `docs/claude-workflow.md`) remain open — added only **when a real need arises**, not ahead of it.
