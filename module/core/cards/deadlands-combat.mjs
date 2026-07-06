@@ -147,7 +147,11 @@ export class DeadlandsCombat extends Combat {
    * @override
    */
   async nextRound() {
+    // Collect the cards played this round before clearing hands, so they can be
+    // retired to the discard pile (unless a full reshuffle supersedes it).
+    const played = [];
     for (const combatant of this.combatants) {
+      played.push(...(combatant.hand ?? []));
       if (typeof combatant.clearHand === "function") {
         await combatant.clearHand();
       }
@@ -155,6 +159,10 @@ export class DeadlandsCombat extends Combat {
     const reshuffled = await ActionDeck.maybeReshuffleAtRoundEnd(this);
     if (reshuffled) {
       await this._postSystemMessage(game.i18n.localize("DEADLANDS.Combat.Round.Reshuffle"));
+    } else {
+      // No Black-Joker reshuffle — retire this round's cards to the discard pile
+      // so a later mid-round exhaustion recycles them, not a fresh deck. dlc p.116.
+      await ActionDeck.discard(this, played);
     }
     return super.nextRound();
   }

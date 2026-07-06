@@ -16,6 +16,7 @@
 
 import { KeyedAsyncQueue } from "../async-queue.mjs";
 import { DEADLANDS } from "../config.mjs";
+import { dispatchGmOp, registerGmOp } from "../gm-proxy.mjs";
 
 // ── Pure helpers (no Foundry dependency — safe to call from unit tests) ──────
 
@@ -132,26 +133,147 @@ export function quicknessCardCount({ bust, raises }) {
 
 const FLAG_SCOPE = "deadlands-classic";
 const FLAG_KEY = "deckState";
+const ACTION_DECK_OP = `${FLAG_SCOPE}.actionDeckOp`;
 
 /**
- * @typedef {{ drawPile: object[], reshuffleAtRoundEnd: boolean }} DeckState
+ * @typedef {{ drawPile: object[], discardPile: object[], reshuffleAtRoundEnd: boolean }} DeckState
  */
+
+/** @returns {DeckState} a fresh shuffled 54-card deck state */
+function freshDeckState(rng) {
+  return {
+    drawPile: shuffleDeck(buildFullDeck(), rng),
+    discardPile: [],
+    reshuffleAtRoundEnd: false,
+  };
+}
+
+/**
+ * Deal `count` cards, recycling this deck's discard pile into the draw stock if
+ * the draw pile runs short (never a fresh second deck — that would deal a
+ * duplicate of a card already in play). `dlc` p.116.
+ * @param {DeckState} base
+ * @param {number} count
+ * @param {() => number} rng
+ * @returns {{ state: DeckState, result: { ok:true, dealt:object[], cardsRemaining:number } }}
+ */
+function dealFromDeck(base, count, rng) {
+  const drawPile = [...base.drawPile];
+  let discardPile = [...(base.discardPile ?? [])];
+  if (drawPile.length < count && discardPile.length > 0) {
+    drawPile.push(...shuffleDeck(discardPile, rng));
+    discardPile = [];
+  }
+  const dealt = drawPile.splice(0, count);
+  return {
+    state: { ...base, drawPile, discardPile },
+    result: { ok: true, dealt, cardsRemaining: drawPile.length },
+  };
+}
+
+/**
+ * Apply one wire-protocol operation to a deck state. Pure — shared by the
+ * GM-side query handler and unit tests. Returns the (possibly unchanged)
+ * state plus a JSON-safe result that never exposes the draw-pile order.
+ *
+ * @param {DeckState|null} state — current state, or null when uninitialized
+ * @param {{ op:"initialize" } | { op:"deal", count:number } |
+ *          { op:"discard", cards:object[] } |
+ *          { op:"markReshuffle" } | { op:"maybeReshuffle" }} op
+ * @param {() => number} [rng] — injectable for deterministic tests
+ * @returns {{ state: DeckState|null,
+ *             result: { ok:true, dealt?:object[], reshuffled?:boolean, cardsRemaining:number } }}
+ */
+export function applyDeckOp(state, op, rng = Math.random) {
+  switch (op?.op) {
+    case "initialize": {
+      const next = state ?? freshDeckState(rng);
+      return { state: next, result: { ok: true, cardsRemaining: next.drawPile.length } };
+    }
+    case "deal": {
+      if (!Number.isInteger(op.count) || op.count <= 0) {
+        throw new Error(`Deal count must be a positive integer, got "${op.count}".`);
+      }
+      return dealFromDeck(state ?? freshDeckState(rng), op.count, rng);
+    }
+    case "discard": {
+      // Retire played cards to the discard pile so a later mid-round
+      // exhaustion can recycle them. `dlc` p.116.
+      const base = state ?? freshDeckState(rng);
+      const cards = Array.isArray(op.cards) ? op.cards : [];
+      const next = { ...base, discardPile: [...(base.discardPile ?? []), ...cards] };
+      return { state: next, result: { ok: true, cardsRemaining: next.drawPile.length } };
+    }
+    case "markReshuffle": {
+      const base = state ?? freshDeckState(rng);
+      const next = { ...base, reshuffleAtRoundEnd: true };
+      return { state: next, result: { ok: true, cardsRemaining: next.drawPile.length } };
+    }
+    case "maybeReshuffle": {
+      if (!state?.reshuffleAtRoundEnd) {
+        return {
+          state,
+          result: { ok: true, reshuffled: false, cardsRemaining: state?.drawPile.length ?? 0 },
+        };
+      }
+      const next = freshDeckState(rng);
+      return {
+        state: next,
+        result: { ok: true, reshuffled: true, cardsRemaining: next.drawPile.length },
+      };
+    }
+    default:
+      throw new Error(`Unknown Action Deck op "${op?.op}".`);
+  }
+}
 
 /**
  * Manages the Action Deck as a flag on the active Combat document.
  * Avoids the native Cards API, which has no bridge to Combatant#initiative.
  */
 export class ActionDeck {
-  // Serializes every read-modify-write per combat on this client, keyed by
-  // combat id, so overlapping async calls (e.g. two deal() calls fired close
-  // together) can't interleave between their `await` points and clobber each
-  // other's draw pile. Does not protect against a genuinely simultaneous
-  // write from a *different* client/browser — see the equivalent note on
-  // FatePot in module/core/chips/fate-pot.mjs.
+  // All mutations route through the active GM's client (dispatchGmOp), where
+  // #executeOp serializes every read-modify-write in this queue, keyed per
+  // combat id — one writer for the whole world, so neither same-client nor
+  // cross-client concurrent deals can interleave and duplicate or lose cards.
+  // See docs/notes.md and the equivalent note on FatePot.
   static #mutex = new KeyedAsyncQueue();
 
   static #enqueue(combat, task) {
     return ActionDeck.#mutex.enqueue(combat.id, task);
+  }
+
+  /**
+   * Register the GM-op query handler. Call from `init` hook on every client —
+   * User#query refuses to send a query name the caller has not registered.
+   */
+  static registerQueries() {
+    registerGmOp(ACTION_DECK_OP, (data, context) => ActionDeck.#executeOp(data, context));
+  }
+
+  /**
+   * GM-side op executor — the single serialized writer for a combat's deck.
+   * @param {object} data — wire-protocol op plus `combatId` (see applyDeckOp)
+   * @param {{ user: User }} _context — the requesting user (unused; every op
+   *   is available to players — deals are triggered by their own casting flows)
+   * @returns {Promise<{ ok:true, dealt?:object[], reshuffled?:boolean, cardsRemaining:number }>}
+   */
+  static async #executeOp(data, _context) {
+    if (!game.user.isGM) {
+      throw new Error("Action Deck ops must execute on a GM client.");
+    }
+    const combat = game.combats.get(data?.combatId);
+    if (!combat) {
+      throw new Error(`Combat "${data?.combatId}" not found.`);
+    }
+    return ActionDeck.#enqueue(combat, async () => {
+      const current = ActionDeck.getState(combat);
+      const { state, result } = applyDeckOp(current, data);
+      if (state !== current) {
+        await combat.setFlag(FLAG_SCOPE, FLAG_KEY, state);
+      }
+      return result;
+    });
   }
 
   /**
@@ -165,49 +287,43 @@ export class ActionDeck {
   /**
    * Create a fresh shuffled deck on the combat if none exists.
    * @param {Combat} combat
-   * @param {() => number} [_rng]
-   * @returns {Promise<DeckState>}
+   * @returns {Promise<{ ok:true, cardsRemaining:number }>} summary (never the pile itself)
    */
-  static async initialize(combat, _rng = Math.random) {
-    return ActionDeck.#enqueue(combat, () => ActionDeck.#initializeUnsafe(combat, _rng));
-  }
-
-  /** @param {Combat} combat @param {() => number} _rng */
-  static async #initializeUnsafe(combat, _rng) {
-    const existing = this.getState(combat);
-    if (existing) {
-      return existing;
-    }
-    const state = {
-      drawPile: shuffleDeck(buildFullDeck(), _rng),
-      reshuffleAtRoundEnd: false,
-    };
-    await combat.setFlag(FLAG_SCOPE, FLAG_KEY, state);
-    return state;
+  static async initialize(combat) {
+    return dispatchGmOp(ACTION_DECK_OP, { op: "initialize", combatId: combat.id });
   }
 
   /**
-   * Draw `count` cards from the pile. Auto-reshuffles a fresh deck if the pile
-   * runs empty (normal mid-combat reshuffle, `dlc` p.116).
+   * Draw `count` cards from the pile. If the pile runs short mid-round it
+   * recycles this deck's discard pile back into the draw stock (never a fresh
+   * second deck). `dlc` p.116.
    * @param {Combat} combat
    * @param {number} count
-   * @param {() => number} [_rng]
    * @returns {Promise<object[]>} dealt cards
    */
-  static async deal(combat, count, _rng = Math.random) {
+  static async deal(combat, count) {
     if (count <= 0) {
       return [];
     }
-    return ActionDeck.#enqueue(combat, async () => {
-      const state = this.getState(combat) ?? (await this.#initializeUnsafe(combat, _rng));
-      const drawPile = [...state.drawPile];
-      if (drawPile.length < count) {
-        drawPile.push(...shuffleDeck(buildFullDeck(), _rng));
-      }
-      const dealt = drawPile.splice(0, count);
-      await combat.setFlag(FLAG_SCOPE, FLAG_KEY, { ...state, drawPile });
-      return dealt;
+    const { dealt } = await dispatchGmOp(ACTION_DECK_OP, {
+      op: "deal",
+      combatId: combat.id,
+      count,
     });
+    return dealt;
+  }
+
+  /**
+   * Retire played cards to the deck's discard pile (called at round end for the
+   * cards that were in play). `dlc` p.116.
+   * @param {Combat} combat
+   * @param {object[]} cards
+   */
+  static async discard(combat, cards) {
+    if (!cards?.length) {
+      return;
+    }
+    await dispatchGmOp(ACTION_DECK_OP, { op: "discard", combatId: combat.id, cards });
   }
 
   /**
@@ -216,30 +332,20 @@ export class ActionDeck {
    * @param {Combat} combat
    */
   static async markReshuffleAtRoundEnd(combat) {
-    return ActionDeck.#enqueue(combat, async () => {
-      const state = this.getState(combat) ?? (await this.#initializeUnsafe(combat, Math.random));
-      await combat.setFlag(FLAG_SCOPE, FLAG_KEY, { ...state, reshuffleAtRoundEnd: true });
-    });
+    await dispatchGmOp(ACTION_DECK_OP, { op: "markReshuffle", combatId: combat.id });
   }
 
   /**
    * Execute the round-end reshuffle if one was flagged. Returns `true` if it ran.
    * `dlc` p.118.
    * @param {Combat} combat
-   * @param {() => number} [_rng]
    * @returns {Promise<boolean>}
    */
-  static async maybeReshuffleAtRoundEnd(combat, _rng = Math.random) {
-    return ActionDeck.#enqueue(combat, async () => {
-      const state = this.getState(combat);
-      if (!state?.reshuffleAtRoundEnd) {
-        return false;
-      }
-      await combat.setFlag(FLAG_SCOPE, FLAG_KEY, {
-        drawPile: shuffleDeck(buildFullDeck(), _rng),
-        reshuffleAtRoundEnd: false,
-      });
-      return true;
+  static async maybeReshuffleAtRoundEnd(combat) {
+    const { reshuffled } = await dispatchGmOp(ACTION_DECK_OP, {
+      op: "maybeReshuffle",
+      combatId: combat.id,
     });
+    return reshuffled;
   }
 }

@@ -33,23 +33,47 @@ Tracked by: Phase 6 implementation, `module/core/wounds/wound-track.mjs`.
 
 ---
 
-## Fate Pot / Action Deck cross-client race (hotfix follow-up, unresolved)
+## Fate Pot / Action Deck cross-client race (RESOLVED — GM-proxy, 2026-07-03)
 
-**Current implementation:** `FatePot` and `ActionDeck` each serialize their read-modify-write
-calls through a `KeyedAsyncQueue` (`module/core/async-queue.mjs`) so two overlapping async calls
-*on the same client* can't interleave between `await` points and lose an update (e.g. a chip
-return racing a Marshal's Tithe draw, or two `deal()` calls fired close together).
+**Final design:** every mutation of the Fate Pot (world setting) and the Action Deck (Combat
+flag) is a pure JSON operation descriptor dispatched to the **single active GM client**
+(`game.users.activeGM`) over Foundry's native Queries API (`CONFIG.queries` + `User#query` —
+see `docs/v14-api-notes.md` §Queries API). The GM-side handler applies the op through the
+pre-existing `KeyedAsyncQueue`, making it the one serialized writer for the whole world — the
+cross-client lost-update/duplicate-card race is gone by construction.
 
-**Known limitation:** this only serializes within one browser tab. A genuinely simultaneous write
-from two different clients (two players, or a player and the GM) racing on the same world setting
-or combat flag can still interleave, since Foundry's world-scope `Setting` and document flags have
-no native compare-and-swap.
+This also fixed a **live permissions bug**: Foundry's server rejects world-setting writes
+(`SETTINGS_MODIFY`, default Assistant+) and Combat-flag writes from player clients, so every
+player-initiated chip spend or casting-flow card draw was failing server-side before the proxy.
 
-**Closing this fully would need:** a GM-owned, socket-serialized queue — every client sends a
-patch request over the socket, only the GM's client actually reads-modifies-writes the setting/flag,
-one at a time. Bigger architectural change, not a hotfix. **Decision: TBD (maintainer).**
+Decisions and accepted limits:
 
-Tracked by: `module/core/chips/fate-pot.mjs`, `module/core/cards/action-deck.mjs`.
+- **No active GM → hard block** (maintainer decision, 2026-07-03): the op rejects with a
+  localized warning; there is no local-write fallback. Pot ops now run *before* the actor's
+  chip deduction, so a rejected op never vanishes a chip.
+- **Multi-tab GM double-applies ops** (server emits to every socket of the target user; first
+  ack wins, side effects repeat). Multi-tab GM sessions are unsupported.
+- Two GMs online: `activeGM` designation is deterministic on every client — one writer.
+
+Implementation: `module/core/gm-proxy.mjs` (routing), `applyFatePotOp` / `applyDeckOp` (pure
+op appliers, unit-tested in `tests/fate-pot-ops.test.mjs` / `tests/action-deck-ops.test.mjs`).
+
+**Follow-ups (open):**
+
+- The deck order is still readable by any client via `combat.flags` (the `deckState` flag) —
+  responses never expose the pile, but the flag itself replicates to all clients. Hiding it
+  would need GM-owned storage (e.g. a world setting keyed per combat).
+- **Actor chip write is not fully atomic with the pot write.** `executeSpend` /
+  `executeWhiteSpend` re-read the actor's live chip count immediately before `actor.update`, so a
+  grant that lands during the GM round trip is no longer clobbered — but a narrow TOCTOU window
+  remains between that re-read and the write. A full fix (optimistic per-actor lock / CAS) is
+  deferred; the re-read closes the systematic case (a Marshal grant mid-spend).
+- **Action Deck uses one shared deck for the whole combat**, not the separate posse / Marshal
+  decks the rules describe (`dlc` p.26, p.117). Same-card ties are meant to happen *across* the two
+  decks; with a single deck they can't occur at all. Splitting into two decks (keyed by PC vs NPC
+  side) is future work — the mid-round exhaustion now recycles the discard pile rather than dealing
+  duplicates, which was the acute bug.
+- Add a `media` entry to `system.json` once real screenshots exist in `assets/screenshots/`.
 
 ---
 

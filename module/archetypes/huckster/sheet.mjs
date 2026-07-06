@@ -7,7 +7,7 @@
  * @license MIT
  */
 
-import { executeWhiteSpend } from "../../core/chips/chip-rules.mjs";
+import { runWithWhiteSpend } from "../../core/chips/chip-widget.mjs";
 import { POKER_HAND_RANKS } from "../../core/dice/poker-hand-evaluator.mjs";
 import { toPascal } from "../../core/utils.mjs";
 import { BaseCharacterSheet } from "../_base/base-character-sheet.mjs";
@@ -148,11 +148,8 @@ export class HucksterSheet extends BaseCharacterSheet {
       return;
     }
 
-    const whiteSpend = await executeWhiteSpend(this.document, params.whiteSpend);
-
-    await castHex(this.document, hexItem, {
-      modifier: params.modifier,
-      whiteSpend,
-    });
+    await runWithWhiteSpend(this.document, params.whiteSpend, (whiteSpend) =>
+      castHex(this.document, hexItem, { modifier: params.modifier, whiteSpend })
+    );
   }
 }
