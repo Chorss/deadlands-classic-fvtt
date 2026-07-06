@@ -24,6 +24,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   cross the GM query wire; use `returnToPool` / `discard` / `drawBlind`.
 - `ActionDeck.initialize` returns an `{ok, cardsRemaining}` summary instead of
   the full deck state, so the draw-pile order never crosses the wire.
+- The four copies of the white-chip spend-then-roll block (trait, aptitude, hex,
+  miracle) are consolidated into the single `runWithWhiteSpend` helper, so trait
+  and aptitude rolls now get the same refund-on-failure protection as casts.
 
 ### Fixed
 
