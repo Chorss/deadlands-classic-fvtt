@@ -7,8 +7,12 @@
 
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { applyFatePotOp, drawBlindPure } from "../module/core/chips/fate-pot.mjs";
-import { FATE_POT_SEED } from "../module/core/config.mjs";
+import {
+  applyFatePotOp,
+  assertFatePotOpAuthorized,
+  drawBlindPure,
+} from "../module/core/chips/fate-pot.mjs";
+import { CHIP_LIMIT, FATE_POT_SEED } from "../module/core/config.mjs";
 
 /** Fresh fixture pot for every test. */
 const pot = () => ({ white: 5, red: 3, blue: 2, legend: 1 });
@@ -94,5 +98,46 @@ describe("applyFatePotOp", () => {
   it("results survive a JSON round trip unchanged (wire contract)", () => {
     const result = applyFatePotOp(pot(), { op: "drawBlind", n: 2 }, () => 0);
     assert.deepEqual(JSON.parse(JSON.stringify(result)), result);
+  });
+});
+
+describe("assertFatePotOpAuthorized", () => {
+  const asPlayer = { isGM: false };
+  const asGM = { isGM: true };
+
+  it("blocks a non-GM from reset and patch", () => {
+    assert.throws(() => assertFatePotOpAuthorized({ op: "reset" }, asPlayer), /Only a GM/);
+    assert.throws(
+      () => assertFatePotOpAuthorized({ op: "patch", patch: {} }, asPlayer),
+      /Only a GM/
+    );
+  });
+
+  it("allows a GM to reset and patch", () => {
+    assert.doesNotThrow(() => assertFatePotOpAuthorized({ op: "reset" }, asGM));
+    assert.doesNotThrow(() => assertFatePotOpAuthorized({ op: "patch", patch: {} }, asGM));
+  });
+
+  it("lets a player draw one chip (Tithe/Joker) but not a bulk draw", () => {
+    assert.doesNotThrow(() => assertFatePotOpAuthorized({ op: "drawBlind", n: 1 }, asPlayer));
+    assert.throws(
+      () => assertFatePotOpAuthorized({ op: "drawBlind", n: 2 }, asPlayer),
+      /Only a GM/
+    );
+  });
+
+  it("lets a GM draw in bulk", () => {
+    assert.doesNotThrow(() => assertFatePotOpAuthorized({ op: "drawBlind", n: 50 }, asGM));
+  });
+
+  it("caps a player's returnToPool/discard at the chip limit", () => {
+    assert.doesNotThrow(() =>
+      assertFatePotOpAuthorized({ op: "returnToPool", color: "white", n: CHIP_LIMIT }, asPlayer)
+    );
+    assert.throws(
+      () =>
+        assertFatePotOpAuthorized({ op: "discard", color: "white", n: CHIP_LIMIT + 1 }, asPlayer),
+      /per-request limit/
+    );
   });
 });

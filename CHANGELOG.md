@@ -50,6 +50,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (the `gm.isSelf` path) previously threw with no user feedback, while the chip
   spend/`tryWhiteSpend` catch blocks assumed the proxy had already notified. The
   GM-local path now surfaces the same error notification as the remote path.
+- **Fate Pot ops are authorized per requesting user.** Only `reset` was GM-gated;
+  a player could `patch` the whole pot to zero or `drawBlind` it dry from the
+  console. The GM client now runs `assertFatePotOpAuthorized` before applying any
+  op — `reset`/`patch` are GM-only, a player's blind draw is capped at one chip
+  (Tithe/Joker), and returns/discards can't exceed the per-actor chip cap.
 
 ## [0.3.3] — 2026-07-01
 

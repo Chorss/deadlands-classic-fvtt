@@ -18,7 +18,7 @@
  */
 
 import { KeyedAsyncQueue } from "../async-queue.mjs";
-import { CHIP_COLORS, FATE_POT_SEED } from "../config.mjs";
+import { CHIP_COLORS, CHIP_LIMIT, FATE_POT_SEED } from "../config.mjs";
 import { dispatchGmOp, registerGmOp } from "../gm-proxy.mjs";
 
 const SYSTEM_ID = "deadlands-classic";
@@ -135,6 +135,43 @@ export function applyFatePotOp(pot, op, rng = Math.random) {
   }
 }
 
+/**
+ * Authorize a Fate Pot op by the requesting user's privilege. Runs on the GM
+ * client before the op is applied, so a non-GM player can only request the
+ * narrow set of writes a legitimate spend needs. `reset`/`patch` are the whole
+ * pot's absolute state (GM only); a player's blind draw is the single-chip
+ * Marshal's Tithe / Joker draw (n=1); returns/discards can never exceed the
+ * per-actor chip cap. Malformed ops fall through and are rejected later by
+ * {@link applyFatePotOp}.
+ *
+ * @param {{ op:string, n?:number }} op — wire-protocol op (opId already stripped)
+ * @param {{ isGM: boolean }} context
+ * @throws {Error} when a non-GM requests a GM-only or over-limit op
+ */
+export function assertFatePotOpAuthorized(op, { isGM }) {
+  switch (op?.op) {
+    case "reset":
+    case "patch":
+      if (!isGM) {
+        throw new Error(`Only a GM may ${op.op} the Fate Pot.`);
+      }
+      return;
+    case "drawBlind":
+      if (!isGM && op.n > 1) {
+        throw new Error("Only a GM may draw more than one chip from the pot at once.");
+      }
+      return;
+    case "returnToPool":
+    case "discard":
+      if (!isGM && op.n > CHIP_LIMIT) {
+        throw new Error(`Chip count exceeds the per-request limit (${CHIP_LIMIT}).`);
+      }
+      return;
+    default:
+      return;
+  }
+}
+
 // ── FatePot class — Foundry-integrated ───────────────────────────────────────
 
 const QUEUE_KEY = "pot";
@@ -179,9 +216,7 @@ export class FatePot {
     if (!game.user.isGM) {
       throw new Error("Fate Pot ops must execute on a GM client.");
     }
-    if (data?.op === "reset" && !user?.isGM) {
-      throw new Error("Only a GM may reset the Fate Pot.");
-    }
+    assertFatePotOpAuthorized(data, { isGM: Boolean(user?.isGM) });
     return FatePot.#enqueue(async () => {
       const { pot, drawn } = applyFatePotOp(FatePot.getData(), data);
       await game.settings.set(SYSTEM_ID, SETTING_KEY, pot);
