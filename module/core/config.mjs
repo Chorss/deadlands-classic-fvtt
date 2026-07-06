@@ -116,6 +116,15 @@ export const APTITUDES = {
 export const DIE_TYPES = ["d4", "d6", "d8", "d10", "d12"];
 
 /**
+ * Damage-die reduction ladder used by Armor (ascending). Weapon damage dice can
+ * reach d20 (e.g. dynamite), unlike Trait dice which cap at d12. `dlc` p.136:
+ * each level of Armor steps the die type down one rung; once at d4, further
+ * levels remove dice from the pool instead.
+ * @type {readonly string[]}
+ */
+export const DAMAGE_DIE_LADDER = ["d4", "d6", "d8", "d10", "d12", "d20"];
+
+/**
  * Named Target Number difficulty ladder. `dlc` p.28.
  * @type {Record<string, number>}
  */
@@ -296,6 +305,7 @@ export const DEADLANDS = Object.freeze({
   TRAITS,
   APTITUDES,
   DIE_TYPES,
+  DAMAGE_DIE_LADDER,
   TNS,
   CHIP_COLORS,
   FATE_POT_SEED,

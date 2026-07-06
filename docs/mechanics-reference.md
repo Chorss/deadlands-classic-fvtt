@@ -76,3 +76,12 @@ conditions). Verify exact tiers/effects in `dlc` (fear / Fear Level chapter) bef
 Any PC can become Harrowed. Implemented via `OverlayRegistry`: the flag `system.harrowed.isHarrowed`
 toggles behavior; extra schema (`dominion`, `harrowedPowers[]`, `countingCoup`); a "Harrowed" tab is
 injected when the flag is true; the **nightly Dominion contest** (opposed Spirit, each side adds their current Dominion — `dlc` p.195) runs **per game session** (during sleep), not on combat start. The one-time return roll on becoming Harrowed adds Grit instead (`dlc` p.253).
+
+## 12. Damage rolls & Armor — `dlc` p.134-137
+Damage pools **SUM** all exploding dice (unlike Trait rolls, which take the highest). Armor works two
+ways: a **positive** Armor level steps the damage die type down the ladder **d4 < d6 < d8 < d10 < d12 <
+d20**, one rung per point (below d4, remove dice from the pool instead — `0d4` = no damage; e.g. 3d6 vs
+Armor 2 → 2d4). A **negative** Armor value ("Light Armor") instead subtracts its magnitude flat from
+the total (e.g. 14 damage vs Light Armor 4 → 10). The two layer: die-type reduction first, then the flat
+subtraction, floored at 0. `dlc` p.135-136. (Armor-piercing ammo, which lowers the Armor level before
+this step, is not yet implemented.)

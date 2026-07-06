@@ -134,6 +134,7 @@
   "DEADLANDS.Roll.Raises": "{raises} Raise(s)!",
   "DEADLANDS.Roll.Damage": "Damage",
   "DEADLANDS.Roll.Unskilled": "Unskilled",
+  "DEADLANDS.Roll.ArmorReduction": "− {value} armor",
 
   "DEADLANDS.TN.Foolproof": "Foolproof",
   "DEADLANDS.TN.Fair": "Fair",

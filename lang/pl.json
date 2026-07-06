@@ -134,6 +134,7 @@
   "DEADLANDS.Roll.Raises": "{raises} Sukces(y) dodatkowy!",
   "DEADLANDS.Roll.Damage": "Obrażenia",
   "DEADLANDS.Roll.Unskilled": "Bez umiejętności",
+  "DEADLANDS.Roll.ArmorReduction": "− {value} pancerza",
 
   "DEADLANDS.TN.Foolproof": "Banalny",
   "DEADLANDS.TN.Fair": "Zwykły",

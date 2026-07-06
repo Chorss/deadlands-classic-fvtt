@@ -23,6 +23,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   drawn by the Marshal's own NPC no longer grants a chip — the Red Joker draw
   is the drawing player's only, and the Black Joker's chip penalty applies only
   when a player drew it. Extracted a pure, unit-tested `resolveJokerOutcome()`.
+- **Damage — Armor die-type reduction** (dlc p.136): `rollDamage()` only ever
+  applied Armor as a flat subtraction; the die-type step-down that heavy Armor
+  actually performs (e.g. 3d6 vs Armor 2 → 2d4) was an unimplemented
+  placeholder. It now takes `armorLevel` (die-type/count reduction) and
+  `lightArmorValue` (Light Armor flat subtraction) separately and applies them
+  in the correct order. The pure math is unit-tested against the rulebook's own
+  worked examples.
 
 ## [0.3.3] — 2026-07-01
 
