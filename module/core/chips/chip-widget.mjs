@@ -109,5 +109,48 @@ export async function tryWhiteSpend(actor, requested) {
   }
 }
 
+/**
+ * Spend white chips, then run a roll/cast action that consumes them — and if
+ * that action throws (e.g. a GM-routed card deal times out), refund the chips
+ * and notify, so a failed action never silently costs the player. Keeps the
+ * rejection from escaping an un-awaited sheet-action handler.
+ *
+ * @param {Actor} actor
+ * @param {number} requested — raw whiteSpend value from the roll dialog
+ * @param {(whiteSpend: number) => Promise<any>} action — receives the amount actually spent
+ * @returns {Promise<any|null>} the action's result, or null if the spend or action failed
+ */
+export async function runWithWhiteSpend(actor, requested, action) {
+  const whiteSpend = await tryWhiteSpend(actor, requested);
+  if (whiteSpend === null) {
+    return null; // spend failed — the GM proxy already notified the user
+  }
+
+  try {
+    return await action(whiteSpend);
+  } catch (err) {
+    console.error("deadlands-classic | Action failed after white-chip spend:", err);
+    if (whiteSpend > 0) {
+      await refundWhiteSpend(actor, whiteSpend).catch((refundErr) => {
+        console.error("deadlands-classic | White-chip refund also failed:", refundErr);
+      });
+    }
+    ui.notifications.error(game.i18n.localize("DEADLANDS.ChipRule.ActionFailedRefunded"));
+    return null;
+  }
+}
+
+/**
+ * Reverse a white-chip spend: pull the returned chips back out of the pot and
+ * credit them to the actor. The inverse of executeWhiteSpend's two writes.
+ * @param {Actor} actor
+ * @param {number} n
+ */
+async function refundWhiteSpend(actor, n) {
+  await FatePot.discard("white", n);
+  const current = actor.system.chips?.white ?? 0;
+  await actor.update({ "system.chips.white": current + n });
+}
+
 // Re-export for convenience so callers can import from one place.
 export { FatePot };

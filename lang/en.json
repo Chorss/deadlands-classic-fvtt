@@ -153,6 +153,7 @@
   "DEADLANDS.ChipRule.NoneLeft": "No chips of that color remaining.",
   "DEADLANDS.ChipRule.BustOnlyLegend": "Only a Legend chip (reroll) can save a bust!",
   "DEADLANDS.ChipRule.OnePerAction": "Only one red, blue, or legend chip per action.",
+  "DEADLANDS.ChipRule.ActionFailedRefunded": "The action failed — your white chips have been refunded.",
 
   "DEADLANDS.GmProxy.NoActiveGM": "This action requires an active Game Master — ask your GM to log in and try again.",
   "DEADLANDS.GmProxy.QueryFailed": "The GM's client did not confirm the action after several attempts — it may or may not have applied. Check the Fate Pot / Action Deck before retrying.",

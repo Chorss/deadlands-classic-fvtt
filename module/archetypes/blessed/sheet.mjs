@@ -7,7 +7,7 @@
  * @license MIT
  */
 
-import { tryWhiteSpend } from "../../core/chips/chip-widget.mjs";
+import { runWithWhiteSpend } from "../../core/chips/chip-widget.mjs";
 import { BaseCharacterSheet } from "../_base/base-character-sheet.mjs";
 import { HARROWED_SHEET_PART, HARROWED_SHEET_TAB } from "../_overlays/harrowed/sheet-tab.mjs";
 import { invokeMiracle, isMiracleAccessDenied, sinDenialLabel, trackSin } from "./mechanics.mjs";
@@ -151,15 +151,9 @@ export class BlessedSheet extends BaseCharacterSheet {
       return;
     }
 
-    const whiteSpend = await tryWhiteSpend(this.document, params.whiteSpend);
-    if (whiteSpend === null) {
-      return;
-    }
-
-    await invokeMiracle(this.document, miracleItem, {
-      modifier: params.modifier,
-      whiteSpend,
-    });
+    await runWithWhiteSpend(this.document, params.whiteSpend, (whiteSpend) =>
+      invokeMiracle(this.document, miracleItem, { modifier: params.modifier, whiteSpend })
+    );
   }
 
   /** @this {BlessedSheet} */

@@ -153,6 +153,7 @@
   "DEADLANDS.ChipRule.NoneLeft": "Brak sztonów w tym kolorze.",
   "DEADLANDS.ChipRule.BustOnlyLegend": "Tylko szton Legendy (przerzut) może uratować porażkę totalną!",
   "DEADLANDS.ChipRule.OnePerAction": "Tylko jeden czerwony, niebieski lub legendarny szton na akcję.",
+  "DEADLANDS.ChipRule.ActionFailedRefunded": "Akcja nie powiodła się — białe sztony zostały zwrócone.",
 
   "DEADLANDS.GmProxy.NoActiveGM": "Ta akcja wymaga aktywnego Mistrza Gry — poproś MG o zalogowanie się i spróbuj ponownie.",
   "DEADLANDS.GmProxy.QueryFailed": "Klient MG nie potwierdził akcji po kilku próbach — mogła zostać zastosowana lub nie. Sprawdź Pulę Losu / Talię Akcji przed ponowieniem.",

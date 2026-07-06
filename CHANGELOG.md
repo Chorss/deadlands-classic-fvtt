@@ -63,6 +63,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `executeWhiteSpend` wrote the actor's new chip count from a snapshot taken
   before the GM round trip, so a chip the Marshal granted mid-spend was silently
   overwritten. The write is now a delta off a fresh read taken right before it.
+- **A failed hex/miracle no longer eats white chips.** Casting a hex or invoking
+  a miracle spent the white chips *before* the GM-routed card deal, so a deal
+  that timed out or found no GM cost the player chips with no roll and leaked an
+  unhandled rejection. Both flows now run through `runWithWhiteSpend`, which
+  refunds the chips and notifies when the follow-up action throws.
 
 ## [0.3.3] — 2026-07-01
 
