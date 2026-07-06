@@ -372,7 +372,7 @@ export class FatePot {
 
     // Marshal draws too. dlc p.146.
     const marshalDraw = await FatePot.drawBlind(chipsPerPlayer);
-    log.push(`Marshal: ${marshalDraw.join(", ")}`);
+    log.push(`${game.i18n.localize("DEADLANDS.System.Marshal")}: ${marshalDraw.join(", ")}`);
 
     await ChatMessage.create({
       content: `<div class="dlc-chip-draw"><strong>${game.i18n.localize("DEADLANDS.Chip.SessionDraw")}</strong><ul>${log.map((l) => `<li>${l}</li>`).join("")}</ul></div>`,

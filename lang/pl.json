@@ -1,6 +1,7 @@
 {
   "DEADLANDS.System.Title": "Deadlands Classic",
   "DEADLANDS.System.Loaded": "System Deadlands Classic załadowany.",
+  "DEADLANDS.System.Marshal": "MG",
 
   "DEADLANDS.Settings.DisplayFont.Label": "Czcionka nagłówków",
   "DEADLANDS.Settings.DisplayFont.Hint": "Czcionka używana w nagłówkach, nazwach cech i tytułach sekcji. Wszystkie warianty są dołączone offline.",
@@ -134,6 +135,9 @@
   "DEADLANDS.Roll.Raises": "{raises} Sukces(y) dodatkowy!",
   "DEADLANDS.Roll.Damage": "Obrażenia",
   "DEADLANDS.Roll.Unskilled": "Bez umiejętności",
+  "DEADLANDS.Roll.ArmorReduction": "− {value} pancerza",
+  "DEADLANDS.Roll.AcesCount": "Asy: {count}",
+  "DEADLANDS.Roll.VersusTN": "PT {tn}",
 
   "DEADLANDS.TN.Foolproof": "Banalny",
   "DEADLANDS.TN.Fair": "Zwykły",
@@ -153,6 +157,7 @@
   "DEADLANDS.ChipRule.NoneLeft": "Brak sztonów w tym kolorze.",
   "DEADLANDS.ChipRule.BustOnlyLegend": "Tylko szton Legendy (przerzut) może uratować porażkę totalną!",
   "DEADLANDS.ChipRule.OnePerAction": "Tylko jeden czerwony, niebieski lub legendarny szton na akcję.",
+  "DEADLANDS.ChipRule.NoGoingBack": "Bez odwrotu: po wydaniu czerwonego, niebieskiego lub legendarnego sztonu nie można już wydać białego sztonu w tej akcji.",
   "DEADLANDS.ChipRule.ActionFailedRefunded": "Akcja nie powiodła się — białe sztony zostały zwrócone.",
 
   "DEADLANDS.GmProxy.NoActiveGM": "Ta akcja wymaga aktywnego Mistrza Gry — poproś MG o zalogowanie się i spróbuj ponownie.",
@@ -165,11 +170,7 @@
   "DEADLANDS.Wound.Severity.Critical": "Krytyczne",
   "DEADLANDS.Wound.Severity.Maimed": "Okaleczenie",
 
-  "DEADLANDS.Wound.Applied": "{wounds} rana(y) w {location}. Dech −{wind}.",
   "DEADLANDS.Wound.Winded": "Wyczerpany! Brak akcji w tej rundzie.",
-  "DEADLANDS.Wound.BleedingTick": "Krwawienie: −{drain} Dechu.",
-  "DEADLANDS.Wound.MaimedLimb": "{location} jest okaleczona — wyłączona z akcji.",
-  "DEADLANDS.Wound.WindRecovered": "Dech odzyskany: {value}/{max}.",
 
   "DEADLANDS.Guts.Label": "Test Odwagi",
   "DEADLANDS.Guts.Success": "Nerwy ze stali — brak efektu.",
@@ -213,11 +214,11 @@
   "DEADLANDS.Combat.Card.Rank.K": "Król",
   "DEADLANDS.Combat.Card.Rank.A": "As",
 
-  "DEADLANDS.Combat.Initiative.Label": "Inicjatywa kartami",
-  "DEADLANDS.Combat.Initiative.Deal": "Dobierz karty inicjatywy",
   "DEADLANDS.Combat.Initiative.Bust": "{name} ma niefarta — brak kart akcji w tej rundzie!",
   "DEADLANDS.Combat.Initiative.BlackJoker": "{name} dobił Czarnego Jokera! MG dobiera szton {chip}. Karta ze spodnika odrzucona. Talia przetasowywana na końcu rundy.",
+  "DEADLANDS.Combat.Initiative.BlackJokerNPC": "{name} dobił Czarnego Jokera! Karta ze spodnika odrzucona. Talia przetasowywana na końcu rundy — brak sztonu dla drużyny przy dobraniu przez BN.",
   "DEADLANDS.Combat.Initiative.RedJoker": "{name} dobił Czerwonego Jokera! Dobiera szton {chip} i może działać w dowolnej chwili tej rundy.",
+  "DEADLANDS.Combat.Initiative.RedJokerNPC": "{name} dobił Czerwonego Jokera! Może działać w dowolnej chwili tej rundy — brak sztonu przy dobraniu przez BN.",
   "DEADLANDS.Combat.Initiative.NoSleeveJoker": "Jokerów nie można trzymać w spodniku.",
 
   "DEADLANDS.Combat.Hand.Title": "Ręka akcji: {name}",
@@ -356,6 +357,7 @@
   "DEADLANDS.Blessed.Chat.SpiritRoll": "Rzut Ducha",
   "DEADLANDS.Blessed.Chat.FaithLost": "Wiara −1 poziom.",
   "DEADLANDS.Blessed.Chat.FaithKept": "Wiara się utrzymuje — brak utraty poziomu.",
+  "DEADLANDS.Sheet.Tab.Miracles": "Cuda",
   "DEADLANDS.Sheet.Empty.Miracles": "Brak cudów. Dodaj przedmiot Cud, aby odblokować sekcję.",
 
   "DEADLANDS.Shaman.Ritual.Label": "Umiejętność Rytuału",
@@ -387,6 +389,7 @@
   "DEADLANDS.Shaman.Chat.ManitouRepelled": "Szaman odparł manitou",
   "DEADLANDS.Shaman.Chat.ManitouDamage": "Obrażenia trzewi",
   "DEADLANDS.Shaman.Warn.InsufficientAppeasement": "{name}: za mało Obłaskawienia (potrzeba {cost}, masz {current}).",
+  "DEADLANDS.Sheet.Tab.Favors": "Przysługi",
   "DEADLANDS.Sheet.Empty.Favors": "Brak przysług. Dodaj przedmiot Przysługa, aby odblokować sekcję.",
   "DEADLANDS.Shaman.Medicine.Blessing": "Błogosławieństwo",
   "DEADLANDS.Shaman.Medicine.Earth": "Ziemia",
@@ -449,6 +452,7 @@
   "DEADLANDS.MadScientist.Malfunction.Catastrophic": "Katastrofalna Awaria",
   "DEADLANDS.MadScientist.Warn.NeedsBlueprint": "Ten wynalazek wymaga najpierw opracowanego projektu.",
   "DEADLANDS.MadScientist.Warn.NotConstructed": "Ten wynalazek nie został jeszcze zbudowany.",
+  "DEADLANDS.Sheet.Tab.Gizmos": "Wynalazki",
   "DEADLANDS.Sheet.Empty.Gizmos": "Brak wynalazków. Dodaj przedmiot Wynalazek, aby odblokować sekcję.",
   "DEADLANDS.MadScientist.Madness.AbsentMinded.Label": "Roztargnienie",
   "DEADLANDS.MadScientist.Madness.AbsentMinded.Note": "Postać często zapomina ważnych szczegółów — MG stosuje kary do zadań wymagających pamięci.",

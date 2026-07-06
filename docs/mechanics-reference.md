@@ -24,11 +24,13 @@ No dice for the order itself. Each round make a **Quickness roll vs TN 5 (Fair)*
 **0 cards**; otherwise draw **1 base card + 1 per raise** (max 5 — a bare success with no raises = 1
 card) from a 54-card deck (52 + 2 Jokers). Act highest → lowest. Suit tiebreaker: **♠ > ♥ > ♦ > ♣**. Red Joker = best (act anytime + draw a Fate
 Chip). Black Joker = backlash (discard your sleeve card; the Marshal draws a chip from the Pot;
-reshuffle at end of round). **Reshuffle has two triggers** (`dlc` p.116): the deck running out
-mid-round reshuffles the played (discard) cards back into the draw stock **immediately** — never a
-second fresh deck, so no card is dealt twice; a Black Joker instead finishes the round, then
-reshuffles. *(Implementation simplification: one shared deck for the whole combat rather than a
-separate posse / Marshal deck — see `docs/notes.md`.)*
+reshuffle at end of round). **Both chip effects are posse-only:** the Marshal's own NPCs drawing
+either Joker grant no chip to anyone (a Red Joker still lets the NPC act anytime; a Black Joker still
+discards the sleeve + triggers the reshuffle) — `dlc` p.118. **Reshuffle has two triggers** (`dlc`
+p.116): the deck running out mid-round reshuffles the played (discard) cards back into the draw stock
+**immediately** — never a second fresh deck, so no card is dealt twice; a Black Joker instead finishes
+the round, then reshuffles. *(Implementation simplification: one shared deck for the whole combat
+rather than a separate posse / Marshal deck — see `docs/notes.md`.)*
 
 ## 4. Fate Chips — four colors — `dlc` p.146-148
 - **White** (1 BP) — +1 extra die on a Trait/Aptitude roll (stack multiple Whites until the first
@@ -89,3 +91,12 @@ conditions). Verify exact tiers/effects in `dlc` (fear / Fear Level chapter) bef
 Any PC can become Harrowed. Implemented via `OverlayRegistry`: the flag `system.harrowed.isHarrowed`
 toggles behavior; extra schema (`dominion`, `harrowedPowers[]`, `countingCoup`); a "Harrowed" tab is
 injected when the flag is true; the **nightly Dominion contest** (opposed Spirit, each side adds their current Dominion — `dlc` p.195) runs **per game session** (during sleep), not on combat start. The one-time return roll on becoming Harrowed adds Grit instead (`dlc` p.253) *(not yet implemented — the overlay only seeds Dominion)*.
+
+## 12. Damage rolls & Armor — `dlc` p.134-137
+Damage pools **SUM** all exploding dice (unlike Trait rolls, which take the highest). Armor works two
+ways: a **positive** Armor level steps the damage die type down the ladder **d4 < d6 < d8 < d10 < d12 <
+d20**, one rung per point (below d4, remove dice from the pool instead — `0d4` = no damage; e.g. 3d6 vs
+Armor 2 → 2d4). A **negative** Armor value ("Light Armor") instead subtracts its magnitude flat from
+the total (e.g. 14 damage vs Light Armor 4 → 10). The two layer: die-type reduction first, then the flat
+subtraction, floored at 0. `dlc` p.135-136. (Armor-piercing ammo, which lowers the Armor level before
+this step, is not yet implemented.)

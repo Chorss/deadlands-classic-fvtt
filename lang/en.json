@@ -1,6 +1,7 @@
 {
   "DEADLANDS.System.Title": "Deadlands Classic",
   "DEADLANDS.System.Loaded": "Deadlands Classic system ready.",
+  "DEADLANDS.System.Marshal": "Marshal",
 
   "DEADLANDS.Settings.DisplayFont.Label": "Display font",
   "DEADLANDS.Settings.DisplayFont.Hint": "Font used for headings, trait names and section titles. All options are bundled offline.",
@@ -134,6 +135,9 @@
   "DEADLANDS.Roll.Raises": "{raises} Raise(s)!",
   "DEADLANDS.Roll.Damage": "Damage",
   "DEADLANDS.Roll.Unskilled": "Unskilled",
+  "DEADLANDS.Roll.ArmorReduction": "− {value} armor",
+  "DEADLANDS.Roll.AcesCount": "Aces: {count}",
+  "DEADLANDS.Roll.VersusTN": "vs TN {tn}",
 
   "DEADLANDS.TN.Foolproof": "Foolproof",
   "DEADLANDS.TN.Fair": "Fair",
@@ -153,6 +157,7 @@
   "DEADLANDS.ChipRule.NoneLeft": "No chips of that color remaining.",
   "DEADLANDS.ChipRule.BustOnlyLegend": "Only a Legend chip (reroll) can save a bust!",
   "DEADLANDS.ChipRule.OnePerAction": "Only one red, blue, or legend chip per action.",
+  "DEADLANDS.ChipRule.NoGoingBack": "No Going Back: once a red, blue, or Legend chip is spent, no more white chips may be spent this action.",
   "DEADLANDS.ChipRule.ActionFailedRefunded": "The action failed — your white chips have been refunded.",
 
   "DEADLANDS.GmProxy.NoActiveGM": "This action requires an active Game Master — ask your GM to log in and try again.",
@@ -165,11 +170,7 @@
   "DEADLANDS.Wound.Severity.Critical": "Critical",
   "DEADLANDS.Wound.Severity.Maimed": "Maimed",
 
-  "DEADLANDS.Wound.Applied": "{wounds} wound(s) to {location}. Wind −{wind}.",
   "DEADLANDS.Wound.Winded": "Winded! No actions this round.",
-  "DEADLANDS.Wound.BleedingTick": "Bleeding: −{drain} Wind.",
-  "DEADLANDS.Wound.MaimedLimb": "{location} is maimed — out of action.",
-  "DEADLANDS.Wound.WindRecovered": "Wind recovered to {value}/{max}.",
 
   "DEADLANDS.Guts.Label": "Guts Check",
   "DEADLANDS.Guts.Success": "Steeled nerves — no effect.",
@@ -213,11 +214,11 @@
   "DEADLANDS.Combat.Card.Rank.K": "King",
   "DEADLANDS.Combat.Card.Rank.A": "Ace",
 
-  "DEADLANDS.Combat.Initiative.Label": "Card Initiative",
-  "DEADLANDS.Combat.Initiative.Deal": "Deal Initiative Cards",
   "DEADLANDS.Combat.Initiative.Bust": "{name} went bust — no action cards this round!",
   "DEADLANDS.Combat.Initiative.BlackJoker": "{name} drew the Black Joker! Marshal draws a {chip} chip. Sleeve discarded. Deck reshuffles at round end.",
+  "DEADLANDS.Combat.Initiative.BlackJokerNPC": "{name} drew the Black Joker! Sleeve discarded. Deck reshuffles at round end — no Fate Chip for the posse on an NPC draw.",
   "DEADLANDS.Combat.Initiative.RedJoker": "{name} drew the Red Joker! Draws a {chip} chip and may act at any time this round.",
+  "DEADLANDS.Combat.Initiative.RedJokerNPC": "{name} drew the Red Joker! May act at any time this round — no Fate Chip on an NPC draw.",
   "DEADLANDS.Combat.Initiative.NoSleeveJoker": "Jokers cannot be kept up your sleeve.",
 
   "DEADLANDS.Combat.Hand.Title": "Action Hand: {name}",
@@ -356,6 +357,7 @@
   "DEADLANDS.Blessed.Chat.SpiritRoll": "Spirit roll",
   "DEADLANDS.Blessed.Chat.FaithLost": "Faith −1 level.",
   "DEADLANDS.Blessed.Chat.FaithKept": "Faith holds — no level lost.",
+  "DEADLANDS.Sheet.Tab.Miracles": "Miracles",
   "DEADLANDS.Sheet.Empty.Miracles": "No miracles. Add a Miracle item to unlock this section.",
 
   "DEADLANDS.Shaman.Ritual.Label": "Ritual Aptitude",
@@ -387,6 +389,7 @@
   "DEADLANDS.Shaman.Chat.ManitouRepelled": "Shaman repelled the manitou",
   "DEADLANDS.Shaman.Chat.ManitouDamage": "Guts damage",
   "DEADLANDS.Shaman.Warn.InsufficientAppeasement": "{name}: not enough Appeasement (need {cost}, have {current}).",
+  "DEADLANDS.Sheet.Tab.Favors": "Favors",
   "DEADLANDS.Sheet.Empty.Favors": "No favors. Add a Favor item to unlock this section.",
   "DEADLANDS.Shaman.Medicine.Blessing": "Blessing",
   "DEADLANDS.Shaman.Medicine.Earth": "Earth",
@@ -449,6 +452,7 @@
   "DEADLANDS.MadScientist.Malfunction.Catastrophic": "Catastrophic Malfunction",
   "DEADLANDS.MadScientist.Warn.NeedsBlueprint": "This gizmo needs a devised blueprint first.",
   "DEADLANDS.MadScientist.Warn.NotConstructed": "This gizmo has not been constructed yet.",
+  "DEADLANDS.Sheet.Tab.Gizmos": "Gizmos",
   "DEADLANDS.Sheet.Empty.Gizmos": "No gizmos. Add a Gizmo item to unlock this section.",
   "DEADLANDS.MadScientist.Madness.AbsentMinded.Label": "Absent-Minded",
   "DEADLANDS.MadScientist.Madness.AbsentMinded.Note": "Character frequently forgets important details — GM applies penalties to memory-based tasks.",

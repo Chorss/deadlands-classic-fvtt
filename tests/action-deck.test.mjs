@@ -14,6 +14,7 @@ import {
   cardValue,
   compareCards,
   quicknessCardCount,
+  resolveJokerOutcome,
   shuffleDeck,
 } from "../module/core/cards/action-deck.mjs";
 
@@ -234,5 +235,33 @@ describe("quicknessCardCount (dlc p.116)", () => {
 
   it("5+ raises → capped at 5", () => {
     assert.equal(quicknessCardCount({ bust: false, raises: 10 }), 5);
+  });
+});
+
+// ── resolveJokerOutcome ──────────────────────────────────────────────────────
+
+describe("resolveJokerOutcome (dlc p.118)", () => {
+  it("red Joker drawn by the posse grants a chip", () => {
+    const r = resolveJokerOutcome("red", true);
+    assert.equal(r.drawsChip, true);
+    assert.equal(r.messageKey, "DEADLANDS.Combat.Initiative.RedJoker");
+  });
+
+  it("red Joker drawn by an NPC grants nothing", () => {
+    const r = resolveJokerOutcome("red", false);
+    assert.equal(r.drawsChip, false);
+    assert.equal(r.messageKey, "DEADLANDS.Combat.Initiative.RedJokerNPC");
+  });
+
+  it("black Joker drawn by the posse makes the Marshal draw a chip", () => {
+    const r = resolveJokerOutcome("black", true);
+    assert.equal(r.drawsChip, true);
+    assert.equal(r.messageKey, "DEADLANDS.Combat.Initiative.BlackJoker");
+  });
+
+  it("black Joker drawn by an NPC grants the posse nothing", () => {
+    const r = resolveJokerOutcome("black", false);
+    assert.equal(r.drawsChip, false);
+    assert.equal(r.messageKey, "DEADLANDS.Combat.Initiative.BlackJokerNPC");
   });
 });
