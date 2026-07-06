@@ -11,6 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Fixed
+
+## [0.3.4] — 2026-07-06
+
+### Added
+
 - `tools/audit-i18n.mjs` (`npm run audit:i18n`) — flags `DEADLANDS.*` keys used
   in `module/` or `templates/` that don't exist in `lang/en.json`, the gap that
   `verify-documenttypes.mjs` (EN/PL parity only) can't catch.
@@ -268,7 +276,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `CombatantHandDialog` and initiative-value path corrections after V14 runtime testing.
 - Multiple V14 API compatibility fixes across archetype sheets and mechanics.
 
-[Unreleased]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.3.3...HEAD
+[Unreleased]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.3.4...HEAD
+[0.3.4]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.3.3...0.3.4
 [0.3.3]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.3.2...0.3.3
 [0.3.2]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.3.1...0.3.2
 [0.3.1]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.3.0...0.3.1
