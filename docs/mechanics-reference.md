@@ -23,7 +23,9 @@ Each Trait has a die type **and** a die count (e.g. Nimbleness 4d8). Roll all di
 No dice for the order itself. Each round make a **Quickness roll vs TN 5 (Fair)** and draw
 **1 card + 1 per success and raise** (max 5) from a 54-card deck (52 + 2 Jokers). Act highest → lowest. Suit tiebreaker: **♠ > ♥ > ♦ > ♣**. Red Joker = best (act anytime + draw a Fate
 Chip). Black Joker = backlash (discard your sleeve card; the Marshal draws a chip from the Pot;
-reshuffle at end of round).
+reshuffle at end of round). **Both chip effects are posse-only:** the Marshal's own NPCs drawing
+either Joker grant no chip to anyone (a Red Joker still lets the NPC act anytime; a Black Joker still
+discards the sleeve + triggers the reshuffle). `dlc` p.118.
 
 ## 4. Fate Chips — four colors — `dlc` p.146-148
 - **White** (1 BP) — +1 extra die on a Trait/Aptitude roll (stack multiple Whites until the first

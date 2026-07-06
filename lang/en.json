@@ -214,7 +214,9 @@
   "DEADLANDS.Combat.Initiative.Deal": "Deal Initiative Cards",
   "DEADLANDS.Combat.Initiative.Bust": "{name} went bust — no action cards this round!",
   "DEADLANDS.Combat.Initiative.BlackJoker": "{name} drew the Black Joker! Marshal draws a {chip} chip. Sleeve discarded. Deck reshuffles at round end.",
+  "DEADLANDS.Combat.Initiative.BlackJokerNPC": "{name} drew the Black Joker! Sleeve discarded. Deck reshuffles at round end — no Fate Chip for the posse on an NPC draw.",
   "DEADLANDS.Combat.Initiative.RedJoker": "{name} drew the Red Joker! Draws a {chip} chip and may act at any time this round.",
+  "DEADLANDS.Combat.Initiative.RedJokerNPC": "{name} drew the Red Joker! May act at any time this round — no Fate Chip on an NPC draw.",
   "DEADLANDS.Combat.Initiative.NoSleeveJoker": "Jokers cannot be kept up your sleeve.",
 
   "DEADLANDS.Combat.Hand.Title": "Action Hand: {name}",

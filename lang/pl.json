@@ -214,7 +214,9 @@
   "DEADLANDS.Combat.Initiative.Deal": "Dobierz karty inicjatywy",
   "DEADLANDS.Combat.Initiative.Bust": "{name} ma niefarta — brak kart akcji w tej rundzie!",
   "DEADLANDS.Combat.Initiative.BlackJoker": "{name} dobił Czarnego Jokera! MG dobiera szton {chip}. Karta ze spodnika odrzucona. Talia przetasowywana na końcu rundy.",
+  "DEADLANDS.Combat.Initiative.BlackJokerNPC": "{name} dobił Czarnego Jokera! Karta ze spodnika odrzucona. Talia przetasowywana na końcu rundy — brak sztonu dla drużyny przy dobraniu przez BN.",
   "DEADLANDS.Combat.Initiative.RedJoker": "{name} dobił Czerwonego Jokera! Dobiera szton {chip} i może działać w dowolnej chwili tej rundy.",
+  "DEADLANDS.Combat.Initiative.RedJokerNPC": "{name} dobił Czerwonego Jokera! Może działać w dowolnej chwili tej rundy — brak sztonu przy dobraniu przez BN.",
   "DEADLANDS.Combat.Initiative.NoSleeveJoker": "Jokerów nie można trzymać w spodniku.",
 
   "DEADLANDS.Combat.Hand.Title": "Ręka akcji: {name}",

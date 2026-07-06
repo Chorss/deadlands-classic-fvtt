@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   white chips even after a red, blue, or Legend chip had already been spent on
   the same action. Added the missing gate and corrected the unit test that had
   locked in the wrong behavior.
+- **Joker Fate-Chip draws are posse-only** (dlc p.118): a Red or Black Joker
+  drawn by the Marshal's own NPC no longer grants a chip — the Red Joker draw
+  is the drawing player's only, and the Black Joker's chip penalty applies only
+  when a player drew it. Extracted a pure, unit-tested `resolveJokerOutcome()`.
 
 ## [0.3.3] — 2026-07-01
 
