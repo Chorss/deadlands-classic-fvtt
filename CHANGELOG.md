@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `tools/audit-i18n.mjs` (`npm run audit:i18n`) — flags `DEADLANDS.*` keys used
+  in `module/` or `templates/` that don't exist in `lang/en.json`, the gap that
+  `verify-documenttypes.mjs` (EN/PL parity only) can't catch.
+
 ### Changed
 
 - Removed the dead `wound-locations-widget.hbs` partial (never rendered — all
