@@ -356,6 +356,7 @@
   "DEADLANDS.Blessed.Chat.SpiritRoll": "Spirit roll",
   "DEADLANDS.Blessed.Chat.FaithLost": "Faith −1 level.",
   "DEADLANDS.Blessed.Chat.FaithKept": "Faith holds — no level lost.",
+  "DEADLANDS.Sheet.Tab.Miracles": "Miracles",
   "DEADLANDS.Sheet.Empty.Miracles": "No miracles. Add a Miracle item to unlock this section.",
 
   "DEADLANDS.Shaman.Ritual.Label": "Ritual Aptitude",
@@ -387,6 +388,7 @@
   "DEADLANDS.Shaman.Chat.ManitouRepelled": "Shaman repelled the manitou",
   "DEADLANDS.Shaman.Chat.ManitouDamage": "Guts damage",
   "DEADLANDS.Shaman.Warn.InsufficientAppeasement": "{name}: not enough Appeasement (need {cost}, have {current}).",
+  "DEADLANDS.Sheet.Tab.Favors": "Favors",
   "DEADLANDS.Sheet.Empty.Favors": "No favors. Add a Favor item to unlock this section.",
   "DEADLANDS.Shaman.Medicine.Blessing": "Blessing",
   "DEADLANDS.Shaman.Medicine.Earth": "Earth",
@@ -449,6 +451,7 @@
   "DEADLANDS.MadScientist.Malfunction.Catastrophic": "Catastrophic Malfunction",
   "DEADLANDS.MadScientist.Warn.NeedsBlueprint": "This gizmo needs a devised blueprint first.",
   "DEADLANDS.MadScientist.Warn.NotConstructed": "This gizmo has not been constructed yet.",
+  "DEADLANDS.Sheet.Tab.Gizmos": "Gizmos",
   "DEADLANDS.Sheet.Empty.Gizmos": "No gizmos. Add a Gizmo item to unlock this section.",
   "DEADLANDS.MadScientist.Madness.AbsentMinded.Label": "Absent-Minded",
   "DEADLANDS.MadScientist.Madness.AbsentMinded.Note": "Character frequently forgets important details — GM applies penalties to memory-based tasks.",

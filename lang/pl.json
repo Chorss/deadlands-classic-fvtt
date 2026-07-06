@@ -356,6 +356,7 @@
   "DEADLANDS.Blessed.Chat.SpiritRoll": "Rzut Ducha",
   "DEADLANDS.Blessed.Chat.FaithLost": "Wiara −1 poziom.",
   "DEADLANDS.Blessed.Chat.FaithKept": "Wiara się utrzymuje — brak utraty poziomu.",
+  "DEADLANDS.Sheet.Tab.Miracles": "Cuda",
   "DEADLANDS.Sheet.Empty.Miracles": "Brak cudów. Dodaj przedmiot Cud, aby odblokować sekcję.",
 
   "DEADLANDS.Shaman.Ritual.Label": "Umiejętność Rytuału",
@@ -387,6 +388,7 @@
   "DEADLANDS.Shaman.Chat.ManitouRepelled": "Szaman odparł manitou",
   "DEADLANDS.Shaman.Chat.ManitouDamage": "Obrażenia trzewi",
   "DEADLANDS.Shaman.Warn.InsufficientAppeasement": "{name}: za mało Obłaskawienia (potrzeba {cost}, masz {current}).",
+  "DEADLANDS.Sheet.Tab.Favors": "Przysługi",
   "DEADLANDS.Sheet.Empty.Favors": "Brak przysług. Dodaj przedmiot Przysługa, aby odblokować sekcję.",
   "DEADLANDS.Shaman.Medicine.Blessing": "Błogosławieństwo",
   "DEADLANDS.Shaman.Medicine.Earth": "Ziemia",
@@ -449,6 +451,7 @@
   "DEADLANDS.MadScientist.Malfunction.Catastrophic": "Katastrofalna Awaria",
   "DEADLANDS.MadScientist.Warn.NeedsBlueprint": "Ten wynalazek wymaga najpierw opracowanego projektu.",
   "DEADLANDS.MadScientist.Warn.NotConstructed": "Ten wynalazek nie został jeszcze zbudowany.",
+  "DEADLANDS.Sheet.Tab.Gizmos": "Wynalazki",
   "DEADLANDS.Sheet.Empty.Gizmos": "Brak wynalazków. Dodaj przedmiot Wynalazek, aby odblokować sekcję.",
   "DEADLANDS.MadScientist.Madness.AbsentMinded.Label": "Roztargnienie",
   "DEADLANDS.MadScientist.Madness.AbsentMinded.Note": "Postać często zapomina ważnych szczegółów — MG stosuje kary do zadań wymagających pamięci.",
