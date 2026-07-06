@@ -251,19 +251,28 @@ export class FatePot {
    * Overwrite pot counts with the given absolute values (clamped ≥ 0), routed
    * through the GM client like every other mutation.
    *
-   * Updater functions are no longer accepted — they can't cross the GM query
-   * wire. Increments/decrements go through the dedicated ops instead
-   * (`returnToPool`, `discard`, `drawBlind`).
+   * A function cannot cross the GM query wire, so the updater form runs the
+   * function locally against a snapshot of the current pot and sends the
+   * resulting plain object. It is **deprecated** (no protection against a
+   * concurrent write between the read and the send — same as a manual
+   * `get()`+`patch()`); prefer `returnToPool` / `discard` / `drawBlind` for
+   * read-dependent changes. Kept as a compat shim for 0.3.x GM macros.
    *
-   * @param {{ white?:number, red?:number, blue?:number, legend?:number }} patch
+   * @param {{ white?:number, red?:number, blue?:number, legend?:number }
+   *   | ((current: {white:number,red:number,blue:number,legend:number}) => object)} patch
    */
   static async patch(patch) {
+    let plainPatch = patch;
     if (typeof patch === "function") {
-      throw new TypeError(
-        "FatePot.patch no longer accepts updater functions — use returnToPool/discard/drawBlind or pass a plain patch object."
+      foundry.utils.logCompatibilityWarning(
+        "FatePot.patch(updaterFn) is deprecated — pass a plain patch object, or use " +
+          "returnToPool/discard/drawBlind for read-dependent changes. The updater runs " +
+          "against a local snapshot with no guard against concurrent writes.",
+        { since: "0.4.0", until: "0.5.0", once: true }
       );
+      plainPatch = patch(FatePot.getData());
     }
-    await dispatchGmOp(FATE_POT_OP, { op: "patch", patch });
+    await dispatchGmOp(FATE_POT_OP, { op: "patch", patch: plainPatch });
   }
 
   /**

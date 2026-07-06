@@ -20,8 +20,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- `FatePot.patch` accepts plain patch objects only — updater functions cannot
-  cross the GM query wire; use `returnToPool` / `discard` / `drawBlind`.
+- `FatePot.patch` prefers a plain patch object (an updater function can't cross
+  the GM query wire). The updater form is still accepted as a **deprecated**
+  compat shim — it runs locally against a snapshot and logs a compatibility
+  warning; prefer `returnToPool` / `discard` / `drawBlind` for read-dependent
+  changes.
 - `ActionDeck.initialize` returns an `{ok, cardsRemaining}` summary instead of
   the full deck state, so the draw-pile order never crosses the wire.
 - The four copies of the white-chip spend-then-roll block (trait, aptitude, hex,
