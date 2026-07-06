@@ -155,7 +155,7 @@
   "DEADLANDS.ChipRule.OnePerAction": "Tylko jeden czerwony, niebieski lub legendarny szton na akcję.",
 
   "DEADLANDS.GmProxy.NoActiveGM": "Ta akcja wymaga aktywnego Mistrza Gry — poproś MG o zalogowanie się i spróbuj ponownie.",
-  "DEADLANDS.GmProxy.QueryFailed": "Klient MG nie potwierdził akcji — nic nie zostało zmienione. Spróbuj ponownie.",
+  "DEADLANDS.GmProxy.QueryFailed": "Klient MG nie potwierdził akcji po kilku próbach — mogła zostać zastosowana lub nie. Sprawdź Pulę Losu / Talię Akcji przed ponowieniem.",
 
   "DEADLANDS.Wound.Severity.None": "Brak",
   "DEADLANDS.Wound.Severity.Light": "Lekkie",

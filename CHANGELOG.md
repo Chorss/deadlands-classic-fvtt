@@ -39,6 +39,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Chip spends now write the pot **before** deducting the actor's chips, so a
   rejected pot write (e.g. no GM online) can no longer vanish a chip; roll
   flows abort cleanly when the spend fails.
+- **GM-op retries no longer double-apply.** A `User#query` timeout expires only
+  the caller's ack while the GM keeps running the handler, so the old
+  "nothing was changed — try again" message was false and a retry re-applied
+  the op. Each dispatch now carries a stable `opId`, handlers run through an
+  `OpDedupCache` on the GM client (retry collapses onto the first run), and the
+  query is retried once automatically. The `QueryFailed` message no longer
+  claims nothing changed.
+- **Silent GM-local failures now notify.** A failed op on the GM's own client
+  (the `gm.isSelf` path) previously threw with no user feedback, while the chip
+  spend/`tryWhiteSpend` catch blocks assumed the proxy had already notified. The
+  GM-local path now surfaces the same error notification as the remote path.
 
 ## [0.3.3] — 2026-07-01
 
