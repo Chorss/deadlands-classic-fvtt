@@ -28,62 +28,71 @@ const returnWhites = async (n) => {
 test("concurrent GM + player writes neither lose chips nor duplicate cards", async ({
   browser,
 }) => {
-  const gmPage = await (await browser.newContext()).newPage();
-  const playerPage = await (await browser.newContext()).newPage();
-  await joinAs(gmPage, "Gamemaster");
-  await joinAs(playerPage, "Player");
-
-  // ── Fate Pot: concurrent returnToPool from both clients ──────────────────
-  const whiteBefore = await gmPage.evaluate(
-    () => game.deadlandsClassic.chips.FatePot.getData().white
-  );
-
-  await Promise.all([
-    gmPage.evaluate(returnWhites, OPS_PER_CLIENT),
-    playerPage.evaluate(returnWhites, OPS_PER_CLIENT),
-  ]);
-
-  // All writes happen on the GM client, so its read is authoritative.
-  const whiteAfter = await gmPage.evaluate(
-    () => game.deadlandsClassic.chips.FatePot.getData().white
-  );
-  expect(whiteAfter, "lost white-chip updates across clients").toBe(
-    whiteBefore + 2 * OPS_PER_CLIENT
-  );
-
-  // Restore the pot.
-  await gmPage.evaluate(
-    (white) => game.deadlandsClassic.chips.FatePot.patch({ white }),
-    whiteBefore
-  );
-
-  // ── Action Deck: concurrent deals from both clients ──────────────────────
-  const combatId = await gmPage.evaluate(async () => {
-    const combat = await Combat.implementation.create({});
-    return combat.id;
-  });
-
+  // Own the contexts so they can be closed — otherwise each spec leaks two live
+  // Foundry sessions into every later spec sharing this worker.
+  const gmContext = await browser.newContext();
+  const playerContext = await browser.newContext();
   try {
-    // Wait for the new combat to replicate to the player client.
-    await playerPage.waitForFunction((id) => Boolean(game.combats.get(id)), combatId);
+    const gmPage = await gmContext.newPage();
+    const playerPage = await playerContext.newPage();
+    await joinAs(gmPage, "Gamemaster");
+    await joinAs(playerPage, "Player");
 
-    const dealFromCombat = async ({ id, count }) =>
-      game.deadlandsClassic.cards.ActionDeck.deal(game.combats.get(id), count);
+    // ── Fate Pot: concurrent returnToPool from both clients ────────────────
+    const whiteBefore = await gmPage.evaluate(
+      () => game.deadlandsClassic.chips.FatePot.getData().white
+    );
 
-    const [gmCards, playerCards] = await Promise.all([
-      gmPage.evaluate(dealFromCombat, { id: combatId, count: CARDS_PER_CLIENT }),
-      playerPage.evaluate(dealFromCombat, { id: combatId, count: CARDS_PER_CLIENT }),
+    await Promise.all([
+      gmPage.evaluate(returnWhites, OPS_PER_CLIENT),
+      playerPage.evaluate(returnWhites, OPS_PER_CLIENT),
     ]);
 
-    const all = [...gmCards, ...playerCards].map((card) => JSON.stringify(card));
-    expect(new Set(all).size, "duplicate cards dealt across clients").toBe(2 * CARDS_PER_CLIENT);
-
-    const remaining = await gmPage.evaluate(
-      (id) => game.deadlandsClassic.cards.ActionDeck.getState(game.combats.get(id)).drawPile.length,
-      combatId
+    // All writes happen on the GM client, so its read is authoritative.
+    const whiteAfter = await gmPage.evaluate(
+      () => game.deadlandsClassic.chips.FatePot.getData().white
     );
-    expect(remaining).toBe(FULL_DECK - 2 * CARDS_PER_CLIENT);
+    expect(whiteAfter, "lost white-chip updates across clients").toBe(
+      whiteBefore + 2 * OPS_PER_CLIENT
+    );
+
+    // Restore the pot.
+    await gmPage.evaluate(
+      (white) => game.deadlandsClassic.chips.FatePot.patch({ white }),
+      whiteBefore
+    );
+
+    // ── Action Deck: concurrent deals from both clients ────────────────────
+    const combatId = await gmPage.evaluate(async () => {
+      const combat = await Combat.implementation.create({});
+      return combat.id;
+    });
+
+    try {
+      // Wait for the new combat to replicate to the player client.
+      await playerPage.waitForFunction((id) => Boolean(game.combats.get(id)), combatId);
+
+      const dealFromCombat = async ({ id, count }) =>
+        game.deadlandsClassic.cards.ActionDeck.deal(game.combats.get(id), count);
+
+      const [gmCards, playerCards] = await Promise.all([
+        gmPage.evaluate(dealFromCombat, { id: combatId, count: CARDS_PER_CLIENT }),
+        playerPage.evaluate(dealFromCombat, { id: combatId, count: CARDS_PER_CLIENT }),
+      ]);
+
+      const all = [...gmCards, ...playerCards].map((card) => JSON.stringify(card));
+      expect(new Set(all).size, "duplicate cards dealt across clients").toBe(2 * CARDS_PER_CLIENT);
+
+      const remaining = await gmPage.evaluate(
+        (id) =>
+          game.deadlandsClassic.cards.ActionDeck.getState(game.combats.get(id)).drawPile.length,
+        combatId
+      );
+      expect(remaining).toBe(FULL_DECK - 2 * CARDS_PER_CLIENT);
+    } finally {
+      await gmPage.evaluate((id) => game.combats.get(id)?.delete(), combatId);
+    }
   } finally {
-    await gmPage.evaluate((id) => game.combats.get(id)?.delete(), combatId);
+    await Promise.all([gmContext.close(), playerContext.close()]);
   }
 });
