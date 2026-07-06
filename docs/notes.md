@@ -63,6 +63,11 @@ op appliers, unit-tested in `tests/fate-pot-ops.test.mjs` / `tests/action-deck-o
 - The deck order is still readable by any client via `combat.flags` (the `deckState` flag) —
   responses never expose the pile, but the flag itself replicates to all clients. Hiding it
   would need GM-owned storage (e.g. a world setting keyed per combat).
+- **Actor chip write is not fully atomic with the pot write.** `executeSpend` /
+  `executeWhiteSpend` re-read the actor's live chip count immediately before `actor.update`, so a
+  grant that lands during the GM round trip is no longer clobbered — but a narrow TOCTOU window
+  remains between that re-read and the write. A full fix (optimistic per-actor lock / CAS) is
+  deferred; the re-read closes the systematic case (a Marshal grant mid-spend).
 - Add a `media` entry to `system.json` once real screenshots exist in `assets/screenshots/`.
 
 ---

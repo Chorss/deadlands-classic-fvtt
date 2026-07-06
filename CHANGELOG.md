@@ -59,6 +59,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (return-to-pool, then the Marshal's Tithe draw); if the second failed, the pot
   kept the returned chip with no matching draw and a retry inflated it further.
   A single `spendWithTithe` op does both in one GM-side write.
+- **Chip deduction no longer clobbers a concurrent grant.** `executeSpend` /
+  `executeWhiteSpend` wrote the actor's new chip count from a snapshot taken
+  before the GM round trip, so a chip the Marshal granted mid-spend was silently
+  overwritten. The write is now a delta off a fresh read taken right before it.
 
 ## [0.3.3] — 2026-07-01
 

@@ -98,8 +98,8 @@ export function applyChipCap(currentChips, incoming) {
  * @returns {Promise<{ color: string, mode: string, marshalDraw: string|null }>}
  */
 export async function executeSpend(actor, color, { mode = "normal", rollType = "trait" } = {}) {
-  const current = actor.system.chips[color] ?? 0;
-  if (current <= 0) {
+  const initial = actor.system.chips[color] ?? 0;
+  if (initial <= 0) {
     throw new Error(`Actor has no ${color} chips to spend.`);
   }
 
@@ -118,8 +118,12 @@ export async function executeSpend(actor, color, { mode = "normal", rollType = "
     marshalDraw = await FatePot.spendWithTithe(color, { tithe });
   }
 
-  // Deduct from actor.
-  await actor.update({ [`system.chips.${color}`]: current - 1 });
+  // Re-read the live count: the GM round trip above can change the actor's
+  // chips mid-flight (e.g. the Marshal grants one, or a Joker draw resolves).
+  // Writing `initial - 1` from the pre-await snapshot would silently clobber
+  // that change, so base the deduction on the current value instead.
+  const current = actor.system.chips[color] ?? 0;
+  await actor.update({ [`system.chips.${color}`]: Math.max(0, current - 1) });
 
   return { color, mode, marshalDraw };
 }
@@ -139,12 +143,15 @@ export async function executeSpend(actor, color, { mode = "normal", rollType = "
  * @returns {Promise<number>} the clamped amount actually spent
  */
 export async function executeWhiteSpend(actor, requested) {
-  const current = actor.system.chips?.white ?? 0;
-  const spend = Math.min(Math.max(0, requested), current);
+  const available = actor.system.chips?.white ?? 0;
+  const spend = Math.min(Math.max(0, requested), available);
   if (spend > 0) {
     // Pot write first (GM-routed, can fail) — see executeSpend.
     await FatePot.returnToPool("white", spend);
-    await actor.update({ "system.chips.white": current - spend });
+    // Re-read after the GM round trip so a concurrent grant isn't clobbered;
+    // the deduction is a delta off the current value, not the pre-await one.
+    const current = actor.system.chips?.white ?? 0;
+    await actor.update({ "system.chips.white": Math.max(0, current - spend) });
   }
   return spend;
 }
