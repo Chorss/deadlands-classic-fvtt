@@ -1,6 +1,7 @@
 {
   "DEADLANDS.System.Title": "Deadlands Classic",
   "DEADLANDS.System.Loaded": "Deadlands Classic system ready.",
+  "DEADLANDS.System.Marshal": "Marshal",
 
   "DEADLANDS.Settings.DisplayFont.Label": "Display font",
   "DEADLANDS.Settings.DisplayFont.Hint": "Font used for headings, trait names and section titles. All options are bundled offline.",
@@ -135,6 +136,8 @@
   "DEADLANDS.Roll.Damage": "Damage",
   "DEADLANDS.Roll.Unskilled": "Unskilled",
   "DEADLANDS.Roll.ArmorReduction": "− {value} armor",
+  "DEADLANDS.Roll.AcesCount": "Aces: {count}",
+  "DEADLANDS.Roll.VersusTN": "vs TN {tn}",
 
   "DEADLANDS.TN.Foolproof": "Foolproof",
   "DEADLANDS.TN.Fair": "Fair",

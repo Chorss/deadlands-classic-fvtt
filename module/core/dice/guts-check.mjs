@@ -179,9 +179,10 @@ async function _postGutsChat({
   </div>`;
   }
 
+  const tnLabel = game.i18n.format("DEADLANDS.Roll.VersusTN", { tn });
   const content = `<div class="dlc-roll-card ${outcomeClass}">
   <header class="dlc-roll-label">${game.i18n.localize("DEADLANDS.Guts.Label")}: ${actor.name}${unskilledStr}</header>
-  <div class="dlc-roll-total">${gutsResult.highest}${modStr} <span class="dlc-tn">vs TN ${tn}</span></div>
+  <div class="dlc-roll-total">${gutsResult.highest}${modStr} <span class="dlc-tn">${tnLabel}</span></div>
   <div class="dlc-roll-outcome">${outcomeText}</div>${scartHtml}
 </div>`;
 

@@ -1,6 +1,7 @@
 {
   "DEADLANDS.System.Title": "Deadlands Classic",
   "DEADLANDS.System.Loaded": "System Deadlands Classic załadowany.",
+  "DEADLANDS.System.Marshal": "MG",
 
   "DEADLANDS.Settings.DisplayFont.Label": "Czcionka nagłówków",
   "DEADLANDS.Settings.DisplayFont.Hint": "Czcionka używana w nagłówkach, nazwach cech i tytułach sekcji. Wszystkie warianty są dołączone offline.",
@@ -135,6 +136,8 @@
   "DEADLANDS.Roll.Damage": "Obrażenia",
   "DEADLANDS.Roll.Unskilled": "Bez umiejętności",
   "DEADLANDS.Roll.ArmorReduction": "− {value} pancerza",
+  "DEADLANDS.Roll.AcesCount": "Asy: {count}",
+  "DEADLANDS.Roll.VersusTN": "PT {tn}",
 
   "DEADLANDS.TN.Foolproof": "Banalny",
   "DEADLANDS.TN.Fair": "Zwykły",

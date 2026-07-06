@@ -30,6 +30,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `lightArmorValue` (Light Armor flat subtraction) separately and applies them
   in the correct order. The pure math is unit-tested against the rulebook's own
   worked examples.
+- **Localization**: chat-card strings that were hardcoded in English — the
+  Aces tooltip, the "vs TN" total label (trait and Guts rolls), the damage
+  Armor reduction, and the "Marshal" session-draw label — now go through
+  `game.i18n` with EN/PL keys.
 
 ## [0.3.3] — 2026-07-01
 
