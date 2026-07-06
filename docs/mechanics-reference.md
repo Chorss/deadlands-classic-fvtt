@@ -24,7 +24,11 @@ No dice for the order itself. Each round make a **Quickness roll vs TN 5 (Fair)*
 **0 cards**; otherwise draw **1 base card + 1 per raise** (max 5 — a bare success with no raises = 1
 card) from a 54-card deck (52 + 2 Jokers). Act highest → lowest. Suit tiebreaker: **♠ > ♥ > ♦ > ♣**. Red Joker = best (act anytime + draw a Fate
 Chip). Black Joker = backlash (discard your sleeve card; the Marshal draws a chip from the Pot;
-reshuffle at end of round).
+reshuffle at end of round). **Reshuffle has two triggers** (`dlc` p.116): the deck running out
+mid-round reshuffles the played (discard) cards back into the draw stock **immediately** — never a
+second fresh deck, so no card is dealt twice; a Black Joker instead finishes the round, then
+reshuffles. *(Implementation simplification: one shared deck for the whole combat rather than a
+separate posse / Marshal deck — see `docs/notes.md`.)*
 
 ## 4. Fate Chips — four colors — `dlc` p.146-148
 - **White** (1 BP) — +1 extra die on a Trait/Aptitude roll (stack multiple Whites until the first

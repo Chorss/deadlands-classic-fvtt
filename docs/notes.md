@@ -68,6 +68,11 @@ op appliers, unit-tested in `tests/fate-pot-ops.test.mjs` / `tests/action-deck-o
   grant that lands during the GM round trip is no longer clobbered — but a narrow TOCTOU window
   remains between that re-read and the write. A full fix (optimistic per-actor lock / CAS) is
   deferred; the re-read closes the systematic case (a Marshal grant mid-spend).
+- **Action Deck uses one shared deck for the whole combat**, not the separate posse / Marshal
+  decks the rules describe (`dlc` p.26, p.117). Same-card ties are meant to happen *across* the two
+  decks; with a single deck they can't occur at all. Splitting into two decks (keyed by PC vs NPC
+  side) is future work — the mid-round exhaustion now recycles the discard pile rather than dealing
+  duplicates, which was the acute bug.
 - Add a `media` entry to `system.json` once real screenshots exist in `assets/screenshots/`.
 
 ---

@@ -136,12 +136,39 @@ const FLAG_KEY = "deckState";
 const ACTION_DECK_OP = `${FLAG_SCOPE}.actionDeckOp`;
 
 /**
- * @typedef {{ drawPile: object[], reshuffleAtRoundEnd: boolean }} DeckState
+ * @typedef {{ drawPile: object[], discardPile: object[], reshuffleAtRoundEnd: boolean }} DeckState
  */
 
 /** @returns {DeckState} a fresh shuffled 54-card deck state */
 function freshDeckState(rng) {
-  return { drawPile: shuffleDeck(buildFullDeck(), rng), reshuffleAtRoundEnd: false };
+  return {
+    drawPile: shuffleDeck(buildFullDeck(), rng),
+    discardPile: [],
+    reshuffleAtRoundEnd: false,
+  };
+}
+
+/**
+ * Deal `count` cards, recycling this deck's discard pile into the draw stock if
+ * the draw pile runs short (never a fresh second deck — that would deal a
+ * duplicate of a card already in play). `dlc` p.116.
+ * @param {DeckState} base
+ * @param {number} count
+ * @param {() => number} rng
+ * @returns {{ state: DeckState, result: { ok:true, dealt:object[], cardsRemaining:number } }}
+ */
+function dealFromDeck(base, count, rng) {
+  const drawPile = [...base.drawPile];
+  let discardPile = [...(base.discardPile ?? [])];
+  if (drawPile.length < count && discardPile.length > 0) {
+    drawPile.push(...shuffleDeck(discardPile, rng));
+    discardPile = [];
+  }
+  const dealt = drawPile.splice(0, count);
+  return {
+    state: { ...base, drawPile, discardPile },
+    result: { ok: true, dealt, cardsRemaining: drawPile.length },
+  };
 }
 
 /**
@@ -151,6 +178,7 @@ function freshDeckState(rng) {
  *
  * @param {DeckState|null} state — current state, or null when uninitialized
  * @param {{ op:"initialize" } | { op:"deal", count:number } |
+ *          { op:"discard", cards:object[] } |
  *          { op:"markReshuffle" } | { op:"maybeReshuffle" }} op
  * @param {() => number} [rng] — injectable for deterministic tests
  * @returns {{ state: DeckState|null,
@@ -166,17 +194,15 @@ export function applyDeckOp(state, op, rng = Math.random) {
       if (!Number.isInteger(op.count) || op.count <= 0) {
         throw new Error(`Deal count must be a positive integer, got "${op.count}".`);
       }
+      return dealFromDeck(state ?? freshDeckState(rng), op.count, rng);
+    }
+    case "discard": {
+      // Retire played cards to the discard pile so a later mid-round
+      // exhaustion can recycle them. `dlc` p.116.
       const base = state ?? freshDeckState(rng);
-      const drawPile = [...base.drawPile];
-      if (drawPile.length < op.count) {
-        // Normal mid-combat reshuffle when the pile runs dry. `dlc` p.116.
-        drawPile.push(...shuffleDeck(buildFullDeck(), rng));
-      }
-      const dealt = drawPile.splice(0, op.count);
-      return {
-        state: { ...base, drawPile },
-        result: { ok: true, dealt, cardsRemaining: drawPile.length },
-      };
+      const cards = Array.isArray(op.cards) ? op.cards : [];
+      const next = { ...base, discardPile: [...(base.discardPile ?? []), ...cards] };
+      return { state: next, result: { ok: true, cardsRemaining: next.drawPile.length } };
     }
     case "markReshuffle": {
       const base = state ?? freshDeckState(rng);
@@ -268,8 +294,9 @@ export class ActionDeck {
   }
 
   /**
-   * Draw `count` cards from the pile. Auto-reshuffles a fresh deck if the pile
-   * runs empty (normal mid-combat reshuffle, `dlc` p.116).
+   * Draw `count` cards from the pile. If the pile runs short mid-round it
+   * recycles this deck's discard pile back into the draw stock (never a fresh
+   * second deck). `dlc` p.116.
    * @param {Combat} combat
    * @param {number} count
    * @returns {Promise<object[]>} dealt cards
@@ -284,6 +311,19 @@ export class ActionDeck {
       count,
     });
     return dealt;
+  }
+
+  /**
+   * Retire played cards to the deck's discard pile (called at round end for the
+   * cards that were in play). `dlc` p.116.
+   * @param {Combat} combat
+   * @param {object[]} cards
+   */
+  static async discard(combat, cards) {
+    if (!cards?.length) {
+      return;
+    }
+    await dispatchGmOp(ACTION_DECK_OP, { op: "discard", combatId: combat.id, cards });
   }
 
   /**

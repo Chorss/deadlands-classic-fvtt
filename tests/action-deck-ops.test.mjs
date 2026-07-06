@@ -6,7 +6,12 @@
 
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { applyDeckOp, buildFullDeck, shuffleDeck } from "../module/core/cards/action-deck.mjs";
+import {
+  applyDeckOp,
+  buildFullDeck,
+  cardLabelRaw,
+  shuffleDeck,
+} from "../module/core/cards/action-deck.mjs";
 
 const DECK_SIZE = 54;
 const rng = () => 0; // deterministic — order is irrelevant to these assertions
@@ -14,6 +19,7 @@ const rng = () => 0; // deterministic — order is irrelevant to these assertion
 /** Fresh initialized fixture state. */
 const fullState = () => ({
   drawPile: shuffleDeck(buildFullDeck(), rng),
+  discardPile: [],
   reshuffleAtRoundEnd: false,
 });
 
@@ -41,14 +47,44 @@ describe("applyDeckOp", () => {
       assert.equal(state.drawPile.length, DECK_SIZE - 5);
     });
 
-    it("tops up with a fresh deck when the pile runs short", () => {
-      // Arrange — only 3 cards left, 5 requested.
-      const short = { drawPile: buildFullDeck().slice(0, 3), reshuffleAtRoundEnd: false };
+    it("recycles the discard pile when the draw pile runs short (dlc p.116)", () => {
+      // Arrange — 3 cards left to draw, 17 already played, 5 requested.
+      const deck = buildFullDeck();
+      const short = {
+        drawPile: deck.slice(0, 3),
+        discardPile: deck.slice(3, 20),
+        reshuffleAtRoundEnd: false,
+      };
       // Act
-      const { result } = applyDeckOp(short, { op: "deal", count: 5 }, rng);
-      // Assert — 3 + 54 top-up − 5 dealt.
+      const { state, result } = applyDeckOp(short, { op: "deal", count: 5 }, rng);
+      // Assert — discard folded into draw (3 + 17), then 5 dealt; discard emptied.
       assert.equal(result.dealt.length, 5);
-      assert.equal(result.cardsRemaining, 3 + DECK_SIZE - 5);
+      assert.equal(result.cardsRemaining, 3 + 17 - 5);
+      assert.equal(state.discardPile.length, 0);
+    });
+
+    it("never manufactures duplicate cards on a short deal (dlc p.116)", () => {
+      const deck = buildFullDeck();
+      const short = {
+        drawPile: deck.slice(0, 2),
+        discardPile: deck.slice(2, 12),
+        reshuffleAtRoundEnd: false,
+      };
+      const { state, result } = applyDeckOp(short, { op: "deal", count: 5 }, rng);
+      const all = [...result.dealt, ...state.drawPile, ...state.discardPile].map(cardLabelRaw);
+      assert.equal(new Set(all).size, all.length); // every card unique — no dupes
+    });
+
+    it("deals only what's available when draw and discard are both short", () => {
+      // No fresh 54-card deck is ever appended — a short deal simply deals fewer.
+      const short = {
+        drawPile: buildFullDeck().slice(0, 3),
+        discardPile: [],
+        reshuffleAtRoundEnd: false,
+      };
+      const { result } = applyDeckOp(short, { op: "deal", count: 5 }, rng);
+      assert.equal(result.dealt.length, 3);
+      assert.equal(result.cardsRemaining, 0);
     });
 
     it("initializes a deck first when the state is null", () => {
@@ -66,6 +102,23 @@ describe("applyDeckOp", () => {
     it("throws on a non-positive or non-integer count", () => {
       assert.throws(() => applyDeckOp(fullState(), { op: "deal", count: 0 }), /positive integer/);
       assert.throws(() => applyDeckOp(fullState(), { op: "deal", count: 1.5 }), /positive integer/);
+    });
+  });
+
+  describe("discard", () => {
+    it("adds cards to the discard pile, leaving the draw pile untouched", () => {
+      const deck = buildFullDeck();
+      const input = { drawPile: deck.slice(0, 40), discardPile: [], reshuffleAtRoundEnd: false };
+      const played = deck.slice(40, 45);
+      const { state } = applyDeckOp(input, { op: "discard", cards: played }, rng);
+      assert.equal(state.discardPile.length, 5);
+      assert.equal(state.drawPile.length, 40);
+    });
+
+    it("is a no-op with no cards", () => {
+      const input = fullState();
+      const { state } = applyDeckOp(input, { op: "discard", cards: [] }, rng);
+      assert.equal(state.discardPile.length, 0);
     });
   });
 

@@ -74,6 +74,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   that timed out or found no GM cost the player chips with no roll and leaked an
   unhandled rejection. Both flows now run through `runWithWhiteSpend`, which
   refunds the chips and notifies when the follow-up action throws.
+- **Action Deck no longer deals duplicate cards.** When the draw pile ran short
+  mid-round it was topped up with a whole fresh 54-card deck, so a card already
+  in a combatant's hand could be dealt again to another. Per dlc p.116 the deck
+  now recycles its own played (discard) pile back into the draw stock; a full
+  reshuffle is still reserved for the Black Joker. Round end retires the played
+  cards to the discard pile.
 
 ## [0.3.3] — 2026-07-01
 
