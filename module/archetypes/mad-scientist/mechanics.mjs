@@ -27,6 +27,10 @@ import { evaluateHand, meetsMinHand } from "../../core/dice/poker-hand-evaluator
 import { GIZMO_CONSTRUCTION_TABLE } from "../../core/items/gizmo-data.mjs";
 import { toPascal } from "../../core/utils.mjs";
 
+/** Blueprint roll TN — Fair (5). dlc p.168. Exported so the devise dialog can
+ * show the same number instead of a second, driftable copy. */
+export const BLUEPRINT_TN = 5;
+
 /**
  * Madness Table — d20 roll. dlc p.250.
  * Mechanical data only; entries describe the condition type, not rulebook prose.
@@ -71,14 +75,13 @@ export async function deviseBlueprint(actor, gizmoItem, opts = {}) {
   const traitData = actor.system.traits?.cognition;
   const cognitionDie = traitData?.dieType ?? "d6";
   const dieCount = Math.max(1, scienceLevel);
-  const blueprintTN = 5; // Fair (5) — dlc p.168.
 
   const rollResult = rollExplodingPool(dieCount, cognitionDie, {
     modifier: modifier + scienceMod,
-    tn: blueprintTN,
+    tn: BLUEPRINT_TN,
   });
 
-  const succeeded = !rollResult.bust && rollResult.total >= blueprintTN;
+  const succeeded = !rollResult.bust && rollResult.total >= BLUEPRINT_TN;
   let drawn = [];
   let handResult = null;
   let handMeets = false;

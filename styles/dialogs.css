@@ -9,12 +9,6 @@
   padding: 0.25rem;
 }
 
-.dlc-dialog-intro {
-  font-size: 0.85rem;
-  color: var(--dlc-ink-muted);
-  margin-bottom: 0.25rem;
-}
-
 .dlc-dialog-sub {
   font-size: 0.75rem;
   color: var(--dlc-ink-muted);
@@ -28,13 +22,6 @@
   flex-direction: column;
   gap: 0.5rem;
 }
-
-.dlc-chip-avail {
-  font-size: 0.75rem;
-  color: var(--dlc-ink-muted);
-}
-
-/* ── Chips section in combat tab ──────────────────────────────────────────── */
 
 /* ── Combatant hand dialog (action deck) ──────────────────────────────────── */
 

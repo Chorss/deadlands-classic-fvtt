@@ -1,23 +1,38 @@
 {{!-- Dialog: invoke a miracle (Blessed). --}}
 <form class="dlc-dialog-form">
-  <p class="dlc-dialog-intro">
-    {{localize "DEADLANDS.Blessed.Dialog.InvokeIntro"}}: <strong>{{miracleName}}</strong>
-    ({{localize "DEADLANDS.Blessed.MiracleTable.TN"}}: {{tn}})
+  <div class="dlc-dialog-kicker">{{localize "DEADLANDS.Blessed.Dialog.InvokeIntro"}}</div>
+  <div class="dlc-dialog-title">{{miracleName}}</div>
+  <p class="dlc-dialog-sub">
+    {{localize "DEADLANDS.Blessed.MiracleTable.TN"}}: <span class="dlc-num">{{tn}}</span>
   </p>
 
-  <div class="dlc-form-row">
-    <label for="modifier">{{localize "DEADLANDS.Dialog.Modifier"}}</label>
-    <input type="number" id="modifier" name="modifier" value="0" />
+  <div class="dlc-dialog-field">
+    <span class="dlc-dialog-field-label">{{localize "DEADLANDS.Dialog.Modifier"}}</span>
+    <div class="dlc-stepper">
+      <button type="button" class="dlc-stepper-btn" data-action="stepDown" data-for="modifier"
+        aria-label="{{localize 'DEADLANDS.Dialog.Stepper.Decrease'}}">−</button>
+      <input class="dlc-stepper-input dlc-num" type="number" name="modifier" value="0" />
+      <button type="button" class="dlc-stepper-btn" data-action="stepUp" data-for="modifier"
+        aria-label="{{localize 'DEADLANDS.Dialog.Stepper.Increase'}}">+</button>
+    </div>
   </div>
 
   {{#if maxWhite}}
-  <div class="dlc-form-row">
-    <label for="whiteChips">
+  <div class="dlc-dialog-field">
+    <span class="dlc-dialog-field-label">
       {{localize "DEADLANDS.Dialog.WhiteChips"}}
       ({{localize "DEADLANDS.Blessed.Dialog.Available"}}: {{maxWhite}})
-    </label>
-    <input type="number" id="whiteChips" name="whiteChips"
-      min="0" max="{{maxWhite}}" value="0" />
+    </span>
+    <div class="dlc-spend-row">
+      <button type="button" class="dlc-stepper-btn" data-action="stepDown" data-for="whiteChips"
+        aria-label="{{localize 'DEADLANDS.Dialog.Stepper.Decrease'}}">−</button>
+      <span class="dlc-chip dlc-chip-white">
+        <input class="dlc-chip-token dlc-num" type="number" name="whiteChips" value="0"
+          min="0" max="{{maxWhite}}" />
+      </span>
+      <button type="button" class="dlc-stepper-btn" data-action="stepUp" data-for="whiteChips"
+        aria-label="{{localize 'DEADLANDS.Dialog.Stepper.Increase'}}">+</button>
+    </div>
   </div>
   {{/if}}
 </form>

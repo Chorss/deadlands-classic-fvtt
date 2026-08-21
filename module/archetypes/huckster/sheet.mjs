@@ -8,6 +8,7 @@
  */
 
 import { runWithWhiteSpend } from "../../core/chips/chip-widget.mjs";
+import { stepperActions } from "../../core/dialogs/stepper-actions.mjs";
 import { POKER_HAND_RANKS } from "../../core/dice/poker-hand-evaluator.mjs";
 import { toPascal } from "../../core/utils.mjs";
 import { BaseCharacterSheet } from "../_base/base-character-sheet.mjs";
@@ -132,6 +133,7 @@ export class HucksterSheet extends BaseCharacterSheet {
         title: game.i18n.format("DEADLANDS.Huckster.Dialog.CastTitle", { hex: hexItem.name }),
       },
       content,
+      actions: stepperActions,
       ok: {
         label: game.i18n.localize("DEADLANDS.Huckster.Dialog.Cast"),
         callback: (_event, button) => {

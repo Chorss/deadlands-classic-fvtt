@@ -1,14 +1,20 @@
 {{!-- Dialog: perform a ritual to earn Appeasement (Shaman). --}}
 <form class="dlc-dialog-form">
-  <p class="dlc-dialog-intro">
-    {{localize "DEADLANDS.Shaman.Dialog.RitualIntro"}}:
-    <strong>{{favorName}}</strong>
-    ({{localize "DEADLANDS.Shaman.FavorTable.TN"}}: {{ritualTN}})
+  <div class="dlc-dialog-kicker">{{localize "DEADLANDS.Shaman.Dialog.RitualIntro"}}</div>
+  <div class="dlc-dialog-title">{{favorName}}</div>
+  <p class="dlc-dialog-sub">
+    {{localize ritualTypeLabel}} —
+    {{localize "DEADLANDS.Shaman.FavorTable.TN"}}: <span class="dlc-num">{{ritualTN}}</span>
   </p>
-  <p class="dlc-dialog-sub">{{localize ritualTypeLabel}}</p>
 
-  <div class="dlc-form-row">
-    <label for="modifier">{{localize "DEADLANDS.Dialog.Modifier"}}</label>
-    <input type="number" id="modifier" name="modifier" value="0" />
+  <div class="dlc-dialog-field">
+    <span class="dlc-dialog-field-label">{{localize "DEADLANDS.Dialog.Modifier"}}</span>
+    <div class="dlc-stepper">
+      <button type="button" class="dlc-stepper-btn" data-action="stepDown" data-for="modifier"
+        aria-label="{{localize 'DEADLANDS.Dialog.Stepper.Decrease'}}">−</button>
+      <input class="dlc-stepper-input dlc-num" type="number" name="modifier" value="0" />
+      <button type="button" class="dlc-stepper-btn" data-action="stepUp" data-for="modifier"
+        aria-label="{{localize 'DEADLANDS.Dialog.Stepper.Increase'}}">+</button>
+    </div>
   </div>
 </form>

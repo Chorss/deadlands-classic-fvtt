@@ -1,19 +1,29 @@
 {{!-- Dialog: devise blueprint OR construct gizmo (Mad Scientist). --}}
 <form class="dlc-dialog-form">
   {{#if isConstruction}}
-  <p class="dlc-dialog-intro">
-    {{localize "DEADLANDS.MadScientist.Dialog.ConstructIntro"}}: <strong>{{gizmoName}}</strong>
-    ({{localize "DEADLANDS.MadScientist.GizmoTable.ConstructionTN"}}: {{constructionTN}})
+  <div class="dlc-dialog-kicker">{{localize "DEADLANDS.MadScientist.Dialog.ConstructIntro"}}</div>
+  <div class="dlc-dialog-title">{{gizmoName}}</div>
+  <p class="dlc-dialog-sub">
+    {{localize "DEADLANDS.MadScientist.GizmoTable.ConstructionTN"}}:
+    <span class="dlc-num">{{constructionTN}}</span>
   </p>
   {{else}}
-  <p class="dlc-dialog-intro">
-    {{localize "DEADLANDS.MadScientist.Dialog.BlueprintIntro"}}: <strong>{{gizmoName}}</strong>
-    ({{localize "DEADLANDS.MadScientist.Blueprint.TN"}}: 5)
+  <div class="dlc-dialog-kicker">{{localize "DEADLANDS.MadScientist.Dialog.BlueprintIntro"}}</div>
+  <div class="dlc-dialog-title">{{gizmoName}}</div>
+  <p class="dlc-dialog-sub">
+    {{localize "DEADLANDS.MadScientist.Blueprint.TN"}}:
+    <span class="dlc-num">{{blueprintTN}}</span>
   </p>
   {{/if}}
 
-  <div class="dlc-form-row">
-    <label for="modifier">{{localize "DEADLANDS.Dialog.Modifier"}}</label>
-    <input type="number" id="modifier" name="modifier" value="0" />
+  <div class="dlc-dialog-field">
+    <span class="dlc-dialog-field-label">{{localize "DEADLANDS.Dialog.Modifier"}}</span>
+    <div class="dlc-stepper">
+      <button type="button" class="dlc-stepper-btn" data-action="stepDown" data-for="modifier"
+        aria-label="{{localize 'DEADLANDS.Dialog.Stepper.Decrease'}}">−</button>
+      <input class="dlc-stepper-input dlc-num" type="number" name="modifier" value="0" />
+      <button type="button" class="dlc-stepper-btn" data-action="stepUp" data-for="modifier"
+        aria-label="{{localize 'DEADLANDS.Dialog.Stepper.Increase'}}">+</button>
+    </div>
   </div>
 </form>

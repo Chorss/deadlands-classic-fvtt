@@ -8,6 +8,7 @@
  */
 
 import { runWithWhiteSpend } from "../../core/chips/chip-widget.mjs";
+import { stepperActions } from "../../core/dialogs/stepper-actions.mjs";
 import { BaseCharacterSheet } from "../_base/base-character-sheet.mjs";
 import { HARROWED_SHEET_PART, HARROWED_SHEET_TAB } from "../_overlays/harrowed/sheet-tab.mjs";
 import { invokeMiracle, isMiracleAccessDenied, sinDenialLabel, trackSin } from "./mechanics.mjs";
@@ -135,6 +136,7 @@ export class BlessedSheet extends BaseCharacterSheet {
         }),
       },
       content,
+      actions: stepperActions,
       ok: {
         label: game.i18n.localize("DEADLANDS.Blessed.Dialog.Invoke"),
         callback: (_event, button) => {
