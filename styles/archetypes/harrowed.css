@@ -17,7 +17,7 @@
 .dlc-harrowed-label {
   font-family: var(--dlc-font-display);
   font-size: 0.8rem;
-  color: var(--dlc-color-muted);
+  color: var(--dlc-ink-muted);
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
@@ -51,7 +51,7 @@
 
 .dlc-dominion-last-roll {
   font-size: 0.75rem;
-  color: var(--dlc-color-muted);
+  color: var(--dlc-ink-muted);
 }
 
 /* ── Harrowed powers list ─────────────────────────────────────────────────── */
@@ -74,7 +74,7 @@
 }
 
 .dlc-power:hover {
-  background: var(--dlc-color-gold-dim);
+  background: color-mix(in srgb, var(--dlc-brass) 14%, transparent);
 }
 
 .dlc-power-name {
@@ -85,12 +85,12 @@
 .dlc-power-kind {
   font-size: 0.7rem;
   text-transform: uppercase;
-  color: var(--dlc-color-muted);
+  color: var(--dlc-ink-muted);
 }
 
 .dlc-power-level {
   font-size: 0.75rem;
-  color: var(--dlc-color-gold);
+  color: var(--dlc-brass);
 }
 
 /* ── Counting coup ────────────────────────────────────────────────────────── */
@@ -115,7 +115,7 @@
 
 .dlc-coup-source {
   flex: 1;
-  color: var(--dlc-color-muted);
+  color: var(--dlc-ink-muted);
 }
 
 .dlc-coup-power {
@@ -123,7 +123,7 @@
 }
 
 .dlc-coup-taint {
-  color: var(--dlc-color-blood);
+  color: var(--dlc-blood);
   font-size: 0.75rem;
 }
 
@@ -136,7 +136,7 @@
   padding: 1px 5px;
   border-radius: 10px;
   border: 1px solid currentColor;
-  color: var(--dlc-color-gold);
+  color: var(--dlc-brass);
 }
 
 /* ── Harrowed card variant ───────────────────────────────────────────────── */
@@ -154,7 +154,7 @@
 }
 
 .dlc-card--black {
-  border-color: var(--dlc-color-dark);
+  border-color: var(--dlc-ink);
   background: rgba(0, 0, 0, 0.15);
 }
 
@@ -162,13 +162,13 @@
 
 .dlc-last-roll-label {
   font-size: 0.7rem;
-  color: var(--dlc-color-muted);
+  color: var(--dlc-ink-muted);
 }
 .dlc-last-roll-pc {
   color: #2ecc71;
 }
 .dlc-last-roll-npc {
-  color: var(--dlc-color-blood);
+  color: var(--dlc-blood);
 }
 .dlc-last-roll-outcome {
   font-weight: bold;

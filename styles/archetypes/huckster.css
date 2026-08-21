@@ -22,7 +22,7 @@
 }
 
 .dlc-hex-row:hover {
-  background: var(--dlc-color-gold-dim);
+  background: color-mix(in srgb, var(--dlc-brass) 14%, transparent);
 }
 
 .dlc-hex-name {
@@ -76,10 +76,10 @@
   align-items: center;
   gap: 3px;
   padding: 2px 6px;
-  border: 1px solid var(--dlc-color-gold);
+  border: 1px solid var(--dlc-brass);
   border-radius: var(--dlc-radius);
   font-size: 0.8rem;
-  background: var(--dlc-color-gold-dim);
+  background: color-mix(in srgb, var(--dlc-brass) 14%, transparent);
   cursor: default;
   white-space: nowrap;
 }
@@ -116,7 +116,7 @@
    drawn-card lists, .dlc-joker-card in the cast-result chat card. */
 .dlc-joker,
 .dlc-joker-card {
-  border-color: var(--dlc-color-blood);
+  border-color: var(--dlc-blood);
   font-weight: bold;
 }
 
@@ -136,7 +136,7 @@
 /* ── Backlash warning ─────────────────────────────────────────────────────── */
 
 .dlc-backlash-warning {
-  color: var(--dlc-color-blood);
+  color: var(--dlc-blood);
   font-size: 0.8rem;
   font-style: italic;
 }
@@ -149,7 +149,7 @@
 }
 
 .dlc-hex-fail {
-  color: var(--dlc-color-blood);
+  color: var(--dlc-blood);
 }
 
 /* ── Hand result (poker evaluation) ──────────────────────────────────────── */
@@ -158,14 +158,14 @@
 .dlc-hand-title {
   font-family: var(--dlc-font-display);
   font-size: 0.9rem;
-  color: var(--dlc-color-gold);
+  color: var(--dlc-brass);
 }
 
 .dlc-hand-req,
 .dlc-hand-name,
 .dlc-hand-label {
   font-size: 0.75rem;
-  color: var(--dlc-color-muted);
+  color: var(--dlc-ink-muted);
 }
 
 .dlc-hand-cards {
@@ -176,6 +176,6 @@
 
 .dlc-hand-empty {
   font-style: italic;
-  color: var(--dlc-color-muted);
+  color: var(--dlc-ink-muted);
   font-size: 0.8rem;
 }

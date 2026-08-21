@@ -11,13 +11,13 @@
 
 .dlc-dialog-intro {
   font-size: 0.85rem;
-  color: var(--dlc-color-muted);
+  color: var(--dlc-ink-muted);
   margin-bottom: 0.25rem;
 }
 
 .dlc-dialog-sub {
   font-size: 0.75rem;
-  color: var(--dlc-color-muted);
+  color: var(--dlc-ink-muted);
   font-style: italic;
 }
 
@@ -31,7 +31,7 @@
 
 .dlc-chip-avail {
   font-size: 0.75rem;
-  color: var(--dlc-color-muted);
+  color: var(--dlc-ink-muted);
 }
 
 /* ── Chips section in combat tab ──────────────────────────────────────────── */
@@ -61,14 +61,14 @@
   align-items: center;
   gap: 0.4rem;
   padding: 3px 6px;
-  border: 1px dashed var(--dlc-color-gold);
+  border: 1px dashed var(--dlc-brass);
   border-radius: var(--dlc-radius);
 }
 
 .dlc-sleeved-label {
   font-size: 0.75rem;
   font-style: italic;
-  color: var(--dlc-color-muted);
+  color: var(--dlc-ink-muted);
 }
 
 /* ── Spend button (favors, chips) ────────────────────────────────────────── */
@@ -78,11 +78,11 @@
   padding: 1px 6px;
   cursor: pointer;
   background: none;
-  border: 1px solid var(--dlc-color-gold);
+  border: 1px solid var(--dlc-brass);
   border-radius: var(--dlc-radius);
-  color: var(--dlc-color-gold);
+  color: var(--dlc-brass);
 }
 
 .dlc-spend-btn:hover {
-  background: var(--dlc-color-gold-dim);
+  background: color-mix(in srgb, var(--dlc-brass) 14%, transparent);
 }

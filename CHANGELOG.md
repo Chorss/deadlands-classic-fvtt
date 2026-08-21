@@ -43,6 +43,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Ledger design tokens replace the old palette** (milestone M1 of the visual
+  redesign). `styles/_variables.css` now carries parchment surfaces for windows,
+  a night block for the sidebar, semantic accents, a five-step wound ramp,
+  fate-chip triples and a four-face type scale. The nine bundled `@font-face`
+  blocks are unchanged.
+- All 94 references to the retired `--dlc-color-*` and `--dlc-pip-{light,serious,
+  maimed,empty}` tokens were rewritten across the eleven component sheets. The
+  mapping is not 1:1 — the old names mixed role with value, so `--dlc-color-gold`
+  became `--dlc-brass`, `--dlc-color-muted` became `--dlc-ink-muted`, and the two
+  pre-baked `*-dim` alphas became `color-mix()` against the accent they tinted.
+  `--dlc-sheet-gap` and `--dlc-pip-size` keep their names; the design has no
+  counterpart for either.
+- Base primitives (`styles/_base.css`) rebuilt on the new tokens. All ten
+  existing classes keep their selectors, joined by thirteen helpers
+  (`.dlc-section-head`, `.dlc-block-end`, `.dlc-num`, the button variants, the
+  `.dlc-pill` family) that have no markup yet and so appear in the informational
+  dead-selector list until the layout lands.
+- Actor sheets and system dialogs paint their window from the parchment tokens.
+  Foundry's `.application` frame reads `--background`, `--color-border` and
+  `--color-text-primary`, so the sheet root re-points those rather than
+  restyling the chrome; the title bar is left to Foundry.
+- Chat and roll cards render on Foundry's dark sidebar but do not carry
+  `.dlc-night` yet, so the night token block also matches `.dlc-chat-card` and
+  `.dlc-roll-card`. That stopgap is removed once the class reaches the markup.
 - Slash commands migrated to skills: `.claude/commands/*.md` →
   `.claude/skills/<name>/SKILL.md`, with `argument-hint` added for `release`,
   `new-phase` and `add-archetype`.
@@ -58,6 +82,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Focus ring contrast. The indicator was hardcoded `#c8a44b`, which measures
+  1.9:1 against the parchment window and fails WCAG AA. It now uses
+  `--dlc-ink` (14:1 on the window bar, 15.4:1 on the sheet body) and flips to
+  brass on night surfaces.
 - `.claude/hooks/post-write.sh` exits 2 instead of 1 on a validation failure.
   `PostToolUse` surfaces hook stderr to Claude only on exit code 2, so every
   syntax and JSON check it performed was invisible to the model.

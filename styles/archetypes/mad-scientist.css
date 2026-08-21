@@ -22,12 +22,12 @@
 }
 
 .dlc-gizmo-row:hover {
-  background: var(--dlc-color-gold-dim);
+  background: color-mix(in srgb, var(--dlc-brass) 14%, transparent);
 }
 
 /* Gizmo that has been built, as opposed to a blueprint on paper. */
 .dlc-constructed {
-  border-left: 2px solid var(--dlc-color-gold);
+  border-left: 2px solid var(--dlc-brass);
   padding-left: 4px;
 }
 
@@ -64,7 +64,7 @@
 /* ── Harrowed Madness Table result ───────────────────────────────────────── */
 
 .dlc-madness-result {
-  border-left: 3px solid var(--dlc-color-blood);
+  border-left: 3px solid var(--dlc-blood);
   padding-left: 0.5rem;
   margin: 0.25rem 0;
 }
@@ -72,25 +72,25 @@
 .dlc-madness-label {
   font-family: var(--dlc-font-display);
   font-size: 0.85rem;
-  color: var(--dlc-color-blood);
+  color: var(--dlc-blood);
 }
 
 .dlc-madness-note,
 .dlc-madness-details {
   font-size: 0.75rem;
   font-style: italic;
-  color: var(--dlc-color-muted);
+  color: var(--dlc-ink-muted);
 }
 
 .dlc-madness-warning {
   font-size: 0.8rem;
-  color: var(--dlc-color-blood);
+  color: var(--dlc-blood);
 }
 
 /* ── Malfunction ──────────────────────────────────────────────────────────── */
 
 .dlc-malfunction {
-  color: var(--dlc-color-blood);
+  color: var(--dlc-blood);
   font-size: 0.8rem;
   font-style: italic;
 }
