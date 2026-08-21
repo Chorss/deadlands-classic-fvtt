@@ -23,6 +23,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   previously prose in `CLAUDE.md` with nothing behind it.
 - Pre-commit branch running `audit-i18n` when `.mjs`, `.hbs` or `lang/` files
   are staged.
+- `tools/audit-css.mjs` scans `module/**/*.mjs` alongside `templates/**/*.hbs`.
+  21 `dlc-*` classes are built in chat-card template literals and were invisible
+  to the audit. `templates/` stays a hard error; `module/` reports as a warning
+  while a backlog of 9 classes with no CSS rule at all (the Guts-check card) is
+  worked off, and flags anything added beyond it.
+- Dead-selector report in `audit-css` — selectors defined in `styles/` but used
+  nowhere (currently 14). Informational only, never affects the exit code.
+- Pre-commit runs `audit-css` on `.mjs` changes too, so a new class introduced in
+  JavaScript no longer slips past the gate.
+- `audit-css` collects bare `"dlc-*"` string literals in `module/`, catching the
+  classes applied through `classList.add()` and `DEFAULT_OPTIONS.classes`
+  (`dlc-initiative-*`, `dlc-hand-btn`, `dlc-hand-dialog`, `dlc-winded`) that never
+  appear inside a `class="…"` attribute.
+- CSS rules for the six template classes the audit could not previously see:
+  `dlc-unskilled`, `dlc-constructed`, `dlc-joker`, `dlc-joker-card`,
+  `dlc-card--joker`, `dlc-card--black`. The joker highlight in drawn-card lists and
+  the initiative hand had no styling at all.
 
 ### Changed
 
@@ -35,6 +52,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Workshop docs (`CLAUDE.md`, `.claude/README.md`) rewritten to describe the
   mechanisms that actually run, including which permission rules are enforced
   and which are only a speed bump.
+- Biome now covers `styles/**/*.css` (`files.includes`), which previously checked
+  zero lines of CSS. `npm run fmt` reformatted 7 style files — whitespace only,
+  plus `rgba(0,0,0,.4)` → `rgba(0,0,0,0.4)`.
 
 ### Fixed
 
@@ -43,6 +63,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   syntax and JSON check it performed was invisible to the model.
 - `.claude/hooks/post-extract-verify.sh` no longer spawns node processes on
   unrelated Bash calls; a native `if: Bash(*extract-pdf.sh *)` filter gates it.
+- Dropped the redundant `.deadlands-classic.sheet :focus-visible` selector, which
+  tripped `lint/style/noDescendingSpecificity` and was already covered by the
+  `.deadlands-classic :focus-visible` selector sharing its rule. No visual change.
+- `audit-css` no longer loses classes written inside a Handlebars block. Splitting
+  `class="dlc-wound {{#if x}}dlc-maimed{{/if}}"` on whitespace left `dlc-maimed`
+  glued to `{{/if}}`, so it counted as neither used nor dynamic. Six template
+  classes with no CSS rule were passing the "hard error" gate, and 8 of the 14
+  reported dead selectors were live all along.
+- `audit-css` strips CSS comments before harvesting selectors. A class merely
+  *named* in a comment counted as defined, which both polluted the dead-selector
+  list and let a template use it with no rule behind it.
+- `MODULE_BACKLOG` is a frozen set of names rather than a count, so styling one
+  backlog class while adding another unstyled one no longer cancels out unnoticed.
+- Removed the dead `.dlc-wind-label` rule (`header.hbs` uses `.dlc-stat-label`) and
+  corrected a `blessed.css` comment naming a sin-severity vocabulary that does not
+  exist (`light`/`heavy`; the real values are `minor`/`major`/`mortal`).
 
 ## [0.3.4] — 2026-07-06
 

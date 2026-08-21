@@ -50,20 +50,43 @@
   border: 1px solid currentColor;
 }
 
-.dlc-status-none    { color: var(--dlc-color-muted); }
-.dlc-status-devised { color: var(--dlc-color-gold); }
-.dlc-status-ready   { color: #2ecc71; }
-.dlc-status-failed  { color: var(--dlc-color-blood); }
+.dlc-status-none {
+  color: var(--dlc-color-muted);
+}
+.dlc-status-devised {
+  color: var(--dlc-color-gold);
+}
+.dlc-status-ready {
+  color: #2ecc71;
+}
+.dlc-status-failed {
+  color: var(--dlc-color-blood);
+}
 
 /* ── Outcome labels ───────────────────────────────────────────────────────── */
 
-.dlc-outcome-win     { color: #2ecc71; }
-.dlc-outcome-neutral { color: var(--dlc-color-muted); }
-.dlc-outcome-loss    { color: var(--dlc-color-blood); }
+.dlc-outcome-win {
+  color: #2ecc71;
+}
+.dlc-outcome-neutral {
+  color: var(--dlc-color-muted);
+}
+.dlc-outcome-loss {
+  color: var(--dlc-color-blood);
+}
 
 /* ── Last roll display ───────────────────────────────────────────────────── */
 
-.dlc-last-roll-label  { font-size: 0.7rem; color: var(--dlc-color-muted); }
-.dlc-last-roll-pc     { color: #2ecc71; }
-.dlc-last-roll-npc    { color: var(--dlc-color-blood); }
-.dlc-last-roll-outcome { font-weight: bold; }
+.dlc-last-roll-label {
+  font-size: 0.7rem;
+  color: var(--dlc-color-muted);
+}
+.dlc-last-roll-pc {
+  color: #2ecc71;
+}
+.dlc-last-roll-npc {
+  color: var(--dlc-color-blood);
+}
+.dlc-last-roll-outcome {
+  font-weight: bold;
+}

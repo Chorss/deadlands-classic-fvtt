@@ -20,7 +20,6 @@
  * class fall back to always showing the ring, which is acceptable).
  */
 
-.deadlands-classic.sheet :focus-visible,
 .deadlands-classic :focus-visible {
   outline: 2px solid #c8a44b; /* warm gold — passes WCAG AA on dark backgrounds */
   outline-offset: 2px;
