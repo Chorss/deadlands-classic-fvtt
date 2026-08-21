@@ -153,7 +153,7 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   FATE CHIPS
+   FATE CHIPS — physical counters, rendered in the sheet header (M3.1)
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .dlc-chip-row {
@@ -169,50 +169,50 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.2rem;
-  padding: 0.3rem 0.6rem;
-  border-radius: var(--dlc-radius);
-  min-width: 3.5rem;
-  border: 2px solid var(--dlc-chip-border, var(--dlc-rule-strong));
+  gap: 4px;
 }
 
 .dlc-chip-label {
   font-family: var(--dlc-font-head);
-  font-size: 0.55rem;
+  font-size: 0.5rem;
   letter-spacing: var(--dlc-ls-label);
   text-transform: uppercase;
+  color: var(--dlc-ink-muted);
 }
 
-.dlc-chip input[type="number"] {
-  width: 3rem;
+/* The disc is the editable count itself — an <input type="number">, not a
+   button: chip counts are player-reported, not click-to-spend. */
+.dlc-chip .dlc-chip-token {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
   text-align: center;
-  border: none;
-  background: transparent;
+  padding: 0;
   font-family: var(--dlc-font-data);
-  font-size: 1.1rem;
-  font-weight: bold;
-  color: inherit;
+  font-weight: 700;
+  font-size: 0.85rem;
+  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.28);
 }
 
-.dlc-chip-white {
+.dlc-chip-white .dlc-chip-token {
   background: var(--dlc-chip-white);
+  border: 2px solid var(--dlc-chip-white-edge);
   color: var(--dlc-chip-white-ink);
-  --dlc-chip-border: var(--dlc-chip-white-edge);
 }
-.dlc-chip-red {
+.dlc-chip-red .dlc-chip-token {
   background: var(--dlc-chip-red);
+  border: 2px solid var(--dlc-chip-red-edge);
   color: var(--dlc-chip-red-ink);
-  --dlc-chip-border: var(--dlc-chip-red-edge);
 }
-.dlc-chip-blue {
+.dlc-chip-blue .dlc-chip-token {
   background: var(--dlc-chip-blue);
+  border: 2px solid var(--dlc-chip-blue-edge);
   color: var(--dlc-chip-blue-ink);
-  --dlc-chip-border: var(--dlc-chip-blue-edge);
 }
-.dlc-chip-legend {
+.dlc-chip-legend .dlc-chip-token {
   background: var(--dlc-chip-legend);
+  border: 2px solid var(--dlc-chip-legend-edge);
   color: var(--dlc-chip-legend-ink);
-  --dlc-chip-border: var(--dlc-chip-legend-edge);
 }
 
 /* Session draw log (GM tool) — fate-pot.mjs builds this chat message in JS. */

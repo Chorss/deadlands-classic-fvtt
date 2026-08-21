@@ -26,6 +26,7 @@
   "TYPES.Item.ammo": "Ammo",
   "TYPES.Item.hex": "Hex",
 
+  "DEADLANDS.Sheet.EditMode.Toggle": "Edit values",
   "DEADLANDS.Sheet.NamePlaceholder": "Character Name",
   "DEADLANDS.Sheet.Wind": "Wind",
   "DEADLANDS.Sheet.Pace": "Pace",

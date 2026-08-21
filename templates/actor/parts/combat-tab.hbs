@@ -1,17 +1,5 @@
-{{!-- Combat: Fate Chips, wound track, and weapons. Full wound widget in Phase 6. --}}
+{{!-- Combat: wound track and weapons. Fate Chips moved to the header (M3.1). --}}
 <section class="tab dlc-combat {{tab.cssClass}}" data-group="sheet" data-tab="combat">
-  <div class="dlc-chips">
-    <h2 class="dlc-section-title">{{localize 'DEADLANDS.Sheet.Section.Chips'}}</h2>
-    <ul class="dlc-chip-row">
-      {{#each chips as |chip|}}
-      <li class="dlc-chip dlc-chip-{{chip.color}}">
-        <label class="dlc-chip-label" for="dlc-chip-{{chip.color}}">{{localize chip.label}}</label>
-        <input type="number" id="dlc-chip-{{chip.color}}" min="0" name="{{chip.path}}" value="{{chip.value}}"
-          {{#unless @root.editable}}disabled{{/unless}} />
-      </li>
-      {{/each}}
-    </ul>
-  </div>
 
   <div class="dlc-wounds">
     {{!-- Wind bar --}}

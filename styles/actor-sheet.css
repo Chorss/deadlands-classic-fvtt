@@ -3,71 +3,105 @@
  */
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   HEADER
+   HEADER — Ledger masthead (M3.1): portrait, Rye name + Cinzel archetype line,
+   Fate Chips, closed by a 3px double rule; secondary-stat strip beneath.
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .dlc-sheet-header {
-  display: grid;
-  grid-template-columns: var(--dlc-portrait-size) 1fr;
-  gap: var(--dlc-sheet-gap);
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
   padding-bottom: var(--dlc-sheet-gap);
-  border-bottom: 1px solid var(--dlc-brass);
+  border-bottom: 1px solid var(--dlc-rule);
   margin-bottom: var(--dlc-sheet-gap);
+}
+
+.dlc-header-top {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.9rem;
+  padding-bottom: 0.65rem;
+  border-bottom: 3px double var(--dlc-rule-strong);
 }
 
 .dlc-portrait {
   width: var(--dlc-portrait-size);
   height: var(--dlc-portrait-size);
   object-fit: cover;
-  border-radius: var(--dlc-radius);
-  border: 2px solid var(--dlc-brass);
+  border-radius: 3px;
+  border: 1px solid var(--dlc-rule);
+  flex-shrink: 0;
   display: block;
 }
 
 .dlc-header-main {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.2rem;
+  flex: 1;
   min-width: 0;
 }
 
 .dlc-charname {
   font-family: var(--dlc-font-display);
-  font-size: 1.1rem;
+  font-size: var(--dlc-fs-name);
+  line-height: 1.1;
   width: 100%;
   border: none;
-  border-bottom: 1px solid var(--dlc-brass);
   background: transparent;
-  color: inherit;
-  padding: 2px 0;
+  color: var(--dlc-ink);
+  padding: 0;
 }
 
 .dlc-charname:focus {
   outline: none;
-  border-bottom-color: var(--dlc-brass);
-  background: color-mix(in srgb, var(--dlc-brass) 14%, transparent);
+  background: color-mix(in srgb, var(--dlc-brass) 12%, transparent);
 }
 
-/* Secondary stats row (Wind / Pace / Size / Grit / Bounty) */
+.dlc-archetype-line {
+  font-family: var(--dlc-font-head);
+  font-size: 0.6rem;
+  letter-spacing: var(--dlc-ls-label);
+  text-transform: uppercase;
+  color: var(--dlc-ink-muted);
+  margin: 0;
+}
+
+.dlc-edit-toggle-btn {
+  align-self: flex-start;
+}
+.dlc-sheet--edit .dlc-edit-toggle-btn {
+  color: var(--dlc-brass);
+  border-color: var(--dlc-brass);
+}
+
+/* Secondary stats strip (Wind | Pace | Size | Grit | Bounty), divider-separated */
 .dlc-secondary {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
   align-items: center;
+  gap: 0;
+}
+
+.dlc-secondary > .dlc-divider {
+  width: 1px;
+  height: 34px;
+  background: var(--dlc-rule);
+  margin: 0 0.6rem;
 }
 
 .dlc-stat {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 44px;
+  gap: 2px;
 }
 
 .dlc-stat-label {
-  font-size: 0.65rem;
+  font-family: var(--dlc-font-head);
+  font-size: var(--dlc-fs-label);
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
   color: var(--dlc-ink-muted);
   white-space: nowrap;
 }
@@ -79,46 +113,83 @@
 }
 
 .dlc-stat-value {
-  width: 2.4rem;
+  font-family: var(--dlc-font-data);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--dlc-ink);
+  min-width: var(--dlc-target-min-w);
   text-align: center;
-  font-size: 0.9rem;
+  border: none;
+  background: transparent;
 }
 
-.dlc-stat-max {
-  font-size: 0.8rem;
-  color: var(--dlc-ink-muted);
-}
-
-/* Wind specifically */
+/* Wind — header keeps a compact value/max readout; the 18-tick bar lives on
+   the Combat tab (combat.css), sharing these class names on purpose. */
 .dlc-wind {
-  min-width: 60px;
+  flex: 1.5;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-right: 1rem;
+}
+
+.dlc-wind-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.dlc-wind-label {
+  font-family: var(--dlc-font-head);
+  font-size: var(--dlc-fs-label);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--dlc-ink-muted);
 }
 
 .dlc-wind-value {
-  width: 2rem;
-  text-align: center;
+  font-family: var(--dlc-font-data);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--dlc-blood);
 }
 
 .dlc-wind-max {
-  font-size: 0.8rem;
+  font-family: var(--dlc-font-data);
+  font-size: 0.7rem;
   color: var(--dlc-ink-muted);
-}
-
-.dlc-wind-sep {
-  color: var(--dlc-ink-muted);
-  margin: 0 1px;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   TABS NAV
+   SECTION RAIL (replaces the tab bar, D2) — `tabs` is required by Foundry's
+   native changeTab(); see the comment in tabs.hbs.
    ═══════════════════════════════════════════════════════════════════════════ */
 
-.dlc-tabs {
+.dlc-rail {
   display: flex;
-  gap: 2px;
-  border-bottom: 1px solid var(--dlc-brass);
-  margin-bottom: 0.5rem;
+  gap: 6px;
   flex-wrap: wrap;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--dlc-rule);
+  margin-bottom: 0.5rem;
+}
+
+.dlc-rail-item {
+  font-family: var(--dlc-font-head);
+  font-size: var(--dlc-fs-section);
+  letter-spacing: var(--dlc-ls-label);
+  text-transform: uppercase;
+  color: var(--dlc-ink-muted);
+  border: 1px solid var(--dlc-rule);
+  border-radius: 3px;
+  padding: 0.4em 0.75em;
+  cursor: pointer;
+}
+
+.dlc-rail-item.active {
+  background: var(--dlc-rule-strong);
+  color: var(--dlc-card);
+  border-color: var(--dlc-rule-strong);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
