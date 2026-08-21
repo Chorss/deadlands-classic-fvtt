@@ -17,6 +17,7 @@ import { DeadlandsCombatant } from "./core/cards/deadlands-combatant.mjs";
 import { canSpend, executeSpend } from "./core/chips/chip-rules.mjs";
 import { grantChips, spendChip } from "./core/chips/chip-widget.mjs";
 import { FatePot } from "./core/chips/fate-pot.mjs";
+import { FatePotWidget } from "./core/chips/fate-pot-widget.mjs";
 import { DEADLANDS } from "./core/config.mjs";
 import { rollDamage } from "./core/dice/damage-roll.mjs";
 import { rollExplodingPool } from "./core/dice/exploding-roll.mjs";
@@ -91,6 +92,17 @@ Hooks.once("init", () => {
 
   // Fate Pot world setting (4 integers — NOT Cards). dlc p.146. Plan §3.3.
   FatePot.registerSetting(SYSTEM_ID);
+
+  // Fate Pot Marshal widget — GM-only settings-menu entry point for the
+  // session draw / refill ops that previously had no UI (console/macro only).
+  game.settings.registerMenu(SYSTEM_ID, "fatePotWidget", {
+    name: "DEADLANDS.Chip.Pot.Title",
+    label: "DEADLANDS.Chip.Pot.MenuLabel",
+    hint: "DEADLANDS.Chip.Pot.MenuHint",
+    icon: "fa-solid fa-circle-dollar-to-slot",
+    type: FatePotWidget,
+    restricted: true,
+  });
 
   // GM-proxy query handlers — shared-state ops (Fate Pot, Action Deck) execute
   // on the single active GM client. Must register on EVERY client: User#query
