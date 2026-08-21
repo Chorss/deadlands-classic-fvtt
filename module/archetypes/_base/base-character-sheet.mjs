@@ -13,6 +13,8 @@
 import { runWithWhiteSpend } from "../../core/chips/chip-widget.mjs";
 import { APTITUDES, DEADLANDS, TRAITS } from "../../core/config.mjs";
 import { toPascal } from "../../core/utils.mjs";
+import { buildWindTicks, isWinded } from "../../core/wounds/wind-calculator.mjs";
+import { highestWoundPenalty } from "../../core/wounds/wound-track.mjs";
 import { HARROWED_SHEET_PART, HARROWED_SHEET_TAB } from "../_overlays/harrowed/sheet-tab.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -75,8 +77,19 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
       rollTrait: BaseCharacterSheet.#onRollTrait,
       rollAptitude: BaseCharacterSheet.#onRollAptitude,
       dominionRoll: BaseCharacterSheet.#onDominionRoll,
+      toggleEditMode: BaseCharacterSheet.#onToggleEditMode,
     },
   };
+
+  /**
+   * Whole-sheet edit-mode flag (D1) — reveals the raw die-count/type/modifier
+   * controls on the Traits tab in place of the "4d8 +2" notation. Held on the
+   * instance rather than in render context: the sheet's outer frame element
+   * (`this.element`) is created once and survives every re-render triggered by
+   * `submitOnChange`, so a class toggled on it here persists across edits —
+   * state stored in the Handlebars context would not.
+   */
+  #editMode = false;
 
   /** Use actor name as window title (avoids redundant "Type: Name" pattern). */
   get title() {
@@ -127,6 +140,10 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
     context.editable = this.isEditable;
     context.traitGroups = this.#prepareTraits();
     context.dieTypeChoices = Object.fromEntries(DEADLANDS.DIE_TYPES.map((d) => [d, d]));
+    // Foundry's own document-subtype label — already localized for every
+    // archetype (lang/en.json, lang/pl.json), so the masthead needs no
+    // archetype-specific key of its own.
+    context.archetypeLabelKey = `TYPES.Actor.${this.document.type}`;
     context.wounds = this.#prepareWounds();
     context.chips = this.#prepareChips();
     context.items = this.#prepareItems();
@@ -177,6 +194,9 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
         dieCount: trait.dieCount,
         dieType: trait.dieType,
         modifier: trait.modifier,
+        // "+2" / "-1" for the read-only notation; omitted entirely at 0 (D1).
+        modifierDisplay:
+          trait.modifier > 0 ? `+${trait.modifier}` : trait.modifier < 0 ? `${trait.modifier}` : "",
         dieCountPath: `system.traits.${id}.dieCount`,
         dieTypePath: `system.traits.${id}.dieType`,
         modifierPath: `system.traits.${id}.modifier`,
@@ -217,7 +237,9 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
     return {
       woundLocations,
       wind: { value: windValue, max: windMax },
-      windedClass: windValue <= 0 ? "dlc-winded" : "",
+      windTicks: buildWindTicks(windValue, windMax),
+      windedClass: isWinded(windValue) ? "dlc-winded" : "",
+      woundPenalty: highestWoundPenalty(system.wounds ?? {}),
     };
   }
 
@@ -295,6 +317,18 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
   static async #onDominionRoll(_event, _target) {
     const { dominionRoll } = await import("../_overlays/harrowed/mechanics.mjs");
     await dominionRoll(this.document);
+  }
+
+  /**
+   * Toggle the sheet's edit mode (D1). Applied directly to the sheet's outer
+   * frame element rather than tracked in render context, so the state
+   * survives the re-render `submitOnChange` triggers on every field edit.
+   * @this {BaseCharacterSheet}
+   */
+  static #onToggleEditMode(_event, target) {
+    this.#editMode = !this.#editMode;
+    this.element.classList.toggle("dlc-sheet--edit", this.#editMode);
+    target.setAttribute("aria-pressed", String(this.#editMode));
   }
 
   /**

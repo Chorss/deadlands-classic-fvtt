@@ -1,3 +1,4 @@
+import { highestWoundPenalty } from "../../core/wounds/wound-track.mjs";
 import { BaseCharacterSheet } from "../_base/base-character-sheet.mjs";
 
 const SEVERITY_LABELS = [
@@ -13,6 +14,8 @@ export class MookSheet extends BaseCharacterSheet {
   /** @inheritDoc */
   static DEFAULT_OPTIONS = {
     classes: ["mook"],
+    // Compact window (A3), same as NpcSheet — no Fate Chips, one wound slot.
+    position: { width: 460 },
   };
 
   /** @inheritDoc */
@@ -36,7 +39,9 @@ export class MookSheet extends BaseCharacterSheet {
         },
       ],
       wind: context.wounds.wind,
+      windTicks: context.wounds.windTicks,
       windedClass: context.wounds.windedClass,
+      woundPenalty: highestWoundPenalty({ body: { severity } }),
     };
 
     // Mooks have no chips.

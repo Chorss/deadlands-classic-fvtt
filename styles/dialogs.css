@@ -36,12 +36,6 @@
 
 /* ── Chips section in combat tab ──────────────────────────────────────────── */
 
-.dlc-chips {
-  display: flex;
-  flex-direction: column;
-  gap: var(--dlc-section-gap);
-}
-
 /* ── Combatant hand dialog (action deck) ──────────────────────────────────── */
 
 .dlc-combatant-hand {

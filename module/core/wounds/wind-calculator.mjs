@@ -48,3 +48,32 @@ export function gutsWoundsFromNegativeWind(windValue, windMax) {
   }
   return Math.floor(Math.abs(windValue) / windMax);
 }
+
+/** Segments in the sheet's Combat-tab Wind meter (styles/combat.css
+ * `.dlc-wind-track`). A visual approximation, not 1 tick per Wind point —
+ * windMax varies per character (Vigor + Spirit die faces), a fixed-length
+ * bar cannot track it 1:1. */
+export const WIND_TICK_COUNT = 18;
+
+/**
+ * Build the fill state for each Wind-meter tick: "" (empty) beyond the
+ * current fill, otherwise a zone colour ("danger"/"warn"/"ok") by the
+ * tick's position in the bar — a fuel-gauge read, not a literal per-point
+ * Wind track (see WIND_TICK_COUNT). Negative Wind clamps to zero ticks
+ * filled rather than a negative count.
+ *
+ * @param {number} windValue
+ * @param {number} windMax
+ * @returns {string[]} length WIND_TICK_COUNT, each "" | "danger" | "warn" | "ok"
+ */
+export function buildWindTicks(windValue, windMax) {
+  const ratio = windMax > 0 ? Math.max(0, windValue) / windMax : 0;
+  const filled = Math.round(Math.min(1, ratio) * WIND_TICK_COUNT);
+  const zones = ["danger", "warn", "ok"];
+  return Array.from({ length: WIND_TICK_COUNT }, (_, i) => {
+    if (i >= filled) {
+      return "";
+    }
+    return zones[Math.floor((i / WIND_TICK_COUNT) * zones.length)];
+  });
+}
