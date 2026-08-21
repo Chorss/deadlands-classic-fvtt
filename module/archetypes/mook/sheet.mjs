@@ -14,6 +14,8 @@ export class MookSheet extends BaseCharacterSheet {
   /** @inheritDoc */
   static DEFAULT_OPTIONS = {
     classes: ["mook"],
+    // Compact window (A3), same as NpcSheet — no Fate Chips, one wound slot.
+    position: { width: 460 },
   };
 
   /** @inheritDoc */

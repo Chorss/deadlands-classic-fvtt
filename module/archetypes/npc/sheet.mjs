@@ -10,6 +10,8 @@ export class NpcSheet extends BaseCharacterSheet {
   /** @inheritDoc */
   static DEFAULT_OPTIONS = {
     classes: ["npc"],
+    // Compact window (A3) — no Fate Chips, no gear tab clutter to fill 740px.
+    position: { width: 460 },
   };
 
   /** @inheritDoc */

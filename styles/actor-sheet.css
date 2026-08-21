@@ -210,6 +210,13 @@
   align-items: start;
 }
 
+/* Compact NPC/Mook window (A3, M3.6, 460px) — two columns are too tight;
+   Corporeal/Mental traits stack instead. */
+.npc .dlc-trait-columns,
+.mook .dlc-trait-columns {
+  grid-template-columns: 1fr;
+}
+
 .dlc-trait-column {
   display: flex;
   flex-direction: column;
