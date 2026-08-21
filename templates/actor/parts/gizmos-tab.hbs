@@ -1,92 +1,102 @@
-{{!-- Gizmos tab: science + tinkerin' aptitudes, gizmo list with build workflow. --}}
+{{!-- Gizmos tab: science + tinkerin' aptitudes, gizmo list with build workflow.
+     snr p.10-24 (no README pattern — composed from the Hexes-tab primitives, M5). --}}
 <section class="tab dlc-gizmos {{tab.cssClass}}" data-group="sheet" data-tab="gizmos">
 
-  {{!-- Aptitudes --}}
-  <div class="dlc-mad-science-aptitudes">
+  <div class="dlc-section-head">
     <h2 class="dlc-section-title">{{localize "DEADLANDS.MadScientist.Aptitudes.Label"}}</h2>
-    <div class="dlc-aptitude-row">
-      <label for="dlc-mad-science-level">{{localize "DEADLANDS.MadScientist.MadScience.Label"}}</label>
-      <input type="number" id="dlc-mad-science-level" min="0" name="{{madScience.levelPath}}"
-        value="{{madScience.level}}" {{#unless editable}}disabled{{/unless}} />
-      <label for="dlc-mad-science-mod">{{localize "DEADLANDS.MadScientist.MadScience.Modifier"}}</label>
-      <input type="number" id="dlc-mad-science-mod" name="{{madScience.modifierPath}}"
-        value="{{madScience.modifier}}" {{#unless editable}}disabled{{/unless}} />
-    </div>
-    <div class="dlc-aptitude-row">
-      <label for="dlc-tinkerin-level">{{localize "DEADLANDS.MadScientist.Tinkerin.Label"}}</label>
-      <input type="number" id="dlc-tinkerin-level" min="0" name="{{tinkerin.levelPath}}"
-        value="{{tinkerin.level}}" {{#unless editable}}disabled{{/unless}} />
-      <label for="dlc-tinkerin-mod">{{localize "DEADLANDS.MadScientist.Tinkerin.Modifier"}}</label>
-      <input type="number" id="dlc-tinkerin-mod" name="{{tinkerin.modifierPath}}"
-        value="{{tinkerin.modifier}}" {{#unless editable}}disabled{{/unless}} />
-    </div>
+    <span class="dlc-rule-fill"></span>
   </div>
 
-  {{!-- Gizmo list --}}
-  <div class="dlc-gizmo-list">
-    <h2 class="dlc-section-title">{{localize "DEADLANDS.MadScientist.Section.Gizmos"}}</h2>
-    {{#if gizmos.length}}
-    <table class="dlc-gizmo-table">
-      <thead>
-        <tr>
-          <th>{{localize "DEADLANDS.MadScientist.GizmoTable.Name"}}</th>
-          <th>{{localize "DEADLANDS.MadScientist.GizmoTable.BlueprintHand"}}</th>
-          <th>{{localize "DEADLANDS.MadScientist.GizmoTable.ConstructionTN"}}</th>
-          <th>{{localize "DEADLANDS.MadScientist.GizmoTable.Reliability"}}</th>
-          <th>{{localize "DEADLANDS.MadScientist.GizmoTable.Status"}}</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {{#each gizmos as |g|}}
-        <tr class="dlc-gizmo-row {{#if g.constructed}}dlc-constructed{{/if}}" data-gizmo-id="{{g.id}}">
-          <td class="dlc-gizmo-name">
-            <img class="dlc-item-img" src="{{g.img}}" alt="{{g.name}}" />
-            {{g.name}}
-          </td>
-          <td>{{localize g.handLabel}}</td>
-          <td>{{g.constructionTN}}</td>
-          <td>{{g.reliability}}</td>
-          <td>
-            {{#if g.constructed}}
-            <span class="dlc-status dlc-status-ready">{{localize "DEADLANDS.MadScientist.Status.Constructed"}}</span>
-            {{else if (eq g.blueprintStatus "devised")}}
-            <span class="dlc-status dlc-status-devised">{{localize "DEADLANDS.MadScientist.Status.Devised"}}</span>
-            {{else if (eq g.blueprintStatus "failed")}}
-            <span class="dlc-status dlc-status-failed">{{localize "DEADLANDS.MadScientist.Status.Failed"}}</span>
-            {{else}}
-            <span class="dlc-status dlc-status-none">{{localize "DEADLANDS.MadScientist.Status.None"}}</span>
-            {{/if}}
-          </td>
-          <td class="dlc-gizmo-actions">
-            {{#if @root.editable}}
-            {{#unless g.constructed}}
-            <button type="button" class="dlc-blueprint-btn"
-              data-action="deviseBlueprint" data-gizmo-id="{{g.id}}">
-              {{localize "DEADLANDS.MadScientist.Blueprint.Button"}}
-            </button>
-            {{#if (eq g.blueprintStatus "devised")}}
-            <button type="button" class="dlc-construct-btn"
-              data-action="constructGizmo" data-gizmo-id="{{g.id}}">
-              {{localize "DEADLANDS.MadScientist.Construct.Button"}}
-            </button>
-            {{/if}}
-            {{/unless}}
-            {{#if g.constructed}}
-            <button type="button" class="dlc-use-btn"
-              data-action="useGizmo" data-gizmo-id="{{g.id}}">
-              {{localize "DEADLANDS.MadScientist.Use.Button"}}
-            </button>
-            {{/if}}
-            {{/if}}
-          </td>
-        </tr>
-        {{/each}}
-      </tbody>
-    </table>
-    {{else}}
-    <p class="dlc-empty">{{localize "DEADLANDS.Sheet.Empty.Gizmos"}}</p>
-    {{/if}}
+  <div class="dlc-aptitude-row">
+    <span class="dlc-aptitude-stat">
+      <label for="dlc-mad-science-level">{{localize "DEADLANDS.MadScientist.MadScience.Label"}}</label>
+      <input type="number" id="dlc-mad-science-level" class="dlc-num" min="0" name="{{madScience.levelPath}}"
+        value="{{madScience.level}}" {{#unless editable}}disabled{{/unless}} />
+    </span>
+    <span class="dlc-aptitude-stat">
+      <label for="dlc-mad-science-mod">{{localize "DEADLANDS.MadScientist.MadScience.Modifier"}}</label>
+      <input type="number" id="dlc-mad-science-mod" class="dlc-num" name="{{madScience.modifierPath}}"
+        value="{{madScience.modifier}}" {{#unless editable}}disabled{{/unless}} />
+    </span>
+    <span class="dlc-aptitude-divider"></span>
+    <span class="dlc-aptitude-stat">
+      <label for="dlc-tinkerin-level">{{localize "DEADLANDS.MadScientist.Tinkerin.Label"}}</label>
+      <input type="number" id="dlc-tinkerin-level" class="dlc-num" min="0" name="{{tinkerin.levelPath}}"
+        value="{{tinkerin.level}}" {{#unless editable}}disabled{{/unless}} />
+    </span>
+    <span class="dlc-aptitude-stat">
+      <label for="dlc-tinkerin-mod">{{localize "DEADLANDS.MadScientist.Tinkerin.Modifier"}}</label>
+      <input type="number" id="dlc-tinkerin-mod" class="dlc-num" name="{{tinkerin.modifierPath}}"
+        value="{{tinkerin.modifier}}" {{#unless editable}}disabled{{/unless}} />
+    </span>
   </div>
+
+  <div class="dlc-section-head">
+    <h2 class="dlc-section-title">{{localize "DEADLANDS.MadScientist.Section.Gizmos"}}</h2>
+    <span class="dlc-rule-fill"></span>
+  </div>
+
+  {{#if gizmos.length}}
+  <table class="dlc-gizmo-table">
+    <thead>
+      <tr class="dlc-gizmo-head">
+        <th>{{localize "DEADLANDS.MadScientist.GizmoTable.Name"}}</th>
+        <th>{{localize "DEADLANDS.MadScientist.GizmoTable.BlueprintHand"}}</th>
+        <th>{{localize "DEADLANDS.MadScientist.GizmoTable.ConstructionTN"}}</th>
+        <th>{{localize "DEADLANDS.MadScientist.GizmoTable.Reliability"}}</th>
+        <th>{{localize "DEADLANDS.MadScientist.GizmoTable.Status"}}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each gizmos as |g|}}
+      <tr class="dlc-gizmo-row {{#if g.constructed}}dlc-constructed{{/if}}" data-gizmo-id="{{g.id}}">
+        <td class="dlc-gizmo-name">
+          <img class="dlc-item-img" src="{{g.img}}" alt="{{g.name}}" />
+          {{g.name}}
+        </td>
+        <td class="dlc-num">{{localize g.handLabel}}</td>
+        <td class="dlc-num">{{g.constructionTN}}</td>
+        <td class="dlc-num">{{g.reliability}}</td>
+        <td>
+          {{#if g.constructed}}
+          <span class="dlc-pill dlc-pill-green">{{localize "DEADLANDS.MadScientist.Status.Constructed"}}</span>
+          {{else if (eq g.blueprintStatus "devised")}}
+          <span class="dlc-pill dlc-pill-brass">{{localize "DEADLANDS.MadScientist.Status.Devised"}}</span>
+          {{else if (eq g.blueprintStatus "failed")}}
+          <span class="dlc-pill dlc-pill-blood">{{localize "DEADLANDS.MadScientist.Status.Failed"}}</span>
+          {{else}}
+          <span class="dlc-pill dlc-pill-muted">{{localize "DEADLANDS.MadScientist.Status.None"}}</span>
+          {{/if}}
+        </td>
+        <td class="dlc-gizmo-actions">
+          {{#if @root.editable}}
+          {{#unless g.constructed}}
+          <button type="button" class="dlc-btn-primary dlc-gizmo-action-btn"
+            data-action="deviseBlueprint" data-gizmo-id="{{g.id}}">
+            {{localize "DEADLANDS.MadScientist.Blueprint.Button"}}
+          </button>
+          {{#if (eq g.blueprintStatus "devised")}}
+          <button type="button" class="dlc-btn-primary dlc-gizmo-action-btn"
+            data-action="constructGizmo" data-gizmo-id="{{g.id}}">
+            {{localize "DEADLANDS.MadScientist.Construct.Button"}}
+          </button>
+          {{/if}}
+          {{/unless}}
+          {{#if g.constructed}}
+          <button type="button" class="dlc-btn-primary dlc-gizmo-action-btn"
+            data-action="useGizmo" data-gizmo-id="{{g.id}}">
+            {{localize "DEADLANDS.MadScientist.Use.Button"}}
+          </button>
+          {{/if}}
+          {{/if}}
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  {{else}}
+  <p class="dlc-empty">{{localize "DEADLANDS.Sheet.Empty.Gizmos"}}</p>
+  {{/if}}
 
 </section>

@@ -37,31 +37,11 @@
   min-width: 6rem;
 }
 
-/* ── Status badges (gizmo, miracle) ──────────────────────────────────────── */
-
-.dlc-status {
-  display: inline-block;
-  font-size: 0.7rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 1px 6px;
-  border-radius: 10px;
-  border: 1px solid currentColor;
-}
-
-.dlc-status-none {
-  color: var(--dlc-ink-muted);
-}
-.dlc-status-devised {
-  color: var(--dlc-brass);
-}
-.dlc-status-ready {
-  color: #2ecc71;
-}
-.dlc-status-failed {
-  color: var(--dlc-blood);
-}
+/* Status badges (gizmo, miracle) used to live here as bespoke .dlc-status /
+ * .dlc-status-* rules — functionally identical to the .dlc-pill primitive
+ * from _base.css, just with its own sizing. The gizmo tab (M5) now uses
+ * .dlc-pill directly with the brass/blood/green/muted colour variants;
+ * nothing else referenced .dlc-status, so the duplicate is gone. */
 
 /* Outcome labels (.dlc-outcome-*) and the last-roll display (.dlc-last-roll-*)
  * used to be duplicated here and in archetypes/harrowed.css — the only actual

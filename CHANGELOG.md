@@ -48,6 +48,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **M5.3 of the Ledger redesign: the Mad Scientist Gizmos tab.** No README
+  pattern for this archetype — composed from the Hexes-tab (M5.1) primitives:
+  section-heads, an inline Mad Science/Tinkerin' stat row, and the gizmo list
+  as a grid table matching the hex table's shape. Status badges
+  (Constructed/Devised/Failed/Not started) move off the bespoke
+  `.dlc-status`/`-status-*` rules onto the shared `.dlc-pill` primitive (new
+  `-muted` variant added for the neutral state), giving `.dlc-pill-brass` and
+  `.dlc-pill-green` their first consumers since M1 and retiring a rule that
+  duplicated `.dlc-pill`'s concept under a different name.
 - **M5.2 of the Ledger redesign: the Harrowed overlay tab.** Plum double-rule
   masthead with a toggle-switch for Is Harrowed (still a native checkbox
   underneath — no new state plumbing); Dominion/Powers/Counting Coup each get
