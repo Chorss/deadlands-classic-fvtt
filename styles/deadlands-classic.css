@@ -21,16 +21,23 @@
  */
 
 .deadlands-classic :focus-visible {
-  outline: 2px solid #c8a44b; /* warm gold — passes WCAG AA on dark backgrounds */
+  outline: 2px solid var(--dlc-ink); /* >= 14:1 on parchment; night tokens flip it light */
   outline-offset: 2px;
 }
 
 /* Buttons within the system sheet */
 .deadlands-classic button:focus-visible,
 .deadlands-classic a.item[data-action="tab"]:focus-visible {
-  outline: 2px solid #c8a44b;
+  outline: 2px solid var(--dlc-ink);
   outline-offset: 2px;
   border-radius: 3px;
+}
+
+/* Night surfaces (chat cards, combat tracker) take the brass ring instead. */
+.dlc-night :focus-visible,
+.dlc-night button:focus-visible,
+.dlc-night a.item[data-action="tab"]:focus-visible {
+  outline-color: var(--dlc-brass);
 }
 
 /* Screen-reader-only utility (use sparingly — prefer visible labels) */
