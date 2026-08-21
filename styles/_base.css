@@ -1,74 +1,165 @@
-/* Deadlands Classic — base typography and shared primitives.
- * Does NOT reset Foundry global styles — only adds dlc-* namespaced rules.
- */
+/* ============================================================================
+ * Deadlands Classic — base primitives  (Ledger redesign)
+ * Replaces styles/_base.css. Selectors are UNCHANGED from the original so the
+ * existing Handlebars templates keep working; only the rules are rebuilt on the
+ * new tokens. New helper classes are marked  — NEW.
+ * ==========================================================================*/
 
-/* ── Section headings ─────────────────────────────────────────────────────── */
-
+/* ── Section heading = Cinzel label + hairline rule (no box) ───────────────── */
 .dlc-section-title,
 .dlc-section-heading,
 .dlc-column-title {
-  font-family: var(--dlc-font-display);
-  font-size: 0.8rem;
-  letter-spacing: 0.05em;
+  font-family: var(--dlc-font-head);
+  font-size: var(--dlc-fs-section);
+  letter-spacing: var(--dlc-ls-section);
   text-transform: uppercase;
-  color: var(--dlc-color-gold);
-  border-bottom: 1px solid var(--dlc-color-gold);
-  padding-bottom: 2px;
-  margin: 0.5rem 0 0.3rem;
+  color: var(--dlc-ink);
+  margin: 0 0 0.6rem;
+}
+
+/* Full-width rule that sits after a section title. Wrap title + rule in
+ * .dlc-section-head to get the "label —————————— hint" row.  — NEW */
+.dlc-section-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.7rem;
+}
+.dlc-section-head > .dlc-section-title {
+  margin: 0;
+  white-space: nowrap;
+}
+.dlc-section-head::after,
+.dlc-section-head .dlc-rule-fill {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--dlc-rule);
+}
+
+/* Column sub-head (Corporeal / Mental / Edges …)  — NEW */
+.dlc-column-title {
+  font-weight: 700;
+  font-size: 0.55rem;
+  letter-spacing: 0.18em;
+  color: var(--dlc-brass-ink);
+  border: none;
+}
+
+/* Double rule that closes a block  — NEW */
+.dlc-block-end {
+  border-top: 1px solid var(--dlc-rule-strong);
+  border-bottom: 3px double var(--dlc-rule-strong);
 }
 
 /* ── Labels ───────────────────────────────────────────────────────────────── */
-
 .dlc-label {
-  font-size: 0.7rem;
+  font-family: var(--dlc-font-head);
+  font-size: var(--dlc-fs-label);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--dlc-color-muted);
+  letter-spacing: var(--dlc-ls-label);
+  color: var(--dlc-ink-muted);
 }
 
-/* ── Empty-state placeholder ──────────────────────────────────────────────── */
+/* ── Any number → Arvo  — NEW, apply to every value input/span */
+.dlc-num {
+  font-family: var(--dlc-font-data);
+  font-variant-numeric: tabular-nums;
+}
 
+/* ── Empty-state ──────────────────────────────────────────────────────────── */
 .dlc-empty {
+  font-family: var(--dlc-font-body);
   font-style: italic;
-  color: var(--dlc-color-muted);
-  font-size: 0.8rem;
+  color: var(--dlc-ink-muted);
+  font-size: var(--dlc-fs-body);
   padding: 0.4rem 0;
 }
 
-/* ── Generic button ───────────────────────────────────────────────────────── */
-
-.dlc-btn {
+/* ── Buttons — one primary per surface, ghost for the rest ─────────────────── */
+.dlc-btn /* legacy name kept = ghost button */,
+.dlc-btn-ghost {
   cursor: pointer;
   background: none;
-  border: 1px solid var(--dlc-color-gold);
+  border: 1px solid var(--dlc-btn-ghost-border);
   border-radius: var(--dlc-radius);
-  color: var(--dlc-color-gold);
-  padding: 2px 8px;
-  font-size: 0.75rem;
-  transition: background 0.15s;
+  color: var(--dlc-btn-ghost-ink);
+  font-family: var(--dlc-font-head);
+  font-size: 0.6rem;
+  letter-spacing: var(--dlc-ls-label);
+  text-transform: uppercase;
+  padding: 0.55em 0.9em;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+.dlc-btn:hover,
+.dlc-btn-ghost:hover {
+  background: color-mix(in srgb, var(--dlc-brass) 14%, transparent);
 }
 
-.dlc-btn:hover {
-  background: var(--dlc-color-gold-dim);
+.dlc-btn-primary {
+  /* NEW */
+  cursor: pointer;
+  border: none;
+  border-radius: var(--dlc-radius);
+  background: var(--dlc-btn-primary-bg);
+  color: var(--dlc-btn-primary-ink);
+  font-family: var(--dlc-font-head);
+  font-size: 0.6rem;
+  letter-spacing: var(--dlc-ls-label);
+  text-transform: uppercase;
+  padding: 0.6em 1.2em;
 }
+
+/* Accent button variants — reuse for Dominion (plum), Take-wound (blood) */
+.dlc-btn-plum {
+  background: var(--dlc-plum);
+  color: var(--dlc-card);
+  border: none;
+} /* NEW */
+.dlc-btn-blood {
+  background: none;
+  border: 1px solid var(--dlc-blood);
+  color: var(--dlc-blood);
+} /* NEW */
 
 /* ── Separator ────────────────────────────────────────────────────────────── */
-
 .dlc-sep {
-  color: var(--dlc-color-muted);
+  color: var(--dlc-ink-muted);
   margin: 0 2px;
 }
 
-/* ── Warning / bust messages ──────────────────────────────────────────────── */
-
-.dlc-warn,
-.dlc-warning {
-  color: var(--color-level-warning, #f0a000);
-  font-size: 0.75rem;
+/* ── Status pills — status colour = meaning  — NEW */
+.dlc-pill {
+  font-family: var(--dlc-font-head);
+  font-weight: 700;
+  font-size: 0.56rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid currentColor;
+  border-radius: var(--dlc-radius-pill);
+  padding: 0.35em 0.6em;
+}
+.dlc-pill-brass {
+  color: var(--dlc-brass-ink);
+}
+.dlc-pill-blood {
+  color: var(--dlc-blood);
+}
+.dlc-pill-plum {
+  color: var(--dlc-plum);
+}
+.dlc-pill-green {
+  color: var(--dlc-green);
 }
 
+/* ── Warnings — unskilled / bust now use --dlc-blood (was two conflicting) ─── */
+.dlc-warn,
+.dlc-warning,
 .dlc-unskilled-warn {
-  color: var(--color-level-warning, #f0a000);
-  font-size: 0.7rem;
+  color: var(--dlc-blood);
+  font-family: var(--dlc-font-body);
+  font-size: var(--dlc-fs-body);
   font-style: italic;
 }
