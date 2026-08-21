@@ -366,78 +366,47 @@
   font-style: italic;
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   ITEM LISTS (shared — gear, weapons, edges, hindrances)
-   ═══════════════════════════════════════════════════════════════════════════ */
-
-.dlc-item-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
-
-.dlc-item {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 3px 4px;
-  border-radius: var(--dlc-radius);
-  transition: background 0.1s;
-}
-
-.dlc-item:hover {
-  background: color-mix(in srgb, var(--dlc-brass) 14%, transparent);
-}
-
+/* .dlc-item-list/.dlc-item/.dlc-item-name retired with M3.5's gear/weapons
+ * prose rewrite below. .dlc-item-img survives — hexes-tab.hbs, miracles-tab.hbs,
+ * favors-tab.hbs and gizmos-tab.hbs still use it for their own power-list
+ * thumbnails and are untouched until M5. */
 .dlc-item-img {
   width: 24px;
   height: 24px;
   object-fit: cover;
   border-radius: 3px;
-  border: 1px solid var(--color-border-light-tertiary, #555);
+  border: 1px solid var(--dlc-rule);
   flex-shrink: 0;
 }
 
-.dlc-item-name {
-  flex: 1;
-  font-size: 0.85rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  cursor: pointer;
-}
-
-.dlc-item-name:hover {
-  color: var(--dlc-brass);
-}
-
 /* ═══════════════════════════════════════════════════════════════════════════
-   GEAR TAB
+   GEAR — run-in prose (M3.5): "WEAPONS — Colt Peacemaker; Winchester '73."
+   Replaces the old item-list/item-img/item-name markup (gear-tab.hbs and the
+   Weapons block in combat-tab.hbs share this pattern).
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .dlc-gear {
   display: flex;
   flex-direction: column;
-  gap: var(--dlc-section-gap);
+  gap: 0.45rem;
 }
 
-.dlc-gear-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+.dlc-gear-line {
+  font-family: var(--dlc-font-body);
+  font-size: 0.75rem;
+  line-height: 1.75;
+  margin: 0;
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   WEAPONS (combat tab)
-   ═══════════════════════════════════════════════════════════════════════════ */
+.dlc-gear-line > .dlc-gear-cat {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.62rem;
+  font-weight: 700;
+}
 
-.dlc-weapons {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+.dlc-gear-line.hindrances {
+  color: var(--dlc-blood);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
