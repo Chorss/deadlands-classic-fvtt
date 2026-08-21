@@ -22,7 +22,7 @@
 }
 
 .dlc-miracle-row:hover {
-  background: var(--dlc-color-gold-dim);
+  background: color-mix(in srgb, var(--dlc-brass) 14%, transparent);
 }
 
 .dlc-miracle-name {
@@ -67,7 +67,7 @@
 }
 
 .dlc-faith-lost {
-  color: var(--dlc-color-blood);
+  color: var(--dlc-blood);
   font-size: 0.8rem;
 }
 
@@ -85,7 +85,7 @@
 }
 
 .dlc-sin-denied {
-  color: var(--dlc-color-blood);
+  color: var(--dlc-blood);
   font-style: italic;
   font-size: 0.75rem;
 }

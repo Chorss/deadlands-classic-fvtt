@@ -103,7 +103,7 @@
 /* Aptitude at level 0 — rolled with 1 die and a -4 modifier (dlc p.29).
    Applied conditionally in traits-tab.hbs; matches .dlc-unskilled-warn above. */
 .dlc-unskilled {
-  color: var(--dlc-color-muted);
+  color: var(--dlc-ink-muted);
   font-style: italic;
 }
 

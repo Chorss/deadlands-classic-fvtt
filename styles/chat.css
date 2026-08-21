@@ -14,18 +14,18 @@
   gap: 0.4rem;
   margin-bottom: 0.3rem;
   padding-bottom: 0.3rem;
-  border-bottom: 1px solid var(--dlc-color-gold);
+  border-bottom: 1px solid var(--dlc-brass);
 }
 
 .dlc-actor-name {
   font-family: var(--dlc-font-display);
   font-size: 0.85rem;
-  color: var(--dlc-color-gold);
+  color: var(--dlc-brass);
 }
 
 .dlc-chat-verb {
   font-size: 0.8rem;
-  color: var(--dlc-color-muted);
+  color: var(--dlc-ink-muted);
 }
 
 /* ── Roll result block ────────────────────────────────────────────────────── */
@@ -45,7 +45,7 @@
 .dlc-roll-total {
   font-size: 1.2rem;
   font-weight: bold;
-  color: var(--dlc-color-gold);
+  color: var(--dlc-brass);
 }
 
 .dlc-raises {
@@ -63,13 +63,13 @@
 
 .dlc-fail-msg,
 .dlc-failure {
-  color: var(--dlc-color-blood);
+  color: var(--dlc-blood);
   font-weight: bold;
   font-size: 0.85rem;
 }
 
 .dlc-bust-msg {
-  color: var(--dlc-color-blood);
+  color: var(--dlc-blood);
   font-weight: bold;
   font-style: italic;
   font-size: 0.85rem;
@@ -87,7 +87,7 @@
 .dlc-backlash-header {
   font-family: var(--dlc-font-display);
   font-size: 0.85rem;
-  color: var(--dlc-color-blood);
+  color: var(--dlc-blood);
 }
 
 .dlc-backlash-entry {
@@ -100,13 +100,13 @@
 
 .dlc-backlash-roll {
   font-size: 0.75rem;
-  color: var(--dlc-color-muted);
+  color: var(--dlc-ink-muted);
 }
 
 .dlc-backlash-note {
   font-size: 0.75rem;
   font-style: italic;
-  color: var(--dlc-color-muted);
+  color: var(--dlc-ink-muted);
 }
 
 .dlc-backlash-succeeds {
@@ -121,14 +121,14 @@
   letter-spacing: 0.04em;
   padding: 1px 5px;
   border-radius: 3px;
-  border: 1px solid var(--dlc-color-blood);
-  color: var(--dlc-color-blood);
+  border: 1px solid var(--dlc-blood);
+  color: var(--dlc-blood);
 }
 
 /* Manitou contest (Shaman) */
 .dlc-manitou-msg {
   font-style: italic;
-  color: var(--dlc-color-muted);
+  color: var(--dlc-ink-muted);
   font-size: 0.8rem;
   margin-top: 0.2rem;
 }
