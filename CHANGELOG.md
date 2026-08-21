@@ -48,6 +48,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **M5.5 of the Ledger redesign: the Shaman Favors tab — M5 complete.** No
+  README pattern for this archetype — composed from the Hexes-tab (M5.1)
+  primitives: section-heads for Ritual Aptitude/Appeasement/Favors, inline
+  stat rows, and the favor list as a grid table. Perform Ritual is now the
+  shared `.dlc-btn-primary`; Spend Favor keeps the existing shared
+  `.dlc-spend-btn` from `dialogs.css`. Retired `.dlc-use-btn`, a leftover
+  never actually referenced by this tab's own markup. This closes M5 (all
+  five archetype tabs — Huckster, Harrowed, Mad Scientist, Blessed, Shaman —
+  now on the Ledger primitives); M6 (dialogs) is next.
 - **M5.4 of the Ledger redesign: the Blessed Miracles tab.** No README
   pattern for this archetype — composed from the Hexes-tab (M5.1) primitives:
   section-heads, an inline Faith Level/Modifier stat row, and the miracle
