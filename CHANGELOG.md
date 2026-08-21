@@ -48,6 +48,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **M3 of the Ledger redesign: the character sheet's actual layout, not just
+  its tokens.** Masthead rebuilt around a 3px double rule (portrait + Rye name
+  + Cinzel archetype line, sourced from Foundry's own `TYPES.Actor.<type>`
+  label); Fate Chips move from the Combat tab into the header as
+  `.dlc-chip-token` discs. The tab bar restyles into a Cinzel rail
+  (`.dlc-rail`/`.dlc-rail-item`) — icons dropped, `tabs` kept on the `<nav>`
+  since ApplicationV2's native `changeTab()` depends on it for active-tab
+  highlighting. Traits render as read-only "4d8 +2" notation with dotted
+  leaders by default; a new whole-sheet edit-mode toggle (header) reveals the
+  raw die-count/type/modifier controls, which stay in the DOM at all times so
+  ApplicationV2's form submission never drops a path. Wounds get 5-segment
+  severity bars driven by `data-severity` (colour ramp was already aliased in
+  CSS from M1, never wired to markup until now) plus a penalty stamp; the Wind
+  meter gets an 18-tick fuel-gauge bar alongside the still-directly-editable
+  value (`buildWindTicks`, `wind-calculator.mjs`, unit-tested). Gear and
+  Weapons become run-in prose ("WEAPONS — Colt Peacemaker; Winchester '73.")
+  instead of item lists. NPC and Mook sheets shrink to a 460px compact window
+  with single-column traits.
 - **M2 of the Ledger redesign: `styles/chips.css` is gone.** Its rules were
   duplicates of what the new tokens already cover, kept alive only by import
   order. Fate-chip primitives moved to `combat.css` (rebuilt on the
