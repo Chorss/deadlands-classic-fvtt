@@ -34,4 +34,8 @@ if echo "$STAGED" | grep -qE '\.(hbs|css)$'; then
   node tools/audit-css.mjs || fail "audit-css: CSS classes used in templates but missing from styles/ — add rules before committing"
 fi
 
+if echo "$STAGED" | grep -qE '\.(mjs|hbs)$|^lang/'; then
+  node tools/audit-i18n.mjs || fail "audit-i18n: i18n keys referenced in code/templates but missing from lang/ — add them before committing"
+fi
+
 exit 0

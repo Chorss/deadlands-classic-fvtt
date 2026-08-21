@@ -5,22 +5,13 @@
 # stdout → JSON injected into Claude's context (additionalContext or decision:block)
 # stderr → shown to user in terminal
 #
-# Fires on every Bash tool call; exits early if the command is not extract-pdf.sh.
+# Gated twice: the `if` filter in settings.json (Bash(*extract-pdf.sh *)) keeps this
+# script from spawning at all on unrelated commands, and the grep below is the
+# second gate — the `if` filter is best-effort and fails open.
 
 set -eu
 
 INPUT=$(cat)
-
-# Parse tool name
-TOOL=$(node -e "
-  let s='';
-  process.stdin.on('data', c => s += c);
-  process.stdin.on('end', () => {
-    try { process.stdout.write(JSON.parse(s).tool_name ?? ''); } catch {}
-  });
-" <<< "$INPUT")
-
-[[ "$TOOL" == "Bash" ]] || exit 0
 
 # Parse bash command
 COMMAND=$(node -e "

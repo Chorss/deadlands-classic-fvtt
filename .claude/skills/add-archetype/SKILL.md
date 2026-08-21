@@ -1,6 +1,8 @@
 ---
+name: add-archetype
 description: Scaffold a new archetype — creates manifest.mjs, data.mjs, sheet.mjs, optional mechanics.mjs, i18n keys EN+PL, system.json entry, and entry-point import. Delegates to the archetype-scaffolder subagent.
 allowed-tools: Read, Write, Edit, Bash(node:*), Bash(node tools/verify-documenttypes.mjs:*), Agent
+argument-hint: "<kebab-name> [--mechanics|--overlay]"
 ---
 
 # /add-archetype <name> [--mechanics] [--overlay]

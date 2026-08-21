@@ -3,8 +3,8 @@
 Step-by-step tutorial for contributors adding a new PC archetype (e.g. "Blessed Gunslinger") or
 NPC type. If you are adding an overlay (like Harrowed), see `architecture.md` §Harrowed instead.
 
-> **Automated:** this entire tutorial is wrapped by the `/add-archetype` slash command
-> (`.claude/commands/add-archetype.md`), which delegates to the `archetype-scaffolder` subagent —
+> **Automated:** this entire tutorial is wrapped by the `/add-archetype` skill
+> (`.claude/skills/add-archetype/SKILL.md`), which delegates to the `archetype-scaffolder` subagent —
 > it generates the manifest/data/sheet files (plus optional mechanics), the EN+PL i18n keys, the
 > `system.json` `documentTypes` entry, and the entry-point import in one pass. The manual steps
 > below remain the reference for understanding exactly what the scaffold produces.

@@ -11,9 +11,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `npm run verify:all` — one definition of "green" (manifest + EN/PL parity →
+  CSS coverage → i18n keys → unit tests), now shared by CI, the pre-commit hook
+  and the `/verify-system` skill. `tools/audit-i18n.mjs` was previously wired
+  into nothing and never ran outside a manual invocation.
+- `Stop` hook (`.claude/hooks/stop-verify.sh`) — runs `verify:all` before Claude
+  ends a turn with a dirty working tree. This is the only check that covers files
+  written through Bash (`sed -i`, heredocs, `>` redirection), which bypass the
+  `PostToolUse` `Write|Edit` hook entirely.
+- Enforced deny rules for `vendor/`, `books/`, `.pdf-extract/` and `LICENSE` —
+  previously prose in `CLAUDE.md` with nothing behind it.
+- Pre-commit branch running `audit-i18n` when `.mjs`, `.hbs` or `lang/` files
+  are staged.
+
 ### Changed
 
+- Slash commands migrated to skills: `.claude/commands/*.md` →
+  `.claude/skills/<name>/SKILL.md`, with `argument-hint` added for `release`,
+  `new-phase` and `add-archetype`.
+- `.claude/rules/` is now loaded natively by Claude Code instead of through
+  `@`-includes in `CLAUDE.md`. `code-quality.md` gained a `paths:` scope, so its
+  164 lines no longer load in sessions that never touch JavaScript.
+- Workshop docs (`CLAUDE.md`, `.claude/README.md`) rewritten to describe the
+  mechanisms that actually run, including which permission rules are enforced
+  and which are only a speed bump.
+
 ### Fixed
+
+- `.claude/hooks/post-write.sh` exits 2 instead of 1 on a validation failure.
+  `PostToolUse` surfaces hook stderr to Claude only on exit code 2, so every
+  syntax and JSON check it performed was invisible to the model.
+- `.claude/hooks/post-extract-verify.sh` no longer spawns node processes on
+  unrelated Bash calls; a native `if: Bash(*extract-pdf.sh *)` filter gates it.
 
 ## [0.3.4] — 2026-07-06
 

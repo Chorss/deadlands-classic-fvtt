@@ -30,7 +30,7 @@ templates/                  # Handlebars partials per sheet section
 styles/                     # CSS entry + partials per concern
 lang/                       # en.json, pl.json (key sets MUST match)
 packs/                      # LevelDB compendium packs (V14 format)
-tools/                      # verify-documenttypes.mjs and other repo tooling
+tools/                      # verify-documenttypes.mjs, audit-css.mjs, audit-i18n.mjs
 tests/                      # node:test unit tests for pure core logic
 docs/                       # plan, architecture, v14-api-notes, mechanics-reference, notes
 ```
@@ -39,11 +39,12 @@ Full layout: `docs/implementation-plan.md` §4.
 
 ## Dev rules
 
-Detailed rules live in `.claude/rules/`. Two rules auto-load every session via the
-`@`-includes at the bottom of this file: `commits.md` and `naming.md`. The rest
-(`v14-api.md`, `localization.md`, `references.md`, `rulebook-authority.md`) carry a `paths:` frontmatter as
-human-readable scope documentation — Claude reads them on demand when touching
-matching files. The list below is a human-readable index.
+Detailed rules live in `.claude/rules/`, loaded natively by Claude Code — no `@`-includes needed.
+A rule **without** `paths:` frontmatter loads at session start with the same priority as `CLAUDE.md`
+(`commits.md`, `naming.md` — unconditional, ~61 lines). A rule **with** `paths:` loads only when a
+matching file is read or written (`code-quality.md`, `v14-api.md`, `localization.md`, `references.md`,
+`rulebook-authority.md`). Path-scoped rules are not re-injected after `/compact`, which is why
+`post-write.sh` also nudges on mechanics files. The list below is a human-readable index.
 
 - **Commits** — conventional commit prefixes, enforced by `.githooks/commit-msg`. → `commits.md`
 - **Branch per feature.** Use `.github/PULL_REQUEST_TEMPLATE.md` on PRs.
@@ -51,6 +52,7 @@ matching files. The list below is a human-readable index.
 - **Localization** — EN/PL key parity mandatory, no hardcoded UI strings. → `localization.md`
 - **Game rules — one source of truth.** All mechanics come from `deadlands-rules-ref` (full catalog in `index/README.md`); `docs/mechanics-reference.md` is only a paraphrase; re-verify a mechanic before coding it. → rule `rulebook-authority.md`, skill `/verify-mechanic` (before coding), subagent `mechanic-verifier` (audit written code/packs), plus a non-blocking post-write reminder on mechanics files.
 - **Naming conventions** — casing matrix for keys, folders, classes, i18n. → `naming.md`
+- **Code quality** — Biome-enforced lint rules, SOLID boundaries, OWASP patterns, cognitive complexity ≤ 15, CSS/template coverage. Scoped to `module/`, `tools/`, `tests/` `.mjs`. → `code-quality.md`
 - **Tests for core logic** — pure modules (exploding-roll, poker-evaluator, chip-rules, wound-track) ship with `node:test` unit tests. Foundry-dependent code is verified manually.
 - **Phase order matters.** Follow `docs/implementation-plan.md` §5 — each phase ends with a working, testable system. Don't skip ahead.
 - **Communication language.** The maintainer works in Polish; reply in Polish in chat and planning documents. Code, identifiers, commit messages, and this document stay in English.
@@ -63,7 +65,7 @@ matching files. The list below is a human-readable index.
 | Architecture + registry contract | `docs/architecture.md` |
 | V14 API patterns & code snippets | `docs/v14-api-notes.md` |
 | Mechanics quick reference (⚠ **paraphrase** — subordinate to the rulebook source below) | `docs/mechanics-reference.md` |
-| Extending with a new archetype | `docs/extending-archetypes.md` *(planned, Phase 14)* |
+| Extending with a new archetype | `docs/extending-archetypes.md` |
 | Open questions / licensing notes | `docs/notes.md` |
 | **Game rules — single authoritative source** (full rulebook catalog) | `$DEADLANDS_RULES_PATH/index/README.md` (catalog of every book) + `<slug>.md`; discipline → `.claude/rules/rulebook-authority.md` |
 | Persistent memory across Claude sessions | `~/.claude/projects/.../memory/` (key knowledge distilled into `docs/`) |
@@ -147,16 +149,11 @@ Ask before editing anything else — in particular, never modify `vendor/`, `boo
 Before declaring a task done:
 
 ```bash
-node tools/verify-documenttypes.mjs   # manifest + EN/PL key parity
-node --test tests/*.test.mjs          # unit tests
+npm run lint          # Biome — formatting + lint rules
+npm run verify:all    # manifest + EN/PL parity → CSS coverage → i18n keys → unit tests
 ```
 
-The `/verify-system` slash command wraps both in a one-paragraph report.
+These are the same two commands CI runs, so green locally means green on the PR.
+The `/verify-system` skill wraps them in a one-paragraph report, and a `Stop` hook
+runs `verify:all` before the turn ends whenever the working tree is dirty.
 
----
-
-## Auto-loaded rule files
-
-@.claude/rules/commits.md
-@.claude/rules/naming.md
-@.claude/rules/code-quality.md
