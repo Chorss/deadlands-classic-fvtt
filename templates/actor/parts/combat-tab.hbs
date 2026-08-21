@@ -2,33 +2,43 @@
 <section class="tab dlc-combat {{tab.cssClass}}" data-group="sheet" data-tab="combat">
 
   <div class="dlc-wounds">
-    {{!-- Wind bar --}}
+    {{!-- Wind meter: value/max stays directly editable (Wind changes every
+         combat round); the 18-tick bar beneath it is a read-only fuel-gauge
+         approximation (M3.4, BaseCharacterSheet#prepareWounds). --}}
     <div class="dlc-wind-bar {{wounds.windedClass}}">
-      <h2 class="dlc-section-title">{{localize "DEADLANDS.Sheet.Wind"}}</h2>
-      <div class="dlc-wind-track">
-        <input type="number" class="dlc-wind-value" name="system.wind.value"
-          value="{{wounds.wind.value}}" min="0" max="{{wounds.wind.max}}" data-dtype="Number"
-          aria-label="{{localize 'DEADLANDS.Sheet.Wind'}}"
-          {{#unless @root.editable}}disabled{{/unless}} />
-        <span class="dlc-wind-sep">/</span>
-        <span class="dlc-wind-max">{{wounds.wind.max}}</span>
+      <div class="dlc-wind-head">
+        <span class="dlc-wind-label">{{localize "DEADLANDS.Sheet.Wind"}}</span>
+        <span class="dlc-stat-pair">
+          <input type="number" class="dlc-wind-value dlc-num" name="system.wind.value"
+            value="{{wounds.wind.value}}" min="0" max="{{wounds.wind.max}}" data-dtype="Number"
+            aria-label="{{localize 'DEADLANDS.Sheet.Wind'}}"
+            {{#unless @root.editable}}disabled{{/unless}} />
+          <span class="dlc-sep">/</span>
+          <span class="dlc-wind-max dlc-num">{{wounds.wind.max}}</span>
+        </span>
         {{#if wounds.windedClass}}<span class="dlc-winded-badge">{{localize "DEADLANDS.Wound.Winded"}}</span>{{/if}}
+      </div>
+      <div class="dlc-wind-track">
+        {{#each wounds.windTicks as |tick|}}<span class="dlc-wind-tick {{tick}}"></span>{{/each}}
       </div>
     </div>
 
     {{!-- 8-slot wound track --}}
-    <h2 class="dlc-section-title">{{localize "DEADLANDS.Sheet.Section.Wounds"}}</h2>
+    <h2 class="dlc-section-title">
+      {{localize "DEADLANDS.Sheet.Section.Wounds"}}
+      {{#if wounds.woundPenalty}}<span class="dlc-wound-penalty dlc-num">{{wounds.woundPenalty}}</span>{{/if}}
+    </h2>
     <ul class="dlc-wound-list">
       {{#each wounds.woundLocations as |wound|}}
-      <li class="dlc-wound {{#if wound.isMaimed}}dlc-maimed{{/if}}" data-location="{{wound.id}}">
+      <li class="dlc-wound {{#if wound.isMaimed}}dlc-maimed{{/if}}" data-location="{{wound.id}}" data-severity="{{wound.severity}}">
         <span class="dlc-wound-label">{{localize wound.label}}</span>
         <div class="dlc-wound-pips">
           {{#each wound.pips}}<span class="dlc-wound-pip {{#if filled}}dlc-pip-filled{{/if}}"></span>{{/each}}
         </div>
-        <input type="number" class="dlc-wound-sev" min="0" max="5" name="{{wound.path}}"
+        <input type="number" class="dlc-wound-sev dlc-num" min="0" max="5" name="{{wound.path}}"
           value="{{wound.severity}}" {{#unless @root.editable}}disabled{{/unless}}
           aria-label="{{localize wound.label}} {{localize 'DEADLANDS.Sheet.Aria.WoundSeverity'}}" />
-        {{#if wound.severity}}<span class="dlc-wound-severity">{{localize wound.severityLabel}}</span>{{/if}}
+        <span class="dlc-wound-tier">{{#if wound.severity}}{{localize wound.severityLabel}}{{else}}—{{/if}}</span>
       </li>
       {{/each}}
     </ul>

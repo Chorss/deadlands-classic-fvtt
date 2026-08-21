@@ -15,9 +15,11 @@ globalThis.foundry = undefined;
 
 import { drawHitLocation, resolveHitLocation } from "../module/core/wounds/hit-location.mjs";
 import {
+  buildWindTicks,
   computeWindMax,
   gutsWoundsFromNegativeWind,
   isWinded,
+  WIND_TICK_COUNT,
 } from "../module/core/wounds/wind-calculator.mjs";
 import {
   accumulateWounds,
@@ -293,5 +295,40 @@ describe("gutsWoundsFromNegativeWind (dlc p.141-142)", () => {
 
   it("returns 2 at two full intervals", () => {
     assert.equal(gutsWoundsFromNegativeWind(-24, 12), 2);
+  });
+});
+
+// ── buildWindTicks (sheet Wind-meter presentation, no rulebook value of its own) ──
+
+describe("buildWindTicks", () => {
+  it("fills every tick at full Wind", () => {
+    const ticks = buildWindTicks(12, 12);
+    assert.equal(ticks.length, WIND_TICK_COUNT);
+    assert.ok(ticks.every((t) => t !== ""));
+  });
+
+  it("fills no ticks at zero Wind", () => {
+    const ticks = buildWindTicks(0, 12);
+    assert.ok(ticks.every((t) => t === ""));
+  });
+
+  it("clamps negative Wind to zero ticks rather than going negative", () => {
+    const ticks = buildWindTicks(-8, 12);
+    assert.ok(ticks.every((t) => t === ""));
+  });
+
+  it("colours the low end of the filled range as danger", () => {
+    const ticks = buildWindTicks(12, 12);
+    assert.equal(ticks[0], "danger");
+  });
+
+  it("colours the high end of the filled range as ok", () => {
+    const ticks = buildWindTicks(12, 12);
+    assert.equal(ticks.at(-1), "ok");
+  });
+
+  it("returns all-empty when windMax is zero (no division by zero)", () => {
+    const ticks = buildWindTicks(5, 0);
+    assert.ok(ticks.every((t) => t === ""));
   });
 });

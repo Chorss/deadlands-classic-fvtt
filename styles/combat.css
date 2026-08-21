@@ -12,13 +12,23 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   WOUND TRACK
+   WOUND TRACK (M3.4) — 2-col grid of 5-segment severity bars. Row: LABEL
+   (uppercase) | 5 segments (severity ramp via data-severity) | tier name.
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .dlc-wounds {
   display: flex;
   flex-direction: column;
   gap: var(--dlc-section-gap);
+}
+
+.dlc-wound-penalty {
+  font-family: var(--dlc-font-head);
+  font-weight: 700;
+  font-size: 0.55rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dlc-blood);
 }
 
 /* 8-slot wound list: 2-column grid */
@@ -28,34 +38,33 @@
   margin: 0;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.3rem;
+  gap: 0 1.9rem;
 }
 
 .dlc-wound {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 3px 5px;
-  border-radius: var(--dlc-radius);
-  border: 1px solid transparent;
-  transition:
-    border-color 0.15s,
-    background 0.15s;
+  gap: 0.6rem;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--dlc-rule-soft);
 }
 
 .dlc-wound.dlc-maimed {
-  border-color: var(--dlc-blood);
-  background: color-mix(in srgb, var(--dlc-blood) 12%, transparent);
+  border-bottom-color: var(--dlc-blood);
 }
 
 .dlc-wound-label {
-  font-size: 0.75rem;
+  flex: 1;
+  font-family: var(--dlc-font-body);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--dlc-ink);
   white-space: nowrap;
-  min-width: 5rem;
-  color: var(--dlc-ink-muted);
 }
 
-/* Pip dots */
+/* Severity bar — 5 segments; .dlc-pip-filled marks a filled one, coloured by
+   the row's data-severity (the ramp: 1-2 yellow, 3-4 orange, 5 blood). */
 .dlc-wound-pips {
   display: flex;
   gap: 3px;
@@ -63,12 +72,11 @@
 }
 
 .dlc-wound-pip {
-  display: inline-block;
-  width: var(--dlc-pip-size);
-  height: var(--dlc-pip-size);
-  border-radius: 50%;
+  width: 16px;
+  height: 9px;
+  border-radius: 2px;
   background: var(--dlc-wound-empty);
-  border: 1px solid #555;
+  border: 1px solid var(--dlc-rule);
   transition: background 0.1s;
 }
 
@@ -77,19 +85,21 @@
   border-color: var(--dlc-wound-1);
 }
 
-/* Severity-aware pip colour — driven by wound severity class on the <li> */
-.dlc-wound[data-severity="3"] .dlc-wound-pip.dlc-pip-filled,
-.dlc-wound[data-severity="4"] .dlc-wound-pip.dlc-pip-filled {
+.dlc-wound[data-severity="3"] .dlc-pip-filled,
+.dlc-wound[data-severity="4"] .dlc-pip-filled {
   background: var(--dlc-wound-3);
   border-color: var(--dlc-wound-3);
 }
 
-.dlc-wound[data-severity="5"] .dlc-wound-pip.dlc-pip-filled {
+.dlc-wound[data-severity="5"] .dlc-pip-filled {
   background: var(--dlc-wound-5);
   border-color: var(--dlc-wound-5);
 }
 
-/* Severity number input — small, tucked right */
+/* Severity number input — kept directly editable (no view/edit split): a
+   wound's severity has no compact read-only notation to fall back to the
+   way trait dice do, so hiding it behind edit mode would just remove the
+   only way to record damage. */
 .dlc-wound-sev {
   width: 2rem;
   text-align: center;
@@ -97,59 +107,62 @@
   margin-left: auto;
 }
 
-.dlc-wound-severity {
-  font-size: 0.7rem;
-  font-style: italic;
-  color: var(--dlc-blood);
-  white-space: nowrap;
+/* Tier name at row end (Light / Heavy / Serious / Critical / Maimed / —) */
+.dlc-wound-tier {
+  font-family: var(--dlc-font-data);
+  font-size: 0.62rem;
+  min-width: 52px;
+  text-align: right;
+  color: var(--dlc-ink-muted);
 }
 
-/* Shared with the combat-tab wound list (dlc-wound-label). */
-.dlc-wound-label {
-  white-space: nowrap;
+.dlc-wound[data-severity="5"] .dlc-wound-tier {
+  color: var(--dlc-blood);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   WIND BAR
+   WIND METER — 18-tick bar (M3.4). The value/max readout above it reuses
+   .dlc-wind-head/.dlc-wind-label/.dlc-wind-value/.dlc-wind-max from the
+   header (actor-sheet.css) — same names, same look, in both places.
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .dlc-wind-bar {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .dlc-wind-track {
   display: flex;
-  align-items: center;
-  gap: 4px;
+  gap: 2px;
+  height: 8px;
 }
 
-.dlc-wind-track .dlc-wind-value {
-  width: 2.5rem;
-  text-align: center;
-  font-size: 0.9rem;
+.dlc-wind-tick {
+  flex: 1;
+  border-radius: 1px;
+  background: var(--dlc-wind-empty);
 }
-
-.dlc-wind-track .dlc-wind-sep {
-  color: var(--dlc-ink-muted);
+.dlc-wind-tick.ok {
+  background: var(--dlc-wind-ok);
 }
-
-.dlc-wind-track .dlc-wind-max {
-  font-size: 0.85rem;
-  color: var(--dlc-ink-muted);
+.dlc-wind-tick.warn {
+  background: var(--dlc-wind-warn);
+}
+.dlc-wind-tick.danger {
+  background: var(--dlc-wind-danger);
 }
 
 .dlc-winded-badge {
-  font-size: 0.7rem;
-  font-weight: bold;
-  color: var(--dlc-blood);
+  font-family: var(--dlc-font-head);
+  font-weight: 700;
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  padding: 1px 5px;
+  color: var(--dlc-blood);
   border: 1px solid var(--dlc-blood);
-  border-radius: var(--dlc-radius);
+  border-radius: 3px;
+  padding: 3px 5px;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
