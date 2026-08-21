@@ -48,6 +48,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **M5.4 of the Ledger redesign: the Blessed Miracles tab.** No README
+  pattern for this archetype — composed from the Hexes-tab (M5.1) primitives:
+  section-heads, an inline Faith Level/Modifier stat row, and the miracle
+  list as a grid table. The sin-denied warning and the three sin-severity
+  tracker buttons move to the shared `.dlc-warn`/`.dlc-btn-ghost` primitives;
+  major/mortal sin share one blood-accent colour ramp between the tracker
+  buttons and the sin-result chat card's severity tag (same
+  `dlc-sin-{{severity}}` dynamic fragment for both).
 - **M5.3 of the Ledger redesign: the Mad Scientist Gizmos tab.** No README
   pattern for this archetype — composed from the Hexes-tab (M5.1) primitives:
   section-heads, an inline Mad Science/Tinkerin' stat row, and the gizmo list

@@ -1,6 +1,10 @@
-/* Deadlands Classic — Blessed archetype styles (miracles, faith, sin tracker). */
+/* Deadlands Classic — Blessed archetype styles (miracles, faith, sin tracker).
+ * No README pattern (M5) — composed from the Hexes-tab primitives.
+ */
 
-/* ── Miracles tab ─────────────────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════════════
+   MIRACLES TAB (M5)
+   ═══════════════════════════════════════════════════════════════════════════ */
 
 .dlc-miracles {
   display: flex;
@@ -8,61 +12,134 @@
   gap: var(--dlc-section-gap);
 }
 
-.dlc-miracle-table,
-.dlc-miracle-list {
-  width: 100%;
-}
+/* ── Faith stat row ───────────────────────────────────────────────────────── */
 
-.dlc-miracle-row {
+.dlc-faith-row {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 3px 4px;
-  border-radius: var(--dlc-radius);
+  gap: 1.1rem;
+  flex-wrap: wrap;
 }
 
-.dlc-miracle-row:hover {
-  background: color-mix(in srgb, var(--dlc-brass) 14%, transparent);
+.dlc-faith-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.dlc-faith-stat label {
+  font-family: var(--dlc-font-head);
+  font-size: 0.56rem;
+  letter-spacing: var(--dlc-ls-label);
+  text-transform: uppercase;
+  color: var(--dlc-ink-muted);
+}
+
+.dlc-faith-stat input {
+  width: 2.6rem;
+  text-align: center;
+}
+
+.dlc-sin-denied {
+  margin: 0;
+}
+
+/* ── Sin tracker — three severity buttons (GM/owner only) ────────────────── */
+
+.dlc-sin-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.dlc-sin-controls-label {
+  font-family: var(--dlc-font-head);
+  font-size: 0.56rem;
+  letter-spacing: var(--dlc-ls-label);
+  text-transform: uppercase;
+  color: var(--dlc-ink-muted);
+}
+
+.dlc-sin-btn {
+  padding: 0.3em 0.7em;
+  font-size: 0.55rem;
+}
+
+.dlc-sin-major {
+  border-color: var(--dlc-blood);
+  color: var(--dlc-blood);
+}
+
+.dlc-sin-mortal {
+  border-color: var(--dlc-blood);
+  color: var(--dlc-blood);
+  font-weight: 700;
+}
+
+/* ── Miracle list — grid table, same shape as the Huckster hex table ─────── */
+
+.dlc-miracle-table {
+  display: grid;
+  grid-template-columns: 1.8fr 0.5fr 0.6fr 0.8fr 0.7fr auto;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.dlc-miracle-table thead,
+.dlc-miracle-table tbody,
+.dlc-miracle-head,
+.dlc-miracle-row {
+  display: contents;
+}
+
+.dlc-miracle-head th {
+  font-family: var(--dlc-font-head);
+  font-size: 0.5rem;
+  letter-spacing: var(--dlc-ls-label);
+  text-transform: uppercase;
+  color: var(--dlc-ink-muted);
+  text-align: left;
+  font-weight: 400;
+  padding: 0 0.2rem 0.4rem;
+  border-bottom: 1px solid var(--dlc-rule-strong);
+}
+
+.dlc-miracle-row td {
+  padding: 0.4rem 0.2rem;
+  border-bottom: 1px solid var(--dlc-rule-soft);
+  font-size: 0.75rem;
 }
 
 .dlc-miracle-name {
-  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--dlc-font-body);
+  font-weight: 700;
   font-size: 0.85rem;
 }
 
 .dlc-miracle-actions {
-  display: flex;
-  gap: 3px;
+  text-align: right;
 }
 
 .dlc-invoke-btn {
-  font-size: 0.7rem;
-  padding: 1px 6px;
+  padding: 0.3em 0.7em;
+  font-size: 0.55rem;
 }
 
-/* ── Miracle outcome ──────────────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════════════
+   CHAT CARDS (module/archetypes/blessed/mechanics.mjs, dlc-night shell from M4)
+   ═══════════════════════════════════════════════════════════════════════════ */
 
 .dlc-miracle-result,
 .dlc-miracle-outcome {
   font-size: 0.85rem;
 }
 
-/* ── Faith / sin tracker ──────────────────────────────────────────────────── */
-
-.dlc-faith {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-
-.dlc-faith-row {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
 .dlc-faith-kept {
-  color: #2ecc71;
+  color: var(--dlc-green);
   font-size: 0.8rem;
 }
 
@@ -71,34 +148,19 @@
   font-size: 0.8rem;
 }
 
-/* Sin controls */
-.dlc-sin-controls,
-.dlc-sin-buttons {
-  display: flex;
-  gap: 4px;
-  align-items: center;
-}
-
-.dlc-sin-btn {
-  font-size: 0.7rem;
-  padding: 1px 6px;
-}
-
-.dlc-sin-denied {
-  color: var(--dlc-blood);
-  font-style: italic;
-  font-size: 0.75rem;
-}
-
-/* Sin severity tags — one shared rule for minor / major / mortal. */
-.dlc-sin-severity {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-/* Sin result chat */
 .dlc-sin-result,
 .dlc-sin-details {
   font-size: 0.8rem;
+}
+
+/* Sin severity tag — the .dlc-sin-{{severity}} modifier is shared with the
+ * tracker buttons above (same dynamic fragment, same colour ramp: minor
+ * brass, major/mortal blood — see the button rules earlier in this file). */
+.dlc-sin-severity {
+  display: inline-block;
+  font-family: var(--dlc-font-head);
+  font-size: 0.56rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dlc-brass-ink);
 }
