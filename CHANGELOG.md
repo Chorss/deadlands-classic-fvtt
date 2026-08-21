@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Local Playwright E2E suite (`tests/e2e/`, `npm run test:e2e`) driving a real
+  Foundry instance: boot smoke, per-archetype sheet render (raw-i18n-key leak
+  check), click-to-roll flow, and a two-client GM-proxy race regression.
+  Local-only by design — CI cannot run licensed Foundry. Setup and usage:
+  `docs/testing-e2e.md`.
 - `npm run verify:all` — one definition of "green" (manifest + EN/PL parity →
   CSS coverage → i18n keys → unit tests), now shared by CI, the pre-commit hook
   and the `/verify-system` skill. `tools/audit-i18n.mjs` was previously wired
@@ -133,6 +138,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   compat shim — it runs locally against a snapshot and logs a compatibility
   warning; prefer `returnToPool` / `discard` / `drawBlind` for read-dependent
   changes.
+- README: structured the Screenshots section (planned captures in
+  `assets/screenshots/`, shipped in the release zip once present) and dropped
+  the stale version qualifier from the feature-status heading.
 - `ActionDeck.initialize` returns an `{ok, cardsRemaining}` summary instead of
   the full deck state, so the draw-pile order never crosses the wire.
 - The four copies of the white-chip spend-then-roll block (trait, aptitude, hex,
