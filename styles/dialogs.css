@@ -44,6 +44,51 @@
   gap: 0.5rem;
 }
 
+.dlc-hand-title {
+  font-family: var(--dlc-font-display);
+  font-size: 0.9rem;
+  color: var(--dlc-brass);
+}
+
+.dlc-hand-cards {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.dlc-hand-empty {
+  font-style: italic;
+  color: var(--dlc-ink-muted);
+  font-size: 0.8rem;
+}
+
+/* Generic card box — relocated from huckster.css (M5): this rule belongs to
+ * the Combatant Hand dialog, not the Huckster archetype; it only ended up
+ * there because the hex-cast chat card used to share the same .dlc-card
+ * class name (renamed to .dlc-hex-card in M5 to end that coupling). Colour
+ * variants (.dlc-card--joker/--red/--black) live in archetypes/harrowed.css. */
+.dlc-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 6px;
+  border: 1px solid var(--dlc-brass);
+  border-radius: var(--dlc-radius);
+  font-size: 0.8rem;
+  background: color-mix(in srgb, var(--dlc-brass) 14%, transparent);
+  cursor: default;
+  white-space: nowrap;
+}
+
+.dlc-card-label {
+  font-size: 0.75rem;
+}
+
+.dlc-card-actions {
+  display: flex;
+  gap: 3px;
+}
+
 .dlc-play-card {
   font-size: 0.75rem;
   padding: 2px 8px;

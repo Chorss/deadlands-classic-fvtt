@@ -1,6 +1,11 @@
-/* Deadlands Classic — Huckster archetype styles (hexes, poker hand, backlash). */
+/* Deadlands Classic — Huckster archetype styles (hexes tab, hex-cast chat card).
+ * README A2 (hnh p.10-14): Hexslingin' section above Traits, hex table
+ * (Hex · Trait · Hand · Speed · Range · Cast), "Backlash pending" pill.
+ */
 
-/* ── Hexes tab ────────────────────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════════════
+   HEXES TAB (M5)
+   ═══════════════════════════════════════════════════════════════════════════ */
 
 .dlc-hexes {
   display: flex;
@@ -8,174 +13,252 @@
   gap: var(--dlc-section-gap);
 }
 
-.dlc-hex-table,
-.dlc-hex-list {
-  width: 100%;
-}
-
-.dlc-hex-row {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 3px 4px;
-  border-radius: var(--dlc-radius);
-}
-
-.dlc-hex-row:hover {
-  background: color-mix(in srgb, var(--dlc-brass) 14%, transparent);
-}
-
-.dlc-hex-name {
-  flex: 1;
-  font-size: 0.85rem;
-}
-
-.dlc-hex-actions,
-.dlc-hex-cast {
-  display: flex;
-  gap: 3px;
-}
-
-.dlc-cast-btn {
-  font-size: 0.7rem;
-  padding: 1px 6px;
-}
-
-/* ── Hexslingin roll display ──────────────────────────────────────────────── */
-
-.dlc-hexslingin {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
+/* ── Hexslingin' stat row — Level / Modifier / Last Draw, dotted-leader-free
+   (values are short, a leader would look sparse); dividers echo the header's
+   .dlc-divider between Wind and the secondary stats. ────────────────────── */
 
 .dlc-hexslingin-row {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1.1rem;
+  flex-wrap: wrap;
 }
 
-/* ── Poker hand — action cards in a horizontal row ───────────────────────── */
+.dlc-hexslingin-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.dlc-hexslingin-stat label {
+  font-family: var(--dlc-font-head);
+  font-size: 0.56rem;
+  letter-spacing: var(--dlc-ls-label);
+  text-transform: uppercase;
+  color: var(--dlc-ink-muted);
+}
+
+.dlc-hexslingin-stat input {
+  width: 2.6rem;
+  text-align: center;
+}
+
+.dlc-hexslingin-divider {
+  width: 1px;
+  height: 1.2rem;
+  background: var(--dlc-rule);
+}
+
+/* ── Last draw — small card discs, one per drawn card ────────────────────── */
 
 .dlc-last-draw {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.dlc-last-draw-label {
+  font-family: var(--dlc-font-head);
+  font-size: 0.56rem;
+  letter-spacing: var(--dlc-ls-label);
+  text-transform: uppercase;
+  color: var(--dlc-ink-muted);
+}
+
+.dlc-card-row {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dlc-drawn-card {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  width: 26px;
+  height: 34px;
+  border-radius: var(--dlc-radius);
+  border: 1px solid var(--dlc-rule);
+  background: var(--dlc-paper);
+  font-family: var(--dlc-font-data);
+}
+
+.dlc-card-rank {
+  font-weight: 700;
+  font-size: 0.7rem;
+}
+
+.dlc-card-suit {
+  font-size: 0.6rem;
+}
+
+/* Red suits (hearts/diamonds) share the blood accent used everywhere else for
+ * red — Jokers use the same red/black split as the combat tracker (M4).
+ * data-suit carries the raw CARD_SUITS key (config.mjs), not the symbol. */
+.dlc-card-suit[data-suit="hearts"],
+.dlc-card-suit[data-suit="diamonds"] {
+  color: var(--dlc-blood);
+}
+
+.dlc-drawn-card.dlc-joker {
+  font-weight: 700;
+}
+
+.dlc-drawn-card.dlc-joker-red {
+  border-color: var(--dlc-blood);
+  color: var(--dlc-blood);
+}
+
+.dlc-drawn-card.dlc-joker-black {
+  border-color: var(--dlc-ink);
+  font-weight: 900;
+}
+
+/* ── Hex list — grid table matching the README's Hex/Trait/Hand/Spd/Range
+   columns; native <table> kept for accessibility, laid out with grid so the
+   ragged item-name column doesn't force fixed <col> widths. ──────────────── */
+
+.dlc-hex-table {
+  display: grid;
+  grid-template-columns: 1.6fr 0.8fr 1fr 0.5fr 0.7fr auto;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.dlc-hex-table thead,
+.dlc-hex-table tbody,
+.dlc-hex-head,
+.dlc-hex-row {
+  display: contents;
+}
+
+.dlc-hex-head th {
+  font-family: var(--dlc-font-head);
+  font-size: 0.5rem;
+  letter-spacing: var(--dlc-ls-label);
+  text-transform: uppercase;
+  color: var(--dlc-ink-muted);
+  text-align: left;
+  font-weight: 400;
+  padding: 0 0.2rem 0.4rem;
+  border-bottom: 1px solid var(--dlc-rule-strong);
+}
+
+.dlc-hex-row td {
+  padding: 0.4rem 0.2rem;
+  border-bottom: 1px solid var(--dlc-rule-soft);
+  font-size: 0.75rem;
+}
+
+.dlc-hex-name {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--dlc-font-body);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.dlc-hex-actions {
+  text-align: right;
+}
+
+.dlc-cast-btn {
+  padding: 0.3em 0.7em;
+  font-size: 0.55rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   HEX CAST — chat card (module/archetypes/huckster/mechanics.mjs#castHex,
+   templates/chat/hex-cast-result.hbs). Renders on the M4 dlc-chat-card shell.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.dlc-hex-cast {
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
 }
 
-.dlc-drawn-cards,
 .dlc-cards-drawn {
+  font-size: 0.75rem;
+  color: var(--dlc-ink-muted);
+}
+
+.dlc-drawn-cards {
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
+  list-style: none;
+  padding: 0;
+  margin: 0.3rem 0;
 }
 
-.dlc-drawn-card,
-.dlc-card {
+/* Named dlc-hex-card, not the generic dlc-card the Combatant Hand dialog uses
+ * (styles/archetypes/harrowed.css .dlc-card--*) — the two were accidentally
+ * sharing a selector before M5, so this card's look leaked into every
+ * archetype's hand dialog. */
+.dlc-hex-card {
   display: inline-flex;
   align-items: center;
   gap: 3px;
   padding: 2px 6px;
-  border: 1px solid var(--dlc-brass);
+  border: 1px solid var(--dlc-rule);
   border-radius: var(--dlc-radius);
   font-size: 0.8rem;
-  background: color-mix(in srgb, var(--dlc-brass) 14%, transparent);
-  cursor: default;
-  white-space: nowrap;
 }
 
-/* Suit colours — red suits vs black suits */
-.dlc-card-row {
-  display: flex;
-  gap: 4px;
-  flex-wrap: wrap;
+.dlc-hex-card.dlc-joker-card {
+  font-weight: 700;
 }
 
-.dlc-card-suit {
-  font-size: 1em;
-}
-
-/* Red suits (hearts ♥, diamonds ♦) */
-.dlc-card[data-suit="hearts"] .dlc-card-suit,
-.dlc-card[data-suit="diamonds"] .dlc-card-suit {
-  color: #c0392b;
-}
-
-/* Joker highlight */
-.dlc-card[data-joker="red"] {
-  border-color: #c0392b;
-  background: rgba(192, 57, 43, 0.15);
-}
-
-.dlc-card[data-joker="black"] {
-  border-color: #888;
-  background: rgba(40, 40, 40, 0.3);
-}
-
-/* Joker drawn from the hex deck. Two spellings reach the DOM: .dlc-joker on the
-   drawn-card lists, .dlc-joker-card in the cast-result chat card. */
-.dlc-joker,
-.dlc-joker-card {
+.dlc-hex-card.dlc-joker-card.dlc-joker-red {
   border-color: var(--dlc-blood);
-  font-weight: bold;
-}
-
-.dlc-card-rank {
-  font-weight: bold;
-}
-
-.dlc-card-label {
-  font-size: 0.75rem;
-}
-
-.dlc-card-actions {
-  display: flex;
-  gap: 3px;
-}
-
-/* ── Backlash warning ─────────────────────────────────────────────────────── */
-
-.dlc-backlash-warning {
   color: var(--dlc-blood);
-  font-size: 0.8rem;
-  font-style: italic;
 }
 
-/* ── Hex outcomes ─────────────────────────────────────────────────────────── */
+.dlc-hex-card.dlc-joker-card.dlc-joker-black {
+  border-color: var(--dlc-ink);
+  font-weight: 900;
+}
 
-.dlc-hex-success,
+.dlc-hand-result {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  font-family: var(--dlc-font-display);
+  font-size: 0.85rem;
+  color: var(--dlc-brass);
+}
+
+.dlc-hand-label,
+.dlc-hand-req {
+  font-family: var(--dlc-font-body);
+  font-size: 0.72rem;
+  color: var(--dlc-ink-muted);
+}
+
+.dlc-hand-name {
+  font-family: var(--dlc-font-display);
+}
+
 .dlc-hex-outcome {
-  color: #2ecc71;
+  margin-top: 0.3rem;
+  font-family: var(--dlc-font-head);
+  font-weight: 700;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.dlc-hex-success {
+  color: var(--dlc-green);
 }
 
 .dlc-hex-fail {
   color: var(--dlc-blood);
-}
-
-/* ── Hand result (poker evaluation) ──────────────────────────────────────── */
-
-.dlc-hand-result,
-.dlc-hand-title {
-  font-family: var(--dlc-font-display);
-  font-size: 0.9rem;
-  color: var(--dlc-brass);
-}
-
-.dlc-hand-req,
-.dlc-hand-name,
-.dlc-hand-label {
-  font-size: 0.75rem;
-  color: var(--dlc-ink-muted);
-}
-
-.dlc-hand-cards {
-  display: flex;
-  gap: 4px;
-  flex-wrap: wrap;
-}
-
-.dlc-hand-empty {
-  font-style: italic;
-  color: var(--dlc-ink-muted);
-  font-size: 0.8rem;
 }
