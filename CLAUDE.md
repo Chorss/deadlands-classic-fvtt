@@ -30,7 +30,7 @@ templates/                  # Handlebars partials per sheet section
 styles/                     # CSS entry + partials per concern
 lang/                       # en.json, pl.json (key sets MUST match)
 packs/                      # LevelDB compendium packs (V14 format)
-tools/                      # verify-documenttypes.mjs and other repo tooling
+tools/                      # verify-documenttypes.mjs, audit-css.mjs, audit-i18n.mjs
 tests/                      # node:test unit tests for pure core logic
 docs/                       # plan, architecture, v14-api-notes, mechanics-reference, notes
 ```
@@ -65,7 +65,7 @@ matching file is read or written (`code-quality.md`, `v14-api.md`, `localization
 | Architecture + registry contract | `docs/architecture.md` |
 | V14 API patterns & code snippets | `docs/v14-api-notes.md` |
 | Mechanics quick reference (⚠ **paraphrase** — subordinate to the rulebook source below) | `docs/mechanics-reference.md` |
-| Extending with a new archetype | `docs/extending-archetypes.md` *(planned, Phase 14)* |
+| Extending with a new archetype | `docs/extending-archetypes.md` |
 | Open questions / licensing notes | `docs/notes.md` |
 | **Game rules — single authoritative source** (full rulebook catalog) | `$DEADLANDS_RULES_PATH/index/README.md` (catalog of every book) + `<slug>.md`; discipline → `.claude/rules/rulebook-authority.md` |
 | Persistent memory across Claude sessions | `~/.claude/projects/.../memory/` (key knowledge distilled into `docs/`) |
@@ -149,9 +149,11 @@ Ask before editing anything else — in particular, never modify `vendor/`, `boo
 Before declaring a task done:
 
 ```bash
-node tools/verify-documenttypes.mjs   # manifest + EN/PL key parity
-node --test tests/*.test.mjs          # unit tests
+npm run lint          # Biome — formatting + lint rules
+npm run verify:all    # manifest + EN/PL parity → CSS coverage → i18n keys → unit tests
 ```
 
-The `/verify-system` slash command wraps both in a one-paragraph report.
+These are the same two commands CI runs, so green locally means green on the PR.
+The `/verify-system` skill wraps them in a one-paragraph report, and a `Stop` hook
+runs `verify:all` before the turn ends whenever the working tree is dirty.
 
