@@ -1,6 +1,8 @@
 ---
+name: release
 description: Create a versioned release — bumps semver in system.json + package.json, updates CHANGELOG, commits, tags main, and pushes (CI builds the zip and publishes the GitHub Release). Triggers — /release, "zrób release", "utwórz release", "taguj wersję", "wypuść wersję", "nowa wersja".
 allowed-tools: Bash(git *), Bash(gh *), Bash(node *), Bash(node --check:*), Bash(node --test:*), Bash(npm run *), Read, Edit, Write, Grep, Glob
+argument-hint: "[major|minor|patch]"
 ---
 
 # Release
