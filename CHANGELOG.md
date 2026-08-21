@@ -48,6 +48,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **M5.1 of the Ledger redesign: the Huckster Hexes tab.** Section-head +
+  hairline for Hexslingin' and the hex list; a "Backlash pending" pill
+  (`.dlc-pill-blood`) instead of a bespoke warning line; inline Level/Modifier
+  stats; the hex list becomes a grid table (Hex/Trait/Hand/Spd/Duration/Range/
+  Cast) with the Cast button now the shared `.dlc-btn-primary`. Fixed a latent
+  bug found along the way: the hex-cast chat card's red/black joker colouring
+  was a `data-joker`/`data-suit` attribute selector that never matched the
+  card's actual class-based markup, so it silently never rendered — now fixed
+  to target the classes the template sets. Also separated the hex-cast card's
+  `.dlc-card` from the Combatant Hand dialog's identically-named class (the
+  two were accidentally sharing one rule in `huckster.css`, so a Huckster's
+  drawn-card style was leaking into every archetype's hand dialog); the
+  hex-cast card is now `.dlc-hex-card`, and the generic dialog rules moved to
+  `dialogs.css` where they belong.
 - **M4 of the Ledger redesign: chat cards and the combat tracker.** Every
   outcome class (`trait-roll.mjs`, `damage-roll.mjs`, `guts-check.mjs`,
   `harrowed/mechanics.mjs`, the Fate Pot chip-draw card) is now a bare state —
