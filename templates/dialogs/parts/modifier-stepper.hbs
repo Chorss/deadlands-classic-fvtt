@@ -1,0 +1,11 @@
+{{!-- Shared modifier stepper. Params: labelKey (string, required). --}}
+<div class="dlc-dialog-field">
+  <span class="dlc-dialog-field-label">{{localize labelKey}}</span>
+  <div class="dlc-stepper">
+    <button type="button" class="dlc-stepper-btn" data-action="step" data-delta="-1" data-for="modifier"
+      aria-label="{{localize 'DEADLANDS.Dialog.Stepper.Decrease'}}">−</button>
+    <input class="dlc-stepper-input dlc-num" type="number" name="modifier" value="0" />
+    <button type="button" class="dlc-stepper-btn" data-action="step" data-delta="1" data-for="modifier"
+      aria-label="{{localize 'DEADLANDS.Dialog.Stepper.Increase'}}">+</button>
+  </div>
+</div>

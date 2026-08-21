@@ -8,6 +8,7 @@
  * @license MIT
  */
 
+import { stepperActions } from "../../core/dialogs/stepper-actions.mjs";
 import { toPascal } from "../../core/utils.mjs";
 import { BaseCharacterSheet } from "../_base/base-character-sheet.mjs";
 import { HARROWED_SHEET_PART, HARROWED_SHEET_TAB } from "../_overlays/harrowed/sheet-tab.mjs";
@@ -126,6 +127,7 @@ export class ShamanSheet extends BaseCharacterSheet {
         title: game.i18n.format("DEADLANDS.Shaman.Dialog.RitualTitle", { favor: favorItem.name }),
       },
       content,
+      actions: stepperActions,
       ok: {
         label: game.i18n.localize("DEADLANDS.Shaman.Dialog.Perform"),
         callback: (_event, button) => {

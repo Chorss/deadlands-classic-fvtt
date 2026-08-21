@@ -8,11 +8,12 @@
  * @license MIT
  */
 
+import { stepperActions } from "../../core/dialogs/stepper-actions.mjs";
 import { POKER_HAND_RANKS } from "../../core/dice/poker-hand-evaluator.mjs";
 import { toPascal } from "../../core/utils.mjs";
 import { BaseCharacterSheet } from "../_base/base-character-sheet.mjs";
 import { HARROWED_SHEET_PART, HARROWED_SHEET_TAB } from "../_overlays/harrowed/sheet-tab.mjs";
-import { checkMalfunction, constructGizmo, deviseBlueprint } from "./mechanics.mjs";
+import { BLUEPRINT_TN, checkMalfunction, constructGizmo, deviseBlueprint } from "./mechanics.mjs";
 
 const TEMPLATE_ROOT = "systems/deadlands-classic/templates/actor/parts";
 const DIALOG_ROOT = "systems/deadlands-classic/templates/dialogs";
@@ -126,6 +127,7 @@ export class MadScientistSheet extends BaseCharacterSheet {
       `${DIALOG_ROOT}/devise-blueprint-dialog.hbs`,
       {
         gizmoName: gizmoItem.name,
+        blueprintTN: BLUEPRINT_TN,
       }
     );
 
@@ -136,6 +138,7 @@ export class MadScientistSheet extends BaseCharacterSheet {
         }),
       },
       content,
+      actions: stepperActions,
       ok: {
         label: game.i18n.localize("DEADLANDS.MadScientist.Dialog.Devise"),
         callback: (_event, button) => {
@@ -175,6 +178,7 @@ export class MadScientistSheet extends BaseCharacterSheet {
         }),
       },
       content,
+      actions: stepperActions,
       ok: {
         label: game.i18n.localize("DEADLANDS.MadScientist.Dialog.Construct"),
         callback: (_event, button) => {

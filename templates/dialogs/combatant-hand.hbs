@@ -1,27 +1,35 @@
 {{!-- Combatant hand dialog — shows Action Cards and allows play/sleeve actions.
      Context: { name: string, hand: CardContext[], sleevedCard: CardContext|null }
-     CardContext: { rank, suit, joker, label, isJoker, isRedJoker, isBlackJoker }
+     CardContext: { rank, suit, joker, label, suitSymbol, isJoker, isRedJoker, isBlackJoker }
 --}}
 <div class="dlc-combatant-hand">
-  <h3 class="dlc-hand-title">
-    {{localize "DEADLANDS.Combat.Hand.Title" name=name}}
-  </h3>
+  <div class="dlc-dialog-kicker">{{localize "DEADLANDS.Combat.Hand.Kicker"}}</div>
+  <div class="dlc-dialog-title">{{name}}</div>
 
   {{#if hand.length}}
   <ul class="dlc-hand-cards">
     {{#each hand}}
-    <li class="dlc-card
-        {{#if this.isJoker}} dlc-card--joker{{/if}}
-        {{#if this.isRedJoker}} dlc-card--red{{/if}}
-        {{#if this.isBlackJoker}} dlc-card--black{{/if}}">
-      <span class="dlc-card-label">{{this.label}}</span>
-      <div class="dlc-card-actions">
-        <button type="button" class="dlc-btn dlc-play-card" data-action="playCard"
+    <li class="dlc-hand-row
+        {{#if this.isJoker}} dlc-joker{{/if}}
+        {{#if this.isRedJoker}} dlc-joker-red{{/if}}
+        {{#if this.isBlackJoker}} dlc-joker-black{{/if}}">
+      <span class="dlc-card-face" {{#unless this.isJoker}}data-suit="{{this.suit}}"{{/unless}}>
+        {{#if this.isJoker}}
+        <span class="dlc-card-face-rank">★</span>
+        <span class="dlc-card-face-suit">{{localize "DEADLANDS.Combat.Hand.JokerAbbr"}}</span>
+        {{else}}
+        <span class="dlc-card-face-rank">{{this.rank}}</span>
+        <span class="dlc-card-face-suit">{{this.suitSymbol}}</span>
+        {{/if}}
+      </span>
+      <span class="dlc-hand-label">{{this.label}}</span>
+      <div class="dlc-hand-actions">
+        <button type="button" class="dlc-btn-primary dlc-play-card" data-action="playCard"
                 data-rank="{{this.rank}}" data-suit="{{this.suit}}" data-joker="{{this.joker}}">
           {{localize "DEADLANDS.Combat.Hand.Play"}}
         </button>
         {{#unless this.isJoker}}
-        <button type="button" class="dlc-btn dlc-sleeve-card" data-action="sleeveCard"
+        <button type="button" class="dlc-btn-ghost dlc-sleeve-card" data-action="sleeveCard"
                 data-rank="{{this.rank}}" data-suit="{{this.suit}}">
           {{localize "DEADLANDS.Combat.Hand.Sleeve"}}
         </button>
@@ -36,9 +44,11 @@
 
   {{#if sleevedCard}}
   <div class="dlc-sleeved">
-    <span class="dlc-sleeved-label">
-      {{localize "DEADLANDS.Combat.Hand.Sleeve"}}: {{sleevedCard.label}}
+    <span class="dlc-sleeved-label">{{localize "DEADLANDS.Combat.Hand.Sleeve"}}</span>
+    <span class="dlc-sleeved-card" {{#unless sleevedCard.isJoker}}data-suit="{{sleevedCard.suit}}"{{/unless}}>
+      {{#if sleevedCard.isJoker}}★{{localize "DEADLANDS.Combat.Hand.JokerAbbr"}}{{else}}{{sleevedCard.rank}}{{sleevedCard.suitSymbol}}{{/if}}
     </span>
+    <span class="dlc-sleeved-note">{{localize "DEADLANDS.Combat.Hand.SleeveNote"}}</span>
   </div>
   {{/if}}
 </div>

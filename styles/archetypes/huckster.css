@@ -198,10 +198,12 @@
   margin: 0.3rem 0;
 }
 
-/* Named dlc-hex-card, not the generic dlc-card the Combatant Hand dialog uses
- * (styles/archetypes/harrowed.css .dlc-card--*) — the two were accidentally
- * sharing a selector before M5, so this card's look leaked into every
- * archetype's hand dialog. */
+/* Named dlc-hex-card, not the generic dlc-card the Combatant Hand dialog used
+ * to use — the two were accidentally sharing a selector before M5, so this
+ * card's look leaked into every archetype's hand dialog. M5 split them into
+ * dlc-hex-card (here) and dlc-card (dialogs.css); M6.3 redesigned the hand
+ * dialog again onto dlc-card-face/dlc-hand-row (styles/dialogs.css),
+ * retiring dlc-card and harrowed.css's dlc-card--* joker variants. */
 .dlc-hex-card {
   display: inline-flex;
   align-items: center;

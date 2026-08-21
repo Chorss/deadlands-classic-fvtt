@@ -1,21 +1,11 @@
 {{!-- Dialog for casting a hex. dlc p.157, hnh p.33. --}}
 <form class="dlc-cast-hex-dialog">
-  <p class="dlc-dialog-intro">
-    {{localize "DEADLANDS.Huckster.Dialog.CastIntro"}}
-    <strong>{{hexName}}</strong>
-  </p>
+  <div class="dlc-dialog-kicker">{{localize "DEADLANDS.Huckster.Dialog.CastIntro"}}</div>
+  <div class="dlc-dialog-title">{{hexName}}</div>
 
-  <div class="dlc-form-row">
-    <label for="modifier">{{localize "DEADLANDS.Dialog.TraitRoll.Modifier"}}</label>
-    <input type="number" id="modifier" name="modifier" value="0" />
-  </div>
+  {{> "systems/deadlands-classic/templates/dialogs/parts/modifier-stepper.hbs" labelKey="DEADLANDS.Dialog.TraitRoll.Modifier"}}
 
   {{#if maxWhite}}
-  <div class="dlc-form-row">
-    <label for="whiteChips">{{localize "DEADLANDS.Dialog.TraitRoll.WhiteChips"}}</label>
-    <input type="number" id="whiteChips" name="whiteChips"
-      min="0" max="{{maxWhite}}" value="0" />
-    <span class="dlc-chip-avail">({{localize "DEADLANDS.Huckster.Dialog.Available"}}: {{maxWhite}})</span>
-  </div>
+  {{> "systems/deadlands-classic/templates/dialogs/parts/chip-spend.hbs" labelKey="DEADLANDS.Dialog.TraitRoll.WhiteChips" availMode="inline" availKey="DEADLANDS.Huckster.Dialog.Available"}}
   {{/if}}
 </form>

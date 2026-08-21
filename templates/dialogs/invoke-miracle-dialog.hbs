@@ -1,23 +1,14 @@
 {{!-- Dialog: invoke a miracle (Blessed). --}}
 <form class="dlc-dialog-form">
-  <p class="dlc-dialog-intro">
-    {{localize "DEADLANDS.Blessed.Dialog.InvokeIntro"}}: <strong>{{miracleName}}</strong>
-    ({{localize "DEADLANDS.Blessed.MiracleTable.TN"}}: {{tn}})
+  <div class="dlc-dialog-kicker">{{localize "DEADLANDS.Blessed.Dialog.InvokeIntro"}}</div>
+  <div class="dlc-dialog-title">{{miracleName}}</div>
+  <p class="dlc-dialog-sub">
+    {{localize "DEADLANDS.Blessed.MiracleTable.TN"}}: <span class="dlc-num">{{tn}}</span>
   </p>
 
-  <div class="dlc-form-row">
-    <label for="modifier">{{localize "DEADLANDS.Dialog.Modifier"}}</label>
-    <input type="number" id="modifier" name="modifier" value="0" />
-  </div>
+  {{> "systems/deadlands-classic/templates/dialogs/parts/modifier-stepper.hbs" labelKey="DEADLANDS.Dialog.Modifier"}}
 
   {{#if maxWhite}}
-  <div class="dlc-form-row">
-    <label for="whiteChips">
-      {{localize "DEADLANDS.Dialog.WhiteChips"}}
-      ({{localize "DEADLANDS.Blessed.Dialog.Available"}}: {{maxWhite}})
-    </label>
-    <input type="number" id="whiteChips" name="whiteChips"
-      min="0" max="{{maxWhite}}" value="0" />
-  </div>
+  {{> "systems/deadlands-classic/templates/dialogs/parts/chip-spend.hbs" labelKey="DEADLANDS.Dialog.WhiteChips" availMode="inline" availKey="DEADLANDS.Blessed.Dialog.Available"}}
   {{/if}}
 </form>

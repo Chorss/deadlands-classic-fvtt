@@ -12,6 +12,7 @@
 
 import { runWithWhiteSpend } from "../../core/chips/chip-widget.mjs";
 import { APTITUDES, DEADLANDS, TRAITS } from "../../core/config.mjs";
+import { stepperActions } from "../../core/dialogs/stepper-actions.mjs";
 import { toPascal } from "../../core/utils.mjs";
 import { buildWindTicks, isWinded } from "../../core/wounds/wind-calculator.mjs";
 import { highestWoundPenalty } from "../../core/wounds/wound-track.mjs";
@@ -52,6 +53,7 @@ async function _showRollDialog({ label, maxWhite, unskilled = false }) {
   return foundry.applications.api.DialogV2.prompt({
     window: { title: game.i18n.localize("DEADLANDS.Dialog.TraitRoll.Title") },
     content,
+    actions: stepperActions,
     ok: {
       label: game.i18n.localize("DEADLANDS.Dialog.TraitRoll.Roll"),
       callback: (_event, button) => {

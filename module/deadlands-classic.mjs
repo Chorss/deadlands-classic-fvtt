@@ -70,6 +70,14 @@ Hooks.once("init", () => {
     typeof str === "string" && str.length > 0 ? str[0].toUpperCase() + str.slice(1) : str
   );
 
+  // Preload dialog partials referenced via {{> "..."}} in templates/dialogs/*.hbs.
+  void foundry.applications.handlebars
+    .loadTemplates([
+      "systems/deadlands-classic/templates/dialogs/parts/modifier-stepper.hbs",
+      "systems/deadlands-classic/templates/dialogs/parts/chip-spend.hbs",
+    ])
+    .catch((err) => console.error(`${LOG_PREFIX} Failed to preload dialog partials`, err));
+
   // Document classes.
   CONFIG.Actor.documentClass = DeadlandsActor;
   CONFIG.Item.documentClass = DeadlandsItem;

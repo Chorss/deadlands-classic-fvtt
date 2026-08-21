@@ -48,6 +48,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **M6.3 of the Ledger redesign: the Combatant Hand dialog — M6 complete.** The
+  hand's cards move off a flex-stretched text label onto a proper 34×46
+  `.dlc-card-face` box (rank stacked over the real suit glyph, via the
+  previously-unused `CARD_SUITS.symbol`), with the card's full localized
+  label kept alongside it rather than dropped — no invented "why this card
+  matters" copy, since that would require ranking across the whole combat,
+  not just this hand. Sleeved-card display now shows a compact rank+suit
+  plus a "held over to next round" note (new `DEADLANDS.Combat.Hand.*`
+  EN+PL keys). Dialog width 320→380 to match the design reference. This was
+  the dialog whose root class (`dlc-hand-dialog`) was `audit-css`'s last
+  `MODULE_BACKLOG` entry — closing it, `tools/audit-css.mjs` now treats
+  `module/` as a hard error (exit 1) on par with `templates/`, instead of a
+  warning. This closes M6 (all six dialogs — trait-roll, cast-hex,
+  devise-blueprint, ritual, invoke-miracle, combatant-hand — on the Ledger
+  primitives); M7 (item sheets) is next.
+- **M6.2 of the Ledger redesign: the four archetype action dialogs.** Cast
+  Hex, Devise Blueprint, Ritual and Invoke Miracle now share the
+  Trait/Aptitude roll dialog's kicker+title masthead and the same
+  `.dlc-stepper`/`.dlc-spend-row` controls (M6.1) instead of the old bare
+  `.dlc-form-row` number inputs. Devise Blueprint's dialog was hardcoding
+  "Blueprint TN: 5" directly in the template, duplicating the TN
+  `mechanics.mjs#deviseBlueprint` already defines — extracted to an exported
+  `BLUEPRINT_TN` constant so the dialog reads the same single source of
+  truth (`dlc` p.168, unchanged value). Retired `.dlc-dialog-intro` and
+  `.dlc-chip-avail`.
+- **M6.1 of the Ledger redesign: the Trait/Aptitude roll dialog.** TN moves
+  from a `<select>` to a segmented radio group (`.dlc-tn-picker`) — the
+  `RadioNodeList`'s `.value` still reads the checked option, so
+  `_showRollDialog`'s callback contract is untouched. The flat modifier
+  becomes a +/− stepper, and the white-chip spend gets the same stepper
+  flanking a `.dlc-chip-token` disc instead of a bare number input. New
+  shared `core/dialogs/stepper-actions.mjs` backs both dialogs' controls via
+  `DialogV2`'s `options.actions` map.
 - **M5.5 of the Ledger redesign: the Shaman Favors tab — M5 complete.** No
   README pattern for this archetype — composed from the Hexes-tab (M5.1)
   primitives: section-heads for Ritual Aptitude/Appeasement/Favors, inline
