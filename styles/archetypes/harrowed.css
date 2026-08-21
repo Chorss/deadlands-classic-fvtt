@@ -149,7 +149,16 @@
 
 /* ── Last roll results ────────────────────────────────────────────────────── */
 
-.dlc-last-roll-label  { font-size: 0.7rem; color: var(--dlc-color-muted); }
-.dlc-last-roll-pc     { color: #2ecc71; }
-.dlc-last-roll-npc    { color: var(--dlc-color-blood); }
-.dlc-last-roll-outcome { font-weight: bold; }
+.dlc-last-roll-label {
+  font-size: 0.7rem;
+  color: var(--dlc-color-muted);
+}
+.dlc-last-roll-pc {
+  color: #2ecc71;
+}
+.dlc-last-roll-npc {
+  color: var(--dlc-color-blood);
+}
+.dlc-last-roll-outcome {
+  font-weight: bold;
+}

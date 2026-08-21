@@ -136,9 +136,13 @@
 /* ── Hex outcomes ─────────────────────────────────────────────────────────── */
 
 .dlc-hex-success,
-.dlc-hex-outcome { color: #2ecc71; }
+.dlc-hex-outcome {
+  color: #2ecc71;
+}
 
-.dlc-hex-fail    { color: var(--dlc-color-blood); }
+.dlc-hex-fail {
+  color: var(--dlc-color-blood);
+}
 
 /* ── Hand result (poker evaluation) ──────────────────────────────────────── */
 

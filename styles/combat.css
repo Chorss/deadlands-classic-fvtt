@@ -38,7 +38,9 @@
   padding: 3px 5px;
   border-radius: var(--dlc-radius);
   border: 1px solid transparent;
-  transition: border-color 0.15s, background 0.15s;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
 }
 
 .dlc-wound.dlc-maimed {

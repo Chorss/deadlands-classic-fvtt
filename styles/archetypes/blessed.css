@@ -84,10 +84,18 @@
   padding: 1px 6px;
 }
 
-.dlc-sin-denied  { color: var(--dlc-color-blood); font-style: italic; font-size: 0.75rem; }
+.dlc-sin-denied {
+  color: var(--dlc-color-blood);
+  font-style: italic;
+  font-size: 0.75rem;
+}
 
 /* Sin severity tags — .dlc-sin-light / .dlc-sin-heavy / etc. */
-.dlc-sin-severity { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; }
+.dlc-sin-severity {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
 
 /* Sin result chat */
 .dlc-sin-result,
