@@ -1,0 +1,24 @@
+<div class="dlc-fate-pot">
+  <ol class="dlc-chip-row">
+    {{#each chips}}
+      <li class="dlc-chip dlc-chip-{{this.color}}">
+        <span class="dlc-chip-token dlc-num">{{this.count}}</span>
+        <span class="dlc-chip-label">{{this.label}}</span>
+      </li>
+    {{/each}}
+  </ol>
+
+  <p class="dlc-fate-pot-total">
+    {{localize "DEADLANDS.Chip.Pot.Total"}}
+    <span class="dlc-num">{{total}}</span>
+  </p>
+
+  <div class="dlc-fate-pot-actions">
+    <button type="button" class="dlc-btn-primary" data-action="draw">
+      {{localize "DEADLANDS.Chip.Pot.Draw"}}
+    </button>
+    <button type="button" class="dlc-btn-ghost" data-action="refill">
+      {{localize "DEADLANDS.Chip.Pot.Refill"}}
+    </button>
+  </div>
+</div>

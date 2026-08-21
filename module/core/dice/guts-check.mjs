@@ -149,7 +149,7 @@ async function _postGutsChat({
   scartRoll,
   windLost,
 }) {
-  const outcomeClass = success ? "dlc-success" : "dlc-bust";
+  const outcomeClass = success ? "success" : "bust";
   const outcomeText = success
     ? game.i18n.localize("DEADLANDS.Guts.Success")
     : game.i18n.localize("DEADLANDS.Guts.Fail");
@@ -180,7 +180,7 @@ async function _postGutsChat({
   }
 
   const tnLabel = game.i18n.format("DEADLANDS.Roll.VersusTN", { tn });
-  const content = `<div class="dlc-roll-card ${outcomeClass}">
+  const content = `<div class="dlc-chat-card dlc-night ${outcomeClass}">
   <header class="dlc-roll-label">${game.i18n.localize("DEADLANDS.Guts.Label")}: ${actor.name}${unskilledStr}</header>
   <div class="dlc-roll-total">${gutsResult.highest}${modStr} <span class="dlc-tn">${tnLabel}</span></div>
   <div class="dlc-roll-outcome">${outcomeText}</div>${scartHtml}

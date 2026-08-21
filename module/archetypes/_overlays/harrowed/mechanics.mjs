@@ -129,12 +129,17 @@ export async function dominionRoll(actor) {
       : outcome.winner === "manitou"
         ? "DEADLANDS.Harrowed.Dominion.ManitouWins"
         : "DEADLANDS.Harrowed.Dominion.NoChange";
+  // Outcome colour follows who gained ground, not a fixed arcane purple:
+  // the PC winning reads as success (green), the manitou winning as a
+  // bust (blood); a stalemate keeps the neutral arcane accent (plum).
+  const outcomeClass =
+    outcome.winner === "pc" ? "success" : outcome.winner === "manitou" ? "bust" : "arcane";
 
   await ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor }),
     content: `
-      <div class="dlc-chat-card harrowed-dominion">
-        <h3>${game.i18n.localize("DEADLANDS.Harrowed.Dominion.Roll.Title")}</h3>
+      <div class="dlc-chat-card dlc-night ${outcomeClass} dlc-harrowed-dominion">
+        <h3 class="dlc-roll-label">${game.i18n.localize("DEADLANDS.Harrowed.Dominion.Roll.Title")}</h3>
         <p><strong>${actor.name}</strong></p>
         <p>${game.i18n.format("DEADLANDS.Harrowed.Dominion.RollResult", {
           pcTotal: outcome.pcTotal,

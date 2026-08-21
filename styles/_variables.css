@@ -171,11 +171,10 @@
 
 /* ── NIGHT THEME (sidebar: chat + combat tracker) ─────────────────────────── */
 /* Apply .dlc-night to the chat card / tracker root. Same token NAMES so the
- * component rules are identical — only the values flip. */
-/* .dlc-chat-card / .dlc-roll-card: drop in M4, once .dlc-night reaches the markup. */
-.dlc-night,
-.dlc-chat-card,
-.dlc-roll-card {
+ * component rules are identical — only the values flip. Every chat card now
+ * carries .dlc-night directly in its own markup (M4) — the M1 stopgap that
+ * matched .dlc-chat-card/.dlc-roll-card here regardless has been removed. */
+.dlc-night {
   --dlc-paper: #14100c;
   --dlc-card: #1e1811;
   --dlc-rule: #302719;

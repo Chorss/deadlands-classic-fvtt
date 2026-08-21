@@ -165,6 +165,101 @@
   padding: 3px 5px;
 }
 
+/* Wind bar's own winded state (base-character-sheet.mjs's windedClass) — an
+ * outline rather than a fill, so the 18-tick bar underneath stays legible. */
+.dlc-wind-bar.dlc-winded {
+  border: 1px solid var(--dlc-blood);
+  border-radius: var(--dlc-radius);
+  padding: 3px 5px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   COMBAT TRACKER (M4/B5) — small elements injected by deadlands-classic.mjs's
+   `renderCombatTracker` hook directly into Foundry's native tracker row.
+   There is no custom tracker application in this system, and no root of ours
+   to hang .dlc-night on — each injected element carries .dlc-night itself
+   (see the hook), since it renders inside Foundry's own (always-dark) sidebar.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.dlc-initiative-label,
+.dlc-initiative-card {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+  padding: 1px 4px;
+  font-family: var(--dlc-font-data);
+  font-weight: 700;
+  font-size: 0.72rem;
+  border-radius: 3px;
+  border: 1px solid var(--dlc-hairline);
+  color: var(--dlc-ink);
+}
+
+.dlc-initiative-red-joker {
+  color: var(--dlc-blood);
+  border-color: var(--dlc-blood);
+}
+
+.dlc-initiative-black-joker {
+  color: var(--dlc-ink);
+  border-color: var(--dlc-ink);
+  font-weight: 900;
+}
+
+.dlc-hand-btn {
+  color: var(--dlc-brass);
+  cursor: pointer;
+}
+
+.dlc-hand-btn:hover {
+  color: var(--dlc-brass-ink);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   GUTS CHECK — Scart Table (M4, module/core/dice/guts-check.mjs)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.dlc-scart-result {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 0.4rem;
+  padding-top: 0.4rem;
+  border-top: 1px solid var(--dlc-rule);
+}
+
+.dlc-scart-roll {
+  font-family: var(--dlc-font-data);
+  font-size: 0.7rem;
+  color: var(--dlc-ink-muted);
+}
+
+.dlc-scart-effect {
+  font-family: var(--dlc-font-head);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dlc-blood);
+}
+
+.dlc-wind-lost {
+  font-family: var(--dlc-font-data);
+  font-weight: normal;
+  text-transform: none;
+  letter-spacing: normal;
+  color: var(--dlc-ink-muted);
+}
+
+.dlc-scart-note,
+.dlc-gm-note {
+  font-family: var(--dlc-font-body);
+  font-size: 0.72rem;
+  font-style: italic;
+  color: var(--dlc-ink-muted);
+  margin: 0;
+}
+
 /* ═══════════════════════════════════════════════════════════════════════════
    FATE CHIPS — physical counters, rendered in the sheet header (M3.1)
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -194,8 +289,14 @@
 }
 
 /* The disc is the editable count itself — an <input type="number">, not a
-   button: chip counts are player-reported, not click-to-spend. */
+   button: chip counts are player-reported, not click-to-spend. The Marshal
+   Fate Pot widget (M4/B6) reuses this rule for a read-only <span> disc —
+   inline-flex centers a <span>'s content the way text-align alone does for
+   an <input>. */
 .dlc-chip .dlc-chip-token {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -237,4 +338,45 @@
 .dlc-chip-draw ul {
   margin: 0.2rem 0 0;
   padding-left: 1.1rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FATE POT WIDGET (M4/B6) — Marshal-only window, module/core/chips/
+   fate-pot-widget.mjs. A window (parchment), not a sidebar card — reuses the
+   .dlc-chip-row/.dlc-chip/.dlc-chip-token primitives above as read-only spans.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Root class of the app window itself (DEFAULT_OPTIONS.classes) — .dlc-fate-pot
+   below already supplies its own padding, so drop Foundry's default. */
+.dlc-fate-pot-widget .window-content {
+  padding: 0;
+}
+
+.dlc-fate-pot {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dlc-section-gap);
+  padding: var(--dlc-sheet-pad);
+}
+
+.dlc-fate-pot-total {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--dlc-font-head);
+  font-size: 0.7rem;
+  letter-spacing: var(--dlc-ls-label);
+  text-transform: uppercase;
+  color: var(--dlc-ink-muted);
+  margin: 0;
+  padding-top: 0.4rem;
+  border-top: 1px solid var(--dlc-rule);
+}
+
+.dlc-fate-pot-actions {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.dlc-fate-pot-actions > button {
+  flex: 1;
 }

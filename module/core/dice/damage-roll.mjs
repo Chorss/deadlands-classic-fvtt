@@ -131,7 +131,7 @@ async function _postDamageChatMessage(result, label) {
         })}</span>`
       : "";
 
-  const content = `<div class="dlc-roll-card dlc-damage">
+  const content = `<div class="dlc-chat-card dlc-night damage">
   <header class="dlc-roll-label">${game.i18n.localize("DEADLANDS.Roll.Damage")}: ${label}</header>
   <div class="dlc-roll-dice">${diceStr}</div>
   <div class="dlc-roll-total">${result.total}${armorStr}</div>
