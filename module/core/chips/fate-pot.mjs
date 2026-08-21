@@ -375,7 +375,7 @@ export class FatePot {
     log.push(`${game.i18n.localize("DEADLANDS.System.Marshal")}: ${marshalDraw.join(", ")}`);
 
     await ChatMessage.create({
-      content: `<div class="dlc-chip-draw"><strong>${game.i18n.localize("DEADLANDS.Chip.SessionDraw")}</strong><ul>${log.map((l) => `<li>${l}</li>`).join("")}</ul></div>`,
+      content: `<div class="dlc-chat-card dlc-night dlc-chip-draw"><strong>${game.i18n.localize("DEADLANDS.Chip.SessionDraw")}</strong><ul>${log.map((l) => `<li>${l}</li>`).join("")}</ul></div>`,
       style: CONST.CHAT_MESSAGE_STYLES.OTHER,
     });
   }

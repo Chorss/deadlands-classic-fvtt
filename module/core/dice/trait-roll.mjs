@@ -88,16 +88,16 @@ async function _postChatMessage(result, label, tn, actor) {
 
   let outcomeClass, outcomeText;
   if (result.bust) {
-    outcomeClass = "dlc-bust";
+    outcomeClass = "bust";
     outcomeText = game.i18n.localize("DEADLANDS.Roll.Bust");
   } else if (result.success) {
-    outcomeClass = "dlc-success";
+    outcomeClass = "success";
     outcomeText =
       result.raises > 0
         ? game.i18n.format("DEADLANDS.Roll.Raises", { raises: result.raises })
         : game.i18n.localize("DEADLANDS.Roll.Success");
   } else {
-    outcomeClass = "dlc-fail";
+    outcomeClass = "failure";
     outcomeText = game.i18n.localize("DEADLANDS.Roll.Fail");
   }
 
@@ -107,7 +107,7 @@ async function _postChatMessage(result, label, tn, actor) {
       : "";
 
   const tnLabel = game.i18n.format("DEADLANDS.Roll.VersusTN", { tn });
-  const content = `<div class="dlc-roll-card ${outcomeClass}">
+  const content = `<div class="dlc-chat-card dlc-night ${outcomeClass}">
   <header class="dlc-roll-label">${label}</header>
   <div class="dlc-roll-dice">${diceStr}</div>
   <div class="dlc-roll-total">${result.highest}${modStr} <span class="dlc-tn">${tnLabel}</span></div>
