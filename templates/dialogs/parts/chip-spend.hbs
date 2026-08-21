@@ -1,0 +1,28 @@
+{{!--
+  Shared chip-spend stepper. Params:
+    labelKey  (string, required) — DEADLANDS.*.WhiteChips key.
+    availMode (string, required) — "inline" or "trailing".
+    availKey  (string, required when availMode="inline") — DEADLANDS.*.Dialog.Available key.
+  Caller must wrap with {{#if maxWhite}}; maxWhite is inherited from the caller's context.
+--}}
+<div class="dlc-dialog-field">
+  <span class="dlc-dialog-field-label">
+    {{localize labelKey}}
+    {{#if (eq availMode "inline")}}
+    ({{localize availKey}}: {{maxWhite}})
+    {{/if}}
+  </span>
+  <div class="dlc-spend-row">
+    <button type="button" class="dlc-stepper-btn" data-action="step" data-delta="-1" data-for="whiteChips"
+      aria-label="{{localize 'DEADLANDS.Dialog.Stepper.Decrease'}}">−</button>
+    <span class="dlc-chip dlc-chip-white">
+      <input class="dlc-chip-token dlc-num" type="number" name="whiteChips" value="0"
+        min="0" max="{{maxWhite}}" />
+    </span>
+    <button type="button" class="dlc-stepper-btn" data-action="step" data-delta="1" data-for="whiteChips"
+      aria-label="{{localize 'DEADLANDS.Dialog.Stepper.Increase'}}">+</button>
+    {{#if (eq availMode "trailing")}}
+    <span class="dlc-spend-avail">{{localize 'DEADLANDS.Dialog.Stepper.Of'}} {{maxWhite}}</span>
+    {{/if}}
+  </div>
+</div>

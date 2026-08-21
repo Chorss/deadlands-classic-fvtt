@@ -8,31 +8,33 @@
  * `DialogV2.prompt()` config's `actions` to wire it up, no custom render hook
  * or manual `addEventListener` needed.
  *
- * Markup contract: two `<button data-action="stepUp|stepDown" data-for="<input
- * name>">` elements next to the target input. See `.dlc-stepper` in
- * `styles/dialogs.css` and `templates/dialogs/trait-roll-dialog.hbs`.
+ * Markup contract: a `<button data-action="step" data-delta="±1" data-for="<input
+ * name>">` element next to the target input. See `.dlc-stepper` in
+ * `styles/dialogs.css` and `templates/dialogs/parts/modifier-stepper.hbs`.
  *
  * @license MIT
  */
 
 /**
- * @param {number} delta
- * @returns {(this: foundry.applications.api.DialogV2, event: PointerEvent, target: HTMLElement) => void}
+ * @this {foundry.applications.api.DialogV2}
+ * @param {PointerEvent} _event
+ * @param {HTMLElement} target
  */
-function step(delta) {
-  return function (_event, target) {
-    const input = this.element.querySelector(`input[name="${target.dataset.for}"]`);
-    if (!input) {
-      return;
-    }
-    const min = input.min !== "" ? Number(input.min) : Number.NEGATIVE_INFINITY;
-    const max = input.max !== "" ? Number(input.max) : Number.POSITIVE_INFINITY;
-    input.value = Math.min(max, Math.max(min, Number(input.value || 0) + delta));
-  };
+function step(_event, target) {
+  const delta = Number(target.dataset.delta);
+  if (!Number.isFinite(delta)) {
+    return;
+  }
+  const input = this.element.querySelector(`input[name="${target.dataset.for}"]`);
+  if (!input) {
+    return;
+  }
+  const min = input.min !== "" ? Number(input.min) : Number.NEGATIVE_INFINITY;
+  const max = input.max !== "" ? Number(input.max) : Number.POSITIVE_INFINITY;
+  input.value = Math.min(max, Math.max(min, Number(input.value || 0) + delta));
 }
 
 /** Spread into a `DialogV2.prompt()` config's `actions` map. */
 export const stepperActions = {
-  stepUp: step(1),
-  stepDown: step(-1),
+  step,
 };

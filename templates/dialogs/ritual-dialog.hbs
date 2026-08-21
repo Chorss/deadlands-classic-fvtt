@@ -7,14 +7,5 @@
     {{localize "DEADLANDS.Shaman.FavorTable.TN"}}: <span class="dlc-num">{{ritualTN}}</span>
   </p>
 
-  <div class="dlc-dialog-field">
-    <span class="dlc-dialog-field-label">{{localize "DEADLANDS.Dialog.Modifier"}}</span>
-    <div class="dlc-stepper">
-      <button type="button" class="dlc-stepper-btn" data-action="stepDown" data-for="modifier"
-        aria-label="{{localize 'DEADLANDS.Dialog.Stepper.Decrease'}}">−</button>
-      <input class="dlc-stepper-input dlc-num" type="number" name="modifier" value="0" />
-      <button type="button" class="dlc-stepper-btn" data-action="stepUp" data-for="modifier"
-        aria-label="{{localize 'DEADLANDS.Dialog.Stepper.Increase'}}">+</button>
-    </div>
-  </div>
+  {{> "systems/deadlands-classic/templates/dialogs/parts/modifier-stepper.hbs" labelKey="DEADLANDS.Dialog.Modifier"}}
 </form>
