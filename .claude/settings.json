@@ -85,6 +85,18 @@
           }
         ]
       }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/stop-verify.sh",
+            "timeout": 120,
+            "statusMessage": "verify:all"
+          }
+        ]
+      }
     ]
   }
 }
