@@ -1,6 +1,11 @@
-/* Deadlands Classic — Mad Scientist archetype styles (gizmos, blueprints, harrowed madness). */
+/* Deadlands Classic — Mad Scientist archetype styles (gizmos, blueprints,
+ * harrowed madness). No README pattern (M5) — composed from the Hexes-tab
+ * primitives (section-head, inline stat row, grid table, .dlc-pill status).
+ */
 
-/* ── Gizmos tab ───────────────────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════════════
+   GIZMOS TAB (M5)
+   ═══════════════════════════════════════════════════════════════════════════ */
 
 .dlc-gizmos {
   display: flex;
@@ -8,60 +13,110 @@
   gap: var(--dlc-section-gap);
 }
 
-.dlc-gizmo-table,
-.dlc-gizmo-list {
-  width: 100%;
-}
+/* ── Mad Science / Tinkerin' aptitude row ────────────────────────────────── */
 
-.dlc-gizmo-row {
+.dlc-aptitude-row {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 3px 4px;
-  border-radius: var(--dlc-radius);
+  gap: 1.1rem;
+  flex-wrap: wrap;
 }
 
-.dlc-gizmo-row:hover {
-  background: color-mix(in srgb, var(--dlc-brass) 14%, transparent);
+.dlc-aptitude-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.dlc-aptitude-stat label {
+  font-family: var(--dlc-font-head);
+  font-size: 0.56rem;
+  letter-spacing: var(--dlc-ls-label);
+  text-transform: uppercase;
+  color: var(--dlc-ink-muted);
+}
+
+.dlc-aptitude-stat input {
+  width: 2.6rem;
+  text-align: center;
+}
+
+.dlc-aptitude-divider {
+  width: 1px;
+  height: 1.2rem;
+  background: var(--dlc-rule);
+}
+
+/* ── Gizmo list — grid table, same shape as the Huckster hex table ───────── */
+
+.dlc-gizmo-table {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 0.8fr 0.8fr 1fr auto;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.dlc-gizmo-table thead,
+.dlc-gizmo-table tbody,
+.dlc-gizmo-head,
+.dlc-gizmo-row {
+  display: contents;
+}
+
+.dlc-gizmo-head th {
+  font-family: var(--dlc-font-head);
+  font-size: 0.5rem;
+  letter-spacing: var(--dlc-ls-label);
+  text-transform: uppercase;
+  color: var(--dlc-ink-muted);
+  text-align: left;
+  font-weight: 400;
+  padding: 0 0.2rem 0.4rem;
+  border-bottom: 1px solid var(--dlc-rule-strong);
+}
+
+.dlc-gizmo-row td {
+  padding: 0.4rem 0.2rem;
+  border-bottom: 1px solid var(--dlc-rule-soft);
+  font-size: 0.75rem;
 }
 
 /* Gizmo that has been built, as opposed to a blueprint on paper. */
-.dlc-constructed {
+.dlc-gizmo-row.dlc-constructed td:first-child {
   border-left: 2px solid var(--dlc-brass);
-  padding-left: 4px;
+  padding-left: calc(0.2rem - 2px);
 }
 
 .dlc-gizmo-name {
-  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--dlc-font-body);
+  font-weight: 700;
   font-size: 0.85rem;
 }
 
 .dlc-gizmo-actions {
   display: flex;
-  gap: 3px;
+  gap: 4px;
+  justify-content: flex-end;
 }
 
-.dlc-blueprint-btn,
-.dlc-construct-btn {
-  font-size: 0.7rem;
-  padding: 1px 6px;
+.dlc-gizmo-action-btn {
+  padding: 0.3em 0.7em;
+  font-size: 0.55rem;
 }
 
-/* ── Gizmo result / reliability ───────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════════════
+   CHAT CARDS (module/archetypes/mad-scientist/mechanics.mjs, dlc-night shell
+   from M4) — gizmo blueprint/construction/use result and the Harrowed Madness
+   Table whisper. Drawn-card discs reuse .dlc-drawn-card/.dlc-joker from
+   archetypes/huckster.css (M5.1) — same concept, one rule.
+   ═══════════════════════════════════════════════════════════════════════════ */
 
 .dlc-gizmo-result {
   font-size: 0.85rem;
 }
-
-/* ── Mad Science aptitudes section ───────────────────────────────────────── */
-
-.dlc-mad-science-aptitudes {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-/* ── Harrowed Madness Table result ───────────────────────────────────────── */
 
 .dlc-madness-result {
   border-left: 3px solid var(--dlc-blood);
@@ -86,8 +141,6 @@
   font-size: 0.8rem;
   color: var(--dlc-blood);
 }
-
-/* ── Malfunction ──────────────────────────────────────────────────────────── */
 
 .dlc-malfunction {
   color: var(--dlc-blood);
