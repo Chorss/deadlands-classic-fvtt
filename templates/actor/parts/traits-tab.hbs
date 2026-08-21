@@ -14,15 +14,27 @@
               {{localize trait.label}}
             </button>
           </h3>
-          <div class="dlc-trait-die">
-            <input type="number" class="dlc-die-count" name="{{trait.dieCountPath}}" min="1"
+          <span class="dlc-leader" aria-hidden="true"></span>
+
+          {{!-- Read-only "4d8 +2" notation (D1). --}}
+          <div class="dlc-trait-die-view">
+            <span class="dlc-die-notation dlc-num">{{trait.dieCount}}{{trait.dieType}}</span>
+            {{#if trait.modifierDisplay}}<span class="dlc-die-mod dlc-num">{{trait.modifierDisplay}}</span>{{/if}}
+          </div>
+
+          {{!-- Raw editing controls (D1) — always in the DOM so ApplicationV2's
+               form submission never drops these paths; toggled with the whole-
+               sheet edit-mode class (BaseCharacterSheet#toggleEditMode), never
+               removed. See DEADLANDS_RULES / PLAN-MIGRACJI.md D1. --}}
+          <div class="dlc-trait-die-edit">
+            <input type="number" class="dlc-die-count dlc-num" name="{{trait.dieCountPath}}" min="1"
               value="{{trait.dieCount}}" {{#unless @root.editable}}disabled{{/unless}}
               aria-label="{{localize trait.label}} {{localize 'DEADLANDS.Sheet.Aria.DieCount'}}" />
             <select class="dlc-die-type" name="{{trait.dieTypePath}}" {{#unless @root.editable}}disabled{{/unless}}
               aria-label="{{localize trait.label}} {{localize 'DEADLANDS.Sheet.Aria.DieType'}}">
               {{selectOptions @root.dieTypeChoices selected=trait.dieType}}
             </select>
-            <input type="number" class="dlc-die-mod" name="{{trait.modifierPath}}"
+            <input type="number" class="dlc-die-mod dlc-num" name="{{trait.modifierPath}}"
               value="{{trait.modifier}}" {{#unless @root.editable}}disabled{{/unless}}
               aria-label="{{localize trait.label}} {{localize 'DEADLANDS.Sheet.Aria.DieModifier'}}" />
           </div>
@@ -38,7 +50,10 @@
               data-aptitude-id="{{apt.id}}">
               {{localize apt.label}}
             </button>
-            <input type="number" class="dlc-apt-level" name="{{apt.path}}" min="0"
+            <span class="dlc-leader" aria-hidden="true"></span>
+
+            <span class="dlc-apt-level dlc-apt-level-view dlc-num">{{#if apt.level}}{{apt.level}}{{else}}—{{/if}}</span>
+            <input type="number" class="dlc-apt-level dlc-apt-level-edit dlc-num" name="{{apt.path}}" min="0"
               value="{{apt.level}}" {{#unless @root.editable}}disabled{{/unless}}
               aria-label="{{localize apt.label}} {{localize 'DEADLANDS.Sheet.Aria.AptitudeLevel'}}" />
           </li>

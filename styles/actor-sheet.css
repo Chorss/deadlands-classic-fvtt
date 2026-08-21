@@ -193,46 +193,50 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   TRAITS TAB
+   TRAITS TAB (M3.3) — dotted leaders, no boxes. "4d8 +2" notation replaces
+   the raw dieCount/dieType/modifier controls in the default (view) state;
+   the controls stay in the DOM and surface under .dlc-sheet--edit (D1) —
+   see BaseCharacterSheet#toggleEditMode and traits-tab.hbs.
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .dlc-traits {
-  padding: 0 0.25rem;
+  padding: 0;
 }
 
 .dlc-trait-columns {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  gap: 0.65rem 1.9rem;
   align-items: start;
 }
 
 .dlc-trait-column {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.6rem;
 }
 
 .dlc-trait {
-  border-bottom: 1px solid var(--dlc-rule);
-  padding-bottom: 0.4rem;
+  border: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .dlc-trait-head {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
+  align-items: baseline;
+  gap: 5px;
 }
 
 .dlc-trait-name {
-  font-family: var(--dlc-font-display);
-  font-size: 0.85rem;
+  font-family: var(--dlc-font-body);
+  font-weight: 700;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   margin: 0;
-  flex: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 /* Reset button styling shared by the trait-name and aptitude roll triggers. */
@@ -244,40 +248,72 @@
   font: inherit;
   color: inherit;
   text-align: left;
-  width: 100%;
 }
 
-.dlc-roll-btn:hover {
-  color: var(--dlc-brass);
+.dlc-trait-name .dlc-roll-btn:hover,
+.dlc-apt-roll:hover {
+  color: var(--dlc-brass-ink);
 }
 
-/* Die notation: [count] [d6 ▼] [±mod] inline */
-.dlc-trait-die {
+/* Dotted leader filling the gap between a label and its value. */
+.dlc-leader {
+  flex: 1;
+  border-bottom: 1px dotted var(--dlc-hairline);
+  transform: translateY(-3px);
+}
+
+/* "4d8 +2" — read-only by default. */
+.dlc-trait-die-view {
   display: flex;
+  align-items: baseline;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.dlc-die-notation {
+  font-weight: 700;
+  font-size: 0.78rem;
+}
+
+.dlc-die-mod {
+  font-size: 0.65rem;
+  color: var(--dlc-ink-muted);
+}
+
+/* Raw dieCount/dieType/modifier controls — hidden until edit mode (D1). */
+.dlc-trait-die-edit {
+  display: none;
   align-items: center;
   gap: 2px;
   flex-shrink: 0;
 }
+.dlc-sheet--edit .dlc-trait-die-view {
+  display: none;
+}
+.dlc-sheet--edit .dlc-trait-die-edit {
+  display: flex;
+}
 
-.dlc-die-count {
+.dlc-trait-die-edit .dlc-die-count {
   width: 2rem;
   text-align: center;
 }
 
-.dlc-die-type {
+.dlc-trait-die-edit .dlc-die-type {
   max-width: 4rem;
 }
 
-.dlc-die-mod {
+.dlc-trait-die-edit .dlc-die-mod {
   width: 2.4rem;
   text-align: center;
+  color: inherit;
 }
 
 /* Aptitudes list */
 .dlc-aptitudes {
   list-style: none;
   padding: 0;
-  margin: 0.2rem 0 0 0.5rem;
+  margin: 0;
   display: flex;
   flex-direction: column;
   gap: 1px;
@@ -286,40 +322,45 @@
 .dlc-aptitude,
 .dlc-aptitude-row {
   display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 1px 0;
-  border-radius: 2px;
-}
-
-.dlc-aptitude:hover,
-.dlc-aptitude-row:hover {
-  background: color-mix(in srgb, var(--dlc-brass) 14%, transparent);
+  align-items: baseline;
+  gap: 5px;
+  padding: 1px 0 1px 14px;
 }
 
 .dlc-apt-roll {
-  flex: 1;
-  text-align: left;
-  font-size: 0.8rem;
-  padding: 0;
+  font-family: var(--dlc-font-body);
+  font-size: 0.74rem;
   border: none;
   background: none;
+  padding: 0;
   cursor: pointer;
-  color: inherit;
-}
-
-.dlc-apt-roll:hover {
-  color: var(--dlc-brass);
+  color: var(--dlc-ink);
 }
 
 .dlc-apt-level {
-  width: 2rem;
+  font-family: var(--dlc-font-data);
+  font-weight: 700;
+  font-size: 0.7rem;
+  min-width: 22px;
   text-align: center;
-  font-size: 0.8rem;
+}
+
+.dlc-apt-level-edit {
+  display: none;
+  border: none;
+  background: none;
+  color: inherit;
+}
+.dlc-sheet--edit .dlc-apt-level-view {
+  display: none;
+}
+.dlc-sheet--edit .dlc-apt-level-edit {
+  display: inline-block;
 }
 
 /* Aptitude at level 0 — rolled with 1 die and a -4 modifier (dlc p.29).
-   Applied conditionally in traits-tab.hbs; matches .dlc-unskilled-warn in dialogs.css. */
+   Applied conditionally in traits-tab.hbs; matches .dlc-unskilled-warn in dialogs.css.
+   Also used bare in a guts-check.mjs chat card (unrelated context, same meaning). */
 .dlc-unskilled {
   color: var(--dlc-ink-muted);
   font-style: italic;
