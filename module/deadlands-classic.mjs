@@ -169,7 +169,10 @@ function _renderInitiativeLabel(row, combatant) {
   let label = initContainer.querySelector(".dlc-initiative-label");
   if (!label) {
     label = document.createElement("span");
-    label.classList.add("dlc-initiative-label", "dlc-initiative-card");
+    // dlc-night: this renders inside Foundry's own (always-dark) tracker
+    // row, not one of our own parchment surfaces — no ancestor supplies the
+    // night tokens, so the label carries them itself (M4/B5).
+    label.classList.add("dlc-initiative-label", "dlc-initiative-card", "dlc-night");
     initContainer.appendChild(label);
   }
   label.textContent = DeadlandsCombat.cardLabel(card);
@@ -188,7 +191,7 @@ function _renderHandButton(row, combatant) {
   }
 
   const btn = document.createElement("a");
-  btn.classList.add("dlc-hand-btn");
+  btn.classList.add("dlc-hand-btn", "dlc-night");
   btn.setAttribute("aria-label", game.i18n.localize("DEADLANDS.Combat.Hand.Open"));
   btn.title = game.i18n.localize("DEADLANDS.Combat.Hand.Open");
   const icon = document.createElement("i");
