@@ -8,6 +8,7 @@
  * to the front instead of spawning a second window.
  */
 
+import { DEADLANDS } from "../config.mjs";
 import { DeadlandsCombat } from "./deadlands-combat.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -26,7 +27,7 @@ export class CombatantHandDialog extends HandlebarsApplicationMixin(ApplicationV
   static DEFAULT_OPTIONS = {
     classes: ["deadlands-classic", "dlc-hand-dialog"],
     window: { minimizable: false },
-    position: { width: 320, height: "auto" },
+    position: { width: 380, height: "auto" },
     actions: {
       playCard: CombatantHandDialog.#onPlayCard,
       sleeveCard: CombatantHandDialog.#onSleeveCard,
@@ -56,6 +57,7 @@ export class CombatantHandDialog extends HandlebarsApplicationMixin(ApplicationV
     return {
       ...card,
       label: DeadlandsCombat.cardLabel(card),
+      suitSymbol: card.suit ? DEADLANDS.CARD_SUITS[card.suit]?.symbol : null,
       isJoker: !!card.joker,
       isRedJoker: card.joker === "red",
       isBlackJoker: card.joker === "black",

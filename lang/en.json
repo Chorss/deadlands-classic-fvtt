@@ -231,8 +231,11 @@
   "DEADLANDS.Combat.Initiative.NoSleeveJoker": "Jokers cannot be kept up your sleeve.",
 
   "DEADLANDS.Combat.Hand.Title": "Action Hand: {name}",
+  "DEADLANDS.Combat.Hand.Kicker": "Your action hand",
   "DEADLANDS.Combat.Hand.Play": "Play Card",
   "DEADLANDS.Combat.Hand.Sleeve": "Up the Sleeve",
+  "DEADLANDS.Combat.Hand.SleeveNote": "Held over to next round.",
+  "DEADLANDS.Combat.Hand.JokerAbbr": "JKR",
   "DEADLANDS.Combat.Hand.Empty": "No cards in hand.",
   "DEADLANDS.Combat.Hand.Open": "Show Action Hand",
 

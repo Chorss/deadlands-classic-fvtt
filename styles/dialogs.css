@@ -23,24 +23,29 @@
   gap: 0.5rem;
 }
 
-/* ── Combatant hand dialog (action deck) ──────────────────────────────────── */
+/* ── Combatant hand dialog (action deck, M6.3 — closes MODULE_BACKLOG) ────── */
+
+/* combatant-hand-dialog.mjs is a standalone ApplicationV2, not a Dialog form —
+ * it owns its own window chrome, so (like .dlc-fate-pot-widget in combat.css)
+ * it zeroes Foundry's default .window-content padding and lets its own root
+ * class provide it instead. */
+.dlc-hand-dialog .window-content {
+  padding: 0;
+}
 
 .dlc-combatant-hand {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-}
-
-.dlc-hand-title {
-  font-family: var(--dlc-font-display);
-  font-size: 0.9rem;
-  color: var(--dlc-brass);
+  gap: 0.6rem;
+  padding: 0.9rem 1.1rem 1.1rem;
 }
 
 .dlc-hand-cards {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   display: flex;
-  gap: 4px;
-  flex-wrap: wrap;
+  flex-direction: column;
 }
 
 .dlc-hand-empty {
@@ -49,50 +54,115 @@
   font-size: 0.8rem;
 }
 
-/* Generic card box — relocated from huckster.css (M5): this rule belongs to
- * the Combatant Hand dialog, not the Huckster archetype; it only ended up
- * there because the hex-cast chat card used to share the same .dlc-card
- * class name (renamed to .dlc-hex-card in M5 to end that coupling). Colour
- * variants (.dlc-card--joker/--red/--black) live in archetypes/harrowed.css. */
-.dlc-card {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  padding: 2px 6px;
-  border: 1px solid var(--dlc-brass);
-  border-radius: var(--dlc-radius);
-  font-size: 0.8rem;
-  background: color-mix(in srgb, var(--dlc-brass) 14%, transparent);
-  cursor: default;
-  white-space: nowrap;
-}
-
-.dlc-card-label {
-  font-size: 0.75rem;
-}
-
-.dlc-card-actions {
+.dlc-hand-row {
   display: flex;
-  gap: 3px;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--dlc-rule-soft);
+}
+
+/* A card's own face — a compact boxed rank/suit, read like a physical card.
+ * Deliberately its own primitive, not shared with huckster.css's
+ * .dlc-drawn-card or combat.css's .dlc-initiative-card — the three boxes are
+ * sized for different contexts (this one alone stacks rank over a real suit
+ * glyph) and don't warrant a common abstraction. */
+.dlc-card-face {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 46px;
+  border: 1px solid var(--dlc-rule);
+  border-radius: var(--dlc-radius);
+  background: var(--dlc-paper);
+  font-family: var(--dlc-font-data);
+}
+
+.dlc-card-face-rank {
+  font-weight: 700;
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
+
+.dlc-card-face-suit {
+  font-size: 0.78rem;
+  line-height: 1;
+}
+
+.dlc-card-face[data-suit="hearts"],
+.dlc-card-face[data-suit="diamonds"],
+.dlc-sleeved-card[data-suit="hearts"],
+.dlc-sleeved-card[data-suit="diamonds"] {
+  color: var(--dlc-blood);
+}
+
+.dlc-hand-row.dlc-joker .dlc-card-face {
+  font-weight: 900;
+}
+
+.dlc-hand-row.dlc-joker-red .dlc-card-face {
+  border-color: var(--dlc-blood);
+  color: var(--dlc-blood);
+}
+
+.dlc-hand-row.dlc-joker-black .dlc-card-face {
+  border-color: var(--dlc-ink);
+}
+
+.dlc-hand-label {
+  flex: 1;
+  font-size: 0.78rem;
+  color: var(--dlc-ink);
+}
+
+.dlc-hand-actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
 }
 
 .dlc-play-card {
-  font-size: 0.75rem;
-  padding: 2px 8px;
+  font-size: 0.6rem;
+  padding: 0.3em 0.7em;
 }
 
-.dlc-sleeve-card,
+.dlc-sleeve-card {
+  font-size: 0.6rem;
+  padding: 0.3em 0.7em;
+}
+
+/* The currently-sleeved card display — kept dashed to read as "tucked away",
+ * distinct from the hand rows above. */
 .dlc-sleeved {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 3px 6px;
+  gap: 0.5rem;
+  padding: 0.5rem 0.7rem;
   border: 1px dashed var(--dlc-brass);
   border-radius: var(--dlc-radius);
 }
 
 .dlc-sleeved-label {
-  font-size: 0.75rem;
+  font-family: var(--dlc-font-head);
+  font-size: 0.56rem;
+  letter-spacing: var(--dlc-ls-label);
+  text-transform: uppercase;
+  color: var(--dlc-ink-muted);
+}
+
+.dlc-sleeved-card {
+  font-family: var(--dlc-font-data);
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: var(--dlc-ink);
+}
+
+.dlc-sleeved-note {
+  flex: 1;
+  font-size: 0.72rem;
   font-style: italic;
   color: var(--dlc-ink-muted);
 }

@@ -216,22 +216,8 @@
   color: var(--dlc-blood);
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   COMBATANT HAND DIALOG — Action Card joker variants (M6 still owns the rest
-   of that dialog's redesign; these three stay here only because they are
-   BEM modifiers of .dlc-card, which lives in styles/dialogs.css).
-   ═══════════════════════════════════════════════════════════════════════════ */
-
-.dlc-card--red {
-  border-color: var(--dlc-blood);
-  background: color-mix(in srgb, var(--dlc-blood) 14%, transparent);
-}
-
-.dlc-card--joker {
-  font-weight: bold;
-}
-
-.dlc-card--black {
-  border-color: var(--dlc-ink);
-  background: color-mix(in srgb, var(--dlc-ink) 12%, transparent);
-}
+/* The Combatant Hand dialog's Action Card joker variants (.dlc-card--red/
+ * --joker/--black) used to live here as BEM modifiers of dialogs.css's
+ * .dlc-card. M6.3 redesigned that dialog around .dlc-hand-row/.dlc-card-face
+ * instead (styles/dialogs.css), retiring both the old class names and this
+ * cross-file split. */

@@ -231,8 +231,11 @@
   "DEADLANDS.Combat.Initiative.NoSleeveJoker": "Jokerów nie można trzymać w spodniku.",
 
   "DEADLANDS.Combat.Hand.Title": "Ręka akcji: {name}",
+  "DEADLANDS.Combat.Hand.Kicker": "Twoja ręka akcji",
   "DEADLANDS.Combat.Hand.Play": "Zagraj kartę",
   "DEADLANDS.Combat.Hand.Sleeve": "W spodniku",
+  "DEADLANDS.Combat.Hand.SleeveNote": "Zachowana na następną rundę.",
+  "DEADLANDS.Combat.Hand.JokerAbbr": "JKR",
   "DEADLANDS.Combat.Hand.Empty": "Brak kart w ręce.",
   "DEADLANDS.Combat.Hand.Open": "Pokaż rękę kart",
 
