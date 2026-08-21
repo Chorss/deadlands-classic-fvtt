@@ -100,6 +100,13 @@
   text-shadow: 0 0 4px var(--color-shadow-primary, rgba(0, 0, 0, 0.4));
 }
 
+/* Aptitude at level 0 — rolled with 1 die and a -4 modifier (dlc p.29).
+   Applied conditionally in traits-tab.hbs; matches .dlc-unskilled-warn above. */
+.dlc-unskilled {
+  color: var(--dlc-color-muted);
+  font-style: italic;
+}
+
 /* ── Chat roll card ─────────────────────────────────────────── */
 
 .dlc-roll-card {

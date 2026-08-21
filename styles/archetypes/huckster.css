@@ -112,6 +112,14 @@
   background: rgba(40, 40, 40, 0.3);
 }
 
+/* Joker drawn from the hex deck. Two spellings reach the DOM: .dlc-joker on the
+   drawn-card lists, .dlc-joker-card in the cast-result chat card. */
+.dlc-joker,
+.dlc-joker-card {
+  border-color: var(--dlc-color-blood);
+  font-weight: bold;
+}
+
 .dlc-card-rank {
   font-weight: bold;
 }

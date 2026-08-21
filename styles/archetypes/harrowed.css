@@ -147,6 +147,17 @@
   background: rgba(192, 57, 43, 0.15);
 }
 
+/* Siblings of the modifier above, added the same conditional way. Stage M6 moves
+   all three next to the rest of the card styles. */
+.dlc-card--joker {
+  font-weight: bold;
+}
+
+.dlc-card--black {
+  border-color: var(--dlc-color-dark);
+  background: rgba(0, 0, 0, 0.15);
+}
+
 /* ── Last roll results ────────────────────────────────────────────────────── */
 
 .dlc-last-roll-label {

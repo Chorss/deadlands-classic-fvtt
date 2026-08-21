@@ -25,6 +25,12 @@
   background: var(--dlc-color-gold-dim);
 }
 
+/* Gizmo that has been built, as opposed to a blueprint on paper. */
+.dlc-constructed {
+  border-left: 2px solid var(--dlc-color-gold);
+  padding-left: 4px;
+}
+
 .dlc-gizmo-name {
   flex: 1;
   font-size: 0.85rem;

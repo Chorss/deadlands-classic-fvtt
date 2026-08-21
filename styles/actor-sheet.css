@@ -94,12 +94,6 @@
   min-width: 60px;
 }
 
-.dlc-wind-label {
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  color: var(--dlc-color-muted);
-}
-
 .dlc-wind-value {
   width: 2rem;
   text-align: center;
