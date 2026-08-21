@@ -1,6 +1,7 @@
-/* Deadlands Classic — Harrowed overlay styles (dominion, powers, counting coup). */
-
-/* ── Harrowed section ─────────────────────────────────────────────────────── */
+/* Deadlands Classic — Harrowed overlay styles (dominion, powers, counting coup).
+ * README A8 (bod p.62, p.80-82, p.196-199): plum double-rule masthead, Dominion
+ * roll + last-roll summary, Powers/Counting Coup as dotted-leader prose lines.
+ */
 
 .dlc-harrowed {
   display: flex;
@@ -8,168 +9,229 @@
   gap: var(--dlc-section-gap);
 }
 
+/* ── Masthead — plum double rule marks this as the arcane/Harrowed overlay ── */
+
+.dlc-harrowed-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  border-bottom: 3px double var(--dlc-plum);
+  padding-bottom: 0.6rem;
+}
+
+.dlc-harrowed-title {
+  font-family: var(--dlc-font-head);
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--dlc-plum);
+}
+
+/* Is-Harrowed toggle switch — a real checkbox underneath, visually a track +
+ * thumb. Kept keyboard-operable: the input stays in normal tab order, just
+ * visually hidden in favour of the track/thumb pair. */
+.dlc-harrowed-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+}
+
+.dlc-toggle-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.dlc-toggle-track {
+  position: relative;
+  width: 30px;
+  height: 16px;
+  border-radius: 9px;
+  background: var(--dlc-rule);
+  transition: background 0.15s;
+}
+
+.dlc-toggle-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--dlc-card);
+  transition: left 0.15s;
+}
+
+.dlc-toggle-input:checked + .dlc-toggle-track {
+  background: var(--dlc-plum);
+}
+
+.dlc-toggle-input:checked + .dlc-toggle-track .dlc-toggle-thumb {
+  left: 16px;
+}
+
+.dlc-toggle-input:disabled + .dlc-toggle-track {
+  opacity: 0.5;
+}
+
+.dlc-toggle-input:focus-visible + .dlc-toggle-track {
+  outline: 2px solid var(--dlc-ink);
+  outline-offset: 2px;
+}
+
+.dlc-toggle-text {
+  font-family: var(--dlc-font-head);
+  font-size: 0.6rem;
+  letter-spacing: var(--dlc-ls-label);
+  text-transform: uppercase;
+  color: var(--dlc-ink-muted);
+}
+
 .dlc-harrowed-section {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
-}
-
-.dlc-harrowed-label {
-  font-family: var(--dlc-font-display);
-  font-size: 0.8rem;
-  color: var(--dlc-ink-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.dlc-harrowed-status {
-  font-size: 0.85rem;
-}
-
-.dlc-harrowed-toggle {
-  cursor: pointer;
+  gap: 0.4rem;
 }
 
 /* ── Dominion ─────────────────────────────────────────────────────────────── */
 
-.dlc-dominion-control {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-
 .dlc-dominion-row {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
 }
 
-.dlc-dominion-roll-btn {
-  font-size: 0.75rem;
-  padding: 2px 8px;
-}
-
-.dlc-dominion-last-roll {
-  font-size: 0.75rem;
-  color: var(--dlc-ink-muted);
-}
-
-/* ── Harrowed powers list ─────────────────────────────────────────────────── */
-
-.dlc-powers-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.dlc-power {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 3px 4px;
-  border-radius: var(--dlc-radius);
-}
-
-.dlc-power:hover {
-  background: color-mix(in srgb, var(--dlc-brass) 14%, transparent);
-}
-
-.dlc-power-name {
-  flex: 1;
-  font-size: 0.85rem;
-}
-
-.dlc-power-kind {
-  font-size: 0.7rem;
+.dlc-dominion-row label {
+  font-family: var(--dlc-font-head);
+  font-size: 0.56rem;
+  letter-spacing: var(--dlc-ls-label);
   text-transform: uppercase;
   color: var(--dlc-ink-muted);
 }
 
-.dlc-power-level {
-  font-size: 0.75rem;
-  color: var(--dlc-brass);
+.dlc-dominion-row input {
+  width: 2.6rem;
+  text-align: center;
 }
 
-/* ── Counting coup ────────────────────────────────────────────────────────── */
+.dlc-dominion-roll-btn {
+  margin-left: auto;
+}
 
+.dlc-dominion-last-roll {
+  margin: 0;
+  font-family: var(--dlc-font-body);
+  font-size: 0.8rem;
+  color: var(--dlc-ink-soft);
+}
+
+.dlc-last-roll-label {
+  font-family: var(--dlc-font-head);
+  font-size: 0.56rem;
+  letter-spacing: var(--dlc-ls-label);
+  text-transform: uppercase;
+  color: var(--dlc-ink-muted);
+}
+
+.dlc-last-roll-outcome {
+  font-weight: 700;
+}
+
+.dlc-outcome-win {
+  color: var(--dlc-green);
+}
+
+.dlc-outcome-loss {
+  color: var(--dlc-blood);
+}
+
+.dlc-outcome-neutral {
+  color: var(--dlc-ink-muted);
+}
+
+/* ── Harrowed powers — dotted-leader prose lines, plum kind pill ─────────── */
+
+.dlc-powers-list,
 .dlc-coup-list {
   list-style: none;
   padding: 0;
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
 }
+
+.dlc-power {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid var(--dlc-rule-soft);
+}
+
+.dlc-power-name {
+  font-family: var(--dlc-font-body);
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.dlc-power-kind {
+  white-space: nowrap;
+}
+
+.dlc-power-level {
+  font-size: 0.8rem;
+}
+
+/* ── Counting coup — source / power (italic) / taint (blood) ─────────────── */
 
 .dlc-coup-entry {
   display: flex;
-  align-items: flex-start;
-  gap: 0.4rem;
-  padding: 3px 4px;
-  font-size: 0.8rem;
-  border-radius: var(--dlc-radius);
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid var(--dlc-rule-soft);
 }
 
 .dlc-coup-source {
   flex: 1;
-  color: var(--dlc-ink-muted);
+  font-size: 0.75rem;
 }
 
 .dlc-coup-power {
   font-style: italic;
+  font-size: 0.75rem;
+  color: var(--dlc-ink-soft);
 }
 
 .dlc-coup-taint {
+  font-family: var(--dlc-font-head);
+  font-weight: 700;
+  font-size: 0.56rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--dlc-blood);
-  font-size: 0.75rem;
 }
 
-/* ── Chip badge (spending chips from Harrowed powers) ────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════════════
+   COMBATANT HAND DIALOG — Action Card joker variants (M6 still owns the rest
+   of that dialog's redesign; these three stay here only because they are
+   BEM modifiers of .dlc-card, which lives in styles/dialogs.css).
+   ═══════════════════════════════════════════════════════════════════════════ */
 
-.dlc-chip-badge {
-  display: inline-block;
-  font-size: 0.7rem;
-  font-weight: bold;
-  padding: 1px 5px;
-  border-radius: 10px;
-  border: 1px solid currentColor;
-  color: var(--dlc-brass);
-}
-
-/* ── Harrowed card variant ───────────────────────────────────────────────── */
-
-/* dlc-card--red is a BEM modifier added conditionally via {{#if isRedJoker}} */
 .dlc-card--red {
-  border-color: #c0392b;
-  background: rgba(192, 57, 43, 0.15);
+  border-color: var(--dlc-blood);
+  background: color-mix(in srgb, var(--dlc-blood) 14%, transparent);
 }
 
-/* Siblings of the modifier above, added the same conditional way. Stage M6 moves
-   all three next to the rest of the card styles. */
 .dlc-card--joker {
   font-weight: bold;
 }
 
 .dlc-card--black {
   border-color: var(--dlc-ink);
-  background: rgba(0, 0, 0, 0.15);
-}
-
-/* ── Last roll results ────────────────────────────────────────────────────── */
-
-.dlc-last-roll-label {
-  font-size: 0.7rem;
-  color: var(--dlc-ink-muted);
-}
-.dlc-last-roll-pc {
-  color: #2ecc71;
-}
-.dlc-last-roll-npc {
-  color: var(--dlc-blood);
-}
-.dlc-last-roll-outcome {
-  font-weight: bold;
+  background: color-mix(in srgb, var(--dlc-ink) 12%, transparent);
 }

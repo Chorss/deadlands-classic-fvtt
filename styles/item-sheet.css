@@ -63,30 +63,8 @@
   color: var(--dlc-blood);
 }
 
-/* ── Outcome labels ───────────────────────────────────────────────────────── */
-
-.dlc-outcome-win {
-  color: #2ecc71;
-}
-.dlc-outcome-neutral {
-  color: var(--dlc-ink-muted);
-}
-.dlc-outcome-loss {
-  color: var(--dlc-blood);
-}
-
-/* ── Last roll display ───────────────────────────────────────────────────── */
-
-.dlc-last-roll-label {
-  font-size: 0.7rem;
-  color: var(--dlc-ink-muted);
-}
-.dlc-last-roll-pc {
-  color: #2ecc71;
-}
-.dlc-last-roll-npc {
-  color: var(--dlc-blood);
-}
-.dlc-last-roll-outcome {
-  font-weight: bold;
-}
+/* Outcome labels (.dlc-outcome-*) and the last-roll display (.dlc-last-roll-*)
+ * used to be duplicated here and in archetypes/harrowed.css — the only actual
+ * consumer, harrowed-tab.hbs, was already reading harrowed.css's copy (it
+ * @imports after this file), so these were dead weight. Consolidated into
+ * archetypes/harrowed.css (M5), per the README's flagged duplicate. */

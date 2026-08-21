@@ -48,6 +48,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **M5.2 of the Ledger redesign: the Harrowed overlay tab.** Plum double-rule
+  masthead with a toggle-switch for Is Harrowed (still a native checkbox
+  underneath — no new state plumbing); Dominion/Powers/Counting Coup each get
+  the `.dlc-section-head` treatment; Powers and Counting Coup become
+  dotted-leader prose rows with the power's kind as a `.dlc-pill-plum` badge.
+  Consolidated a README-flagged duplicate: `.dlc-outcome-*`/`.dlc-last-roll-*`
+  were defined in both `item-sheet.css` and `archetypes/harrowed.css` — the
+  latter already won the cascade (it `@import`s later) and was the only one
+  actually read by `harrowed-tab.hbs`, so the `item-sheet.css` copy was dead
+  weight, now removed.
 - **M5.1 of the Ledger redesign: the Huckster Hexes tab.** Section-head +
   hairline for Hexslingin' and the hex list; a "Backlash pending" pill
   (`.dlc-pill-blood`) instead of a bespoke warning line; inline Level/Modifier
