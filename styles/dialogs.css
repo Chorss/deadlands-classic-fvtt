@@ -86,3 +86,24 @@
 .dlc-spend-btn:hover {
   background: color-mix(in srgb, var(--dlc-brass) 14%, transparent);
 }
+
+/* ── Trait / aptitude roll dialog ─────────────────────────────────────────── */
+
+.dlc-roll-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.4rem 0;
+  min-width: 220px;
+}
+
+.dlc-roll-dialog-label {
+  font-family: var(--dlc-font-head);
+  font-weight: bold;
+  font-size: 1rem;
+  text-align: center;
+  color: var(--dlc-ink);
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--dlc-rule);
+  margin-bottom: 0.2rem;
+}

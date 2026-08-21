@@ -151,3 +151,77 @@
   border: 1px solid var(--dlc-blood);
   border-radius: var(--dlc-radius);
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FATE CHIPS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.dlc-chip-row {
+  display: flex;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex-wrap: wrap;
+}
+
+.dlc-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: var(--dlc-radius);
+  min-width: 3.5rem;
+  border: 2px solid var(--dlc-chip-border, var(--dlc-rule-strong));
+}
+
+.dlc-chip-label {
+  font-family: var(--dlc-font-head);
+  font-size: 0.55rem;
+  letter-spacing: var(--dlc-ls-label);
+  text-transform: uppercase;
+}
+
+.dlc-chip input[type="number"] {
+  width: 3rem;
+  text-align: center;
+  border: none;
+  background: transparent;
+  font-family: var(--dlc-font-data);
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: inherit;
+}
+
+.dlc-chip-white {
+  background: var(--dlc-chip-white);
+  color: var(--dlc-chip-white-ink);
+  --dlc-chip-border: var(--dlc-chip-white-edge);
+}
+.dlc-chip-red {
+  background: var(--dlc-chip-red);
+  color: var(--dlc-chip-red-ink);
+  --dlc-chip-border: var(--dlc-chip-red-edge);
+}
+.dlc-chip-blue {
+  background: var(--dlc-chip-blue);
+  color: var(--dlc-chip-blue-ink);
+  --dlc-chip-border: var(--dlc-chip-blue-edge);
+}
+.dlc-chip-legend {
+  background: var(--dlc-chip-legend);
+  color: var(--dlc-chip-legend-ink);
+  --dlc-chip-border: var(--dlc-chip-legend-edge);
+}
+
+/* Session draw log (GM tool) — fate-pot.mjs builds this chat message in JS. */
+.dlc-chip-draw {
+  font-family: var(--dlc-font-body);
+  font-size: 0.8rem;
+}
+
+.dlc-chip-draw ul {
+  margin: 0.2rem 0 0;
+  padding-left: 1.1rem;
+}

@@ -50,13 +50,13 @@
 
 .dlc-raises {
   font-size: 0.8rem;
-  color: #2ecc71;
+  color: var(--dlc-green);
 }
 
 /* ── Outcome messages ─────────────────────────────────────────────────────── */
 
 .dlc-success-msg {
-  color: #2ecc71;
+  color: var(--dlc-green);
   font-weight: bold;
   font-size: 0.85rem;
 }
@@ -73,6 +73,17 @@
   font-weight: bold;
   font-style: italic;
   font-size: 0.85rem;
+}
+
+.dlc-success {
+  color: var(--dlc-green);
+  font-weight: bold;
+}
+
+.dlc-bust {
+  color: var(--dlc-blood);
+  font-weight: bold;
+  font-style: italic;
 }
 
 /* ── Archetype-specific chat messages ─────────────────────────────────────── */
@@ -110,7 +121,7 @@
 }
 
 .dlc-backlash-succeeds {
-  color: #2ecc71;
+  color: var(--dlc-green);
   font-size: 0.8rem;
 }
 
@@ -131,4 +142,67 @@
   color: var(--dlc-ink-muted);
   font-size: 0.8rem;
   margin-top: 0.2rem;
+}
+
+/* ── Roll result card (trait/damage/guts rolls, built in module/core/dice/) ──
+ * `dlc-roll-card` unifies with `dlc-chat-card` in M4 (decision D3) — until
+ * then this stays a separate wrapper with its own rules. */
+
+.dlc-roll-card {
+  border: 1px solid var(--dlc-rule);
+  border-radius: var(--dlc-radius);
+  padding: 0.4rem 0.6rem;
+  margin: 0.2rem 0;
+}
+
+.dlc-roll-label {
+  font-weight: bold;
+  margin-bottom: 0.3rem;
+}
+.dlc-roll-dice {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.2rem;
+}
+.dlc-die {
+  display: inline-block;
+  background: var(--dlc-chip-white);
+  color: var(--dlc-chip-white-ink);
+  border: 1px solid var(--dlc-chip-white-edge);
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-family: var(--dlc-font-data);
+  font-size: 0.9rem;
+}
+.dlc-ace {
+  color: var(--dlc-brass);
+}
+.dlc-tn {
+  color: var(--dlc-ink-muted);
+  font-size: 0.85rem;
+}
+.dlc-modifier {
+  font-size: 0.85rem;
+}
+.dlc-roll-outcome {
+  font-weight: bold;
+  margin-top: 0.2rem;
+}
+
+.dlc-success .dlc-roll-outcome {
+  color: var(--dlc-green);
+}
+.dlc-bust .dlc-roll-outcome {
+  color: var(--dlc-blood);
+}
+.dlc-fail .dlc-roll-outcome {
+  color: var(--dlc-ink-muted);
+}
+.dlc-damage .dlc-roll-outcome {
+  color: var(--dlc-blood);
+}
+.dlc-armor {
+  font-size: 0.8rem;
+  color: var(--dlc-ink-muted);
 }
