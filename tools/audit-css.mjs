@@ -8,8 +8,12 @@
  * Two severity levels, on purpose:
  *   templates/  → error   (exit 1) — the long-standing contract, kept strict.
  *   module/     → warning (exit 0) — chat cards and injected UI start with a known
- *                 backlog of unstyled classes (see MODULE_BACKLOG). Flipping this
- *                 to an error is the closing criterion of Ledger stage M4.
+ *                 backlog of unstyled classes (see MODULE_BACKLOG). M4 closed all
+ *                 of it except `dlc-hand-dialog`, which belongs to M6 (the dialog
+ *                 whose content, `combatant-hand.hbs`, M6 redesigns) — kept as a
+ *                 single deliberate, disclosed exception rather than an invented
+ *                 rule with nothing to style yet. Flipping module/ to an error is
+ *                 fair game once that one closes too.
  *
  * Also reports selectors defined in styles/ that nothing uses, split by confidence:
  * genuinely dead vs. probably reached through a dynamic fragment. Informational
@@ -38,26 +42,15 @@ const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..
 
 /**
  * Classes used in `module/` that have no CSS rule at all — an existing gap, not a
- * regression, fixed in Ledger stage M4. Frozen as names rather than a count so a
- * one-for-one swap (style one, add another) still trips the warning.
+ * regression. Frozen as names rather than a count so a one-for-one swap (style
+ * one, add another) still trips the warning.
+ *
+ * M4 (chat cards + tracker) closed every entry but one: `dlc-hand-dialog` is the
+ * root class of CombatantHandDialog, whose content template (`combatant-hand.hbs`)
+ * M6 redesigns — giving the root a rule now, with nothing in it to style yet,
+ * would just be inventing busywork ahead of that stage.
  */
-const MODULE_BACKLOG = new Set([
-  "dlc-chip-draw",
-  "dlc-gm-note",
-  "dlc-hand-btn",
-  "dlc-hand-dialog",
-  "dlc-initiative-black-joker",
-  "dlc-initiative-card",
-  "dlc-initiative-label",
-  "dlc-initiative-red-joker",
-  "dlc-outcome",
-  "dlc-scart-effect",
-  "dlc-scart-note",
-  "dlc-scart-result",
-  "dlc-scart-roll",
-  "dlc-wind-lost",
-  "dlc-winded",
-]);
+const MODULE_BACKLOG = new Set(["dlc-hand-dialog"]);
 
 function collectFiles(dir, ext) {
   if (!fs.existsSync(dir)) {
