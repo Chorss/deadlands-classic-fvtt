@@ -48,6 +48,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **M2 of the Ledger redesign: `styles/chips.css` is gone.** Its rules were
+  duplicates of what the new tokens already cover, kept alive only by import
+  order. Fate-chip primitives moved to `combat.css` (rebuilt on the
+  `--dlc-chip-*` triples from M1 instead of four hardcoded hex colours), the
+  roll dialog's shell to `dialogs.css`, the trait/aptitude roll-button reset to
+  `actor-sheet.css`, and the JS-built roll-result card (`trait-roll.mjs`,
+  `damage-roll.mjs`, `guts-check.mjs`) to `chat.css`. `.dlc-unskilled-warn` had
+  two conflicting definitions (`_base.css` vs the old `chips.css`); only one
+  survives.
 - **Ledger design tokens replace the old palette** (milestone M1 of the visual
   redesign). `styles/_variables.css` now carries parchment surfaces for windows,
   a night block for the sidebar, semantic accents, a five-step wound ramp,
