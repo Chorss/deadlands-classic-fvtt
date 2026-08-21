@@ -1,5 +1,8 @@
 ---
-# No `paths:` — applies everywhere (auto-loaded via CLAUDE.md)
+paths:
+  - "module/**/*.mjs"
+  - "tools/**/*.mjs"
+  - "tests/**/*.mjs"
 ---
 
 # Code quality standards — JavaScript / .mjs
@@ -147,7 +150,7 @@ Test names describe behaviour, not implementation:
 
 **Every `dlc-*` class introduced in a `.hbs` template MUST have a corresponding CSS rule in `styles/`.**
 
-This is enforced by `tools/audit-css.mjs` (run via `/verify-system`, pre-commit hook on `.hbs`/`.css` changes, and CI). A commit that adds a template class without a CSS rule is rejected.
+This is enforced by `tools/audit-css.mjs` (run via `/verify-system`, pre-commit hook on `.hbs`/`.css`/`.mjs` changes, and CI). A commit that adds a template class without a CSS rule is rejected. Classes built in `module/**/*.mjs` template literals are scanned too, but report as a **warning** while the known backlog of unstyled chat-card classes is worked off; the tool still exits 0. It also lists selectors defined in `styles/` that nothing uses, split into genuinely dead vs. probably reached through a dynamic fragment — informational only, never a gate. A class named only in a CSS comment does **not** count as defined.
 
 **Workflow when adding a new template section:**
 1. Write the `.hbs` markup with `dlc-*` classes.

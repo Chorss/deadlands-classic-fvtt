@@ -10,9 +10,9 @@ project context is `CLAUDE.md` at the repo root, which auto-loads every session.
 ├── settings.json            shared, checked into git
 ├── settings.local.json      per-clone overrides, gitignored
 ├── agents/                  custom subagent definitions (one .md per agent)
-├── commands/                slash commands (one .md per command)
+├── skills/                  invocable procedures (one <name>/SKILL.md per skill)
 ├── hooks/                   shell scripts invoked by settings.json hooks
-└── rules/                   focused rule docs referenced from CLAUDE.md
+└── rules/                   focused rule docs, loaded natively by Claude Code
 ```
 
 ## What ships where
@@ -21,27 +21,66 @@ project context is `CLAUDE.md` at the repo root, which auto-loads every session.
 |---|---|---|
 | `settings.json` | ✓ | Shared permissions, hook wiring, shared env (`DEADLANDS_DEV`) |
 | `settings.local.json` | ✗ (gitignored) | Per-machine `DEADLANDS_RULES_PATH`, domain allowlists, local tooling permissions |
-| `agents/*.md`, `commands/*.md`, `hooks/*.sh`, `rules/*.md` | ✓ | Shared workshop — every contributor gets the same setup |
+| `agents/*.md`, `skills/*/SKILL.md`, `hooks/*.sh`, `rules/*.md` | ✓ | Shared workshop — every contributor gets the same setup |
 
 ## Hooks
 
 Wired in `settings.json` under `hooks`:
 
-| Event | Matcher | Script | What it does |
+| Event | Matcher / filter | Script | What it does |
 |---|---|---|---|
 | `SessionStart` | — | inline | `git config core.hooksPath .githooks` so the `commit-msg` / `pre-commit` hooks apply on every clone |
-| `PostToolUse` | `Write \| Edit \| MultiEdit` | `hooks/post-write.sh` | `node --check` on `.mjs`, `JSON.parse` on `.json`, re-run `verify-documenttypes` after `system.json` / `lang/*.json` edits |
-| `PostToolUse` | `Bash` | `hooks/post-extract-verify.sh` | After every `extract-pdf.sh` call (any path), runs `$DEADLANDS_RULES_PATH/scripts/verify-pdf-extract.sh`. FAIL injects `decision: block` so Claude stops before indexing a broken extract |
+| `PostToolUse` | `Write \| Edit` | `hooks/post-write.sh` | `node --check` on `.mjs`, `JSON.parse` on `.json`, re-run `verify-documenttypes` after `system.json` / `lang/*.json` edits. Also nudges on mechanics files |
+| `PostToolUse` | `Bash` + `if: Bash(*extract-pdf.sh *)` | `hooks/post-extract-verify.sh` | After an `extract-pdf.sh` call, runs `$DEADLANDS_RULES_PATH/scripts/verify-pdf-extract.sh`. FAIL injects `decision: block` so Claude stops before indexing a broken extract |
+| `Stop` | — | `hooks/stop-verify.sh` | When the working tree is dirty, runs `npm run verify:all` and blocks the end of the turn with the failure text if it is red |
 
-## Commands
+Three details worth knowing:
 
-- `/verify-system` — manifest + EN/PL parity + tests, one-paragraph report
-- `/release` — cut a versioned release (bumps, tags, pushes; CI builds the zip)
-- `/new-phase N` — create branch `phase-N/<slug>`, extract checklist + test block from `docs/implementation-plan.pl.md`, list companion PDFs to verify
+- **`post-write.sh` fails with `exit 2`, not `exit 1`.** `PostToolUse` surfaces a hook's
+  stderr to Claude only on exit code 2. With `exit 1` the validation still ran and still
+  failed, but the model never saw it.
+- **The `if:` filter is what keeps the PDF gate cheap.** Without it the script spawned node
+  on every single Bash call just to discover the command was unrelated. The filter is
+  best-effort and fails open, so the script keeps its own `grep` as a second gate.
+- **`Stop` is the only net under bash-written files.** `PostToolUse` on `Write|Edit` does
+  not fire when a Bash command rewrites a file (`sed -i`, a heredoc, `>` redirection), so
+  those edits bypass every per-write check. `stop-verify.sh` catches them before the turn ends.
+
+## Permissions
+
+`settings.json` splits into two kinds of deny rule, and they are not equally strong.
+
+**Path rules — enforced.** `CLAUDE.md` says never to modify `vendor/`, `books/`,
+`.pdf-extract/` or `LICENSE`; these make it true regardless of what Claude decides:
+
+```json
+"Edit(vendor/**)", "Edit(books/**)", "Edit(.pdf-extract/**)", "Edit(LICENSE)"
+```
+
+They must be written as `Edit(...)`, **not** `Write(...)`. Claude Code checks file
+permissions against `Edit(path)` and `Read(path)` rules only; a `Write(path)` rule is
+accepted, never consulted, and warned about at startup. `Edit(...)` also covers the target
+of a shell output redirection, so `sed ... > vendor/x` is blocked too.
+
+**Bash argument rules — soft.** The `rm -rf`, `git push --force`, `git reset --hard` and
+`git clean` entries are a speed bump, not a guarantee. Patterns that try to constrain
+command arguments are fragile: `rm -fr`, `find -delete` and similar spellings sail straight
+past them. Treat them as a typo-catcher, not a security boundary.
 
 ## Skills
 
-- `verify-mechanic` — verify a mechanic against `deadlands-rules-ref` **before** coding it; returns `<slug> p.NNN` + paraphrase. Delegates to `pdf-reference-lookup`.
+- `/verify-system` — `npm run lint` + `npm run verify:all`, one-paragraph report
+- `/verify-mechanic` — verify a mechanic against `deadlands-rules-ref` **before** coding it;
+  returns `<slug> p.NNN` + paraphrase. Delegates to `pdf-reference-lookup`
+- `/release [major|minor|patch]` — cut a versioned release (bumps, tags, pushes; CI builds the zip)
+- `/new-phase [N] [slug]` — create branch `phase-N/<slug>`, extract checklist + test block from
+  `docs/implementation-plan.pl.md`, list companion PDFs to verify
+- `/add-archetype <kebab-name> [--mechanics|--overlay]` — full archetype scaffold; delegates to
+  `archetype-scaffolder`
+
+Skills are invoked with `/name` or automatically when their `description:` matches the task.
+`/release` deliberately carries Polish trigger phrases ("zrób release", "taguj wersję") in its
+description, so the maintainer's usual phrasing invokes it.
 
 ## Agents
 
@@ -60,18 +99,32 @@ Wired in `settings.json` under `hooks`:
 
 ## Rules
 
-Focused per-topic docs. `CLAUDE.md` pulls `commits.md` and `naming.md` into every
-session via `@`-include; the rest are read on demand when Claude touches files
-matching their `paths:` frontmatter.
+Claude Code loads `.claude/rules/*.md` itself — there are no `@`-includes in `CLAUDE.md`.
+A rule **without** `paths:` frontmatter loads at session start with the same priority as
+`CLAUDE.md`. A rule **with** `paths:` loads only when a matching file is read or written,
+which keeps it out of sessions that never touch those files.
 
-| File | Auto-loaded? | Scope |
+| File | When it loads | Scope |
 |---|---|---|
-| `commits.md` | ✓ every session | Conventional-commit prefixes, no AI co-author trailers |
-| `naming.md` | ✓ every session | Casing matrix for keys, folders, classes, i18n |
-| `v14-api.md` | on demand | `module/**/*.mjs` — V14 API only, no V13 fallbacks |
-| `localization.md` | on demand | `lang/**`, `module/**`, `templates/**` — EN/PL key parity |
-| `references.md` | on demand | `vendor/**` — read, don't copy |
-| `rulebook-authority.md` | on demand | `module/**`, `tests/**`, `packs/**`, `docs/mechanics-reference.md` — `deadlands-rules-ref` is the only source of truth for game rules |
+| `commits.md` | every session | Conventional-commit prefixes, no AI co-author trailers |
+| `naming.md` | every session | Casing matrix for keys, folders, classes, i18n |
+| `code-quality.md` | on matching file | `module/**/*.mjs`, `tools/**/*.mjs`, `tests/**/*.mjs` — Biome rules, SOLID boundaries, OWASP patterns, complexity ≤ 15, CSS coverage |
+| `v14-api.md` | on matching file | `module/**/*.mjs` — V14 API only, no V13 fallbacks |
+| `localization.md` | on matching file | `lang/**/*.json`, `module/**/*.mjs`, `templates/**/*.hbs` — EN/PL key parity |
+| `references.md` | on matching file | `vendor/**` — read, don't copy |
+| `rulebook-authority.md` | on matching file | `module/**/*.mjs`, `tests/**/*.mjs`, `packs/**`, `docs/mechanics-reference.md` — `deadlands-rules-ref` is the only source of truth for game rules |
+
+Path-scoped rules are **not** re-injected after `/compact`, which is why `post-write.sh`
+keeps its own non-blocking reminder on mechanics files.
+
+## Verification
+
+One definition of green, shared by CI, the pre-commit hook and `/verify-system`:
+
+```bash
+npm run lint          # Biome — formatting + lint rules
+npm run verify:all    # verify-documenttypes → audit-css → audit-i18n → tests
+```
 
 ## Local setup (one-time)
 

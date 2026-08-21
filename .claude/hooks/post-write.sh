@@ -18,7 +18,8 @@ FILE_PATH=$(node -e "
 REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 REL="${FILE_PATH#${REPO_ROOT}/}"
 
-fail() { echo "post-write: $1" >&2; exit 1; }
+# exit 2 (not 1) — PostToolUse surfaces stderr to Claude only on exit code 2.
+fail() { echo "post-write: $1" >&2; exit 2; }
 
 case "$REL" in
   *.mjs)

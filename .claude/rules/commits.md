@@ -13,6 +13,10 @@ Rules applied to every commit on this repository.
 - **Do not add `Co-Authored-By: Claude <noreply@anthropic.com>`** (or any other AI-tool co-author trailer).
 - Commits in this repo are authored solely by the maintainer, regardless of who drafted the change.
 - Regular human co-author trailers are fine when the work is genuinely shared.
+- **The same applies to PR bodies.** No `🤖 Generated with [Claude Code]` line, no
+  `https://claude.ai/code/session_…` link, no `Claude-Session:` trailer — not in the
+  description, not in a comment. This overrides the Claude Code default, which appends
+  that footer to every PR body unless told otherwise.
 
 ## Enforcement
 

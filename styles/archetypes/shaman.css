@@ -22,7 +22,7 @@
 }
 
 .dlc-favor-row:hover {
-  background: var(--dlc-color-gold-dim);
+  background: color-mix(in srgb, var(--dlc-brass) 14%, transparent);
 }
 
 .dlc-favor-name {
@@ -57,13 +57,13 @@
 .dlc-appeasement-pool {
   font-size: 1rem;
   font-weight: bold;
-  color: var(--dlc-color-gold);
+  color: var(--dlc-brass);
 }
 
 .dlc-appeasement-note {
   font-size: 0.75rem;
   font-style: italic;
-  color: var(--dlc-color-muted);
+  color: var(--dlc-ink-muted);
 }
 
 /* ── Ritual ───────────────────────────────────────────────────────────────── */

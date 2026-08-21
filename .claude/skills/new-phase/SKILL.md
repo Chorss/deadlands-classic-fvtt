@@ -1,6 +1,8 @@
 ---
+name: new-phase
 description: Start a new implementation phase — creates branch, extracts the checklist from docs/implementation-plan.pl.md, identifies companion PDFs to verify.
 allowed-tools: Bash(git fetch:*), Bash(git status:*), Bash(git log:*), Bash(git branch:*), Bash(git checkout:*), Bash(grep:*), Bash(awk:*), Read, Glob
+argument-hint: "[N] [slug]"
 ---
 
 # /new-phase [N]

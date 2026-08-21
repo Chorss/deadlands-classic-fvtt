@@ -24,8 +24,5 @@ jobs:
       - name: Lint (Biome)
         run: npm run lint
 
-      - name: Unit tests
-        run: npm run test
-
-      - name: Verify manifest + EN/PL key parity
-        run: npm run verify
+      - name: Verify (manifest, EN/PL parity, CSS coverage, i18n, tests)
+        run: npm run verify:all

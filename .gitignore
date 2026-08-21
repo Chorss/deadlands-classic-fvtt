@@ -59,6 +59,10 @@ books/
 # Extracted text carries the source's copyright — never commit.
 .pdf-extract/
 
+# Maintainer-local UI redesign analysis + design handoff package (fonts, .dc.html
+# prototypes) — working material for the Ledger migration, never part of the system.
+Analiza projektu i wygląd/
+
 # Maintainer-local Polish translations of docs — repo docs are English; PL copies stay local & unpublished.
 docs/*.pl.md
 

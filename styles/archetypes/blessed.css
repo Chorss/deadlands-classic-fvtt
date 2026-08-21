@@ -22,7 +22,7 @@
 }
 
 .dlc-miracle-row:hover {
-  background: var(--dlc-color-gold-dim);
+  background: color-mix(in srgb, var(--dlc-brass) 14%, transparent);
 }
 
 .dlc-miracle-name {
@@ -67,7 +67,7 @@
 }
 
 .dlc-faith-lost {
-  color: var(--dlc-color-blood);
+  color: var(--dlc-blood);
   font-size: 0.8rem;
 }
 
@@ -84,10 +84,18 @@
   padding: 1px 6px;
 }
 
-.dlc-sin-denied  { color: var(--dlc-color-blood); font-style: italic; font-size: 0.75rem; }
+.dlc-sin-denied {
+  color: var(--dlc-blood);
+  font-style: italic;
+  font-size: 0.75rem;
+}
 
-/* Sin severity tags — .dlc-sin-light / .dlc-sin-heavy / etc. */
-.dlc-sin-severity { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; }
+/* Sin severity tags — one shared rule for minor / major / mortal. */
+.dlc-sin-severity {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
 
 /* Sin result chat */
 .dlc-sin-result,

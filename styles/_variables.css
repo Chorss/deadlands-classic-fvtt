@@ -1,7 +1,15 @@
-/* Deadlands Classic — design tokens.
- * All dlc-* components reference these custom properties.
- * Imported first so downstream partials can rely on them.
- */
+/* ============================================================================
+ * Deadlands Classic — design tokens  (Ledger redesign)
+ * Drop-in replacement for styles/_variables.css
+ *
+ * One rule decides the theme:
+ *   • WINDOWS  (actor sheets, item sheets, dialogs)  → parchment  → :root
+ *   • SIDEBAR  (chat cards, combat tracker)          → night      → .dlc-night
+ *
+ * Every dlc-* component references these custom properties only — no hex
+ * literal ever appears in a component rule. The @font-face blocks are carried
+ * over unchanged (Rye / Libre Baskerville / Cinzel / Arvo).
+ * ==========================================================================*/
 
 /* ── Bundled fonts (all offline — no external network requests) ───────────── */
 
@@ -77,30 +85,140 @@
   src: url("../fonts/Cinzel-Bold.woff2") format("woff2");
 }
 
+/* ── PARCHMENT THEME (windows) ────────────────────────────────────────────── */
 :root {
-  /* ── Palette ─────────────────────────────────────────────────────────────── */
-  --dlc-color-gold:       #c8a44b; /* warm gold — focus ring, dividers, accents */
-  --dlc-color-gold-dim:   rgba(200, 164, 75, 0.15);
-  --dlc-color-dark:       #1a0e00; /* deep saddle-brown (text on light bg) */
-  --dlc-color-paper:      #f4eed4; /* parchment — section headers, labels */
-  --dlc-color-blood:      #8b1a1a; /* wound red */
-  --dlc-color-blood-dim:  rgba(139, 26, 26, 0.12);
-  --dlc-color-muted:      #6b5c3e; /* secondary / placeholder text */
+  /* Surfaces */
+  --dlc-paper: #efe7d5; /* window bar, inset fills */
+  --dlc-card: #f8f2e3; /* sheet / dialog body */
+  --dlc-rule: #ded2b6; /* hairline dividers */
+  --dlc-rule-soft: #e7ddc7; /* faint row separators */
+  --dlc-rule-strong: #211a13; /* section double-rules, primary button */
 
-  /* ── Typography ──────────────────────────────────────────────────────────── */
-  --dlc-font-display: "Rye", Georgia, "Times New Roman", serif;
-  --dlc-font-body:    "Libre Baskerville", Georgia, serif;
+  /* Ink (all carry text — each ≥ 4.5:1 on --dlc-card) */
+  --dlc-ink: #211a13; /* primary text, names */
+  --dlc-ink-soft: #4a4136; /* body prose, secondary values */
+  --dlc-ink-muted: #6b6152; /* labels, unskilled aptitudes  (5.4:1) */
+  --dlc-hairline: #a79c87; /* leader dots / rules ONLY — never text */
 
-  /* ── Layout ──────────────────────────────────────────────────────────────── */
-  --dlc-portrait-size: 120px;
-  --dlc-sheet-gap:     0.75rem;
-  --dlc-section-gap:   0.5rem;
-  --dlc-radius:        4px;
+  /* Semantic accents — one meaning each. *-ink = text-safe on --dlc-card */
+  --dlc-brass: #8a6a16; /* interactive — swatch / borders */
+  --dlc-brass-ink: #6e5411; /* interactive — text (4.9:1) */
+  --dlc-blood: #a03a24; /* wounds, bust, hindrances (5.0:1) */
+  --dlc-indigo: #2c4a6e; /* blue chip */
+  --dlc-plum: #5c3a6e; /* arcane / Harrowed (7.4:1) */
+  --dlc-green: #2e6b3e; /* success (5.1:1) */
 
-  /* ── Wounds / pips ───────────────────────────────────────────────────────── */
-  --dlc-pip-size:    10px;
-  --dlc-pip-empty:   #3a3a3a;
-  --dlc-pip-light:   #d4ac0d;   /* severity 1–2 — Light / Heavy */
-  --dlc-pip-serious: #e67e22;   /* severity 3–4 — Serious / Critical */
-  --dlc-pip-maimed:  #c0392b;   /* severity 5   — Maimed */
+  /* Fate chips — fill / edge / ink */
+  --dlc-chip-white: #f5f1e6;
+  --dlc-chip-white-edge: #c9bb9c;
+  --dlc-chip-white-ink: #211a13;
+  --dlc-chip-red: #a03a24;
+  --dlc-chip-red-edge: #7c2a18;
+  --dlc-chip-red-ink: #fbf3e6;
+  --dlc-chip-blue: #2c4a6e;
+  --dlc-chip-blue-edge: #1e3450;
+  --dlc-chip-blue-ink: #f1f5fa;
+  --dlc-chip-legend: #5c3a6e;
+  --dlc-chip-legend-edge: #42264f;
+  --dlc-chip-legend-ink: #f6f0fa;
+
+  /* Wound-severity ramp (segments 1→5) */
+  --dlc-wound-empty: #efe7d5;
+  --dlc-wound-1: #c9a227; /* Light / Heavy   (sev 1–2) */
+  --dlc-wound-3: #c2621c; /* Serious / Critical (sev 3–4) */
+  --dlc-wound-5: #a03a24; /* Maimed          (sev 5) */
+
+  /* Wind meter */
+  --dlc-wind-ok: #6e5411;
+  --dlc-wind-warn: #c2621c;
+  --dlc-wind-danger: #a03a24;
+  --dlc-wind-empty: #e2d8c0;
+
+  /* Typography — same faces in BOTH themes */
+  --dlc-font-display: "Rye", Georgia, "Times New Roman", serif; /* names, once */
+  --dlc-font-head: "Cinzel", Georgia, serif; /* labels, section rules */
+  --dlc-font-body: "Libre Baskerville", Georgia, serif; /* prose */
+  --dlc-font-data: "Arvo", "Courier New", monospace; /* EVERY number */
+
+  /* Type scale */
+  --dlc-fs-name: 1.55rem; /* Rye character name  (~25px)  */
+  --dlc-fs-section: 0.7rem; /* Cinzel section title, .2em    */
+  --dlc-fs-label: 0.6rem; /* Cinzel stat/field label       */
+  --dlc-fs-body: 0.78rem; /* Baskerville body / aptitudes  */
+  --dlc-fs-data: 0.75rem; /* Arvo values                   */
+  --dlc-ls-section: 0.2em;
+  --dlc-ls-label: 0.14em;
+
+  /* Layout */
+  --dlc-portrait-size: 72px;
+  --dlc-sheet-pad: 1.25rem 1.5rem;
+  --dlc-section-gap: 1.1rem;
+  --dlc-radius: 4px;
+  --dlc-radius-pill: 11px;
+  --dlc-sheet-gap: 0.75rem; /* sheet section spacing — no design counterpart */
+  --dlc-pip-size: 10px; /* wound-track segment */
+
+  /* Buttons */
+  --dlc-btn-primary-bg: var(--dlc-rule-strong);
+  --dlc-btn-primary-ink: var(--dlc-card);
+  --dlc-btn-ghost-border: var(--dlc-brass);
+  --dlc-btn-ghost-ink: var(--dlc-brass-ink);
+
+  /* Hit target floor — any value a player edits mid-scene */
+  --dlc-target-min-w: 32px;
+  --dlc-target-min-h: 28px;
+}
+
+/* ── NIGHT THEME (sidebar: chat + combat tracker) ─────────────────────────── */
+/* Apply .dlc-night to the chat card / tracker root. Same token NAMES so the
+ * component rules are identical — only the values flip. */
+/* .dlc-chat-card / .dlc-roll-card: drop in M4, once .dlc-night reaches the markup. */
+.dlc-night,
+.dlc-chat-card,
+.dlc-roll-card {
+  --dlc-paper: #14100c;
+  --dlc-card: #1e1811;
+  --dlc-rule: #302719;
+  --dlc-rule-soft: #302719;
+  --dlc-rule-strong: #7a6027;
+
+  --dlc-ink: #f0e7d4;
+  --dlc-ink-soft: #cfc3ab;
+  --dlc-ink-muted: #a2937a; /* on --dlc-card night = 5.2:1 */
+  --dlc-hairline: #574936;
+
+  --dlc-brass: #d9ae55;
+  --dlc-brass-ink: #d9ae55;
+  --dlc-blood: #e27a5f;
+  --dlc-indigo: #4c7ba8;
+  --dlc-plum: #c6a3da;
+  --dlc-green: #9dbe8c;
+
+  --dlc-chip-white: #e8e1d0;
+  --dlc-chip-white-edge: #b6ab92;
+  --dlc-chip-white-ink: #14100c;
+  --dlc-chip-red: #c4533c;
+  --dlc-chip-red-edge: #8f3a28;
+  --dlc-chip-red-ink: #14100c;
+  --dlc-chip-blue: #4c7ba8;
+  --dlc-chip-blue-edge: #2c4a6e;
+  --dlc-chip-blue-ink: #14100c;
+  --dlc-chip-legend: #a87fc0;
+  --dlc-chip-legend-edge: #7a5c93;
+  --dlc-chip-legend-ink: #14100c;
+
+  --dlc-wound-empty: #241d15;
+  --dlc-wound-1: #d9ae55;
+  --dlc-wound-3: #de8a3c;
+  --dlc-wound-5: #d0563c;
+
+  --dlc-wind-ok: #d9ae55;
+  --dlc-wind-warn: #de8a3c;
+  --dlc-wind-danger: #d0563c;
+  --dlc-wind-empty: #2b2318;
+
+  --dlc-btn-primary-bg: var(--dlc-brass);
+  --dlc-btn-primary-ink: #14100c;
+  --dlc-btn-ghost-border: var(--dlc-rule);
+  --dlc-btn-ghost-ink: var(--dlc-ink-soft);
 }

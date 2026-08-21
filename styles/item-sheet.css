@@ -8,7 +8,7 @@
   gap: 0.5rem;
   align-items: start;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--dlc-color-gold);
+  border-bottom: 1px solid var(--dlc-brass);
   margin-bottom: 0.5rem;
 }
 
@@ -17,7 +17,7 @@
   height: 60px;
   object-fit: cover;
   border-radius: var(--dlc-radius);
-  border: 2px solid var(--dlc-color-gold);
+  border: 2px solid var(--dlc-brass);
 }
 
 /* ── Form rows ────────────────────────────────────────────────────────────── */
@@ -33,7 +33,7 @@
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.03em;
-  color: var(--dlc-color-muted);
+  color: var(--dlc-ink-muted);
   min-width: 6rem;
 }
 
@@ -50,20 +50,43 @@
   border: 1px solid currentColor;
 }
 
-.dlc-status-none    { color: var(--dlc-color-muted); }
-.dlc-status-devised { color: var(--dlc-color-gold); }
-.dlc-status-ready   { color: #2ecc71; }
-.dlc-status-failed  { color: var(--dlc-color-blood); }
+.dlc-status-none {
+  color: var(--dlc-ink-muted);
+}
+.dlc-status-devised {
+  color: var(--dlc-brass);
+}
+.dlc-status-ready {
+  color: #2ecc71;
+}
+.dlc-status-failed {
+  color: var(--dlc-blood);
+}
 
 /* ── Outcome labels ───────────────────────────────────────────────────────── */
 
-.dlc-outcome-win     { color: #2ecc71; }
-.dlc-outcome-neutral { color: var(--dlc-color-muted); }
-.dlc-outcome-loss    { color: var(--dlc-color-blood); }
+.dlc-outcome-win {
+  color: #2ecc71;
+}
+.dlc-outcome-neutral {
+  color: var(--dlc-ink-muted);
+}
+.dlc-outcome-loss {
+  color: var(--dlc-blood);
+}
 
 /* ── Last roll display ───────────────────────────────────────────────────── */
 
-.dlc-last-roll-label  { font-size: 0.7rem; color: var(--dlc-color-muted); }
-.dlc-last-roll-pc     { color: #2ecc71; }
-.dlc-last-roll-npc    { color: var(--dlc-color-blood); }
-.dlc-last-roll-outcome { font-weight: bold; }
+.dlc-last-roll-label {
+  font-size: 0.7rem;
+  color: var(--dlc-ink-muted);
+}
+.dlc-last-roll-pc {
+  color: #2ecc71;
+}
+.dlc-last-roll-npc {
+  color: var(--dlc-blood);
+}
+.dlc-last-roll-outcome {
+  font-weight: bold;
+}

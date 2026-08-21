@@ -38,19 +38,21 @@
   padding: 3px 5px;
   border-radius: var(--dlc-radius);
   border: 1px solid transparent;
-  transition: border-color 0.15s, background 0.15s;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
 }
 
 .dlc-wound.dlc-maimed {
-  border-color: var(--dlc-color-blood);
-  background: var(--dlc-color-blood-dim);
+  border-color: var(--dlc-blood);
+  background: color-mix(in srgb, var(--dlc-blood) 12%, transparent);
 }
 
 .dlc-wound-label {
   font-size: 0.75rem;
   white-space: nowrap;
   min-width: 5rem;
-  color: var(--dlc-color-muted);
+  color: var(--dlc-ink-muted);
 }
 
 /* Pip dots */
@@ -65,26 +67,26 @@
   width: var(--dlc-pip-size);
   height: var(--dlc-pip-size);
   border-radius: 50%;
-  background: var(--dlc-pip-empty);
+  background: var(--dlc-wound-empty);
   border: 1px solid #555;
   transition: background 0.1s;
 }
 
 .dlc-wound-pip.dlc-pip-filled {
-  background: var(--dlc-pip-light);
-  border-color: var(--dlc-pip-light);
+  background: var(--dlc-wound-1);
+  border-color: var(--dlc-wound-1);
 }
 
 /* Severity-aware pip colour — driven by wound severity class on the <li> */
 .dlc-wound[data-severity="3"] .dlc-wound-pip.dlc-pip-filled,
 .dlc-wound[data-severity="4"] .dlc-wound-pip.dlc-pip-filled {
-  background: var(--dlc-pip-serious);
-  border-color: var(--dlc-pip-serious);
+  background: var(--dlc-wound-3);
+  border-color: var(--dlc-wound-3);
 }
 
 .dlc-wound[data-severity="5"] .dlc-wound-pip.dlc-pip-filled {
-  background: var(--dlc-pip-maimed);
-  border-color: var(--dlc-pip-maimed);
+  background: var(--dlc-wound-5);
+  border-color: var(--dlc-wound-5);
 }
 
 /* Severity number input — small, tucked right */
@@ -98,7 +100,7 @@
 .dlc-wound-severity {
   font-size: 0.7rem;
   font-style: italic;
-  color: var(--dlc-color-blood);
+  color: var(--dlc-blood);
   white-space: nowrap;
 }
 
@@ -131,21 +133,21 @@
 }
 
 .dlc-wind-track .dlc-wind-sep {
-  color: var(--dlc-color-muted);
+  color: var(--dlc-ink-muted);
 }
 
 .dlc-wind-track .dlc-wind-max {
   font-size: 0.85rem;
-  color: var(--dlc-color-muted);
+  color: var(--dlc-ink-muted);
 }
 
 .dlc-winded-badge {
   font-size: 0.7rem;
   font-weight: bold;
-  color: var(--dlc-color-blood);
+  color: var(--dlc-blood);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   padding: 1px 5px;
-  border: 1px solid var(--dlc-color-blood);
+  border: 1px solid var(--dlc-blood);
   border-radius: var(--dlc-radius);
 }

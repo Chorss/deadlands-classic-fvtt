@@ -147,10 +147,10 @@ this fixed map.
   when there is no `paths:`).
 - They don't ask for anything, they state ("never V13 API", "EN/PL parity mandatory", "don't copy
   from the GPL reference tree").
-- Rules in this project: `commits.md`, `naming.md`, `code-quality.md` (always); `v14-api.md`,
-  `localization.md`, `references.md`, `rulebook-authority.md` (contextual).
+- Rules in this project: `commits.md`, `naming.md` (always); `code-quality.md`, `v14-api.md`,
+  `localization.md`, `references.md`, `rulebook-authority.md` (contextual, via `paths:`).
 
-**`.claude/skills/` + `.claude/commands/` — active procedures.**
+**`.claude/skills/` — active procedures.**
 - Invoked via `/name` in a prompt, or automatically when the `description:` semantically matches
   the task.
 - They do something ("scaffold an archetype", "verify a mechanic against the rulebook", "run the

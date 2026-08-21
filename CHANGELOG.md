@@ -16,6 +16,107 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   check), click-to-roll flow, and a two-client GM-proxy race regression.
   Local-only by design — CI cannot run licensed Foundry. Setup and usage:
   `docs/testing-e2e.md`.
+- `npm run verify:all` — one definition of "green" (manifest + EN/PL parity →
+  CSS coverage → i18n keys → unit tests), now shared by CI, the pre-commit hook
+  and the `/verify-system` skill. `tools/audit-i18n.mjs` was previously wired
+  into nothing and never ran outside a manual invocation.
+- `Stop` hook (`.claude/hooks/stop-verify.sh`) — runs `verify:all` before Claude
+  ends a turn with a dirty working tree. This is the only check that covers files
+  written through Bash (`sed -i`, heredocs, `>` redirection), which bypass the
+  `PostToolUse` `Write|Edit` hook entirely.
+- Enforced deny rules for `vendor/`, `books/`, `.pdf-extract/` and `LICENSE` —
+  previously prose in `CLAUDE.md` with nothing behind it.
+- Pre-commit branch running `audit-i18n` when `.mjs`, `.hbs` or `lang/` files
+  are staged.
+- `tools/audit-css.mjs` scans `module/**/*.mjs` alongside `templates/**/*.hbs`.
+  21 `dlc-*` classes are built in chat-card template literals and were invisible
+  to the audit. `templates/` stays a hard error; `module/` reports as a warning
+  while a backlog of 9 classes with no CSS rule at all (the Guts-check card) is
+  worked off, and flags anything added beyond it.
+- Dead-selector report in `audit-css` — selectors defined in `styles/` but used
+  nowhere (currently 14). Informational only, never affects the exit code.
+- Pre-commit runs `audit-css` on `.mjs` changes too, so a new class introduced in
+  JavaScript no longer slips past the gate.
+- `audit-css` collects bare `"dlc-*"` string literals in `module/`, catching the
+  classes applied through `classList.add()` and `DEFAULT_OPTIONS.classes`
+  (`dlc-initiative-*`, `dlc-hand-btn`, `dlc-hand-dialog`, `dlc-winded`) that never
+  appear inside a `class="…"` attribute.
+- CSS rules for the six template classes the audit could not previously see:
+  `dlc-unskilled`, `dlc-constructed`, `dlc-joker`, `dlc-joker-card`,
+  `dlc-card--joker`, `dlc-card--black`. The joker highlight in drawn-card lists and
+  the initiative hand had no styling at all.
+
+### Changed
+
+- **Ledger design tokens replace the old palette** (milestone M1 of the visual
+  redesign). `styles/_variables.css` now carries parchment surfaces for windows,
+  a night block for the sidebar, semantic accents, a five-step wound ramp,
+  fate-chip triples and a four-face type scale. The nine bundled `@font-face`
+  blocks are unchanged.
+- All 94 references to the retired `--dlc-color-*` and `--dlc-pip-{light,serious,
+  maimed,empty}` tokens were rewritten across the eleven component sheets. The
+  mapping is not 1:1 — the old names mixed role with value, so `--dlc-color-gold`
+  became `--dlc-brass`, `--dlc-color-muted` became `--dlc-ink-muted`, and the two
+  pre-baked `*-dim` alphas became `color-mix()` against the accent they tinted.
+  `--dlc-sheet-gap` and `--dlc-pip-size` keep their names; the design has no
+  counterpart for either.
+- Base primitives (`styles/_base.css`) rebuilt on the new tokens. All ten
+  existing classes keep their selectors, joined by thirteen helpers
+  (`.dlc-section-head`, `.dlc-block-end`, `.dlc-num`, the button variants, the
+  `.dlc-pill` family) that have no markup yet and so appear in the informational
+  dead-selector list until the layout lands.
+- Actor sheets and system dialogs paint their window from the parchment tokens.
+  Foundry's `.application` frame reads `--background`, `--color-border` and
+  `--color-text-primary`, so the sheet root re-points those rather than
+  restyling the chrome; the title bar is left to Foundry.
+- Chat and roll cards render on Foundry's dark sidebar but do not carry
+  `.dlc-night` yet, so the night token block also matches `.dlc-chat-card` and
+  `.dlc-roll-card`. That stopgap is removed once the class reaches the markup.
+- Slash commands migrated to skills: `.claude/commands/*.md` →
+  `.claude/skills/<name>/SKILL.md`, with `argument-hint` added for `release`,
+  `new-phase` and `add-archetype`.
+- `.claude/rules/` is now loaded natively by Claude Code instead of through
+  `@`-includes in `CLAUDE.md`. `code-quality.md` gained a `paths:` scope, so its
+  164 lines no longer load in sessions that never touch JavaScript.
+- Workshop docs (`CLAUDE.md`, `.claude/README.md`) rewritten to describe the
+  mechanisms that actually run, including which permission rules are enforced
+  and which are only a speed bump.
+- Biome now covers `styles/**/*.css` (`files.includes`), which previously checked
+  zero lines of CSS. `npm run fmt` reformatted 7 style files — whitespace only,
+  plus `rgba(0,0,0,.4)` → `rgba(0,0,0,0.4)`.
+
+### Fixed
+
+- Focus ring contrast. The indicator was hardcoded `#c8a44b`, which measures
+  1.9:1 against the parchment window and fails WCAG AA. It now uses
+  `--dlc-ink` (14:1 on the window bar, 15.4:1 on the sheet body) and flips to
+  brass on night surfaces.
+- `.claude/hooks/post-write.sh` exits 2 instead of 1 on a validation failure.
+  `PostToolUse` surfaces hook stderr to Claude only on exit code 2, so every
+  syntax and JSON check it performed was invisible to the model.
+- `.claude/hooks/post-extract-verify.sh` no longer spawns node processes on
+  unrelated Bash calls; a native `if: Bash(*extract-pdf.sh *)` filter gates it.
+- Dropped the redundant `.deadlands-classic.sheet :focus-visible` selector, which
+  tripped `lint/style/noDescendingSpecificity` and was already covered by the
+  `.deadlands-classic :focus-visible` selector sharing its rule. No visual change.
+- `audit-css` no longer loses classes written inside a Handlebars block. Splitting
+  `class="dlc-wound {{#if x}}dlc-maimed{{/if}}"` on whitespace left `dlc-maimed`
+  glued to `{{/if}}`, so it counted as neither used nor dynamic. Six template
+  classes with no CSS rule were passing the "hard error" gate, and 8 of the 14
+  reported dead selectors were live all along.
+- `audit-css` strips CSS comments before harvesting selectors. A class merely
+  *named* in a comment counted as defined, which both polluted the dead-selector
+  list and let a template use it with no rule behind it.
+- `MODULE_BACKLOG` is a frozen set of names rather than a count, so styling one
+  backlog class while adding another unstyled one no longer cancels out unnoticed.
+- Removed the dead `.dlc-wind-label` rule (`header.hbs` uses `.dlc-stat-label`) and
+  corrected a `blessed.css` comment naming a sin-severity vocabulary that does not
+  exist (`light`/`heavy`; the real values are `minor`/`major`/`mortal`).
+
+## [0.3.4] — 2026-07-06
+
+### Added
+
 - `tools/audit-i18n.mjs` (`npm run audit:i18n`) — flags `DEADLANDS.*` keys used
   in `module/` or `templates/` that don't exist in `lang/en.json`, the gap that
   `verify-documenttypes.mjs` (EN/PL parity only) can't catch.
@@ -276,7 +377,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `CombatantHandDialog` and initiative-value path corrections after V14 runtime testing.
 - Multiple V14 API compatibility fixes across archetype sheets and mechanics.
 
-[Unreleased]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.3.3...HEAD
+[Unreleased]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.3.4...HEAD
+[0.3.4]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.3.3...0.3.4
 [0.3.3]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.3.2...0.3.3
 [0.3.2]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.3.1...0.3.2
 [0.3.1]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.3.0...0.3.1
