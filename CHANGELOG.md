@@ -48,6 +48,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **M4 of the Ledger redesign: chat cards and the combat tracker.** Every
+  outcome class (`trait-roll.mjs`, `damage-roll.mjs`, `guts-check.mjs`,
+  `harrowed/mechanics.mjs`, the Fate Pot chip-draw card) is now a bare state —
+  `success`/`bust`/`failure`/`damage`/`arcane` — instead of a `dlc-`-prefixed
+  name, matching the `.dlc-rail-item.active` convention from M3. `dlc-night`
+  moves from the M1 sidebar stopgap onto every chat card directly (JS-built
+  and the 7 `templates/chat/*.hbs` cards alike), so `_variables.css`'s night
+  block now targets only `.dlc-night`. `chat.css` is rewritten to paint each
+  card's own background/border/padding and derive its outcome accent from the
+  bare state class. The combat tracker's Foundry-injected elements (initiative
+  label, hand-open button) carry `dlc-night` themselves, since nothing in
+  Foundry's own sidebar row supplies it. New Marshal-only Fate Pot widget
+  (`FatePotWidget`, `game.settings.registerMenu`) gives the session-draw and
+  pot-refill operations — previously console/macro-only — an actual UI, with
+  a confirmation prompt in front of the destructive refill. `audit-css`'s
+  module backlog drops from 15 entries to one deliberate exception
+  (`dlc-hand-dialog`, deferred to M6's dialog redesign).
 - **M3 of the Ledger redesign: the character sheet's actual layout, not just
   its tokens.** Masthead rebuilt around a 3px double rule (portrait + Rye name
   + Cinzel archetype line, sourced from Foundry's own `TYPES.Actor.<type>`
