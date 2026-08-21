@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "permissions": {
     "allow": [
       "Bash(node:*)",
@@ -35,6 +36,10 @@
       "WebSearch"
     ],
     "deny": [
+      "Edit(vendor/**)",
+      "Edit(books/**)",
+      "Edit(.pdf-extract/**)",
+      "Edit(LICENSE)",
       "Bash(rm -rf:*)",
       "Bash(rm -rf /)",
       "Bash(git push --force:*)",
@@ -61,7 +66,7 @@
     ],
     "PostToolUse": [
       {
-        "matcher": "Write|Edit|MultiEdit",
+        "matcher": "Write|Edit",
         "hooks": [
           {
             "type": "command",
@@ -74,7 +79,9 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/post-extract-verify.sh"
+            "command": ".claude/hooks/post-extract-verify.sh",
+            "if": "Bash(*extract-pdf.sh *)",
+            "statusMessage": "PDF quality gate"
           }
         ]
       }
