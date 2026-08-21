@@ -1,31 +1,70 @@
-/* Deadlands Classic — chat card styles (roll results, archetype results). */
+/* Deadlands Classic — chat card styles (roll results, archetype results).
+ * Every card carries .dlc-night (Foundry's sidebar is always dark) — see
+ * PLAN-MIGRACJI.md D3. The M1 stopgap that put .dlc-chat-card in the night
+ * token block is removed below: the class now supplies it on every card
+ * directly, so the stopgap would just be a second, redundant source of the
+ * same values.
+ */
 
 /* ── Shared chat card wrapper ─────────────────────────────────────────────── */
 
 .dlc-chat-card {
   font-family: var(--dlc-font-body);
-  font-size: 0.85rem;
+  font-size: 0.78rem;
   line-height: 1.4;
+  background: var(--dlc-card);
+  border: 1px solid var(--dlc-rule);
+  border-left: 3px solid var(--dlc-rule); /* overridden per outcome below */
+  border-radius: var(--dlc-radius);
+  padding: 0.5rem 0.7rem;
+  color: var(--dlc-ink);
+}
+
+/* Outcome accent — the border-left colour, set by the bare modifier class
+ * every JS-built card (trait-roll.mjs, damage-roll.mjs, guts-check.mjs,
+ * harrowed/mechanics.mjs) applies alongside dlc-chat-card. Unprefixed by
+ * design, same pattern as .dlc-rail-item.active (D2) — only meaningful
+ * combined with the dlc-chat-card ancestor. */
+.dlc-chat-card.success {
+  border-left-color: var(--dlc-green);
+}
+.dlc-chat-card.bust,
+.dlc-chat-card.damage,
+.dlc-chat-card.failure {
+  border-left-color: var(--dlc-blood);
+}
+.dlc-chat-card.arcane {
+  border-left-color: var(--dlc-plum);
 }
 
 .dlc-chat-header {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 0.4rem;
-  margin-bottom: 0.3rem;
-  padding-bottom: 0.3rem;
-  border-bottom: 1px solid var(--dlc-brass);
+  margin-bottom: 0.35rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--dlc-rule);
 }
 
 .dlc-actor-name {
   font-family: var(--dlc-font-display);
-  font-size: 0.85rem;
-  color: var(--dlc-brass);
+  font-size: 0.82rem;
+  color: var(--dlc-ink);
 }
 
 .dlc-chat-verb {
-  font-size: 0.8rem;
+  font-family: var(--dlc-font-head);
+  font-size: 0.56rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--dlc-ink-muted);
+}
+
+/* Title used by JS-built cards in place of dlc-chat-header (trait/guts rolls,
+ * the Dominion Roll card). */
+.dlc-roll-label {
+  font-weight: bold;
+  margin-bottom: 0.3rem;
 }
 
 /* ── Roll result block ────────────────────────────────────────────────────── */
@@ -43,36 +82,100 @@
 }
 
 .dlc-roll-total {
-  font-size: 1.2rem;
+  font-family: var(--dlc-font-data);
+  font-size: 1.3rem;
   font-weight: bold;
-  color: var(--dlc-brass);
+  color: var(--dlc-ink);
 }
 
 .dlc-raises {
-  font-size: 0.8rem;
+  font-family: var(--dlc-font-head);
+  font-size: 0.56rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   color: var(--dlc-green);
+}
+
+.dlc-roll-outcome {
+  font-weight: bold;
+  margin-top: 0.2rem;
+}
+.dlc-chat-card.success .dlc-roll-outcome {
+  color: var(--dlc-green);
+}
+.dlc-chat-card.bust .dlc-roll-outcome,
+.dlc-chat-card.damage .dlc-roll-outcome {
+  color: var(--dlc-blood);
+}
+.dlc-chat-card.failure .dlc-roll-outcome {
+  color: var(--dlc-ink-muted);
+}
+
+.dlc-tn {
+  font-family: var(--dlc-font-data);
+  color: var(--dlc-ink-muted);
+  font-size: 0.85rem;
+  margin-left: auto;
+}
+
+.dlc-modifier {
+  font-size: 0.85rem;
+}
+
+.dlc-armor {
+  font-size: 0.8rem;
+  color: var(--dlc-ink-muted);
+}
+
+/* Individual dice */
+.dlc-roll-dice {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-bottom: 0.2rem;
+}
+
+.dlc-die {
+  display: inline-block;
+  font-family: var(--dlc-font-data);
+  font-weight: 700;
+  font-size: 0.78rem;
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: var(--dlc-chip-white);
+  color: var(--dlc-chip-white-ink);
+  border: 1px solid var(--dlc-chip-white-edge);
+}
+
+.dlc-ace {
+  color: var(--dlc-brass);
 }
 
 /* ── Outcome messages ─────────────────────────────────────────────────────── */
 
+.dlc-success-msg,
+.dlc-fail-msg,
+.dlc-failure,
+.dlc-bust-msg {
+  font-family: var(--dlc-font-head);
+  font-weight: 700;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
 .dlc-success-msg {
   color: var(--dlc-green);
-  font-weight: bold;
-  font-size: 0.85rem;
 }
 
 .dlc-fail-msg,
 .dlc-failure {
   color: var(--dlc-blood);
-  font-weight: bold;
-  font-size: 0.85rem;
 }
 
 .dlc-bust-msg {
   color: var(--dlc-blood);
-  font-weight: bold;
   font-style: italic;
-  font-size: 0.85rem;
 }
 
 .dlc-success {
@@ -86,6 +189,30 @@
   font-style: italic;
 }
 
+/* ── Harrowed: Dominion Roll (module/archetypes/_overlays/harrowed/mechanics.mjs) ── */
+
+.dlc-harrowed-dominion .dlc-roll-label {
+  color: var(--dlc-plum);
+}
+
+.dlc-outcome {
+  font-family: var(--dlc-font-head);
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.dlc-chat-card.success .dlc-outcome {
+  color: var(--dlc-green);
+}
+.dlc-chat-card.bust .dlc-outcome {
+  color: var(--dlc-blood);
+}
+.dlc-chat-card.arcane .dlc-outcome {
+  color: var(--dlc-plum);
+}
+
 /* ── Archetype-specific chat messages ─────────────────────────────────────── */
 
 /* Backlash (Huckster) */
@@ -97,7 +224,7 @@
 
 .dlc-backlash-header {
   font-family: var(--dlc-font-display);
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   color: var(--dlc-blood);
 }
 
@@ -127,82 +254,21 @@
 
 .dlc-backlash-tag {
   display: inline-block;
-  font-size: 0.7rem;
+  font-family: var(--dlc-font-head);
+  font-size: 0.56rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  padding: 1px 5px;
+  padding: 3px 6px;
   border-radius: 3px;
   border: 1px solid var(--dlc-blood);
   color: var(--dlc-blood);
 }
 
-/* Manitou contest (Shaman) */
+/* Manitou contest (Shaman / Harrowed) */
 .dlc-manitou-msg {
+  font-family: var(--dlc-font-body);
   font-style: italic;
   color: var(--dlc-ink-muted);
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   margin-top: 0.2rem;
-}
-
-/* ── Roll result card (trait/damage/guts rolls, built in module/core/dice/) ──
- * `dlc-roll-card` unifies with `dlc-chat-card` in M4 (decision D3) — until
- * then this stays a separate wrapper with its own rules. */
-
-.dlc-roll-card {
-  border: 1px solid var(--dlc-rule);
-  border-radius: var(--dlc-radius);
-  padding: 0.4rem 0.6rem;
-  margin: 0.2rem 0;
-}
-
-.dlc-roll-label {
-  font-weight: bold;
-  margin-bottom: 0.3rem;
-}
-.dlc-roll-dice {
-  display: flex;
-  gap: 0.4rem;
-  flex-wrap: wrap;
-  margin-bottom: 0.2rem;
-}
-.dlc-die {
-  display: inline-block;
-  background: var(--dlc-chip-white);
-  color: var(--dlc-chip-white-ink);
-  border: 1px solid var(--dlc-chip-white-edge);
-  border-radius: 3px;
-  padding: 1px 5px;
-  font-family: var(--dlc-font-data);
-  font-size: 0.9rem;
-}
-.dlc-ace {
-  color: var(--dlc-brass);
-}
-.dlc-tn {
-  color: var(--dlc-ink-muted);
-  font-size: 0.85rem;
-}
-.dlc-modifier {
-  font-size: 0.85rem;
-}
-.dlc-roll-outcome {
-  font-weight: bold;
-  margin-top: 0.2rem;
-}
-
-.dlc-success .dlc-roll-outcome {
-  color: var(--dlc-green);
-}
-.dlc-bust .dlc-roll-outcome {
-  color: var(--dlc-blood);
-}
-.dlc-fail .dlc-roll-outcome {
-  color: var(--dlc-ink-muted);
-}
-.dlc-damage .dlc-roll-outcome {
-  color: var(--dlc-blood);
-}
-.dlc-armor {
-  font-size: 0.8rem;
-  color: var(--dlc-ink-muted);
 }
