@@ -1,7 +1,7 @@
 ---
 name: verify-system
 description: Full system sanity check — manifest, EN/PL parity, CSS coverage, i18n keys, unit tests. Runs the same two commands as CI and the pre-commit hook.
-allowed-tools: Bash(npm run lint:*), Bash(npm run verify:*), Bash(npm run test:*), Bash(node:*)
+allowed-tools: Bash(npm run lint), Bash(npm run lint:*), Bash(npm run verify:all), Bash(npm test), Bash(node:*)
 ---
 
 # Verify the system
