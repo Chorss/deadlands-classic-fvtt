@@ -23,6 +23,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   previously prose in `CLAUDE.md` with nothing behind it.
 - Pre-commit branch running `audit-i18n` when `.mjs`, `.hbs` or `lang/` files
   are staged.
+- `tools/audit-css.mjs` scans `module/**/*.mjs` alongside `templates/**/*.hbs`.
+  21 `dlc-*` classes are built in chat-card template literals and were invisible
+  to the audit. `templates/` stays a hard error; `module/` reports as a warning
+  while a backlog of 9 classes with no CSS rule at all (the Guts-check card) is
+  worked off, and flags anything added beyond it.
+- Dead-selector report in `audit-css` — selectors defined in `styles/` but used
+  nowhere (currently 14). Informational only, never affects the exit code.
+- Pre-commit runs `audit-css` on `.mjs` changes too, so a new class introduced in
+  JavaScript no longer slips past the gate.
 
 ### Changed
 
@@ -35,6 +44,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Workshop docs (`CLAUDE.md`, `.claude/README.md`) rewritten to describe the
   mechanisms that actually run, including which permission rules are enforced
   and which are only a speed bump.
+- Biome now covers `styles/**/*.css` (`files.includes`), which previously checked
+  zero lines of CSS. `npm run fmt` reformatted 7 style files — whitespace only,
+  plus `rgba(0,0,0,.4)` → `rgba(0,0,0,0.4)`.
 
 ### Fixed
 
@@ -43,6 +55,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   syntax and JSON check it performed was invisible to the model.
 - `.claude/hooks/post-extract-verify.sh` no longer spawns node processes on
   unrelated Bash calls; a native `if: Bash(*extract-pdf.sh *)` filter gates it.
+- Dropped the redundant `.deadlands-classic.sheet :focus-visible` selector, which
+  tripped `lint/style/noDescendingSpecificity` and was already covered by the
+  `.deadlands-classic :focus-visible` selector sharing its rule. No visual change.
 
 ## [0.3.4] — 2026-07-06
 
