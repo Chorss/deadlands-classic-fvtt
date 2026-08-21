@@ -1,5 +1,8 @@
 ---
-# No `paths:` — applies everywhere (auto-loaded via CLAUDE.md)
+paths:
+  - "module/**/*.mjs"
+  - "tools/**/*.mjs"
+  - "tests/**/*.mjs"
 ---
 
 # Code quality standards — JavaScript / .mjs
