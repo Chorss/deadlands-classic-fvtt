@@ -5,6 +5,27 @@
  * new tokens. New helper classes are marked  — NEW.
  * ==========================================================================*/
 
+/* ── Window surface ───────────────────────────────────────────────────────── */
+/* Foundry paints .application from --background and colours its text from
+ * --color-text-primary. No component rule here touches that chrome, so the
+ * parchment has to be handed to the core variables explicitly or the sheet
+ * keeps the stock dark frame. Markup checked against V14 build 364:
+ * .application > .window-header + .window-content. */
+.application.deadlands-classic {
+  --background: var(--dlc-paper);
+  --color-border: var(--dlc-rule-strong);
+  --color-text-primary: var(--dlc-ink);
+  --color-scheme: light; /* keep native widgets off the dark scheme */
+
+  color: var(--dlc-ink);
+  font-family: var(--dlc-font-body);
+}
+
+.application.deadlands-classic .window-content {
+  background: var(--dlc-card);
+  color: var(--dlc-ink);
+}
+
 /* ── Section heading = Cinzel label + hairline rule (no box) ───────────────── */
 .dlc-section-title,
 .dlc-section-heading,
