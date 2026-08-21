@@ -1,13 +1,15 @@
-{{!-- Harrowed overlay tab — shown only when isHarrowed=true. dlc p.194-199. --}}
+{{!-- Harrowed overlay tab — shown only when isHarrowed=true. dlc p.194-199, README A8. --}}
 <section class="tab dlc-harrowed {{tab.cssClass}}" data-group="sheet" data-tab="harrowed">
 
-  {{!-- Harrowed toggle --}}
-  <div class="dlc-harrowed-status">
+  <div class="dlc-harrowed-head">
+    <span class="dlc-harrowed-title">{{localize "DEADLANDS.Harrowed.Label"}}</span>
+    <span class="dlc-rule-fill"></span>
     <label class="dlc-harrowed-toggle">
-      <input type="checkbox" name="system.harrowed.isHarrowed"
+      <input type="checkbox" class="dlc-toggle-input" name="system.harrowed.isHarrowed"
         {{#if harrowed.isHarrowed}}checked{{/if}}
         {{#unless editable}}disabled{{/unless}} />
-      <span class="dlc-harrowed-label">{{localize "DEADLANDS.Harrowed.IsHarrowed.Label"}}</span>
+      <span class="dlc-toggle-track" aria-hidden="true"><span class="dlc-toggle-thumb"></span></span>
+      <span class="dlc-toggle-text">{{localize "DEADLANDS.Harrowed.IsHarrowed.Label"}}</span>
     </label>
   </div>
 
@@ -15,27 +17,29 @@
 
   {{!-- Dominion section. bod p.62, p.80-82. --}}
   <div class="dlc-harrowed-section">
-    <h2 class="dlc-section-title">{{localize "DEADLANDS.Harrowed.Dominion.Label"}}</h2>
+    <div class="dlc-section-head">
+      <h2 class="dlc-section-title">{{localize "DEADLANDS.Harrowed.Dominion.Label"}}</h2>
+      <span class="dlc-rule-fill"></span>
+    </div>
     <div class="dlc-dominion-row">
-      <div class="dlc-dominion-control">
-        <label for="dlc-dominion-spirit">{{localize "DEADLANDS.Harrowed.Dominion.SpiritControl"}}</label>
-        <input type="number" id="dlc-dominion-spirit" min="0" name="system.harrowed.dominion.spiritControl"
-          value="{{harrowed.dominion.spiritControl}}"
-          {{#unless editable}}disabled{{/unless}} />
-      </div>
-      <button type="button" class="dlc-dominion-roll-btn" data-action="dominionRoll"
+      <label for="dlc-dominion-spirit">{{localize "DEADLANDS.Harrowed.Dominion.SpiritControl"}}</label>
+      <input type="number" id="dlc-dominion-spirit" class="dlc-num" min="0"
+        name="system.harrowed.dominion.spiritControl" value="{{harrowed.dominion.spiritControl}}"
+        {{#unless editable}}disabled{{/unless}} />
+      <button type="button" class="dlc-btn-plum dlc-dominion-roll-btn" data-action="dominionRoll"
         aria-label="{{localize 'DEADLANDS.Harrowed.Dominion.Roll.Button'}}">
-        <i class="fas fa-dice-d6" aria-hidden="true"></i>
         {{localize "DEADLANDS.Harrowed.Dominion.Roll.Button"}}
       </button>
     </div>
 
     {{!-- Last roll result display --}}
     {{#if harrowed.dominion.lastRoll}}
-    <div class="dlc-dominion-last-roll">
-      <span class="dlc-last-roll-label">{{localize "DEADLANDS.Harrowed.Dominion.LastRoll"}}</span>
-      <span class="dlc-last-roll-pc">{{localize "DEADLANDS.Harrowed.Dominion.PCTotal"}}: {{harrowed.dominion.lastRoll.pcTotal}}</span>
-      <span class="dlc-last-roll-npc">{{localize "DEADLANDS.Harrowed.Dominion.NpcTotal"}}: {{harrowed.dominion.lastRoll.npcTotal}}</span>
+    <p class="dlc-dominion-last-roll">
+      <span class="dlc-last-roll-label">{{localize "DEADLANDS.Harrowed.Dominion.LastRoll"}}</span> —
+      {{localize "DEADLANDS.Harrowed.Dominion.PCTotal"}}
+      <span class="dlc-num">{{harrowed.dominion.lastRoll.pcTotal}}</span>,
+      {{localize "DEADLANDS.Harrowed.Dominion.NpcTotal"}}
+      <span class="dlc-num">{{harrowed.dominion.lastRoll.npcTotal}}</span>.
       {{#if (eq harrowed.dominion.lastRoll.winner "pc")}}
         <span class="dlc-last-roll-outcome dlc-outcome-win">{{localize "DEADLANDS.Harrowed.Dominion.PCWins"}}</span>
       {{else if (eq harrowed.dominion.lastRoll.winner "manitou")}}
@@ -43,20 +47,24 @@
       {{else}}
         <span class="dlc-last-roll-outcome dlc-outcome-neutral">{{localize "DEADLANDS.Harrowed.Dominion.NoChange"}}</span>
       {{/if}}
-    </div>
+    </p>
     {{/if}}
   </div>
 
   {{!-- Harrowed Powers. dlc p.196-199, bod p.19-60. --}}
   <div class="dlc-harrowed-section">
-    <h2 class="dlc-section-title">{{localize "DEADLANDS.Harrowed.Powers.Label"}}</h2>
+    <div class="dlc-section-head">
+      <h2 class="dlc-section-title">{{localize "DEADLANDS.Harrowed.Powers.Label"}}</h2>
+      <span class="dlc-rule-fill"></span>
+    </div>
     {{#if harrowed.powers.length}}
     <ul class="dlc-powers-list">
       {{#each harrowed.powers as |power|}}
-      <li class="dlc-power dlc-power-{{power.kind}}">
+      <li class="dlc-power">
         <span class="dlc-power-name">{{power.name}}</span>
-        <span class="dlc-power-level">{{localize "DEADLANDS.Harrowed.Powers.Level"}}: {{power.level}}</span>
-        <span class="dlc-power-kind dlc-chip-badge">{{power.kind}}</span>
+        <span class="dlc-leader" aria-hidden="true"></span>
+        <span class="dlc-power-kind dlc-pill dlc-pill-plum">{{power.kind}}</span>
+        <span class="dlc-power-level dlc-num">{{power.level}}</span>
       </li>
       {{/each}}
     </ul>
@@ -67,7 +75,10 @@
 
   {{!-- Counting Coup. dlc p.198, bod p.70, p.100-102. --}}
   <div class="dlc-harrowed-section">
-    <h2 class="dlc-section-title">{{localize "DEADLANDS.Harrowed.CountingCoup.Label"}}</h2>
+    <div class="dlc-section-head">
+      <h2 class="dlc-section-title">{{localize "DEADLANDS.Harrowed.CountingCoup.Label"}}</h2>
+      <span class="dlc-rule-fill"></span>
+    </div>
     {{#if harrowed.coup.length}}
     <ul class="dlc-coup-list">
       {{#each harrowed.coup as |coup|}}
@@ -75,7 +86,7 @@
         <span class="dlc-coup-source">{{coup.source}}</span>
         <span class="dlc-coup-power">{{coup.power}}</span>
         {{#if coup.taint}}
-        <span class="dlc-coup-taint dlc-warn">{{coup.taint}}</span>
+        <span class="dlc-coup-taint">{{coup.taint}}</span>
         {{/if}}
       </li>
       {{/each}}
