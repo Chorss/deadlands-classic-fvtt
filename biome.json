@@ -5,6 +5,7 @@
       "module/**/*.mjs",
       "tools/**/*.mjs",
       "tests/**/*.mjs",
+      "styles/**/*.css",
       "lang/**/*.json",
       "system.json",
       "package.json",
