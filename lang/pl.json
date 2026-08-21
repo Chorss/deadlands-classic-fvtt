@@ -486,6 +486,9 @@
 
   "DEADLANDS.Dialog.Modifier": "Modyfikator",
   "DEADLANDS.Dialog.WhiteChips": "Wydawane białe sztony",
+  "DEADLANDS.Dialog.Stepper.Decrease": "Zmniejsz",
+  "DEADLANDS.Dialog.Stepper.Increase": "Zwiększ",
+  "DEADLANDS.Dialog.Stepper.Of": "z",
 
   "DEADLANDS.Harrowed.Label": "Wygrzebany",
   "DEADLANDS.Harrowed.Sheet.Tab.Label": "Wygrzebany",

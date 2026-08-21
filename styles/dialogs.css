@@ -133,16 +133,129 @@
   flex-direction: column;
   gap: 0.6rem;
   padding: 0.4rem 0;
-  min-width: 220px;
+  min-width: 260px;
 }
 
-.dlc-roll-dialog-label {
+/* Masthead — kicker (dialog title, small caps) + the roll's own label (Rye,
+ * matches the sheet's own name treatment). Shared by every archetype dialog
+ * this file styles (M6). */
+.dlc-dialog-kicker {
   font-family: var(--dlc-font-head);
-  font-weight: bold;
-  font-size: 1rem;
-  text-align: center;
+  font-size: 0.56rem;
+  letter-spacing: var(--dlc-ls-label);
+  text-transform: uppercase;
+  color: var(--dlc-ink-muted);
+}
+
+.dlc-dialog-title {
+  font-family: var(--dlc-font-display);
+  font-size: 1.1rem;
   color: var(--dlc-ink);
   padding-bottom: 0.4rem;
   border-bottom: 1px solid var(--dlc-rule);
-  margin-bottom: 0.2rem;
+}
+
+.dlc-dialog-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.dlc-dialog-field-label {
+  font-family: var(--dlc-font-head);
+  font-size: 0.56rem;
+  letter-spacing: var(--dlc-ls-label);
+  text-transform: uppercase;
+  color: var(--dlc-ink-muted);
+}
+
+/* ── TN picker — segmented radio group, one pill per TN choice ───────────── */
+
+.dlc-tn-picker {
+  display: flex;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+
+.dlc-tn-option {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  padding: 0.3em 0.6em;
+  border: 1px solid var(--dlc-rule);
+  border-radius: var(--dlc-radius);
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+
+/* The radio itself stays in the DOM (keyboard/AT operable) but visually
+ * hidden — the label + :has() below carries the selected look. */
+.dlc-tn-option input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.dlc-tn-option-value {
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.dlc-tn-option-label {
+  font-size: 0.68rem;
+  color: var(--dlc-ink-muted);
+}
+
+.dlc-tn-option:has(input:checked) {
+  background: var(--dlc-btn-primary-bg);
+  border-color: var(--dlc-btn-primary-bg);
+}
+
+.dlc-tn-option:has(input:checked) .dlc-tn-option-value,
+.dlc-tn-option:has(input:checked) .dlc-tn-option-label {
+  color: var(--dlc-btn-primary-ink);
+}
+
+.dlc-tn-option:has(input:focus-visible) {
+  outline: 2px solid var(--dlc-ink);
+  outline-offset: 1px;
+}
+
+/* ── Stepper — modifier +/- flanking a plain numeric input ───────────────── */
+
+.dlc-stepper,
+.dlc-spend-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.dlc-stepper-btn {
+  cursor: pointer;
+  background: none;
+  border: 1px solid var(--dlc-btn-ghost-border);
+  border-radius: var(--dlc-radius);
+  color: var(--dlc-btn-ghost-ink);
+  font-family: var(--dlc-font-data);
+  font-weight: 700;
+  width: 1.6rem;
+  height: 1.6rem;
+  line-height: 1;
+}
+
+.dlc-stepper-btn:hover {
+  background: color-mix(in srgb, var(--dlc-brass) 14%, transparent);
+}
+
+.dlc-stepper-input {
+  width: 3rem;
+  text-align: center;
+}
+
+.dlc-spend-avail {
+  font-size: 0.7rem;
+  color: var(--dlc-ink-muted);
 }

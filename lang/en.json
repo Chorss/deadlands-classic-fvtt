@@ -486,6 +486,9 @@
 
   "DEADLANDS.Dialog.Modifier": "Modifier",
   "DEADLANDS.Dialog.WhiteChips": "White chips to spend",
+  "DEADLANDS.Dialog.Stepper.Decrease": "Decrease",
+  "DEADLANDS.Dialog.Stepper.Increase": "Increase",
+  "DEADLANDS.Dialog.Stepper.Of": "of",
 
   "DEADLANDS.Harrowed.Label": "Harrowed",
   "DEADLANDS.Harrowed.Sheet.Tab.Label": "Harrowed",
