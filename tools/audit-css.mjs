@@ -5,15 +5,11 @@
  * Greps every `dlc-*` class from `templates/*.hbs` and `module/*.mjs` and checks
  * that a corresponding CSS selector exists in `styles/*.css`.
  *
- * Two severity levels, on purpose:
- *   templates/  → error   (exit 1) — the long-standing contract, kept strict.
- *   module/     → warning (exit 0) — chat cards and injected UI start with a known
- *                 backlog of unstyled classes (see MODULE_BACKLOG). M4 closed all
- *                 of it except `dlc-hand-dialog`, which belongs to M6 (the dialog
- *                 whose content, `combatant-hand.hbs`, M6 redesigns) — kept as a
- *                 single deliberate, disclosed exception rather than an invented
- *                 rule with nothing to style yet. Flipping module/ to an error is
- *                 fair game once that one closes too.
+ * templates/ and module/ are both an error (exit 1) — the long-standing template
+ * contract, plus module/ as of M6, which closed the last entry of MODULE_BACKLOG
+ * (`dlc-hand-dialog`, CombatantHandDialog's root class — see styles/dialogs.css).
+ * MODULE_BACKLOG is kept as an empty, documented set rather than deleted so a
+ * future regression has somewhere deliberate to go if it's ever excused again.
  *
  * Also reports selectors defined in styles/ that nothing uses, split by confidence:
  * genuinely dead vs. probably reached through a dynamic fragment. Informational
@@ -27,8 +23,8 @@
  * Skips dynamic class fragments (e.g. `dlc-chip-{{color}}`, `${outcomeClass}`) —
  * these cannot be statically resolved and are reported separately as a note.
  *
- * Exit 0  — all template classes covered.
- * Exit 1  — uncovered template classes found (prints a list).
+ * Exit 0  — all template and module classes covered.
+ * Exit 1  — uncovered template and/or module classes found (prints a list).
  *
  * Used by: `npm run verify:all` (hence CI and `/verify-system`) and
  *   `.githooks/pre-commit` on *.hbs, *.css or *.mjs changes.
@@ -41,16 +37,12 @@ import { fileURLToPath } from "node:url";
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 /**
- * Classes used in `module/` that have no CSS rule at all — an existing gap, not a
- * regression. Frozen as names rather than a count so a one-for-one swap (style
- * one, add another) still trips the warning.
- *
- * M4 (chat cards + tracker) closed every entry but one: `dlc-hand-dialog` is the
- * root class of CombatantHandDialog, whose content template (`combatant-hand.hbs`)
- * M6 redesigns — giving the root a rule now, with nothing in it to style yet,
- * would just be inventing busywork ahead of that stage.
+ * Classes used in `module/` deliberately excused from the coverage check — a
+ * disclosed exception, not silent drift. Empty since M6 closed the last entry
+ * (`dlc-hand-dialog`); frozen as names rather than a count so a one-for-one
+ * swap (style one, add another) still trips the check.
  */
-const MODULE_BACKLOG = new Set(["dlc-hand-dialog"]);
+const MODULE_BACKLOG = new Set([]);
 
 function collectFiles(dir, ext) {
   if (!fs.existsSync(dir)) {
@@ -198,42 +190,43 @@ function reportUnusedSelectors() {
   );
 }
 
-function reportModuleWarnings() {
+function reportModuleFailures() {
   if (missingFromModule.length === 0) {
     return;
   }
   const unexpected = missingFromModule.filter((c) => !MODULE_BACKLOG.has(c));
-  console.warn(
-    `\naudit-css WARNING — ${missingFromModule.length} class(es) used in module/ but missing from styles/:`
+  console.error(
+    `\naudit-css FAILED — ${missingFromModule.length} class(es) used in module/ but missing from styles/:`
   );
   for (const c of missingFromModule) {
-    console.warn(`  .${c}${MODULE_BACKLOG.has(c) ? "" : "   ← NOT in the known backlog"}`);
+    console.error(`  .${c}${MODULE_BACKLOG.has(c) ? "" : "   ← NOT in the known backlog"}`);
   }
   if (unexpected.length > 0) {
-    console.warn(
-      `\n  ${unexpected.length} class(es) outside the known backlog (fixed in M4) — ` +
+    console.error(
+      `\n  ${unexpected.length} class(es) outside the known backlog — ` +
         "add the CSS rules, or extend MODULE_BACKLOG deliberately."
     );
   }
 }
 
-if (missingFromTemplates.length > 0) {
-  console.error(
-    `audit-css FAILED — ${missingFromTemplates.length} class(es) used in templates but missing from styles/:\n`
-  );
-  for (const c of missingFromTemplates) {
-    console.error(`  .${c}`);
+if (missingFromTemplates.length > 0 || missingFromModule.length > 0) {
+  if (missingFromTemplates.length > 0) {
+    console.error(
+      `audit-css FAILED — ${missingFromTemplates.length} class(es) used in templates but missing from styles/:\n`
+    );
+    for (const c of missingFromTemplates) {
+      console.error(`  .${c}`);
+    }
   }
   reportDynamicFragments((m) => console.error(m));
-  reportModuleWarnings();
+  reportModuleFailures();
   process.exit(1);
 }
 
 console.log(
   `audit-css OK — ${templateClasses.size} template + ${moduleClasses.size} module class(es), ` +
-    "all template classes covered."
+    "all template and module classes covered."
 );
 reportDynamicFragments((m) => console.log(m));
-reportModuleWarnings();
 reportUnusedSelectors();
 process.exit(0);
