@@ -1,6 +1,10 @@
-/* Deadlands Classic — Shaman archetype styles (favors, appeasement, ritual). */
+/* Deadlands Classic — Shaman archetype styles (favors, appeasement, ritual).
+ * No README pattern (M5) — composed from the Hexes-tab primitives.
+ */
 
-/* ── Favors tab ───────────────────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════════════
+   FAVORS TAB (M5)
+   ═══════════════════════════════════════════════════════════════════════════ */
 
 .dlc-favors {
   display: flex;
@@ -8,56 +12,45 @@
   gap: var(--dlc-section-gap);
 }
 
-.dlc-favor-table,
-.dlc-favor-list {
-  width: 100%;
-}
+/* ── Ritual aptitude / Appeasement stat rows — shared .dlc-ritual-stat, same
+   shape as the Hexslingin' and Faith stat rows. ──────────────────────────── */
 
-.dlc-favor-row {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 3px 4px;
-  border-radius: var(--dlc-radius);
-}
-
-.dlc-favor-row:hover {
-  background: color-mix(in srgb, var(--dlc-brass) 14%, transparent);
-}
-
-.dlc-favor-name {
-  flex: 1;
-  font-size: 0.85rem;
-}
-
-.dlc-favor-actions {
-  display: flex;
-  gap: 3px;
-}
-
-.dlc-use-btn {
-  font-size: 0.7rem;
-  padding: 1px 6px;
-}
-
-/* ── Appeasement pool ─────────────────────────────────────────────────────── */
-
-.dlc-appeasement {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-
+.dlc-ritual-row,
 .dlc-appeasement-row {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1.1rem;
+  flex-wrap: wrap;
+}
+
+.dlc-ritual-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.dlc-ritual-stat label {
+  font-family: var(--dlc-font-head);
+  font-size: 0.56rem;
+  letter-spacing: var(--dlc-ls-label);
+  text-transform: uppercase;
+  color: var(--dlc-ink-muted);
+}
+
+.dlc-ritual-stat input {
+  width: 2.6rem;
+  text-align: center;
+}
+
+.dlc-ritual-divider {
+  width: 1px;
+  height: 1.2rem;
+  background: var(--dlc-rule);
 }
 
 .dlc-appeasement-pool {
-  font-size: 1rem;
-  font-weight: bold;
-  color: var(--dlc-brass);
+  font-size: 0.85rem;
+  color: var(--dlc-ink-soft);
 }
 
 .dlc-appeasement-note {
@@ -66,24 +59,63 @@
   color: var(--dlc-ink-muted);
 }
 
-/* ── Ritual ───────────────────────────────────────────────────────────────── */
+/* ── Favor list — grid table, same shape as the Huckster hex table ───────── */
 
-.dlc-ritual {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+.dlc-favor-table {
+  display: grid;
+  grid-template-columns: 1.6fr 0.8fr 0.8fr 0.6fr 0.5fr 0.7fr auto;
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.dlc-ritual-row {
+.dlc-favor-table thead,
+.dlc-favor-table tbody,
+.dlc-favor-head,
+.dlc-favor-row {
+  display: contents;
+}
+
+.dlc-favor-head th {
+  font-family: var(--dlc-font-head);
+  font-size: 0.5rem;
+  letter-spacing: var(--dlc-ls-label);
+  text-transform: uppercase;
+  color: var(--dlc-ink-muted);
+  text-align: left;
+  font-weight: 400;
+  padding: 0 0.2rem 0.4rem;
+  border-bottom: 1px solid var(--dlc-rule-strong);
+}
+
+.dlc-favor-row td {
+  padding: 0.4rem 0.2rem;
+  border-bottom: 1px solid var(--dlc-rule-soft);
+  font-size: 0.75rem;
+}
+
+.dlc-favor-name {
   display: flex;
   align-items: center;
   gap: 0.4rem;
+  font-family: var(--dlc-font-body);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.dlc-favor-actions {
+  display: flex;
+  gap: 4px;
+  justify-content: flex-end;
 }
 
 .dlc-ritual-btn {
-  font-size: 0.7rem;
-  padding: 1px 6px;
+  padding: 0.3em 0.7em;
+  font-size: 0.55rem;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CHAT CARD (module/archetypes/shaman/mechanics.mjs, dlc-night shell from M4)
+   ═══════════════════════════════════════════════════════════════════════════ */
 
 .dlc-ritual-result,
 .dlc-ritual-outcome {
