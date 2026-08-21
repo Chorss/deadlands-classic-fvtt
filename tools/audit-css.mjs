@@ -7,14 +7,18 @@
  *
  * Two severity levels, on purpose:
  *   templates/  → error   (exit 1) — the long-standing contract, kept strict.
- *   module/     → warning (exit 0) — chat cards built in template literals start
- *                 with a known backlog of unstyled classes (see MODULE_BACKLOG).
- *                 Flipping this to an error is the closing criterion of the
- *                 Ledger migration stage M4.
+ *   module/     → warning (exit 0) — chat cards and injected UI start with a known
+ *                 backlog of unstyled classes (see MODULE_BACKLOG). Flipping this
+ *                 to an error is the closing criterion of Ledger stage M4.
  *
- * Also reports dead selectors (defined in styles/ but used nowhere). That report
- * is informational only and never affects the exit code — during a UI migration
- * CSS legitimately lands before the markup that consumes it.
+ * Also reports selectors defined in styles/ that nothing uses, split by confidence:
+ * genuinely dead vs. probably reached through a dynamic fragment. Informational
+ * only, never affects the exit code — during a UI migration CSS legitimately lands
+ * before the markup that consumes it.
+ *
+ * Classes are collected from `class="…"` attributes and, in `.mjs`, from bare
+ * `"dlc-*"` string literals — `classList.add()`, `DEFAULT_OPTIONS.classes` and
+ * computed class names never appear inside a `class="…"` attribute.
  *
  * Skips dynamic class fragments (e.g. `dlc-chip-{{color}}`, `${outcomeClass}`) —
  * these cannot be statically resolved and are reported separately as a note.
@@ -22,8 +26,8 @@
  * Exit 0  — all template classes covered.
  * Exit 1  — uncovered template classes found (prints a list).
  *
- * Used by: `/verify-system`, `.githooks/pre-commit` (on *.hbs, *.css or *.mjs
- *   changes), PostToolUse hook for templates/ and styles/ edits.
+ * Used by: `npm run verify:all` (hence CI and `/verify-system`) and
+ *   `.githooks/pre-commit` on *.hbs, *.css or *.mjs changes.
  */
 
 import fs from "node:fs";
@@ -32,8 +36,28 @@ import { fileURLToPath } from "node:url";
 
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
-/** Known unstyled classes in module/ — an existing gap, not a regression. Fixed in stage M4. */
-const MODULE_BACKLOG = 9;
+/**
+ * Classes used in `module/` that have no CSS rule at all — an existing gap, not a
+ * regression, fixed in Ledger stage M4. Frozen as names rather than a count so a
+ * one-for-one swap (style one, add another) still trips the warning.
+ */
+const MODULE_BACKLOG = new Set([
+  "dlc-chip-draw",
+  "dlc-gm-note",
+  "dlc-hand-btn",
+  "dlc-hand-dialog",
+  "dlc-initiative-black-joker",
+  "dlc-initiative-card",
+  "dlc-initiative-label",
+  "dlc-initiative-red-joker",
+  "dlc-outcome",
+  "dlc-scart-effect",
+  "dlc-scart-note",
+  "dlc-scart-result",
+  "dlc-scart-roll",
+  "dlc-wind-lost",
+  "dlc-winded",
+]);
 
 function collectFiles(dir, ext) {
   if (!fs.existsSync(dir)) {
@@ -46,14 +70,45 @@ function collectFiles(dir, ext) {
 }
 
 const classRe = /class="([^"]+)"/g;
+// A `dlc-*` class name as a standalone string literal — how classList.add(),
+// DEFAULT_OPTIONS.classes and computed class names reach the DOM.
+const literalRe = /["'`](dlc-[a-z][a-z0-9-]*)["'`]/g;
+// Handlebars *block* syntax. Stripped before splitting the attribute, otherwise a
+// class inside a block sticks to `}}`/`{{/if}}` and is lost in the split.
+const hbBlockRe = /\{\{[#/][^}]*\}\}|\{\{\s*else[^}]*\}\}/g;
 // No `g` flag here — test() with a stateful regex alternates true/false (lastIndex bug).
 // Matches a Handlebars expression or a JS template-literal interpolation.
 const tokenRe = /\{\{[^}]+\}\}|\$\{[^}]*\}/;
 // A `${…}` that is a whitespace-separated token of its own, so splitting the
 // attribute loses it entirely (`class="dlc-roll-card ${outcomeClass}"`).
 const bareInterpolationRe = /(^|\s)\$\{[^}]*\}/;
+const cssCommentRe = /\/\*[\s\S]*?\*\//g;
 
 const dynamicFragments = new Set();
+
+/**
+ * Sort the `dlc-*` tokens of one `class="…"` attribute into static and dynamic.
+ *
+ * @param {string} attr Raw attribute value.
+ * @param {Set<string>} used Receives statically resolvable class names.
+ */
+function collectFromAttribute(attr, used) {
+  // A bare interpolation carries no `dlc-` prefix of its own, so the token split
+  // drops it — record the whole attribute instead so it stays visible.
+  if (bareInterpolationRe.test(attr)) {
+    dynamicFragments.add(attr.replace(/\s+/g, " ").trim());
+  }
+  for (const token of attr.replace(hbBlockRe, " ").split(/\s+/)) {
+    if (!token.startsWith("dlc-")) {
+      continue;
+    }
+    if (tokenRe.test(token)) {
+      dynamicFragments.add(token);
+    } else {
+      used.add(token);
+    }
+  }
+}
 
 /**
  * Collect the static `dlc-*` classes used across a source tree.
@@ -61,26 +116,19 @@ const dynamicFragments = new Set();
  *
  * @param {string} dir Directory to walk, relative to the repo root.
  * @param {string} ext File extension to scan (".hbs", ".mjs").
+ * @param {boolean} scanLiterals Also collect bare `"dlc-*"` string literals.
  * @returns {Set<string>} Statically resolvable class names.
  */
-function collectUsedClasses(dir, ext) {
+function collectUsedClasses(dir, ext, scanLiterals) {
   const used = new Set();
   for (const file of collectFiles(path.join(REPO_ROOT, dir), ext)) {
     const src = fs.readFileSync(file, "utf8");
     for (const match of src.matchAll(classRe)) {
-      const attr = match[1];
-      const tokens = attr.split(/\s+/).filter((t) => t.startsWith("dlc-"));
-      // A bare interpolation carries no `dlc-` prefix of its own, so the token split
-      // drops it — record the whole attribute instead so it stays visible.
-      if (tokens.length > 0 && bareInterpolationRe.test(attr)) {
-        dynamicFragments.add(attr);
-      }
-      for (const token of tokens) {
-        if (tokenRe.test(token)) {
-          dynamicFragments.add(token);
-        } else {
-          used.add(token);
-        }
+      collectFromAttribute(match[1], used);
+    }
+    if (scanLiterals) {
+      for (const match of src.matchAll(literalRe)) {
+        used.add(match[1]);
       }
     }
   }
@@ -88,15 +136,17 @@ function collectUsedClasses(dir, ext) {
 }
 
 // --- collect classes from templates and module code ---
-const templateClasses = collectUsedClasses("templates", ".hbs");
-const moduleClasses = collectUsedClasses("module", ".mjs");
+const templateClasses = collectUsedClasses("templates", ".hbs", false);
+const moduleClasses = collectUsedClasses("module", ".mjs", true);
 
 // --- collect selectors from styles ---
 const selectorRe = /\.(dlc-[a-z][a-z0-9-]*)/g;
 
 const definedClasses = new Set();
 for (const file of collectFiles(path.join(REPO_ROOT, "styles"), ".css")) {
-  const src = fs.readFileSync(file, "utf8");
+  // Comments are stripped first — a class named only in a comment is not defined,
+  // and treating it as such punches a hole in the template gate.
+  const src = fs.readFileSync(file, "utf8").replace(cssCommentRe, " ");
   for (const match of src.matchAll(selectorRe)) {
     definedClasses.add(match[1]);
   }
@@ -107,7 +157,15 @@ const missingFromTemplates = [...templateClasses].filter((c) => !definedClasses.
 const missingFromModule = [...moduleClasses].filter((c) => !definedClasses.has(c)).sort();
 
 const allUsed = new Set([...templateClasses, ...moduleClasses]);
-const deadSelectors = [...definedClasses].filter((c) => !allUsed.has(c)).sort();
+// Static prefix of each dynamic fragment (`dlc-chip-{{chip.color}}` → `dlc-chip-`).
+// A bare `dlc-` prefix (from `dlc-{{group.id}}`) matches everything, so it is dropped.
+const dynamicPrefixes = [...dynamicFragments]
+  .map((f) => f.match(/^(dlc-[a-z0-9-]*?)\{\{/)?.[1])
+  .filter((p) => p && p.length > "dlc-".length);
+
+const unusedSelectors = [...definedClasses].filter((c) => !allUsed.has(c)).sort();
+const maybeCovered = unusedSelectors.filter((c) => dynamicPrefixes.some((p) => c.startsWith(p)));
+const deadSelectors = unusedSelectors.filter((c) => !maybeCovered.includes(c));
 
 function reportDynamicFragments(write) {
   if (dynamicFragments.size === 0) {
@@ -119,37 +177,49 @@ function reportDynamicFragments(write) {
   }
 }
 
+function reportList(heading, classes) {
+  if (classes.length === 0) {
+    return;
+  }
+  console.log(heading);
+  for (const c of classes) {
+    console.log(`    .${c}`);
+  }
+}
+
 /** Informational only — a migration puts CSS in place before the markup that uses it. */
-function reportDeadSelectors() {
-  if (deadSelectors.length === 0) {
+function reportUnusedSelectors() {
+  if (unusedSelectors.length === 0) {
     console.log("\n  dead selectors: none.");
     return;
   }
-  console.log(
-    `\n  note: ${deadSelectors.length} selector(s) defined in styles/ but used nowhere` +
-      " (informational — does not affect the exit code):"
+  console.log("\n  (informational — the sections below do not affect the exit code)");
+  reportList(
+    `\n  ${deadSelectors.length} selector(s) defined in styles/ but used nowhere:`,
+    deadSelectors
   );
-  for (const c of deadSelectors) {
-    console.log(`    .${c}`);
-  }
+  reportList(
+    `\n  ${maybeCovered.length} selector(s) with no static use, probably reached ` +
+      "through a dynamic fragment:",
+    maybeCovered
+  );
 }
 
 function reportModuleWarnings() {
   if (missingFromModule.length === 0) {
     return;
   }
-  const known = missingFromModule.length <= MODULE_BACKLOG ? " (known backlog, fixed in M4)" : "";
+  const unexpected = missingFromModule.filter((c) => !MODULE_BACKLOG.has(c));
   console.warn(
-    `\naudit-css WARNING — ${missingFromModule.length} class(es) used in module/ but missing` +
-      `${known} from styles/:`
+    `\naudit-css WARNING — ${missingFromModule.length} class(es) used in module/ but missing from styles/:`
   );
   for (const c of missingFromModule) {
-    console.warn(`  .${c}`);
+    console.warn(`  .${c}${MODULE_BACKLOG.has(c) ? "" : "   ← NOT in the known backlog"}`);
   }
-  if (missingFromModule.length > MODULE_BACKLOG) {
+  if (unexpected.length > 0) {
     console.warn(
-      `\n  ${missingFromModule.length - MODULE_BACKLOG} above the known backlog of ` +
-        `${MODULE_BACKLOG} — new unstyled classes were added. Add the CSS rules.`
+      `\n  ${unexpected.length} class(es) outside the known backlog (fixed in M4) — ` +
+        "add the CSS rules, or extend MODULE_BACKLOG deliberately."
     );
   }
 }
@@ -172,5 +242,5 @@ console.log(
 );
 reportDynamicFragments((m) => console.log(m));
 reportModuleWarnings();
-reportDeadSelectors();
+reportUnusedSelectors();
 process.exit(0);

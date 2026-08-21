@@ -32,6 +32,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   nowhere (currently 14). Informational only, never affects the exit code.
 - Pre-commit runs `audit-css` on `.mjs` changes too, so a new class introduced in
   JavaScript no longer slips past the gate.
+- `audit-css` collects bare `"dlc-*"` string literals in `module/`, catching the
+  classes applied through `classList.add()` and `DEFAULT_OPTIONS.classes`
+  (`dlc-initiative-*`, `dlc-hand-btn`, `dlc-hand-dialog`, `dlc-winded`) that never
+  appear inside a `class="…"` attribute.
+- CSS rules for the six template classes the audit could not previously see:
+  `dlc-unskilled`, `dlc-constructed`, `dlc-joker`, `dlc-joker-card`,
+  `dlc-card--joker`, `dlc-card--black`. The joker highlight in drawn-card lists and
+  the initiative hand had no styling at all.
 
 ### Changed
 
@@ -58,6 +66,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dropped the redundant `.deadlands-classic.sheet :focus-visible` selector, which
   tripped `lint/style/noDescendingSpecificity` and was already covered by the
   `.deadlands-classic :focus-visible` selector sharing its rule. No visual change.
+- `audit-css` no longer loses classes written inside a Handlebars block. Splitting
+  `class="dlc-wound {{#if x}}dlc-maimed{{/if}}"` on whitespace left `dlc-maimed`
+  glued to `{{/if}}`, so it counted as neither used nor dynamic. Six template
+  classes with no CSS rule were passing the "hard error" gate, and 8 of the 14
+  reported dead selectors were live all along.
+- `audit-css` strips CSS comments before harvesting selectors. A class merely
+  *named* in a comment counted as defined, which both polluted the dead-selector
+  list and let a template use it with no rule behind it.
+- `MODULE_BACKLOG` is a frozen set of names rather than a count, so styling one
+  backlog class while adding another unstyled one no longer cancels out unnoticed.
+- Removed the dead `.dlc-wind-label` rule (`header.hbs` uses `.dlc-stat-label`) and
+  corrected a `blessed.css` comment naming a sin-severity vocabulary that does not
+  exist (`light`/`heavy`; the real values are `minor`/`major`/`mortal`).
 
 ## [0.3.4] — 2026-07-06
 
