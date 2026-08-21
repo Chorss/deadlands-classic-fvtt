@@ -1,18 +1,29 @@
 #!/usr/bin/env node
 /**
- * audit-css.mjs — CSS/template class coverage check.
+ * audit-css.mjs — CSS/class coverage check.
  *
- * Greps every `dlc-*` class from templates/*.hbs and checks that a
- * corresponding CSS selector exists in styles/*.css.
+ * Greps every `dlc-*` class from `templates/*.hbs` and `module/*.mjs` and checks
+ * that a corresponding CSS selector exists in `styles/*.css`.
  *
- * Skips dynamic class fragments (e.g. `dlc-chip-{{color}}`) — these
- * cannot be statically resolved and are reported separately as a note.
+ * Two severity levels, on purpose:
+ *   templates/  → error   (exit 1) — the long-standing contract, kept strict.
+ *   module/     → warning (exit 0) — chat cards built in template literals start
+ *                 with a known backlog of unstyled classes (see MODULE_BACKLOG).
+ *                 Flipping this to an error is the closing criterion of the
+ *                 Ledger migration stage M4.
  *
- * Exit 0  — all classes covered.
- * Exit 1  — uncovered classes found (prints a list).
+ * Also reports dead selectors (defined in styles/ but used nowhere). That report
+ * is informational only and never affects the exit code — during a UI migration
+ * CSS legitimately lands before the markup that consumes it.
  *
- * Used by: `/verify-system`, `.githooks/pre-commit` (on *.hbs or *.css changes),
- *   PostToolUse hook for templates/ and styles/ edits.
+ * Skips dynamic class fragments (e.g. `dlc-chip-{{color}}`, `${outcomeClass}`) —
+ * these cannot be statically resolved and are reported separately as a note.
+ *
+ * Exit 0  — all template classes covered.
+ * Exit 1  — uncovered template classes found (prints a list).
+ *
+ * Used by: `/verify-system`, `.githooks/pre-commit` (on *.hbs, *.css or *.mjs
+ *   changes), PostToolUse hook for templates/ and styles/ edits.
  */
 
 import fs from "node:fs";
@@ -20,6 +31,9 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+
+/** Known unstyled classes in module/ — an existing gap, not a regression. Fixed in stage M4. */
+const MODULE_BACKLOG = 9;
 
 function collectFiles(dir, ext) {
   if (!fs.existsSync(dir)) {
@@ -31,37 +45,57 @@ function collectFiles(dir, ext) {
     .map((e) => path.join(e.parentPath ?? e.path, e.name));
 }
 
-// --- collect classes from templates ---
-const hbsFiles = collectFiles(path.join(REPO_ROOT, "templates"), ".hbs");
 const classRe = /class="([^"]+)"/g;
 // No `g` flag here — test() with a stateful regex alternates true/false (lastIndex bug).
-const tokenRe = /\{\{[^}]+\}\}/;
+// Matches a Handlebars expression or a JS template-literal interpolation.
+const tokenRe = /\{\{[^}]+\}\}|\$\{[^}]*\}/;
+// A `${…}` that is a whitespace-separated token of its own, so splitting the
+// attribute loses it entirely (`class="dlc-roll-card ${outcomeClass}"`).
+const bareInterpolationRe = /(^|\s)\$\{[^}]*\}/;
 
-const usedClasses = new Set();
 const dynamicFragments = new Set();
 
-for (const file of hbsFiles) {
-  const src = fs.readFileSync(file, "utf8");
-  for (const match of src.matchAll(classRe)) {
-    for (const token of match[1].split(/\s+/)) {
-      if (!token.startsWith("dlc-")) {
-        continue;
+/**
+ * Collect the static `dlc-*` classes used across a source tree.
+ * Runtime-computed class lists go to `dynamicFragments` instead.
+ *
+ * @param {string} dir Directory to walk, relative to the repo root.
+ * @param {string} ext File extension to scan (".hbs", ".mjs").
+ * @returns {Set<string>} Statically resolvable class names.
+ */
+function collectUsedClasses(dir, ext) {
+  const used = new Set();
+  for (const file of collectFiles(path.join(REPO_ROOT, dir), ext)) {
+    const src = fs.readFileSync(file, "utf8");
+    for (const match of src.matchAll(classRe)) {
+      const attr = match[1];
+      const tokens = attr.split(/\s+/).filter((t) => t.startsWith("dlc-"));
+      // A bare interpolation carries no `dlc-` prefix of its own, so the token split
+      // drops it — record the whole attribute instead so it stays visible.
+      if (tokens.length > 0 && bareInterpolationRe.test(attr)) {
+        dynamicFragments.add(attr);
       }
-      if (tokenRe.test(token)) {
-        dynamicFragments.add(token);
-      } else {
-        usedClasses.add(token);
+      for (const token of tokens) {
+        if (tokenRe.test(token)) {
+          dynamicFragments.add(token);
+        } else {
+          used.add(token);
+        }
       }
     }
   }
+  return used;
 }
 
+// --- collect classes from templates and module code ---
+const templateClasses = collectUsedClasses("templates", ".hbs");
+const moduleClasses = collectUsedClasses("module", ".mjs");
+
 // --- collect selectors from styles ---
-const cssFiles = collectFiles(path.join(REPO_ROOT, "styles"), ".css");
 const selectorRe = /\.(dlc-[a-z][a-z0-9-]*)/g;
 
 const definedClasses = new Set();
-for (const file of cssFiles) {
+for (const file of collectFiles(path.join(REPO_ROOT, "styles"), ".css")) {
   const src = fs.readFileSync(file, "utf8");
   for (const match of src.matchAll(selectorRe)) {
     definedClasses.add(match[1]);
@@ -69,30 +103,74 @@ for (const file of cssFiles) {
 }
 
 // --- compare ---
-const missing = [...usedClasses].filter((c) => !definedClasses.has(c)).sort();
+const missingFromTemplates = [...templateClasses].filter((c) => !definedClasses.has(c)).sort();
+const missingFromModule = [...moduleClasses].filter((c) => !definedClasses.has(c)).sort();
 
-if (missing.length === 0) {
-  console.log(`audit-css OK — ${usedClasses.size} classes, all covered.`);
-  if (dynamicFragments.size > 0) {
-    console.log(
-      `  note: ${dynamicFragments.size} dynamic fragments skipped (handlebars expressions):`
-    );
-    for (const f of [...dynamicFragments].sort()) {
-      console.log(`    ${f}`);
-    }
+const allUsed = new Set([...templateClasses, ...moduleClasses]);
+const deadSelectors = [...definedClasses].filter((c) => !allUsed.has(c)).sort();
+
+function reportDynamicFragments(write) {
+  if (dynamicFragments.size === 0) {
+    return;
   }
-  process.exit(0);
+  write(`\n  note: ${dynamicFragments.size} dynamic fragment(s) skipped (runtime-built classes):`);
+  for (const f of [...dynamicFragments].sort()) {
+    write(`    ${f}`);
+  }
 }
 
-console.error(
-  `audit-css FAILED — ${missing.length} class(es) used in templates but missing from styles/:\n`
-);
-for (const c of missing) {
-  console.error(`  .${c}`);
-}
-if (dynamicFragments.size > 0) {
-  console.error(
-    `\n  note: ${dynamicFragments.size} dynamic fragments not checked (handlebars expressions).`
+/** Informational only — a migration puts CSS in place before the markup that uses it. */
+function reportDeadSelectors() {
+  if (deadSelectors.length === 0) {
+    console.log("\n  dead selectors: none.");
+    return;
+  }
+  console.log(
+    `\n  note: ${deadSelectors.length} selector(s) defined in styles/ but used nowhere` +
+      " (informational — does not affect the exit code):"
   );
+  for (const c of deadSelectors) {
+    console.log(`    .${c}`);
+  }
 }
-process.exit(1);
+
+function reportModuleWarnings() {
+  if (missingFromModule.length === 0) {
+    return;
+  }
+  const known = missingFromModule.length <= MODULE_BACKLOG ? " (known backlog, fixed in M4)" : "";
+  console.warn(
+    `\naudit-css WARNING — ${missingFromModule.length} class(es) used in module/ but missing` +
+      `${known} from styles/:`
+  );
+  for (const c of missingFromModule) {
+    console.warn(`  .${c}`);
+  }
+  if (missingFromModule.length > MODULE_BACKLOG) {
+    console.warn(
+      `\n  ${missingFromModule.length - MODULE_BACKLOG} above the known backlog of ` +
+        `${MODULE_BACKLOG} — new unstyled classes were added. Add the CSS rules.`
+    );
+  }
+}
+
+if (missingFromTemplates.length > 0) {
+  console.error(
+    `audit-css FAILED — ${missingFromTemplates.length} class(es) used in templates but missing from styles/:\n`
+  );
+  for (const c of missingFromTemplates) {
+    console.error(`  .${c}`);
+  }
+  reportDynamicFragments((m) => console.error(m));
+  reportModuleWarnings();
+  process.exit(1);
+}
+
+console.log(
+  `audit-css OK — ${templateClasses.size} template + ${moduleClasses.size} module class(es), ` +
+    "all template classes covered."
+);
+reportDynamicFragments((m) => console.log(m));
+reportModuleWarnings();
+reportDeadSelectors();
+process.exit(0);
