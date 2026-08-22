@@ -34,29 +34,6 @@ A community-maintained Foundry VTT game system for **Deadlands Classic** (Weird 
 
 ---
 
-## Feature status
-
-| Feature | Status |
-|---|---|
-| Exploding dice, trait/aptitude rolls | ✅ |
-| Fate Chips (White/Red/Blue/Legend) | ✅ |
-| Poker-card initiative (Action Deck) | ✅ |
-| Location-based wounds + Wind | ✅ |
-| Guts check + Scart Table | ✅ |
-| Huckster (hex casting, poker hand eval) | ✅ |
-| Shaman (rituals, favors) | ✅ |
-| Blessed (miracles, sin mechanic) | ✅ |
-| Mad Scientist (gizmos, blueprint + reliability) | ✅ |
-| Harrowed overlay (Dominion Roll) | ✅ |
-| Edges + Hindrances packs (89 entries) | ✅ |
-| Hit Location RollTable | ✅ |
-| Archetype example actors | ✅ |
-| EN/PL localization | ✅ |
-| Hell on Earth Classic | ⏳ v2+ |
-| Lost Colony Classic | ⏳ v2+ |
-
----
-
 ## Screenshots
 
 Captured from a local V14 session (see `docs/testing-e2e.md`); source files live in
