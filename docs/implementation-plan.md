@@ -365,16 +365,16 @@ in 0.2.0, the accessibility pass in 0.3.0.
 
 **Exists in the repo after Phase 0.B essentials (done ✅):**
 - `CLAUDE.md` ✅ (root)
-- `.claude/settings.json` ✅ — permissions (**20 allow** / 8 deny), env `DEADLANDS_DEV=1`, hooks SessionStart (git hooksPath) + PostToolUse (`Write|Edit|MultiEdit` → syntax/JSON/lang; `Bash` → `post-extract-verify.sh`)
+- `.claude/settings.json` ✅ — permissions (34 allow / 12 deny as of 0.4.0), env `DEADLANDS_DEV=1`, hooks SessionStart (git hooksPath), PostToolUse (`Write|Edit|MultiEdit` → syntax/JSON/lang; `Bash` → `post-extract-verify.sh`) and Stop (`stop-verify.sh`)
 - `.claude/settings.local.json` ✅ — user-specific (`DEADLANDS_RULES_PATH`, ad-hoc WebFetch domains, Read globs to `deadlands-rules-ref`); gitignored, content varies per developer
-- `.claude/hooks/post-write.sh` ✅ (dispatcher by extension) + `.claude/hooks/post-extract-verify.sh` ✅ (PDF-extract quality gate)
-- `.claude/commands/verify-system.md` ✅ + `.claude/commands/release.md` ✅ (the `/release` skill)
+- `.claude/hooks/` ✅ — `post-write.sh` (dispatcher by extension), `post-extract-verify.sh` (PDF-extract quality gate), `stop-verify.sh` (runs `verify:all` before a turn ends with a dirty tree)
+- `.claude/skills/` ✅ — `verify-system`, `release`, `add-archetype`, `new-phase`, `verify-mechanic`. There is no `.claude/commands/` directory; a skill invoked as `/name` is the slash command.
 - `.claude/agents/pdf-reference-lookup.md` ✅
-- `.claude/rules/` ✅ — 5 files (commits, naming, v14-api, localization, references) with `paths:` auto-scope
+- `.claude/rules/` ✅ — 7 files: `commits.md` and `naming.md` load unconditionally; `code-quality.md`, `v14-api.md`, `localization.md`, `references.md`, `rulebook-authority.md` auto-scope via `paths:`
 - `.mcp.json` ✅ — Playwright + context7 (project-scoped, requires approval on first start)
 - `.githooks/pre-commit` ✅ + `.githooks/commit-msg` ✅
-- `tools/verify-documenttypes.mjs` ✅ (MVP — without the registry comparison, added since Phase 1)
-- `tests/smoke.test.mjs` + `tests/.gitkeep` ✅
+- `tools/verify-documenttypes.mjs` ✅ — now also compares `documentTypes.Actor`/`.Item` against the registries, joined by `tools/audit-css.mjs` and `tools/audit-i18n.mjs` under `npm run verify:all`
+- `tests/smoke.test.mjs` ✅
 - `package.json` ✅ + `biome.json` ✅ + `.editorconfig` ✅
 - `.gitignore` ✅ — Claude + Playwright artifacts (`test-results/`, `playwright-report/`, `.playwright/`)
 - Memory: `architecture.md` ✅ (new), `dev_workflow.md` ✅ (new), update `game_mechanics.md` + `v14_api_notes.md`, `MEMORY.md` index extended
@@ -424,9 +424,9 @@ in 0.2.0, the accessibility pass in 0.3.0.
 | Risk | L×I | Mitigation / status |
 |---|---|---|
 | **"Deadlands" trademark** — the PEG Fan License **explicitly excludes** the Deadlands setting (SWAG too); MIT protects the code, not the brand. This is NOT the same as prose copyright. | M×H | **CONSCIOUSLY ACCEPTED (D1).** `deadlands-classic` + a disclaimer "unofficial / not affiliated" (README, present). The risk = C&D/takedown, not damages. The `id` is practically irreversible after a public release — **at the 1st public Release, reconsider** (possibly an email to PEG). Source: shop.peginc.com/pages/licensing. |
-| **No world-data migration** — 0.1→0.2→0.3 changes the `TypeDataModel` schema; without `migrationVersion` an update breaks existing worlds. | H×H | `static migrateData()` per model + `migrationVersion` (world settings) since Phase 2; a guarded runner in `ready`; `docs/migration-policy.md` + `tests/migration.test.mjs` (Phase 14). |
+| **No world-data migration** — 0.1→0.2→0.3 changes the `TypeDataModel` schema; without `migrationVersion` an update breaks existing worlds. | H×H | **CLOSED — mitigation shipped.** `static migrateData()` per model + `migrationVersion` (world settings) since Phase 2, a guarded runner in `ready`, `docs/migration-policy.md` and `tests/migration.test.mjs`. Every schema change through 0.4.0 has been self-migrating via `initial:` defaults; the policy's version table records each one. |
 | **The Cards API doesn't support initiative** — `deal/pass/draw` only between Cards documents; no bridge to Combat/Combatant. Card-initiative (Phase 8) stands on its own glue. | M×H | Prototype Combat↔Cards **early in Phase 8** before the tracker UI; fallback: a custom deck object. Source: foundryvtt.com/api Cards. |
-| **CI can't run Foundry** — a commercial license: the binaries may not be committed, the key = the owner's secret; external PRs won't run E2E. | H×M | CI only license-free (lint, `node --test`, `verify-documenttypes`); Playwright E2E = **locally**, not a PR gate (`npm run test:e2e`). Documented in `docs/testing-e2e.md`. Source: foundryvtt.com/article/license. |
+| **CI can't run Foundry** — a commercial license: the binaries may not be committed, the key = the owner's secret; external PRs won't run E2E. | H×M | **CLOSED — mitigation shipped.** CI runs only the license-free `npm run lint` + `npm run verify:all`; the Playwright E2E suite (`npm run test:e2e`) is a local pre-merge check, never a PR gate. Documented in `docs/testing-e2e.md`. Source: foundryvtt.com/article/license. |
 | **No pack-build tooling** — V14 packs = LevelDB built by `fvtt package pack` from JSON; `*.db/` is legacy NeDB. Phases 5/8/9/12 depend on a non-existent step. | H×M | `packs/_source/<slug>/*.json` → `fvtt package pack`; `@foundryvtt/foundryvtt-cli` dev-dep + an npm script; `.gitignore` → `!packs/_source/`. Source: github.com/foundryvtt/foundryvtt-cli. |
 | **No SemVer for the registry contract** — extension modules bind to `*Registry` + the `deadlandsClassic.*` hooks + `game.deadlandsClassic`. A silent signature change breaks all of them. | M×H | Document it as a stable API (`docs/architecture.md`), SemVer (breaking = major), a deprecation window, a versioned `ArchetypeDefinition`. |
 | **Bus factor (1 maintainer)** — 14 phases, ~28-35+ sessions; the Context notes that previous Deadlands attempts were abandoned. | M×H | Trim the MVP (a 0.0.x preview after Phase 6A — D3); `CONTRIBUTING.md` for non-Claude; a system runnable without the AI workshop. |
@@ -451,7 +451,7 @@ in 0.2.0, the accessibility pass in 0.3.0.
 ### Open questions (to resolve during implementation)
 - **Edges/hindrances — AE or flags?** A hybrid: a simple bonus ("Nerves o' Steel +1 Guts") via an AE; a complex one ("Level-Headed draw an extra card") via the `deadlandsClassic.initiativeDraw` hook.
 - **Aptitudes — flat or nested?** Each has a governing trait → nested `{ [traitId]: { aptitudes: {...} } }` preferred. (A change after 0.1 = migration — see the migration risk.)
-- **Wound-location widget layout** — `dlc` p.133 gives 8 slots; the sheet (p.412-413) may group them differently. Verify in Phase 6 before `wound-locations-widget.hbs`.
+- ~~**Wound-location widget layout**~~ — **resolved by removal (0.3.4).** `wound-locations-widget.hbs` was never rendered; every archetype shows wounds in the combat tab's list, so the partial and its CSS were deleted rather than laid out.
 - **Raise → hit-location adjust** (`dlc` p.133) — a dialog after the roll vs a button in chat vs auto. Recommendation: a dialog before applying the wound, with a location preview.
 
 ---
@@ -499,6 +499,8 @@ If the whole scenario passes without manual hacking — v0.1 is ready.
 | **0.3.1** | Offline display-font picker, full CSS layer, `tools/audit-css.mjs` | shipped 2026-06-30 |
 | **0.3.2** | Release-tooling fixes (Biome format of `system.json`, `biome check` in pre-commit) | shipped 2026-07-01 |
 | **0.3.3** | Bug-audit hotfixes (Dominion Roll, stale chip-spend + race conditions, guts wound-pool, Harrowed tab) | shipped 2026-07-01 |
+| **0.3.4** | GM proxy for shared-state writes (Queries API), rule-fidelity fixes (No Going Back, Joker draws, Armor die-step), `tools/audit-i18n.mjs` | shipped 2026-07-06 |
+| **0.4.0** | Ledger UI redesign (M1-M7: tokens, sheet layout, chat cards, archetype tabs, dialogs, item sheets), `WeaponDataModel`, the local Playwright E2E suite, `npm run verify:all`, house-rule TN tiers | shipped 2026-08-22 |
 | **1.0.0** | Stable, a 3-month bug-hunt, full PL localization (MAG canon) | +X |
 | **1.x** | Classic supplements (Smith & Robards, Book o' the Dead, etc.) as separate modules |
 | **2.0** | Hell on Earth Classic as a separate fork or module |
@@ -511,8 +513,68 @@ If the whole scenario passes without manual hacking — v0.1 is ready.
 
 ## 11. Immediate next step
 
-**All phases 0-14 are closed ✅.** The system is at **0.3.3** on `main` (per-phase status markers in §5, release history in §10).
+**All phases 0-14 are closed ✅.** The system is at **0.4.0** on `main` (scope per phase in §5,
+release history in §10).
 
-**Current focus: bug-hunting and playtesting toward 1.0.0.** Real play sessions surface the kind of defects the 0.3.x releases have been fixing (see the 0.3.x entries in `CHANGELOG.md`) — rule-fidelity drift, stale-state UI bugs, async race conditions. The working loop now is: playtest → issue → hotfix branch → PR → patch release.
+0.4.0 was a minor release with a feature programme, not a patch: the Ledger UI redesign across
+seven milestones (PRs #24-#28), the `weapon` data model, item sheets, and a local Playwright E2E
+suite. The 0.3.x working loop — playtest → issue → hotfix branch → PR → patch release — still
+holds for defects, but feature work now goes through §12.
 
-The Phase 0.B nice-to-haves that never proved necessary (`/add-item-type`, `/pdf`, `/phase-test`, `/foundry-link`, the `foundry-test-runner` subagent, `docs/claude-workflow.md`) remain open — added only **when a real need arises**, not ahead of it.
+The Phase 0.B nice-to-haves that never proved necessary (`/add-item-type`, `/pdf`, `/phase-test`,
+`/foundry-link`, the `foundry-test-runner` subagent, `docs/claude-workflow.md`) remain open —
+added only **when a real need arises**, not ahead of it.
+
+---
+
+## 12. Open work after 0.4.0
+
+Numbered phases are done; what follows is tracked as work items, not phases.
+
+### The largest gap: empty content packs
+
+The mechanics for every arcane background are implemented and rule-verified, but a player opening
+a fresh world has almost nothing to *pick from* — each hex, miracle, gizmo and favor has to be
+transcribed from the book by hand. This is a bigger practical obstacle than the missing character
+generator, and it is cheaper to fix. The schemas already exist; only the content in
+`packs/_source/` is missing.
+
+| Item type | Entries in `packs/_source/` | Book source |
+|---|---|---|
+| Edges | 31 | `dlc` p.63-70 |
+| Hindrances | 58 | `dlc` p.52-62 |
+| Hexes | 3 | `dlc` p.156-164, plus `hnh` |
+| Miracles | 0 | `dlc` p.177-180, plus `fb` |
+| Gizmos | 0 | `dlc` p.170-175, plus `snr` |
+| Favors (rituals) | 0 | `dlc` p.182-193, plus `ghost-dancers` |
+| Weapons / Armor / Gear / Ammo | 0 | `dlc` chapter 3, p.75+ |
+| Critters / bestiary | 0 | `dlc` chapter 14, p.259-282, plus `rvc` |
+| Harrowed Powers / Counting Coup | free-text fields, no picker | `dlc` p.197-203, plus `bod` |
+
+The Edge and Hindrance packs are the only ones with meaningful coverage, and both are partial.
+Nothing here is a stub or a placeholder — the item types, sheets and mechanics all work; the
+packs are simply not populated.
+
+### Mechanics not implemented
+
+Deliberately deferred, roughly in order of how much they limit play:
+
+- **Character generation / point-buy** — fields are edited by hand today (`dlc` chapter 2).
+- **Advancement** — Bounty Points are chip income only; there is no UI for spending them
+  (`dlc` chapter 5).
+- **Knacks, Relics, Mysterious Past** — the Harrowed and chargen hooks from `dlc` chapter 13.
+- **Bleedin' & Squealin'** — `tickBleeding()` exists but must be called manually; it does not run
+  per round on its own (`dlc` p.136).
+- Smaller gaps, all playable around: mounts and vehicles with stats, encumbrance, the Duel as its
+  own subsystem, reloading as a rule, Massive Damage, Vamoosin', innocent bystanders, Tests o'
+  Wills as a helper, Tale-Tellin' as downtime chip income, and a full world-settings menu.
+
+### Publication
+
+The system is a reasonable candidate for the Foundry Package Registry now — the registry asks for
+a working manifest and an honest scope description, not full book coverage. The description should
+say plainly: core rules and all five arcane backgrounds playable; character generation,
+advancement and the content packs still in progress.
+
+Before the first public release, revisit **D1** (§8): the manifest `id` is practically
+irreversible once worlds start updating against it.
