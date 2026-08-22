@@ -100,24 +100,17 @@
   border-bottom-color: var(--dlc-brass);
 }
 
-/* Description prose */
-.dlc-item-desc {
-  font-family: var(--dlc-font-body);
-  font-size: 0.72rem;
-  line-height: 1.7;
-  color: var(--dlc-ink-soft);
-}
-.dlc-item-desc :is(h1, h2, h3, strong) {
-  color: var(--dlc-ink);
-}
-
+/* Description prose — .dlc-item-desc-readonly nests inside .dlc-item-desc in
+ * both templates, so it inherits these rules; named only so audit-css sees a
+ * definition for the class the readonly branch renders. */
+.dlc-item-desc,
 .dlc-item-desc-readonly {
   font-family: var(--dlc-font-body);
   font-size: 0.72rem;
   line-height: 1.7;
   color: var(--dlc-ink-soft);
 }
-.dlc-item-desc-readonly :is(h1, h2, h3, strong) {
+.dlc-item-desc :is(h1, h2, h3, strong) {
   color: var(--dlc-ink);
 }
 

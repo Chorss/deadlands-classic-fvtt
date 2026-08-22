@@ -83,7 +83,7 @@
   "DEADLANDS.Item.Weapon.Shots": "Shots",
   "DEADLANDS.Item.Weapon.Rof": "Rate of Fire",
   "DEADLANDS.Item.Weapon.AmmoType": "Ammo Type",
-  "DEADLANDS.Item.Weapon.Defense": "Defense",
+  "DEADLANDS.Item.Weapon.Defense": "Defense Bonus (DB)",
   "DEADLANDS.Item.Weapon.Price": "Price",
   "DEADLANDS.Item.Edge.Points": "pts",
   "DEADLANDS.Item.PostToChat": "Post to Chat",
