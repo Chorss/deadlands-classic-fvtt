@@ -1,5 +1,8 @@
-{{!-- Weapon item sheet. Ledger design (design_handoff_ledger/templates/item/weapon-sheet.hbs). --}}
-<form class="dlc-item-sheet" autocomplete="off">
+{{!-- Weapon item sheet. Ledger design (design_handoff_ledger/templates/item/weapon-sheet.hbs).
+  No <form> wrapper here — the sheet's own root element is already a <form>
+  (ApplicationV2 document sheet); nesting a second one silently breaks
+  submitOnChange, since inputs adopt the nearest ancestor form as their owner. --}}
+<div class="dlc-item-sheet">
   <header class="dlc-item-head">
     <img class="dlc-item-portrait" src="{{item.img}}" data-edit="img" alt="{{item.name}}" />
     <div class="dlc-item-title">
@@ -53,4 +56,4 @@
   <footer class="dlc-item-actions">
     <button type="button" class="dlc-btn-primary" data-action="postToChat">{{localize "DEADLANDS.Item.PostToChat"}}</button>
   </footer>
-</form>
+</div>

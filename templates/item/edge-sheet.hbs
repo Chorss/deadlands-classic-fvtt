@@ -1,5 +1,6 @@
-{{!-- Edge / Hindrance item sheet — shared template, `isHindrance` switches the pill/accent colour. --}}
-<form class="dlc-item-sheet {{#if isHindrance}}dlc-item-hindrance{{/if}}" autocomplete="off">
+{{!-- Edge / Hindrance item sheet — shared template, `isHindrance` switches the pill/accent colour.
+  No <form> wrapper — see weapon-sheet.hbs for why (nested forms silently break submitOnChange). --}}
+<div class="dlc-item-sheet {{#if isHindrance}}dlc-item-hindrance{{/if}}">
   <header class="dlc-item-head">
     <img class="dlc-item-portrait" src="{{item.img}}" data-edit="img" alt="{{item.name}}" />
     <div class="dlc-item-title">
@@ -25,4 +26,4 @@
   <footer class="dlc-item-actions">
     <button type="button" class="dlc-btn-primary" data-action="postToChat">{{localize "DEADLANDS.Item.PostToChat"}}</button>
   </footer>
-</form>
+</div>
