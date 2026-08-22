@@ -48,6 +48,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **M7.1 of the Ledger redesign: `WeaponDataModel`.** `weapon` moves off the
+  untyped `{}` stub in `system.json` onto a real `TypeDataModel` — `category`,
+  `rangeType`, `damage`, `range`, `shots`, `rof`, `ammoType`, `defense`, `price`,
+  `description`. Superset of the roadmap's field list (`docs/implementation-plan.md`
+  §3.5) and the `dlc` rulebook's weapon tables (p.79-82): the roadmap didn't
+  list `category`/`price`, the tables don't have `rangeType`/`defense` as named
+  columns, and neither list was wrong, just incomplete on its own. PL category
+  and field labels sourced from `pg-pl` (Podręcznik Gracza) — `dlc` 20th
+  Anniversary has no Polish edition in the indexed corpus.
 - **M6.3 of the Ledger redesign: the Combatant Hand dialog — M6 complete.** The
   hand's cards move off a flex-stretched text label onto a proper 34×46
   `.dlc-card-face` box (rank stacked over the real suit glyph, via the

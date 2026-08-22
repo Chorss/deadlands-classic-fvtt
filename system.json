@@ -40,7 +40,9 @@
       "mook": {}
     },
     "Item": {
-      "weapon": {},
+      "weapon": {
+        "htmlFields": ["system.description"]
+      },
       "armor": {},
       "gear": {},
       "edge": {

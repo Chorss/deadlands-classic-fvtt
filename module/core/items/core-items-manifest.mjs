@@ -13,8 +13,16 @@
 import { ItemRegistry } from "../item-registry.mjs";
 import { EdgeDataModel } from "./edge-data.mjs";
 import { HindranceDataModel } from "./hindrance-data.mjs";
+import { WeaponDataModel } from "./weapon-data.mjs";
 
 // ── Typed item models ─────────────────────────────────────────────────────────
+
+ItemRegistry.register({
+  id: "weapon",
+  label: "TYPES.Item.weapon",
+  dataModel: WeaponDataModel,
+  htmlFields: ["system.description"],
+});
 
 ItemRegistry.register({
   id: "edge",
@@ -29,6 +37,6 @@ ItemRegistry.register({
 });
 
 // ── Untyped item stubs (schema lives in future phases) ────────────────────────
-// weapon, armor, gear, and ammo are declared in documentTypes but their
-// TypeDataModel subclasses are added in later phases. For now they resolve to
-// the Foundry base TypeDataModel via CONFIG.Item.dataModels omission.
+// armor, gear, and ammo are declared in documentTypes but their TypeDataModel
+// subclasses are added in later phases. For now they resolve to the Foundry
+// base TypeDataModel via CONFIG.Item.dataModels omission.
