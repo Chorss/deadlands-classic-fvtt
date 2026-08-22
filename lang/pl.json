@@ -85,6 +85,8 @@
   "DEADLANDS.Item.Weapon.AmmoType": "Amunicja",
   "DEADLANDS.Item.Weapon.Defense": "Bonus obronny (BO)",
   "DEADLANDS.Item.Weapon.Price": "Cena",
+  "DEADLANDS.Item.Edge.Points": "pkt",
+  "DEADLANDS.Item.PostToChat": "Wyślij na czat",
 
   "DEADLANDS.Trait.Deftness.Label": "Zręczność",
   "DEADLANDS.Trait.Nimbleness.Label": "Sprawność",

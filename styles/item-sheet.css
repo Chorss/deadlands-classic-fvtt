@@ -1,50 +1,126 @@
-/* Deadlands Classic — item sheet layout (weapon, armor, gear, hex, miracle, favor, gizmo). */
+/* ============================================================================
+ * Deadlands Classic — item sheets.
+ * Pairs with templates/item/weapon-sheet.hbs and edge-sheet.hbs.
+ * Item sheets are WINDOWS → parchment (default tokens).
+ * ==========================================================================*/
 
-/* ── Shared item sheet header ─────────────────────────────────────────────── */
-
-.dlc-item-sheet-header {
-  display: grid;
-  grid-template-columns: 60px 1fr;
-  gap: 0.5rem;
-  align-items: start;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--dlc-brass);
-  margin-bottom: 0.5rem;
+.dlc-item-sheet {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  color: var(--dlc-ink);
+  font-family: var(--dlc-font-body);
 }
 
-.dlc-item-sheet-img {
-  width: 60px;
-  height: 60px;
-  object-fit: cover;
-  border-radius: var(--dlc-radius);
-  border: 2px solid var(--dlc-brass);
-}
-
-/* ── Form rows ────────────────────────────────────────────────────────────── */
-
-.dlc-form-row {
+.dlc-item-head {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 3px 0;
+  gap: 0.75rem;
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 3px double var(--dlc-rule-strong);
 }
-
-.dlc-form-row label {
-  font-size: 0.75rem;
+.dlc-item-portrait {
+  width: 52px;
+  height: 52px;
+  object-fit: cover;
+  border-radius: 3px;
+  border: 1px solid var(--dlc-rule);
+  flex-shrink: 0;
+}
+.dlc-item-title {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.dlc-item-name-input {
+  font-family: var(--dlc-font-display);
+  font-size: 1.3rem;
+  border: none;
+  background: transparent;
+  color: var(--dlc-ink);
+  padding: 0;
+  width: 100%;
+}
+.dlc-item-name-input:focus {
+  outline: none;
+  background: color-mix(in srgb, var(--dlc-brass) 12%, transparent);
+}
+.dlc-item-kind {
+  font-family: var(--dlc-font-head);
+  font-size: 0.56rem;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
   color: var(--dlc-ink-muted);
-  min-width: 6rem;
 }
 
-/* Status badges (gizmo, miracle) used to live here as bespoke .dlc-status /
- * .dlc-status-* rules — functionally identical to the .dlc-pill primitive
- * from _base.css, just with its own sizing. The gizmo tab (M5) now uses
- * .dlc-pill directly with the brass/blood/green/muted colour variants;
- * nothing else referenced .dlc-status, so the duplicate is gone. */
+.dlc-pill-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
 
-/* Outcome labels (.dlc-outcome-*) and the last-roll display (.dlc-last-roll-*)
- * used to be duplicated here and in archetypes/harrowed.css — the only actual
- * consumer, harrowed-tab.hbs, was already reading harrowed.css's copy (it
- * @imports after this file), so these were dead weight. Consolidated into
- * archetypes/harrowed.css (M5), per the README's flagged duplicate. */
+/* Stat grid (weapon) */
+.dlc-item-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.65rem 1rem;
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid var(--dlc-rule);
+}
+.dlc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.dlc-field-label {
+  font-family: var(--dlc-font-head);
+  font-size: 0.53rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--dlc-ink-muted);
+}
+.dlc-field input,
+.dlc-field select {
+  font-family: var(--dlc-font-data);
+  font-weight: 700;
+  font-size: 0.85rem;
+  border: none;
+  border-bottom: 1px solid var(--dlc-rule);
+  background: transparent;
+  color: var(--dlc-ink);
+  padding: 0 0 5px;
+}
+.dlc-field input:focus,
+.dlc-field select:focus {
+  outline: none;
+  border-bottom-color: var(--dlc-brass);
+}
+
+/* Description prose — .dlc-item-desc-readonly nests inside .dlc-item-desc in
+ * both templates, so it inherits these rules; named only so audit-css sees a
+ * definition for the class the readonly branch renders. */
+.dlc-item-desc,
+.dlc-item-desc-readonly {
+  font-family: var(--dlc-font-body);
+  font-size: 0.72rem;
+  line-height: 1.7;
+  color: var(--dlc-ink-soft);
+}
+.dlc-item-desc :is(h1, h2, h3, strong) {
+  color: var(--dlc-ink);
+}
+
+.dlc-item-actions {
+  display: flex;
+  gap: 8px;
+  padding-top: 0.75rem;
+}
+
+/* Hindrance variant accent */
+.dlc-item-hindrance .dlc-item-head {
+  border-bottom-color: var(--dlc-blood);
+}

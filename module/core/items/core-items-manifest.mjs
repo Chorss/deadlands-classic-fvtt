@@ -12,8 +12,10 @@
 
 import { ItemRegistry } from "../item-registry.mjs";
 import { EdgeDataModel } from "./edge-data.mjs";
+import { EdgeSheet } from "./edge-sheet.mjs";
 import { HindranceDataModel } from "./hindrance-data.mjs";
 import { WeaponDataModel } from "./weapon-data.mjs";
+import { WeaponSheet } from "./weapon-sheet.mjs";
 
 // ── Typed item models ─────────────────────────────────────────────────────────
 
@@ -21,6 +23,7 @@ ItemRegistry.register({
   id: "weapon",
   label: "TYPES.Item.weapon",
   dataModel: WeaponDataModel,
+  sheetClass: WeaponSheet,
   htmlFields: ["system.description"],
 });
 
@@ -28,12 +31,14 @@ ItemRegistry.register({
   id: "edge",
   label: "TYPES.Item.edge",
   dataModel: EdgeDataModel,
+  sheetClass: EdgeSheet,
 });
 
 ItemRegistry.register({
   id: "hindrance",
   label: "TYPES.Item.hindrance",
   dataModel: HindranceDataModel,
+  sheetClass: EdgeSheet,
 });
 
 // ── Untyped item stubs (schema lives in future phases) ────────────────────────

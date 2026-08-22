@@ -1,0 +1,29 @@
+{{!-- Edge / Hindrance item sheet — shared template, `isHindrance` switches the pill/accent colour.
+  No <form> wrapper — see weapon-sheet.hbs for why (nested forms silently break submitOnChange). --}}
+<div class="dlc-item-sheet {{#if isHindrance}}dlc-item-hindrance{{/if}}">
+  <header class="dlc-item-head">
+    <img class="dlc-item-portrait" src="{{item.img}}" data-edit="img" alt="{{item.name}}" />
+    <div class="dlc-item-title">
+      <input type="text" name="name" value="{{item.name}}" class="dlc-item-name-input"
+        placeholder="{{localize itemTypeLabelKey}}" {{#unless editable}}disabled{{/unless}} />
+      <div class="dlc-pill-row">
+        <span class="dlc-pill {{#if isHindrance}}dlc-pill-blood{{else}}dlc-pill-brass{{/if}}">
+          {{points}} {{localize "DEADLANDS.Item.Edge.Points"}}
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <div class="dlc-item-desc">
+    {{#if editable}}
+    <prose-mirror name="system.description" button="true" editable="true" toggled="false"
+      value="{{system.description}}">{{{enrichedDescription}}}</prose-mirror>
+    {{else}}
+    <div class="dlc-item-desc-readonly">{{{enrichedDescription}}}</div>
+    {{/if}}
+  </div>
+
+  <footer class="dlc-item-actions">
+    <button type="button" class="dlc-btn-primary" data-action="postToChat">{{localize "DEADLANDS.Item.PostToChat"}}</button>
+  </footer>
+</div>
