@@ -180,7 +180,13 @@
    `renderCombatTracker` hook directly into Foundry's native tracker row.
    There is no custom tracker application in this system, and no root of ours
    to hang .dlc-night on — each injected element carries .dlc-night itself
-   (see the hook), since it renders inside Foundry's own (always-dark) sidebar.
+   (see the hook). The "always-dark sidebar" this was written against isn't
+   guaranteed: V14's core.uiConfig has a separate colorScheme.interface the
+   user can set to light, and the tracker row background follows it — this
+   label had no background of its own, so --dlc-ink's light night text
+   landed on a light row and read as blank. Chat cards solved the same
+   problem for the same reason (M4: "paints its own background") — do the
+   same here instead of trusting the ambient row to stay dark.
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .dlc-initiative-label,
@@ -196,6 +202,7 @@
   border-radius: 3px;
   border: 1px solid var(--dlc-hairline);
   color: var(--dlc-ink);
+  background: var(--dlc-card);
 }
 
 .dlc-initiative-red-joker {
