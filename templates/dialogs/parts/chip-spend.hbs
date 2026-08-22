@@ -6,17 +6,17 @@
   Caller must wrap with {{#if maxWhite}}; maxWhite is inherited from the caller's context.
 --}}
 <div class="dlc-dialog-field">
-  <span class="dlc-dialog-field-label">
+  <label class="dlc-dialog-field-label" for="whiteChips">
     {{localize labelKey}}
     {{#if (eq availMode "inline")}}
     ({{localize availKey}}: {{maxWhite}})
     {{/if}}
-  </span>
+  </label>
   <div class="dlc-spend-row">
     <button type="button" class="dlc-stepper-btn" data-action="step" data-delta="-1" data-for="whiteChips"
       aria-label="{{localize 'DEADLANDS.Dialog.Stepper.Decrease'}}">−</button>
     <span class="dlc-chip dlc-chip-white">
-      <input class="dlc-chip-token dlc-num" type="number" name="whiteChips" value="0"
+      <input id="whiteChips" class="dlc-chip-token dlc-num" type="number" name="whiteChips" value="0"
         min="0" max="{{maxWhite}}" />
     </span>
     <button type="button" class="dlc-stepper-btn" data-action="step" data-delta="1" data-for="whiteChips"
