@@ -28,9 +28,10 @@ edges/hindrances automatically.
 
 - **`ArchetypeRegistry`** — PC archetypes (`cowboy`, `huckster`, `shaman`, `blessed`, `madScientist`)
   plus NPC types (`npc`, `mook`).
-- **`ItemRegistry`** — item document types. Core types (`weapon`, `armor`, `gear`, `edge`,
-  `hindrance`, `ammo`) registered in Phase 1; archetype-specific types (`hex`, `miracle`, `favor`,
-  `gizmo`) registered by their archetype manifests in Phases 9-10.
+- **`ItemRegistry`** — item document types. Core types with a data model: `weapon`, `edge`,
+  `hindrance` (`module/core/items/core-items-manifest.mjs`). `armor`, `gear`, and `ammo` are
+  declared in `system.json → documentTypes.Item` but are still schema-less stubs. Archetype-specific
+  types (`hex`, `miracle`, `favor`, `gizmo`) are registered by their archetype manifests.
 - **`OverlayRegistry`** — cross-archetype modifiers like `harrowed` that can apply to **any** PC.
 
 ## ArchetypeDefinition contract
@@ -67,8 +68,9 @@ roll (opposed Spirit + each side's current Dominion — `dlc` p.195) is an `Over
   ┌─────────────────────────────────────────────────────────────────────┐
   │                    module/core/                                     │
   │                                                                     │
-  │  dice/  cards/  chips/  wounds/  documents/  items/  config.mjs    │
-  │  async-queue.mjs  utils.mjs  font-settings.mjs  overlay-registry    │
+  │  dice/  cards/  chips/  wounds/  documents/  items/  dialogs/       │
+  │  config.mjs  async-queue.mjs  utils.mjs  font-settings.mjs          │
+  │  gm-proxy.mjs  op-dedup.mjs  overlay-registry                       │
   │                                                                     │
   │          ArchetypeRegistry ◄──────────────────────────────────────┐ │
   │          ItemRegistry      ◄──────────────────────────────────────┤ │
@@ -124,14 +126,18 @@ Changes to these are **breaking** and trigger a major version bump.
 | `.chips` | `object` | `FatePot`, `canSpend`, `executeSpend`, `grantChips`, `spendChip`, `drawForSession` |
 | `.wounds` | `object` | `woundsFromDamage`, `applyWounds`, `tickBleeding`, `getBleedingRate`, `highestWoundPenalty`, `drawHitLocation`, `resolveHitLocation`, `computeWindMax`, `isWinded`, `gutsWoundsFromNegativeWind` |
 
-Concurrency note: `FatePot` and `ActionDeck` serialize their read-modify-write operations through
+Concurrency note: every mutation of the Fate Pot (a world setting) and the Action Deck (a Combat
+flag) is dispatched as a JSON operation descriptor to the single active GM client
+(`module/core/gm-proxy.mjs`, over Foundry's Queries API) and applied there through
 `module/core/async-queue.mjs` (`KeyedAsyncQueue`, a promise-chain mutex — one global key for the
-pot, one key per combat for the deck). This guards same-client races only; the cross-client race
-is tracked in `notes.md`.
+pot, one key per combat for the deck). The GM is therefore the only serialized writer in the
+world, so the cross-client lost-update race is gone by construction; a dispatch retried after a
+query timeout is collapsed onto the original run by `module/core/op-dedup.mjs`. Resolved in
+0.3.4 — see `notes.md`.
 
 ### Custom hooks (planned — none emitted yet)
 
-As of 0.3.3 the system emits **no** custom hooks. The namespace `deadlandsClassic.<event>`
+As of 0.4.0 the system emits **no** custom hooks. The namespace `deadlandsClassic.<event>`
 (dot-separated, `lowerCamelCase` event segment; cancelable `pre*`, reactive `post*` — see
 `.claude/rules/naming.md`) is reserved for them. Planned surface:
 
@@ -153,4 +159,4 @@ This system follows **Semantic Versioning** (`MAJOR.MINOR.PATCH`):
 - **MINOR** — new capabilities added in a backward-compatible way (new registry field, new hook, new pack).
 - **PATCH** — backward-compatible bug fixes, balance tweaks, i18n additions.
 
-Expansion modules should pin to a compatible range (e.g. `^0.3.0`) in their `manifest.json`.
+Expansion modules should pin to a compatible range (e.g. `^0.4.0`) in their `manifest.json`.
