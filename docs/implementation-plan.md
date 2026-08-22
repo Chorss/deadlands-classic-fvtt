@@ -160,21 +160,25 @@ The data models for these types live in `module/core/items/*.mjs` (`hex-data.mjs
 
 ---
 
-## 4. Directory structure (final)
+## 4. Directory structure (as shipped in 0.4.0)
+
+Generated from the working tree — 71 `.mjs` files under `module/`.
 
 ```
 deadlands-classic-fvtt/
-├── system.json                          # manifest (documentTypes in sync with registries)
+├── system.json                          # manifest (documentTypes in sync with the registries)
 ├── module/
-│   ├── deadlands-classic.mjs            # Entry — imports + init hook
+│   ├── deadlands-classic.mjs            # entry — imports + init/ready hooks
 │   ├── core/
 │   │   ├── archetype-registry.mjs
 │   │   ├── item-registry.mjs
 │   │   ├── overlay-registry.mjs         # Harrowed & future overlays
-│   │   ├── config.mjs                   # DEADLANDS config obj (constants)
-│   │   ├── utils.mjs                    # Shared helpers (toPascal, …)
-│   │   ├── async-queue.mjs              # KeyedAsyncQueue — Fate Pot / Action Deck mutex
-│   │   ├── font-settings.mjs            # Display-font picker (system setting)
+│   │   ├── config.mjs                   # DEADLANDS constants
+│   │   ├── utils.mjs                    # shared helpers (toPascal, …)
+│   │   ├── async-queue.mjs              # KeyedAsyncQueue — the GM-side serialized writer
+│   │   ├── gm-proxy.mjs                 # routes shared-state writes to the active GM (Queries API)
+│   │   ├── op-dedup.mjs                 # makes a GM-side op idempotent under query retry
+│   │   ├── font-settings.mjs            # display-font picker (world setting)
 │   │   ├── dice/
 │   │   │   ├── exploding-roll.mjs
 │   │   │   ├── trait-roll.mjs
@@ -184,22 +188,29 @@ deadlands-classic-fvtt/
 │   │   ├── cards/
 │   │   │   ├── action-deck.mjs
 │   │   │   ├── combatant-hand-dialog.mjs
-│   │   │   ├── deadlands-combat.mjs     # Overrides Combat
+│   │   │   ├── deadlands-combat.mjs     # overrides Combat
 │   │   │   └── deadlands-combatant.mjs
 │   │   ├── chips/
 │   │   │   ├── fate-pot.mjs
-│   │   │   ├── chip-widget.mjs          # UI component
-│   │   │   └── chip-rules.mjs           # Validation: 1/action for red/blue, etc.
+│   │   │   ├── fate-pot-widget.mjs      # Marshal-only settings menu
+│   │   │   ├── chip-widget.mjs
+│   │   │   └── chip-rules.mjs           # 1/action, bust block, "No Going Back"
 │   │   ├── wounds/
 │   │   │   ├── wound-track.mjs
 │   │   │   ├── hit-location.mjs
 │   │   │   └── wind-calculator.mjs
-│   │   ├── documents/                   # Core doc overrides
+│   │   ├── dialogs/
+│   │   │   └── stepper-actions.mjs      # shared +/− stepper for DialogV2 forms
+│   │   ├── documents/
 │   │   │   ├── deadlands-actor.mjs
 │   │   │   └── deadlands-item.mjs
-│   │   └── items/                       # Item-type data models
-│   │       ├── core-items-manifest.mjs  # Registers weapon/armor/gear/ammo
+│   │   └── items/
+│   │       ├── _base/base-item-sheet.mjs
+│   │       ├── core-items-manifest.mjs  # registers weapon, edge, hindrance
+│   │       ├── weapon-data.mjs
+│   │       ├── weapon-sheet.mjs
 │   │       ├── edge-data.mjs
+│   │       ├── edge-sheet.mjs           # also serves hindrance
 │   │       ├── hindrance-data.mjs
 │   │       ├── hex-data.mjs
 │   │       ├── miracle-data.mjs
@@ -209,53 +220,61 @@ deadlands-classic-fvtt/
 │       ├── _base/
 │       │   ├── base-character-data.mjs
 │       │   └── base-character-sheet.mjs
-│       ├── cowboy/
-│       ├── huckster/
-│       ├── shaman/
-│       ├── blessed/
-│       ├── mad-scientist/
-│       ├── _overlays/harrowed/
+│       ├── _overlays/harrowed/          # data-schema, manifest, mechanics, sheet-tab
+│       ├── cowboy/                      # manifest, data, sheet
+│       ├── huckster/                    # + mechanics.mjs
+│       ├── shaman/                      # + mechanics.mjs
+│       ├── blessed/                     # + mechanics.mjs
+│       ├── mad-scientist/               # + mechanics.mjs
 │       ├── npc/                         # GM-controlled full NPC
-│       └── mook/                        # Simplified grunt
+│       └── mook/                        # simplified grunt
 ├── templates/
-│   ├── actor/                           # Base + per-archetype overrides
-│   │   ├── parts/                       # Reusable HBS partials (traits, aptitudes, chips, wounds)
-│   │   └── …
-│   ├── item/
-│   └── dialogs/
+│   ├── actor/parts/                     # header, tabs, traits, combat, gear, bio,
+│   │                                    #   hexes, miracles, gizmos, favors, harrowed
+│   ├── item/                            # weapon-sheet.hbs, edge-sheet.hbs
+│   ├── dialogs/                         # roll + 4 archetype dialogs, combatant hand,
+│   │   └── parts/                       #   and the shared stepper / chip-spend partials
+│   ├── chat/                            # 7 result cards (hex, miracle, ritual, gizmo,
+│   │                                    #   madness, backlash, sin)
+│   └── apps/                            # fate-pot-widget.hbs
 ├── styles/
-│   ├── deadlands-classic.css            # Entry — @import of modules
-│   ├── _variables.css                   # CSS custom properties (theme)
+│   ├── deadlands-classic.css            # entry — the only file listed in system.json styles
+│   ├── _variables.css                   # Ledger design tokens
 │   ├── _base.css
 │   ├── actor-sheet.css
 │   ├── item-sheet.css
-│   ├── chips.css
 │   ├── combat.css
-│   └── archetypes/                      # Styles per archetype (hex-tab, miracle-tab, etc.)
+│   ├── chat.css
+│   ├── dialogs.css
+│   └── archetypes/                      # huckster, blessed, shaman, mad-scientist, harrowed
 ├── lang/
 │   ├── en.json
 │   └── pl.json
-├── packs/                               # Compendium packs (V14 LevelDB; built from packs/_source/ via `fvtt package pack`)
-│   ├── _source/                         # Source JSON per pack (source of truth; .gitignore must have !packs/_source/)
-│   ├── action-deck/                     # 54-card preset deck (Fate Pot is NOT a pack — it's a world setting, §3.3)
-│   ├── edges-srd/                       # Edge names + mechanical effects (no flavor copy)
+├── packs/                               # V14 LevelDB, built from packs/_source/ via `npm run pack`
+│   ├── _source/                         # source JSON per pack (source of truth)
+│   ├── action-deck/                     # 54-card preset deck (the Fate Pot is a world setting, §3.3)
+│   ├── edges-srd/                       # mechanical effects only, no flavor copy
 │   ├── hindrances-srd/
-│   ├── hexes-srd/                       # Example hexes (mechanics only, no flavor copy)
+│   ├── hexes-srd/
 │   ├── hit-location/                    # RollTable
-│   └── archetype-examples/              # Example NPCs, one per archetype
-├── icons/                               # SVG (cards, chips, wound severity, archetype icons)
+│   └── archetype-examples/              # one example actor per archetype
+├── assets/screenshots/                  # README captures, taken during an E2E session
 ├── docs/
-│   ├── notes.md                         # (exists)
 │   ├── implementation-plan.md           # THIS file
-│   ├── architecture.md                  # registry pattern + contract (exists; diagram + SemVer in Phase 14)
-│   ├── v14-api-notes.md                 # V14 patterns (exists)
-│   ├── mechanics-reference.md           # mechanics paraphrase + page citations (exists)
-│   ├── extending-archetypes.md          # How to add a new archetype
-│   └── migration-policy.md              # World-data migration policy
+│   ├── architecture.md                  # registry pattern, public API, SemVer policy
+│   ├── v14-api-notes.md                 # V14 patterns and snippets
+│   ├── mechanics-reference.md           # rulebook citation index (⚠ the rulebook itself wins)
+│   ├── extending-archetypes.md          # how to add a new archetype
+│   ├── migration-policy.md              # world-data migration policy
+│   ├── testing-e2e.md                   # local Playwright suite
+│   └── notes.md                         # design decisions, licensing, open follow-ups
 ├── tools/
-│   ├── verify-documenttypes.mjs         # Sanity-check script: documentTypes == registered archetypes
-│   └── audit-css.mjs                    # dlc-* class coverage audit (templates ↔ styles)
-├── .github/
+│   ├── verify-documenttypes.mjs         # manifest + EN/PL parity + registry comparison
+│   ├── audit-css.mjs                    # dlc-* class coverage (templates + module ↔ styles)
+│   └── audit-i18n.mjs                   # DEADLANDS.* keys used ↔ present in en.json
+├── tests/                               # node:test unit suites
+│   └── e2e/                             # Playwright specs + helpers (local only)
+├── .github/                             # ci.yml, release.yml, issue + PR templates
 └── CHANGELOG.md, README.md, CONTRIBUTING.md, LICENSE, SECURITY.md, CODE_OF_CONDUCT.md
 ```
 
