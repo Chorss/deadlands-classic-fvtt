@@ -1,0 +1,56 @@
+{{!-- Weapon item sheet. Ledger design (design_handoff_ledger/templates/item/weapon-sheet.hbs). --}}
+<form class="dlc-item-sheet" autocomplete="off">
+  <header class="dlc-item-head">
+    <img class="dlc-item-portrait" src="{{item.img}}" data-edit="img" alt="{{item.name}}" />
+    <div class="dlc-item-title">
+      <input type="text" name="name" value="{{item.name}}" class="dlc-item-name-input"
+        placeholder="{{localize itemTypeLabelKey}}" {{#unless editable}}disabled{{/unless}} />
+      <span class="dlc-item-kind">{{localize itemTypeLabelKey}}{{#if categoryLabel}} · {{categoryLabel}}{{/if}}</span>
+    </div>
+  </header>
+
+  <div class="dlc-item-stats">
+    <label class="dlc-field"><span class="dlc-field-label">{{localize "DEADLANDS.Item.Weapon.Category.Label"}}</span>
+      <select name="system.category" {{#unless editable}}disabled{{/unless}}>
+        {{selectOptions categoryChoices selected=system.category blank="" localize=true}}
+      </select></label>
+    <label class="dlc-field"><span class="dlc-field-label">{{localize "DEADLANDS.Item.Weapon.RangeType.Label"}}</span>
+      <select name="system.rangeType" {{#unless editable}}disabled{{/unless}}>
+        {{selectOptions rangeTypeChoices selected=system.rangeType localize=true}}
+      </select></label>
+    <label class="dlc-field"><span class="dlc-field-label">{{localize "DEADLANDS.Item.Weapon.Damage"}}</span>
+      <input type="text" name="system.damage" value="{{system.damage}}" class="dlc-num"
+        {{#unless editable}}disabled{{/unless}} /></label>
+    <label class="dlc-field"><span class="dlc-field-label">{{localize "DEADLANDS.Item.Weapon.Range"}}</span>
+      <input type="number" name="system.range" value="{{system.range}}" class="dlc-num"
+        {{#unless editable}}disabled{{/unless}} /></label>
+    <label class="dlc-field"><span class="dlc-field-label">{{localize "DEADLANDS.Item.Weapon.Shots"}}</span>
+      <input type="number" name="system.shots" value="{{system.shots}}" class="dlc-num"
+        {{#unless editable}}disabled{{/unless}} /></label>
+    <label class="dlc-field"><span class="dlc-field-label">{{localize "DEADLANDS.Item.Weapon.Rof"}}</span>
+      <input type="number" name="system.rof" value="{{system.rof}}" min="1" class="dlc-num"
+        {{#unless editable}}disabled{{/unless}} /></label>
+    <label class="dlc-field"><span class="dlc-field-label">{{localize "DEADLANDS.Item.Weapon.AmmoType"}}</span>
+      <input type="text" name="system.ammoType" value="{{system.ammoType}}" class="dlc-num"
+        {{#unless editable}}disabled{{/unless}} /></label>
+    <label class="dlc-field"><span class="dlc-field-label">{{localize "DEADLANDS.Item.Weapon.Defense"}}</span>
+      <input type="text" name="system.defense" value="{{system.defense}}" class="dlc-num"
+        {{#unless editable}}disabled{{/unless}} /></label>
+    <label class="dlc-field"><span class="dlc-field-label">{{localize "DEADLANDS.Item.Weapon.Price"}}</span>
+      <input type="text" name="system.price" value="{{system.price}}" class="dlc-num"
+        {{#unless editable}}disabled{{/unless}} /></label>
+  </div>
+
+  <div class="dlc-item-desc">
+    {{#if editable}}
+    <prose-mirror name="system.description" button="true" editable="true" toggled="false"
+      value="{{system.description}}">{{{enrichedDescription}}}</prose-mirror>
+    {{else}}
+    <div class="dlc-item-desc-readonly">{{{enrichedDescription}}}</div>
+    {{/if}}
+  </div>
+
+  <footer class="dlc-item-actions">
+    <button type="button" class="dlc-btn-primary" data-action="postToChat">{{localize "DEADLANDS.Item.PostToChat"}}</button>
+  </footer>
+</form>

@@ -85,6 +85,8 @@
   "DEADLANDS.Item.Weapon.AmmoType": "Ammo Type",
   "DEADLANDS.Item.Weapon.Defense": "Defense",
   "DEADLANDS.Item.Weapon.Price": "Price",
+  "DEADLANDS.Item.Edge.Points": "pts",
+  "DEADLANDS.Item.PostToChat": "Post to Chat",
 
   "DEADLANDS.Trait.Deftness.Label": "Deftness",
   "DEADLANDS.Trait.Nimbleness.Label": "Nimbleness",

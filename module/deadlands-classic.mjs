@@ -98,6 +98,19 @@ Hooks.once("init", () => {
     });
   }
 
+  // Per-type item sheets, sourced from the registry. hex/miracle/favor/gizmo
+  // register no sheetClass — they keep the core Foundry ItemSheet for now.
+  for (const def of ItemRegistry.all()) {
+    if (!def.sheetClass) {
+      continue;
+    }
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, def.sheetClass, {
+      types: [def.id],
+      makeDefault: true,
+      label: def.label,
+    });
+  }
+
   // Fate Pot world setting (4 integers — NOT Cards). dlc p.146. Plan §3.3.
   FatePot.registerSetting(SYSTEM_ID);
 
