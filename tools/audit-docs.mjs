@@ -43,7 +43,11 @@
  * Exit 0 — no errors (warnings may still be printed).
  * Exit 1 — at least one error.
  *
- * Used by: `npm run verify:all` (hence CI, `.githooks/pre-commit` and the Stop hook).
+ * Used by: `npm run verify:all` — hence CI (`.github/workflows/ci.yml`) and the
+ *   Stop hook (`.claude/hooks/stop-verify.sh`), which runs `verify:all` before a
+ *   turn ends with a dirty tree. Not in `.githooks/pre-commit`: that hook runs
+ *   individual tools gated on the extensions in the staged diff, and no Markdown
+ *   gate is wired there.
  */
 
 import { execFileSync } from "node:child_process";
