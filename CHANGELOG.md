@@ -11,9 +11,76 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `tools/audit-docs.mjs`, wired into `npm run verify:all` (so CI, the pre-commit
+  hook and the `Stop` hook all get it). Hard errors: a tracked file pointing at a
+  gitignored file, a relative Markdown link whose target is missing, and a
+  rulebook citation whose slug is unknown or whose page is past the end of that
+  book. Warnings only: `docs/*.md` absent from `CLAUDE.md`'s Sources of truth
+  table, and backticked paths that do not exist. The citation check is skipped
+  when `$DEADLANDS_RULES_PATH` is unset, so CI and a fresh clone degrade rather
+  than fail.
+- `docs/implementation-plan.md` §12 — the state of the compendium packs, which no
+  English-language document previously recorded: hexes 3, and miracles, gizmos,
+  favors, weapons and the bestiary all empty. The item types and mechanics work;
+  the content in `packs/_source/` is what is missing.
+- `docs/notes.md` — the house-rule TN tiers 13/15/17/19 as a design note. They are
+  the one mechanical value in the system that does not trace to the rulebook, and
+  they were recorded only in the changelog.
+
 ### Changed
 
+- **`docs/mechanics-reference.md` is now a citation index rather than a
+  paraphrase.** The "in brief" column survives only for claims verified
+  line-by-line against the `deadlands-rules-ref` extracts; every other rule
+  carries a page citation and nothing else. Compressing a multi-page subsystem
+  into one sentence is what produced this file's worst errors, so the arcane
+  backgrounds are now a companion-book map instead of four one-line summaries.
+- `docs/implementation-plan.md` trimmed from 736 to ~500 lines: phases 0-14 are
+  all closed, so their file lists and acceptance tests were removed in favour of
+  a heading plus a one-line scope. The directory tree in §4 was regenerated from
+  the working tree rather than patched.
+- The nine stale Polish copies under `docs/` were deleted, and repo documentation
+  is English-only from here. All eight translations had drifted to an older
+  revision of their English originals and disagreed with them about verified
+  rules. The gitignore rule stays, now covering natively-Polish notes with no
+  English counterpart.
+- Documentation brought back in line with the 0.4.0 code: the GM-proxy resolution
+  of the cross-client race, the registered item types, `ItemSheetV2` and the
+  relocated V14 globals, the 0.3.4 and 0.4.0 migration and roadmap entries, the
+  `.claude/skills/` vocabulary, and the corrected corpus size (71 books, not ~50).
+
 ### Fixed
+
+- **Files tracked in git referenced `docs/*.pl.md`, which is gitignored.** After a
+  fresh clone the `/new-phase` skill extracted its checklist from a file that was
+  not there, and `docs/implementation-plan.md` opened with a link that 404s on
+  GitHub while claiming the missing Polish file was authoritative.
+- `/new-phase`'s phase extraction never worked: an `awk` range tests its end
+  pattern against the same record, so `/^### Faza N /,/^### Faza [0-9]/` began and
+  ended on the heading and printed a single line.
+- Seven rule discrepancies in `docs/mechanics-reference.md`, found by auditing it
+  against the `dlc` extracts. The code was correct in every case; only the
+  document was wrong.
+  - The core resolution rule was **inverted** — the trait supplies the die *type*
+    and the aptitude level the die *count*, not the other way round.
+  - Initiative draws 1 card plus one per success *and* raise, and the 5-card cap
+    applies only absent supernatural aid.
+  - A maimed leg does not halve Pace (that is the *lame*/*limp* Hindrances), and
+    maimed guts or noggin means death — which was missing entirely.
+  - Wounds beyond maimed still count for damage prevention and chip spends, so
+    clamping the stored severity at 5 loses information.
+  - Shaman Appeasement cannot be banked: the favor is chosen first, and unspent
+    points evaporate. The document said the opposite.
+  - Mad Scientist blueprints use a *mad science* roll; Tinkerin' belongs to
+    construction.
+  - Huckster hexes need a success first, and each hex has a minimum required
+    poker hand.
+- The unresolved "verify before coding" TODO on Guts and Fear, now answered with
+  the Fear Level, Terror and Scart citations.
+- Stale claims across the docs: the E2E guide called the screenshots "planned"
+  and described a CI that no longer matches, `extending-archetypes.md` taught a
+  `DEFAULT_OPTIONS` pattern no shipped sheet uses, and `migration-policy.md`
+  described `tests/migration.test.mjs` as future work.
 
 ## [0.4.0] — 2026-08-22
 
