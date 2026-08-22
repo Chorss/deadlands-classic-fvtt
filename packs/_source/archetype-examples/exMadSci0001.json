@@ -45,11 +45,7 @@
         "dieCount": 3,
         "dieType": "d8",
         "modifier": 0,
-        "aptitudes": {
-          "madScience": {
-            "level": 4
-          }
-        }
+        "aptitudes": {}
       },
       "mien": {
         "dieCount": 1,
@@ -111,7 +107,11 @@
     "grit": 1,
     "bounty": 0,
     "woundModifier": 0,
-    "biography": ""
+    "biography": "",
+    "madScience": {
+      "level": 4,
+      "modifier": 0
+    }
   },
   "items": [],
   "effects": [],

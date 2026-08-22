@@ -2,13 +2,13 @@
  * Mad Scientist gizmo-creation and use mechanics.
  *
  * deviseBlueprint(actor, gizmoItem, opts) — Step 2: blueprint workflow:
- *   science roll (Cognition) vs TN 5 → draw 5+raises cards → evaluate poker hand
+ *   mad science roll (Knowledge) vs TN 5 → draw 5+raises cards → evaluate poker hand
  *   hand must meet gizmoItem.system.blueprintHand from Gizmo Construction Table (dlc p.168-169)
  *   Black Joker → Madness Table (d20). dlc p.168.
  *   Updates gizmoItem: blueprintStatus, constructionTN, reliability base.
  *
  * constructGizmo(actor, gizmoItem, opts) — Step 4: construction workflow:
- *   tinkerin' roll (Deftness) vs gizmoItem.system.constructionTN
+ *   tinkerin' roll (Smarts) vs gizmoItem.system.constructionTN
  *   each raise → +2 Reliability (base 10, max 19). dlc p.170.
  *   Updates gizmoItem: reliability, constructed.
  *
@@ -41,22 +41,22 @@ export const MADNESS_TABLE = [
   { roll: 2, key: "absentMinded" },
   { roll: 3, key: "delusion" },
   { roll: 4, key: "delusion" },
-  { roll: 5, key: "paranoia" },
-  { roll: 6, key: "paranoia" },
-  { roll: 7, key: "schizophrenia" },
-  { roll: 8, key: "schizophrenia" },
-  { roll: 9, key: "megalomania" },
-  { roll: 10, key: "megalomania" },
-  { roll: 11, key: "phobia" },
-  { roll: 12, key: "phobia" },
-  { roll: 13, key: "obsession" },
-  { roll: 14, key: "obsession" },
-  { roll: 15, key: "kleptomania" },
-  { roll: 16, key: "kleptomania" },
-  { roll: 17, key: "compulsion" },
-  { roll: 18, key: "compulsion" },
-  { roll: 19, key: "dementia" },
-  { roll: 20, key: "dementia" },
+  { roll: 5, key: "eccentricity" },
+  { roll: 6, key: "eccentricity" },
+  { roll: 7, key: "evilDeeds" },
+  { roll: 8, key: "evilDeeds" },
+  { roll: 9, key: "depression" }, // also costs 1 Grit each time. dlc p.250.
+  { roll: 10, key: "depression" },
+  { roll: 11, key: "minorPhobia" },
+  { roll: 12, key: "minorPhobia" },
+  { roll: 13, key: "majorPhobia" },
+  { roll: 14, key: "majorPhobia" },
+  { roll: 15, key: "mumbler" },
+  { roll: 16, key: "mumbler" },
+  { roll: 17, key: "paranoia" },
+  { roll: 18, key: "paranoia" },
+  { roll: 19, key: "schizophrenia" },
+  { roll: 20, key: "schizophrenia" },
 ];
 
 // ── Blueprint workflow ────────────────────────────────────────────────────────
@@ -71,13 +71,14 @@ export const MADNESS_TABLE = [
  */
 export async function deviseBlueprint(actor, gizmoItem, opts = {}) {
   const modifier = opts.modifier ?? 0;
-  const { level: scienceLevel = 0, modifier: scienceMod = 0 } = actor.system.madScience ?? {};
-  const traitData = actor.system.traits?.cognition;
-  const cognitionDie = traitData?.dieType ?? "d6";
-  const dieCount = Math.max(1, scienceLevel);
+  const { level: madScienceLevel = 0, modifier: madScienceMod = 0 } = actor.system.madScience ?? {};
+  // Mad Science is Knowledge-associated, not Cognition. dlc p.46.
+  const traitData = actor.system.traits?.knowledge;
+  const knowledgeDie = traitData?.dieType ?? "d6";
+  const dieCount = Math.max(1, madScienceLevel);
 
-  const rollResult = rollExplodingPool(dieCount, cognitionDie, {
-    modifier: modifier + scienceMod,
+  const rollResult = rollExplodingPool(dieCount, knowledgeDie, {
+    modifier: modifier + madScienceMod,
     tn: BLUEPRINT_TN,
   });
 
@@ -98,7 +99,7 @@ export async function deviseBlueprint(actor, gizmoItem, opts = {}) {
     }
 
     handResult = evaluateHand(drawn);
-    const minHand = gizmoItem.system.blueprintHand ?? "pair";
+    const minHand = gizmoItem.system.blueprintHand ?? "jacks";
     handMeets = meetsMinHand(handResult, minHand);
 
     if (handMeets) {
@@ -143,13 +144,16 @@ export async function constructGizmo(actor, gizmoItem, opts = {}) {
   }
 
   const modifier = opts.modifier ?? 0;
-  const { level: tinkerinLevel = 0, modifier: tinkerinMod = 0 } = actor.system.tinkerin ?? {};
-  const traitData = actor.system.traits?.deftness;
-  const deftnessDie = traitData?.dieType ?? "d6";
+  // Tinkerin' is a standard Aptitude (Smarts-associated, dlc p.51), not an
+  // archetype-exclusive field — read it from the base Aptitude schema.
+  const traitData = actor.system.traits?.smarts;
+  const { level: tinkerinLevel = 0, modifier: tinkerinMod = 0 } =
+    traitData?.aptitudes?.tinkerin ?? {};
+  const smartsDie = traitData?.dieType ?? "d6";
   const dieCount = Math.max(1, tinkerinLevel);
   const constructionTN = gizmoItem.system.constructionTN ?? 5;
 
-  const rollResult = rollExplodingPool(dieCount, deftnessDie, {
+  const rollResult = rollExplodingPool(dieCount, smartsDie, {
     modifier: modifier + tinkerinMod,
     tn: constructionTN,
   });

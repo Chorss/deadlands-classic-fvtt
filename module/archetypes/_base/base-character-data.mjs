@@ -16,13 +16,8 @@
 
 import { APTITUDES, DIE_TYPES, HIT_LOCATIONS, TRAITS, WOUND_MAX } from "../../core/config.mjs";
 import { OverlayRegistry } from "../../core/overlay-registry.mjs";
+import { dieFace } from "../../core/utils.mjs";
 import { highestWoundPenalty } from "../../core/wounds/wound-track.mjs";
-
-/** Numeric face value of a die-type string ("d8" → 8). */
-function dieFace(dieType) {
-  const n = Number.parseInt(String(dieType).replace(/^d/, ""), 10);
-  return Number.isFinite(n) ? n : 0;
-}
 
 export class BaseCharacterDataModel extends foundry.abstract.TypeDataModel {
   static defineSchema() {

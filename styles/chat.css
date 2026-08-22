@@ -252,6 +252,11 @@
   font-size: 0.8rem;
 }
 
+.dlc-backlash-gate {
+  font-size: 0.75rem;
+  color: var(--dlc-ink-muted);
+}
+
 .dlc-backlash-tag {
   display: inline-block;
   font-family: var(--dlc-font-head);

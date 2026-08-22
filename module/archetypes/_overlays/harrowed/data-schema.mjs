@@ -34,13 +34,34 @@ export function harrowedSchemaFields() {
         // (during sleep); each adds their Dominion points to the roll.
         // Winner gains 1 pt per success and 1 per raise. bod p.62, p.80.
         dominion: new f.SchemaField({
-          // PC's current Dominion points. Starts at Spirit die value / 2 on
-          // creation. Reaching 0 → Total Dominion (manitou permanent).
-          // bod p.12.
+          // PC's current Dominion points. The total pool is the character's
+          // Spirit die *face value* (bod p.12: "a Harrowed has as many
+          // Dominion points as his Spirit"), split by a one-time creation
+          // contest in activateHarrowed(). Reaching 0 → Total Dominion
+          // (manitou permanent, no more session rolls until the Marshal or
+          // magic intervenes). bod p.12, p.81.
           spiritControl: new f.NumberField({ integer: true, min: 0, initial: 0 }),
           // Serialised result of the last Dominion roll (for UI display only;
           // not a rulebook field). Null until first roll this campaign.
           lastRoll: new f.ObjectField({ nullable: true, initial: null }),
+          // The manitou's Spirit, drawn ONCE at Harrowed activation and fixed
+          // for the character's unlife (bod p.87 — this replaces dlc's older
+          // per-check draw). "normal": a die pool like any Trait. "legion":
+          // no fixed pool — Spirit is re-drawn by card every check, same as
+          // dlc's original per-check method (bod p.87: "draw a card to
+          // randomly determine it, just like ... the original rules").
+          // "greater": a flat 3d12+4, not a die pool (bod p.87).
+          manitouSpirit: new f.SchemaField(
+            {
+              kind: new f.StringField({
+                choices: ["normal", "legion", "greater"],
+                initial: "normal",
+              }),
+              dieCount: new f.NumberField({ integer: true, min: 0, initial: 1 }),
+              dieType: new f.StringField({ initial: "d6" }),
+            },
+            { required: false }
+          ),
         }),
 
         // Harrowed Powers — Common Powers (free, dlc p.196-198) plus Purchased

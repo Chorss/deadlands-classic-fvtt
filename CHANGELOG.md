@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **House-rule TN tiers 13/15/17/19** (Deadly, Nightmarish, Hellborn, Unearthly)
+  in the trait-roll dialog's Target Number picker, added at the maintainer's
+  explicit request. The core Difficulty ladder (dlc p.28) only names five
+  tiers up to Incredible (11); these four extend it past RAW and are **not**
+  sourced from `deadlands-rules-ref` — flagged in code (`TN_CHOICES`,
+  `base-character-sheet.mjs`) so they're never mistaken for canon.
 - Local Playwright E2E suite (`tests/e2e/`, `npm run test:e2e`) driving a real
   Foundry instance: boot smoke, per-archetype sheet render (raw-i18n-key leak
   check), click-to-roll flow, and a two-client GM-proxy race regression.
@@ -223,6 +229,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **Standard Aptitude set corrected against `dlc` p.41-51** (`module/core/config.mjs`):
+  dropped `acrobatics`, which doesn't exist anywhere in the rulebook, and added
+  6 standard Aptitudes that were missing — Speed-Load (Deftness), Drivin',
+  Swimmin', Teamster (Nimbleness), Trade (Knowledge), Gamblin' (Smarts) — 44
+  standard Aptitudes total, matching the book. Also renamed the `performance`
+  key to `performin` (EN label "Performance" → "Performin'" — the book's own
+  gerund'd form, matching Shootin'/Fightin'/etc.), and corrected the Trait
+  page cite (`dlc` p.37-38 → p.37-39).
+- **9 Polish Aptitude labels corrected against the official `pg-pl` (MAG)
+  translation**, replacing wording that didn't match the canon term: Bow
+  (Łucznictwo → Łuk), Lockpickin' (Otwieranie zamków → Włamywanie), Academia
+  (Nauka akademicka → Wykształcenie), Demolition (Materiały wybuchowe →
+  Wysadzanie), Disguise (Przebranie → Charakteryzacja), Professional
+  (Zawodowiec → Zawodowstwo), Persuasion (Przekonywanie → Perswazja),
+  Ridicule (Kpiny → Obśmiewanie), Streetwise (Znajomość ulicy → Cwaniactwo).
+  Dodge and Language also switched to the book's plural forms (Uniki, Języki).
 - Focus ring contrast. The indicator was hardcoded `#c8a44b`, which measures
   1.9:1 against the parchment window and fails WCAG AA. It now uses
   `--dlc-ink` (14:1 on the window bar, 15.4:1 on the sheet body) and flips to
@@ -250,6 +272,153 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   class, so this entry is historical — the class is live again) and corrected a
   `blessed.css` comment naming a sin-severity vocabulary that does not exist
   (`light`/`heavy`; the real values are `minor`/`major`/`mortal`).
+- **`concentrations: true` flag corrected against `dlc` p.41-51** (`module/core/config.mjs`):
+  13 Aptitudes with named concentration lists in the book were missing the flag
+  (academia, animalWranglin', areaKnowledge, artillery, arts, drivin', language,
+  professional, science, speed-load, survival, throwin', trade) — only 5 of the
+  18 rulebook-confirmed entries were flagged before.
+- **Four `archetype-examples` compendium actors lost their archetype-specific
+  Aptitude on load** (Huckster's hexslingin', Blessed's faith, Shaman's ritual,
+  Mad Scientist's madScience): the source JSON nested them under
+  `traits.<trait>.aptitudes.<key>`, a location the strict `SchemaField` silently
+  strips since none of the four is a core Aptitude — they live at a flat
+  `system.<key>` field on their own archetype's data model instead. Moved all
+  four to the correct location.
+- The example Mook actor (`exMook00001`) stored its wound track in the
+  8-location shape, but `MookDataModel` replaces `wounds` with a single `body`
+  slot — every stored severity happened to be 0, so no state was actually
+  lost, but the shape didn't match the schema and would have silently
+  swallowed any future edit to those fields. Also dropped `chips`/`grit`/
+  `bounty`, fields the Mook schema deletes entirely. The example NPC actor
+  similarly carried a dead `chips` block that `NpcDataModel` deletes.
+- `packs/_source/hit-location/hit-location-table.json` invented flavor text for
+  Gizzards ("Critical wounds count double") and Noggin ("wind damage instead of
+  wound") with no basis in the book. Corrected to the actual rule (dlc p.137-138,
+  "Noggins & Gizzards"): Gizzards hits add 1 extra damage die, Noggin hits add 2.
+- `invokeMiracle()` (Blessed) applied a generic −1 faith penalty on every busted
+  miracle roll, miscited to dlc p.177. That page (and fb p.35-36) only describe
+  faith loss as a *Tests of Faith* / sin consequence, already handled separately
+  by `trackSin()` — a failed invocation just does nothing. Removed the bust
+  branch from `invokeMiracle()`.
+- Shaman `RITUAL_TRAITS.fast` was mapped to Vigor; the Fast ritual's roll is
+  Spirit-based (ghost-dancers p.74) — Vigor is only used for a separate daily
+  Wind-loss check while fasting, not the ritual roll itself.
+- Mad Scientist rolled the wrong Trait for both of its own subsystem's rolls:
+  `deviseBlueprint()` used Cognition for the science ("mad science") roll and
+  `constructGizmo()` used Deftness for the tinkerin' roll — both Aptitudes are
+  Knowledge- and Smarts-associated respectively (dlc p.46, p.51), matching
+  `config.mjs`'s own `APTITUDES` table, which the mechanics code and the
+  `data.mjs` doc comments both contradicted.
+- Corrected page cites in `edges-srd`/`hindrances-srd` against `dlc` physical
+  page markers: Big Ears, Eagle Eyes, Bad Ears, Grim Servant o' Death,
+  Illiterate, Lame.
+- `hind012Curious` cited a "Moxie TN 5" resistance roll — Moxie doesn't exist
+  anywhere in Deadlands Classic (0 occurrences in the rulebook extract); Curious
+  is a pure roleplaying compulsion with no roll. `hind016Ferner` invented a
+  flat −4 Persuasion penalty the book never states (Ferner is Marshal-discretion
+  social friction only). `hind001Ailin`'s 5-point tier misstated the TN
+  progression and dropped the bust-trigger condition for the second (Onerous 7)
+  roll. `hind021Hankerin'` said "Traits" where the book (and the entry's own
+  1-point tier) says "skills." `hind043Randy` omitted the book's female-only +4
+  seduction-Persuasion bonus. `hind056Wanted` inverted the top tier — the book's
+  Villain is wanted dead, **not** alive, not "dead or alive."
+- `edges-srd/law-man.json` claimed a "5-point Obligation built into the cost,"
+  a mechanic the book states only for Rank (dlc p.67); Law Man merely suggests
+  taking an Obligation/Oath Hindrance separately.
+- Three hindrance descriptions omitted the book's floor clamp on the derived
+  stat they reduce: Big 'Un (Pace minimum 4), Geezer (Vigor minimum d4, Pace
+  minimum 2), Lame's 3-point tier (Pace minimum 2).
+- **Huckster Extended Backlash Table (`hnh` p.101-102) hardcoded 7 conditional
+  rows to a flat failure**, dropping the table's designed "about half the
+  time the hex still has some chance of succeeding" (hnh p.97) down to a flat
+  25%. Rows 2/7/12/17 now run a real Stun check (Vigor vs. the wound's level,
+  dlc p.140-141) to decide whether the huckster loses consciousness; row 4
+  now checks the actual Scart Table result ("Willies" or worse fails the
+  hex); rows 3/8 (pure Wind loss, no wound) have no book formula for
+  knockout — dlc p.141 leaves that to the Marshal's judgment, so the chat
+  card now flags it as the Marshal's call instead of silently asserting an
+  outcome. Also fixed rows 5/10 ("the hex has at least the minimum success"):
+  `castHex()` was gating their success follow-up on the drawn poker hand
+  meeting the item's minimum, when the book guarantees the floor regardless
+  of the hand. The row-2/7/12/17 Stun check also passed the raw wound-severity
+  integer (1-5) as its TN instead of the book's Stun & Recovery table
+  (Light 5, Heavy 7, Serious 9, Critical 11, Maimed 13 — dlc p.141); busting
+  on an exploding pool doesn't depend on the TN, so the unconscious outcome
+  itself was unaffected, but the roll's own TN was wrong. Added
+  `STUN_RECOVERY_TNS` to `config.mjs` and wired `_stunCheck()` to it.
+- Shaman `RITUAL_TYPES`/`RITUAL_TRAITS` only covered 8 of the 16 standalone
+  rituals in `ghost-dancers` p.73-77 — added Jimson Weed, Maim, Sand
+  Painting, Star Gazing, Sweat Lodge, Tattoo, Tobacco, and War Cry (Music is
+  correctly excluded — the book states it augments Dance rather than being
+  its own ritual). Also added `RITUAL_APPEASEMENT`: Appeasement earned per
+  success was hardcoded to a flat 1 for every ritual type, but the book ties
+  it to each ritual's own listed value (Dance/Pledge/Scar/Spirit Song = 1,
+  Paint/Tattoo = 2, Fast/Maim = 3, etc.) — `performRitual()` now multiplies
+  by the ritual's actual value instead.
+- **`GIZMO_CONSTRUCTION_TABLE` had a phantom `pair` row that doesn't exist in
+  the book**, shifting every real row down one slot: all 9 TNs were off by
+  +2 and the ceiling was 25 instead of 21 (dlc p.168-169; the SNR p.12 worked
+  example independently confirms the real table starts at Jacks=5). The
+  `blueprintHand` schema default moved from `"pair"` (not a valid tier) to
+  `"jacks"` (the book's actual lowest tier).
+- Mad Scientist's own two rolls used the wrong Trait: `deviseBlueprint()`
+  rolled Cognition for the science ("mad science") roll and `constructGizmo()`
+  rolled Deftness for tinkerin' — both are Knowledge- and Smarts-associated
+  respectively (dlc p.46, p.51), matching `config.mjs`'s own `APTITUDES`
+  table, which the mechanics code and the `data.mjs` doc comments both
+  contradicted.
+- **`MADNESS_TABLE` had 8 of its 10 conditions on the wrong d20 rows** —
+  e.g. rows 5-6 were labeled "Paranoia" (the book's actual row 17-18) instead
+  of "Eccentricity," and six labels (Megalomania, Phobia, Obsession,
+  Kleptomania, Compulsion, Dementia) don't exist anywhere on the real dlc
+  p.250 table at all. Corrected to the real 10 conditions in the real order
+  (Absent Minded, Delusion, Eccentricity, Evil Deeds, Depression, Minor
+  Phobia, Major Phobia, Mumbler, Paranoia, Schizophrenia) and updated the
+  matching `DEADLANDS.MadScientist.Madness.*` keys in both locales.
+- **Mad Scientist's `tinkerin` field duplicated the standard tinkerin'
+  Aptitude** (already tracked at `traits.smarts.aptitudes.tinkerin` for every
+  character) as a second, disconnected flat field — raising tinkerin' via the
+  normal Aptitude UI never affected gizmo construction rolls, which read the
+  flat field instead. Removed the duplicate field; `constructGizmo()` and the
+  sheet now read the standard Aptitude directly, with a `migrateData()` step
+  that folds any existing world's flat-field value into the standard location.
+  The Gizmos tab's own tinkerin' display briefly duplicated the Traits tab's
+  editable input under the same field name — both tab sections stay mounted
+  in the DOM at once, so submitting the form sent two values for one field
+  and Foundry rejected the update (`level: must be a number`); caught via a
+  live sheet render. The Gizmos tab copy is now read-only. Also reworded the
+  `madScience` label from "Mad Science (science)" to "Mad Science" (and the PL
+  equivalent) — Mad Science and Science are two distinct Aptitudes (dlc p.46:
+  "regular old science Aptitude just won't cut it"), and the parenthetical
+  read as if `madScience` aliased the standard `science` Aptitude shown on the
+  Traits tab, which it doesn't.
+- **Harrowed Dominion's point pool used Spirit die *count* instead of die
+  *face value*** — bod's own three pregen Harrowed templates (p.15-18) all
+  show a pool of 6 for a d6 Spirit character regardless of whether the die
+  count is 1, 3, or 4, confirming "a Harrowed has as many Dominion points as
+  his Spirit" (bod p.12) means face value, matching the same pattern Wind max
+  already uses. `activateHarrowed()` also skipped the book's creation-time
+  Spirit contest entirely (it just set the 50/50 split with no roll, and had
+  no bust-gives-manitou-everything branch), and `dominionRoll()` treated the
+  manitou as a fixed 1 die of the PC's own Spirit type instead of the
+  separate Spirit the book has the Marshal draw once at creation and reuse
+  (bod p.87's Manitou Spirit table — normal/Legion/Greater Manitou). Also
+  fixed `resolveDominionRoll()`: raises were computed against a `TN−1`-floored
+  opponent total instead of the opponent's real total (dlc p.30: "raises...
+  are counted from the opponent's total," no floor), and a tied roll
+  auto-resolved to a PC win instead of the no-change result a tie actually
+  produces (dlc p.29: "beats the TN **and** his opponent" — a tie beats
+  neither). Added a Total Dominion guard: once the manitou controls
+  everything, session Dominion rolls stop until the Marshal or magic
+  intervenes (bod p.81), instead of continuing to roll every session. Legion's
+  per-check Spirit redraw (bod p.87: "just like ... the original rules in the
+  Deadlands rulebook") had been approximated with an invented rank→die-type
+  ladder pending verification; replaced it with the actual referenced table —
+  the character-creation Traits Table (`pg` p.37, echoed for extras at dlc
+  p.213-214) — where card rank sets the die type and suit sets the die count.
+- The Harrowed tab's "last roll" display read `lastRoll.pcTotal`/`.npcTotal`,
+  fields the roll result was never storing (only `pcRoll`/`npcRoll`, the raw
+  dice results) — the totals now save correctly.
 
 ## [0.3.4] — 2026-07-06
 

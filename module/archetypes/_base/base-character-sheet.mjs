@@ -25,13 +25,31 @@ const TextEditor = foundry.applications.ux.TextEditor.implementation;
 const TEMPLATE_ROOT = "systems/deadlands-classic/templates/actor/parts";
 const DIALOG_ROOT = "systems/deadlands-classic/templates/dialogs";
 
-/** TN choices for the roll dialog — keyed by i18n slug, value = TN number. dlc p.28. */
+/**
+ * TN choices for the roll dialog — keyed by i18n slug, value = TN number.
+ * The five named tiers Foolproof–Incredible are the complete core Difficulty
+ * ladder (dlc p.28) — nothing named exists above 11 anywhere in the corpus;
+ * the rulebook's own precedent for tasks this hard is a bare TN, not a named
+ * rung (dlc's Guts/Terror table runs unnamed to TN 13 at p.221-222, and
+ * adventure books just say "a TN of 15"/"TN of 17").
+ *
+ * 13/15/17/19 and their names (Deadly, Nightmarish, Hellborn, Unearthly) are
+ * a **house-rule extension past RAW**, added at the maintainer's explicit
+ * request (2026-08-22) so higher-TN tasks have a picker option instead of
+ * requiring a manual modifier stack — not sourced from deadlands-rules-ref.
+ * See .claude/rules/rulebook-authority.md: this is flagged here precisely so
+ * it's never mistaken for canon later.
+ */
 const TN_CHOICES = [
   { value: 3, label: "DEADLANDS.TN.Foolproof" },
   { value: 5, label: "DEADLANDS.TN.Fair", default: true },
   { value: 7, label: "DEADLANDS.TN.Onerous" },
   { value: 9, label: "DEADLANDS.TN.Hard" },
   { value: 11, label: "DEADLANDS.TN.Incredible" },
+  { value: 13, label: "DEADLANDS.TN.Deadly" },
+  { value: 15, label: "DEADLANDS.TN.Nightmarish" },
+  { value: 17, label: "DEADLANDS.TN.Hellborn" },
+  { value: 19, label: "DEADLANDS.TN.Unearthly" },
 ];
 
 /**

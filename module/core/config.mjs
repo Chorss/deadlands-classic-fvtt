@@ -15,7 +15,7 @@
 
 /**
  * The 10 Traits — five Corporeal, five Mental. Insertion order is the canonical
- * sheet order (Corporeal block, then Mental block). `dlc` p.37-38.
+ * sheet order (Corporeal block, then Mental block). `dlc` p.37-39.
  * @type {Record<string, { group: "corporeal" | "mental" }>}
  */
 export const TRAITS = {
@@ -41,10 +41,16 @@ export const TRAITS = {
  *   hexslingin' → Huckster, ritual → Shaman, faith → Blessed,
  *   mad science → Mad Scientist.
  *
- * `concentrations: true` flags aptitudes that split into specializations
- * (e.g. shootin': pistol/rifle/shotgun). Only the rulebook-enumerated ones are
- * flagged for now; the full concentration handling is built with the aptitude
- * schema in Phase 2 (re-verify against `dlc` p.41-51 then).
+ * `concentrations: true` flags aptitudes that split into named specializations
+ * per p.41: "Concentrations are listed in italics below some of these
+ * Aptitudes. If Concentrations are listed, then one must be chosen." All 18
+ * aptitudes that carry a concentration list on p.41-51 are flagged below
+ * (verified against the full extract, not spot-checked) — but the boolean is
+ * a partial model: Professional (p.47-48) and Trade (p.51) concentrations
+ * "are never considered related" and must be bought as separate Aptitudes,
+ * unlike Shootin'/Fightin'-style concentrations. That distinction needs a
+ * richer shape than `true`/absent; re-verify against p.41-51 when the full
+ * concentration schema is built in Phase 2.
  *
  * @type {Record<string, Record<string, { concentrations?: boolean }>>}
  */
@@ -55,15 +61,18 @@ export const APTITUDES = {
     lockpickin: {},
     shootin: { concentrations: true },
     sleightOfHand: {},
-    throwin: {},
+    speedLoad: { concentrations: true },
+    throwin: { concentrations: true },
   },
   nimbleness: {
-    acrobatics: {},
     climbin: {},
     dodge: {},
+    drivin: { concentrations: true },
     fightin: { concentrations: true },
     horseRidin: {},
     sneak: {},
+    swimmin: {},
+    teamster: {},
   },
   quickness: {
     quickDraw: { concentrations: true },
@@ -71,36 +80,38 @@ export const APTITUDES = {
   strength: {},
   vigor: {},
   cognition: {
-    artillery: {},
-    arts: {},
+    artillery: { concentrations: true },
+    arts: { concentrations: true },
     scrutinize: {},
     search: {},
     trackin: {},
   },
   knowledge: {
-    academia: {},
-    areaKnowledge: {},
+    academia: { concentrations: true },
+    areaKnowledge: { concentrations: true },
     demolition: {},
     disguise: {},
-    language: {},
+    language: { concentrations: true },
     medicine: { concentrations: true },
-    professional: {},
-    science: {},
+    professional: { concentrations: true },
+    science: { concentrations: true },
+    trade: { concentrations: true },
   },
   mien: {
-    animalWranglin: {},
+    animalWranglin: { concentrations: true },
     leadership: {},
     overawe: {},
-    performance: { concentrations: true },
+    performin: { concentrations: true },
     persuasion: {},
     taleTellin: {},
   },
   smarts: {
     bluff: {},
+    gamblin: {},
     ridicule: {},
     scroungin: {},
     streetwise: {},
-    survival: {},
+    survival: { concentrations: true },
     tinkerin: {},
   },
   spirit: {
@@ -189,6 +200,23 @@ export const WOUND_PENALTIES = {
   3: -3,
   4: -4,
   5: -5,
+};
+
+/**
+ * Stun & Recovery table — the TN for a stun check (and, at the same
+ * difficulty, a later recovery check) keyed by wound level. `dlc` p.141.
+ * The `wind: 3` row is the TN for a character whose worst state is being
+ * winded (no wound yet, 0 or lower Wind) — not used by the stun check
+ * itself, since a hit that causes no wound needs no stun check (p.140).
+ * @type {Record<number, number> & { wind: number }}
+ */
+export const STUN_RECOVERY_TNS = {
+  wind: 3,
+  1: 5,
+  2: 7,
+  3: 9,
+  4: 11,
+  5: 13,
 };
 
 /**
@@ -313,6 +341,7 @@ export const DEADLANDS = Object.freeze({
   WOUND_SEVERITIES,
   WOUND_MAX,
   WOUND_PENALTIES,
+  STUN_RECOVERY_TNS,
   HIT_LOCATIONS,
   HIT_LOCATION_TABLE,
   CARD_SUITS,

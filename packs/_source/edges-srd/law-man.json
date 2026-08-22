@@ -7,7 +7,7 @@
     "cost": 1,
     "category": "",
     "requirements": ["Marshal approval"],
-    "description": "<p>Law enforcement authority with growing jurisdiction: 1=deputized for a specific purpose, 3=county sheriff, 5=US Marshal or Texas Ranger. Includes an implicit 5-point Obligation. dlc p.65.</p>"
+    "description": "<p>Law enforcement authority with growing jurisdiction: 1=deputized for a specific purpose, 3=county sheriff, 5=US Marshal or Texas Ranger. The book suggests (but does not require, and does not pre-pay) also taking an Obligation or Oath Hindrance for the badge — unlike Rank, this Edge's cost has no built-in Obligation. dlc p.65.</p>"
   },
   "folder": null,
   "sort": 0,

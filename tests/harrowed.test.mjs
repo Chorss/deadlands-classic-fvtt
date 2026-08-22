@@ -7,7 +7,10 @@
 
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { resolveDominionRoll } from "../module/archetypes/_overlays/harrowed/mechanics.mjs";
+import {
+  manitouSpiritFromCard,
+  resolveDominionRoll,
+} from "../module/archetypes/_overlays/harrowed/mechanics.mjs";
 
 describe("resolveDominionRoll", () => {
   // ── No-change cases ──────────────────────────────────────────────────────
@@ -40,14 +43,14 @@ describe("resolveDominionRoll", () => {
     assert.equal(result.winner, "pc");
     assert.equal(result.pcTotal, 6);
     assert.equal(result.npcTotal, 3);
-    // margin = 6 - max(3, 4) = 6 - 4 = 2 → floor(2/5) = 0 raises → 1 point
+    // margin = 6 - 3 = 3 → floor(3/5) = 0 raises → 1 point. dlc p.30.
     assert.equal(result.pointsGained, 1);
   });
 
   it("PC wins with raises when margin exceeds 5", () => {
     // Arrange — pcTotal=15, npcTotal=4
     const result = resolveDominionRoll({ pcRoll: 12, pcDominion: 3, npcRoll: 2, npcDominion: 2 });
-    // margin = 15 - max(4, 4) = 15 - 4 = 11 → floor(11/5) = 2 raises → 3 points
+    // margin = 15 - 4 = 11 → floor(11/5) = 2 raises → 3 points
     assert.equal(result.winner, "pc");
     assert.equal(result.pointsGained, 3);
   });
@@ -59,34 +62,35 @@ describe("resolveDominionRoll", () => {
     assert.equal(result.pointsGained, 3);
   });
 
-  it("tie on total goes to PC", () => {
-    // Both reach TN; pcTotal === npcTotal → PC wins
+  it("a tie is no change, not a PC win", () => {
+    // dlc p.29: "the character who beats the TN and his opponent wins" — a
+    // tie beats neither. bod doesn't override this for Dominion.
     const result = resolveDominionRoll({ pcRoll: 3, pcDominion: 3, npcRoll: 4, npcDominion: 2 });
     // pcTotal=6, npcTotal=6
-    assert.equal(result.winner, "pc");
-    assert.equal(result.pointsGained, 1);
+    assert.equal(result.winner, "none");
+    assert.equal(result.pointsGained, 0);
   });
 
   // ── Manitou wins ─────────────────────────────────────────────────────────
 
-  it("Manitou wins with 1 point when only Manitou reaches TN", () => {
-    // npcTotal=7, pcTotal=2
+  it("Manitou wins with 1 raise when margin is exactly 5", () => {
+    // npcTotal=7, pcTotal=2 → margin=5 → 1 raise → 2 points. dlc p.30
+    // (raises are counted from the opponent's total, no TN floor).
     const result = resolveDominionRoll({ pcRoll: 1, pcDominion: 1, npcRoll: 5, npcDominion: 2 });
     assert.equal(result.winner, "manitou");
-    // margin = 7 - max(2, 4) = 7 - 4 = 3 → 0 raises → 1 point
-    assert.equal(result.pointsGained, 1);
+    assert.equal(result.pointsGained, 2);
   });
 
   it("Manitou wins with raises when margin is large", () => {
     // npcTotal=18, pcTotal=3
     const result = resolveDominionRoll({ pcRoll: 1, pcDominion: 2, npcRoll: 14, npcDominion: 4 });
-    // margin = 18 - max(3, 4) = 18 - 4 = 14 → floor(14/5)=2 raises → 3 pts
+    // margin = 18 - 3 = 15 → floor(15/5)=3 raises → 4 pts
     assert.equal(result.winner, "manitou");
-    assert.equal(result.pointsGained, 3);
+    assert.equal(result.pointsGained, 4);
   });
 
-  it("Manitou wins with 1 raise when margin is exactly 5", () => {
-    // npcTotal=13, pcTotal=7 → margin=13-7=6 → 1 raise → 2 pts
+  it("Manitou wins with 1 raise when margin is 6 (still below 2 raises)", () => {
+    // npcTotal=13, pcTotal=7 → margin=13-7=6 → floor(6/5)=1 raise → 2 pts
     const result = resolveDominionRoll({ pcRoll: 5, pcDominion: 2, npcRoll: 9, npcDominion: 4 });
     assert.equal(result.winner, "manitou");
     assert.equal(result.pointsGained, 2);
@@ -112,5 +116,50 @@ describe("resolveDominionRoll", () => {
     const result = resolveDominionRoll({ pcRoll: 7, pcDominion: 2, npcRoll: 3, npcDominion: 1 });
     assert.equal(result.pcTotal, 9);
     assert.equal(result.npcTotal, 4);
+  });
+});
+
+// ── manitouSpiritFromCard (bod p.87, dlc p.194) ────────────────────────────────
+
+describe("manitouSpiritFromCard", () => {
+  const pcSpirit = { dieCount: 2, dieType: "d8" };
+
+  it("card 2 → Legion", () => {
+    const result = manitouSpiritFromCard({ rank: "2", joker: null }, pcSpirit);
+    assert.equal(result.kind, "legion");
+  });
+
+  it("cards 3-8 → same Spirit as the hero's", () => {
+    const result = manitouSpiritFromCard({ rank: "6", joker: null }, pcSpirit);
+    assert.equal(result.kind, "normal");
+    assert.equal(result.dieCount, 2);
+    assert.equal(result.dieType, "d8");
+  });
+
+  it("cards 9-Jack → same die type, +1 die", () => {
+    const result = manitouSpiritFromCard({ rank: "J", joker: null }, pcSpirit);
+    assert.equal(result.kind, "normal");
+    assert.equal(result.dieCount, 3);
+    assert.equal(result.dieType, "d8");
+  });
+
+  it("cards Queen-Ace → die type +1 step, +2 dice", () => {
+    const result = manitouSpiritFromCard({ rank: "A", joker: null }, pcSpirit);
+    assert.equal(result.kind, "normal");
+    assert.equal(result.dieCount, 4);
+    assert.equal(result.dieType, "d10");
+  });
+
+  it("die type step-up clamps at d12 (doesn't run off the ladder)", () => {
+    const result = manitouSpiritFromCard(
+      { rank: "K", joker: null },
+      { dieCount: 1, dieType: "d12" }
+    );
+    assert.equal(result.dieType, "d12");
+  });
+
+  it("Joker → Greater Manitou", () => {
+    const result = manitouSpiritFromCard({ rank: null, joker: "red" }, pcSpirit);
+    assert.equal(result.kind, "greater");
   });
 });

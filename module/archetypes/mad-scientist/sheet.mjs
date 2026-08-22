@@ -98,14 +98,20 @@ export class MadScientistSheet extends BaseCharacterSheet {
     };
   }
 
+  /**
+   * Tinkerin' is a standard Aptitude (Smarts-associated, dlc p.51), tracked
+   * at `traits.smarts.aptitudes.tinkerin` on the base schema and edited from
+   * the Traits tab — not an archetype-exclusive field, unlike madScience.
+   * The Gizmos tab only displays it (read-only): a second editable input
+   * bound to the same field name would double-submit it, since both tab
+   * sections stay mounted in the DOM at once.
+   */
   #prepareTinkerin() {
-    const data = this.document.system.tinkerin ?? { level: 0, modifier: 0 };
-    return {
-      level: data.level,
-      modifier: data.modifier,
-      levelPath: "system.tinkerin.level",
-      modifierPath: "system.tinkerin.modifier",
+    const data = this.document.system.traits?.smarts?.aptitudes?.tinkerin ?? {
+      level: 0,
+      modifier: 0,
     };
+    return { level: data.level, modifier: data.modifier };
   }
 
   // ── Action handlers ──────────────────────────────────────────────────────────

@@ -17,6 +17,28 @@
     </p>
     <p class="dlc-backlash-note">{{localize noteKey}}</p>
 
+    {{#if stunDamage}}
+    <p class="dlc-backlash-gate">
+      {{localize "DEADLANDS.Huckster.Backlash.Gate.Damage"}}: <strong>{{stunDamage}}</strong>
+      {{#if stunUnconscious}}
+        — {{localize "DEADLANDS.Huckster.Backlash.Gate.Unconscious"}}
+      {{else}}
+        — {{localize "DEADLANDS.Huckster.Backlash.Gate.Conscious"}}
+      {{/if}}
+    </p>
+    {{/if}}
+    {{#if scartTotal}}
+    <p class="dlc-backlash-gate">
+      {{localize "DEADLANDS.Huckster.Backlash.Gate.ScartRoll"}}: <strong>{{scartTotal}}</strong>
+    </p>
+    {{/if}}
+    {{#if marshalWindLost}}
+    <p class="dlc-backlash-gate dlc-gm-note">
+      {{localize "DEADLANDS.Huckster.Backlash.Gate.WindLost"}}: <strong>{{marshalWindLost}}</strong>
+      — {{localize "DEADLANDS.Huckster.Backlash.Gate.MarshalCall"}}
+    </p>
+    {{/if}}
+
     {{#if hexSucceeds}}
     <p class="dlc-backlash-succeeds">{{localize "DEADLANDS.Huckster.Backlash.HexSucceeds"}}</p>
     {{/if}}

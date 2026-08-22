@@ -14,7 +14,9 @@
       <label class="dlc-tn-option">
         <input type="radio" name="tn" value="{{choice.value}}" {{#if choice.default}}checked{{/if}} />
         <span class="dlc-tn-option-value dlc-num">{{choice.value}}</span>
+        {{#if choice.label}}
         <span class="dlc-tn-option-label">{{localize choice.label}}</span>
+        {{/if}}
       </label>
       {{/each}}
     </div>

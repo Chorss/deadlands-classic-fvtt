@@ -12,8 +12,12 @@
 const MEDICINE_WAYS = ["blessing", "earth", "ghost", "trickster", "visionseeking", "war"];
 
 /**
- * Ritual types available as Aptitude concentrations. ghost-dancers p.71-76.
- * Each concentration has its own associated Trait (handled in mechanics).
+ * Ritual types available as Aptitude concentrations. ghost-dancers p.73-77.
+ * Each concentration has its own associated Trait and Appeasement value
+ * (handled in `shaman/mechanics.mjs`'s `RITUAL_TRAITS`/`RITUAL_APPEASEMENT`).
+ * The 16 standalone rituals the book lists (Music is deliberately excluded —
+ * ghost-dancers p.75: "Music is not its own ritual, but it makes the dance
+ * ritual more effective").
  */
 const RITUAL_TYPES = [
   "dance",
@@ -24,6 +28,14 @@ const RITUAL_TYPES = [
   "scar",
   "animalSacrifice",
   "spiritSong",
+  "jimsonWeed",
+  "maim",
+  "sandPainting",
+  "starGazing",
+  "sweatLodge",
+  "tattoo",
+  "tobacco",
+  "warCry",
 ];
 
 export class FavorDataModel extends foundry.abstract.TypeDataModel {

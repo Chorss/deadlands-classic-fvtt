@@ -21,13 +21,16 @@
     <span class="dlc-aptitude-divider"></span>
     <span class="dlc-aptitude-stat">
       <label for="dlc-tinkerin-level">{{localize "DEADLANDS.MadScientist.Tinkerin.Label"}}</label>
-      <input type="number" id="dlc-tinkerin-level" class="dlc-num" min="0" name="{{tinkerin.levelPath}}"
-        value="{{tinkerin.level}}" {{#unless editable}}disabled{{/unless}} />
+      {{!-- Read-only here: tinkerin' is the standard Smarts Aptitude, edited on
+           the Traits tab. Both tab sections stay in the DOM at once, so a second
+           editable input sharing that field's name would double-submit it. --}}
+      <input type="number" id="dlc-tinkerin-level" class="dlc-num" min="0"
+        value="{{tinkerin.level}}" disabled />
     </span>
     <span class="dlc-aptitude-stat">
       <label for="dlc-tinkerin-mod">{{localize "DEADLANDS.MadScientist.Tinkerin.Modifier"}}</label>
-      <input type="number" id="dlc-tinkerin-mod" class="dlc-num" name="{{tinkerin.modifierPath}}"
-        value="{{tinkerin.modifier}}" {{#unless editable}}disabled{{/unless}} />
+      <input type="number" id="dlc-tinkerin-mod" class="dlc-num"
+        value="{{tinkerin.modifier}}" disabled />
     </span>
   </div>
 

@@ -151,20 +151,23 @@ describe("Manitou opposed roll raises (ghost-dancers p.57)", () => {
 // ── GIZMO_CONSTRUCTION_TABLE spot checks ─────────────────────────────────────
 
 describe("GIZMO_CONSTRUCTION_TABLE (dlc p.168-169)", () => {
+  // gizmo-data.mjs can't be imported directly — it extends
+  // foundry.abstract.TypeDataModel at module scope — so the table is
+  // duplicated here, same as SIN_TNS above. Keep in sync with
+  // module/core/items/gizmo-data.mjs's GIZMO_CONSTRUCTION_TABLE export.
   const TABLE = {
-    pair: 5,
-    jacks: 7,
-    twoPair: 9,
-    threeOfAKind: 11,
-    straight: 13,
-    flush: 15,
-    fullHouse: 17,
-    fourOfAKind: 19,
-    straightFlush: 21,
-    royalFlush: 25,
+    jacks: 5,
+    twoPair: 7,
+    threeOfAKind: 9,
+    straight: 11,
+    flush: 13,
+    fullHouse: 15,
+    fourOfAKind: 17,
+    straightFlush: 19,
+    royalFlush: 21,
   };
 
-  it("pair → Fair (5)", () => assert.equal(TABLE.pair, 5));
-  it("flush → Formidable (15)", () => assert.equal(TABLE.flush, 15));
-  it("royalFlush → Herculean (25)", () => assert.equal(TABLE.royalFlush, 25));
+  it("jacks (lowest tier — no pair/ace row) → Fair (5)", () => assert.equal(TABLE.jacks, 5));
+  it("flush → Strenuous (13)", () => assert.equal(TABLE.flush, 13));
+  it("royalFlush → Incredible (21)", () => assert.equal(TABLE.royalFlush, 21));
 });

@@ -20,30 +20,33 @@ export const GIZMO_POWER_TYPES = ["mechanical", "muscleOrMechanical", "steamOrGh
 
 /**
  * Gizmo Construction Table: blueprint (minimum poker hand) → construction TN.
- * dlc p.168-169.
+ * dlc p.168-169. "Jacks" (the book's lowest tier) means a pair of Jacks or
+ * better — there is no lower tier; the table has no "pair" or "ace" row.
  * @type {Record<string, number>}
  */
 export const GIZMO_CONSTRUCTION_TABLE = {
-  pair: 5, // Fair (5)
-  jacks: 7, // Challenging (7)
-  twoPair: 9, // Hard (9)
-  threeOfAKind: 11, // Onerous (11)
-  straight: 13, // Strenuous (13)
-  flush: 15, // Formidable (15)
-  fullHouse: 17, // Severe (17)
-  fourOfAKind: 19, // Incredible (19)
-  straightFlush: 21, // Legendary (21)
-  royalFlush: 25, // Herculean (25)
+  jacks: 5,
+  twoPair: 7,
+  threeOfAKind: 9,
+  straight: 11,
+  flush: 13,
+  fullHouse: 15,
+  fourOfAKind: 17,
+  straightFlush: 19,
+  royalFlush: 21,
 };
 
 export class GizmoDataModel extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     const f = foundry.data.fields;
     return {
-      // Minimum poker hand from the blueprint draw. dlc p.168-169.
+      // Minimum poker hand from the blueprint draw. dlc p.168-169. Choices
+      // stay the full POKER_HAND_RANKS enum (shared with hexes, which do use
+      // ace/pair), but the default is "jacks" — the Construction Table's
+      // actual lowest tier; ace/pair have no construction TN at all.
       blueprintHand: new f.StringField({
         choices: POKER_HAND_RANKS,
-        initial: "pair",
+        initial: "jacks",
       }),
       // TN for the tinkerin' (construction) roll. dlc p.170.
       constructionTN: new f.NumberField({ integer: true, min: 3, initial: 5 }),

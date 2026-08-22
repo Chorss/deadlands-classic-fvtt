@@ -116,14 +116,14 @@ export async function invokeMiracle(actor, miracleItem, opts = {}) {
 
   const rollResult = rollExplodingPool(dieCount, spiritDie, { modifier: modifier + faithMod, tn });
 
+  // A failed invocation (bust or under-TN) just doesn't happen — no faith loss.
+  // Faith loss is exclusively a Tests of Faith / sin consequence, handled by
+  // trackSin(), not a generic invocation-bust penalty. dlc p.177 ("Tests of
+  // Faith"); fb p.35-36 ("Invoking Miracles" — failure has no faith cost
+  // beyond miracle-specific bespoke effects, which aren't modeled here yet).
   await _sendMiracleMessage(actor, miracleItem, rollResult, {
     miraculSucceeds: !rollResult.bust && rollResult.total >= tn,
   });
-
-  if (rollResult.bust) {
-    // Bust on a faith roll = lose 1 faith if not already at 0. dlc p.177.
-    await _applyFaithLoss(actor);
-  }
 }
 
 // ── Sin tracking ─────────────────────────────────────────────────────────────

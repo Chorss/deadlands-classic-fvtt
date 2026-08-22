@@ -63,12 +63,12 @@
         "dieCount": 3,
         "dieType": "d8",
         "modifier": 0,
-        "aptitudes": {
-          "ritual": {
-            "level": 3
-          }
-        }
+        "aptitudes": {}
       }
+    },
+    "ritual": {
+      "level": 3,
+      "modifier": 0
     },
     "wounds": {
       "noggin": {

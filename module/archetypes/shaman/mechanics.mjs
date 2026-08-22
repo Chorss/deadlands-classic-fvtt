@@ -3,7 +3,8 @@
  *
  * performRitual(actor, favorItem, opts) — earn Appeasement points:
  *   roll ritual level × associated Trait die vs favor.ritualTN
- *   success → earn (1 + raises) Appeasement points
+ *   success → earn the ritual's own Appeasement value × (1 + raises) points
+ *     (RITUAL_APPEASEMENT below; not a flat 1 — it varies per ritual type)
  *   bust → manitou attacks: draw card for Spirit, opposed roll → 3d6+1d6/raise guts damage
  *   Points are added to appeasement.current (up to appeasement.max = guardianSpirit level).
  *   Without Guardian Spirit (guardianSpirit = 0), favor must be specified first and
@@ -21,18 +22,64 @@ import { ActionDeck, buildFullDeck, shuffleDeck } from "../../core/cards/action-
 import { rollExplodingPool } from "../../core/dice/exploding-roll.mjs";
 
 /**
- * Trait associated with each ritual type. ghost-dancers p.71-76.
+ * Trait associated with each ritual type. ghost-dancers p.73-77. The 16
+ * standalone rituals the book lists — Music is deliberately excluded (p.75:
+ * "Music is not its own ritual, but it makes the dance ritual more
+ * effective," a performin'-skill bonus to Dance, not a selectable ritual).
  * @type {Record<string, string>}
  */
 export const RITUAL_TRAITS = {
   dance: "nimbleness",
-  fast: "vigor",
+  fast: "spirit",
   peyote: "vigor",
   bodyPainting: "cognition",
   pledge: "knowledge",
   scar: "vigor",
   animalSacrifice: "nimbleness",
   spiritSong: "spirit",
+  jimsonWeed: "vigor",
+  maim: "vigor",
+  sandPainting: "deftness",
+  starGazing: "smarts",
+  sweatLodge: "vigor",
+  tattoo: "deftness",
+  tobacco: "spirit",
+  warCry: "mien",
+};
+
+/**
+ * Appeasement points earned per success/raise on each ritual type's roll.
+ * ghost-dancers p.73-77 ("Appeasement is the number of Appeasement points
+ * awarded per success on the shaman's ritual roll").
+ *
+ * Three rituals have a book-stated variable value rather than one flat
+ * number, and are given a conservative baseline here pending fuller
+ * sub-table support:
+ *   - animalSacrifice: 1 (small animal) or 2 (large animal), p.73.
+ *   - sandPainting: scales with the painting's size; book gives no fixed
+ *     table, only "Varies" (p.76) — GM discretion.
+ *   - sweatLodge: 0 — it doesn't earn Appeasement directly; instead it
+ *     reduces the TN of other rituals performed within 24 hours by 1 per
+ *     success on its own Vigor roll (p.76-77), not modeled here yet.
+ * @type {Record<string, number>}
+ */
+export const RITUAL_APPEASEMENT = {
+  dance: 1,
+  fast: 3,
+  peyote: 1,
+  bodyPainting: 2,
+  pledge: 1,
+  scar: 1,
+  animalSacrifice: 1,
+  spiritSong: 1,
+  jimsonWeed: 2,
+  maim: 3,
+  sandPainting: 1,
+  starGazing: 2,
+  sweatLodge: 0,
+  tattoo: 2,
+  tobacco: 1,
+  warCry: 1,
 };
 
 // ── Ritual performance workflow ───────────────────────────────────────────────
@@ -69,7 +116,10 @@ export async function performRitual(actor, favorItem, opts = {}) {
     return;
   }
 
-  const earned = rollResult.total >= tn ? 1 + rollResult.raises : 0;
+  // Appeasement per success/raise is the ritual's own listed value, not a
+  // flat 1 — e.g. Fast/Maim award 3, Paint/Tattoo award 2. ghost-dancers p.73-77.
+  const appeasementValue = RITUAL_APPEASEMENT[ritualType] ?? 1;
+  const earned = rollResult.total >= tn ? appeasementValue * (1 + rollResult.raises) : 0;
   if (earned > 0) {
     await _applyAppeasementOrFavor(actor, favorItem, earned);
   }

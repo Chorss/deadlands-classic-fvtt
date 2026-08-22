@@ -26,7 +26,7 @@
     {
       "_id": "hlResult0010",
       "type": 0,
-      "text": "Gizzards (heart/vitals — Critical wounds count double)",
+      "text": "Gizzards (heart/vitals — +1 extra damage die, dlc p.137)",
       "img": "icons/svg/target.svg",
       "range": [10, 10],
       "drawn": false
@@ -50,7 +50,7 @@
     {
       "_id": "hlResult0020",
       "type": 0,
-      "text": "Noggin (head — wind damage instead of wound)",
+      "text": "Noggin (head — +2 extra damage dice, dlc p.137)",
       "img": "icons/svg/target.svg",
       "range": [20, 20],
       "drawn": false
