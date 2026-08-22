@@ -24,8 +24,8 @@
     "unpack": "fvtt package unpack --in packs --out packs/_source"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.4.12",
-    "@foundryvtt/foundryvtt-cli": "^1.0.6",
+    "@biomejs/biome": "^2.5.10",
+    "@foundryvtt/foundryvtt-cli": "^3.0.4",
     "@playwright/test": "^1.61.1"
   }
 }
