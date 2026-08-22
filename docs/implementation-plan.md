@@ -263,310 +263,73 @@ deadlands-classic-fvtt/
 
 ## 5. Phased plan — incremental, one file at a time
 
-Each phase ends with a **working, testable** system. After each file in a phase: reload Foundry, verify in the UI, commit. The phases are in dependency order.
-
-### Phase 0 — Repo configuration, metadata, and AI workshop (16-25 files + memory update)
-
-**Status:** ✅ **CLOSED** (Part A + Part B essentials completed before Phase 1; Part B nice-to-haves continued in the background of Phases 1-3).
-
-**Goal:** Every subsequent phase (1+) must have full Claude Code support — hooks that validate syntax immediately after an edit, slash commands for repeatable operations (new archetype, new item type, verify system), subagents for domain tasks (V14 API check, PDF lookup, mechanic verification), pre-commit as an independent safety net. **Without the workshop, every phase drags on and accumulates regressions.** That's why Phase 0 combines metadata stabilization with a complete AI-environment setup.
-
-#### Part A — Repo metadata (6 files) ✅
-
-1. **Update `system.json`** — `compatibility.minimum/verified: "14"`; add `"type": "system"`; finalize `documentTypes.Actor: {cowboy, huckster, shaman, blessed, madScientist, npc, mook}` (each with `htmlFields: ["system.biography"]` except `mook`); `documentTypes.Item: {weapon, armor, gear, edge, hindrance, ammo}` as core (archetype types `hex/miracle/favor/gizmo` added by their manifests in Phases 9-10, not in Phase 0); add `initiative`, `primaryTokenAttribute` (`system.wind.value`), `esmodules: ["module/deadlands-classic.mjs"]`, `styles: ["styles/deadlands-classic.css"]`, `languages: [{lang: "en", name: "English", path: "lang/en.json"}, {lang: "pl", name: "Polski", path: "lang/pl.json"}]`, `packs: [...]` (empty in Phase 0, filled per phase).
-2. **Correct `README.md`** — compatibility table: `V14 Supported / V13 Not supported / V12 Not supported` (plan: V14-only); scope note: *"v1: Deadlands Classic only; Hell on Earth and Lost Colony deferred to v2+"*; feature list: add the **Legend chip (4th color, reroll a bust)**, **Mad Scientist** as an archetype, **Harrowed overlay**; fix the wound-locations description to 8 locations (PDF p.133); Foundry VTT badge → V14.
-3. **`.gitignore`** — add `.claude/settings.local.json`, `.claude/cache/`, `.claude/logs/`. Keep the existing entries: `books/`, `.pdf-extract/`, `/DeadlandsClassic`, `/Deadlands-Classic`, `node_modules/`, `*.log`, IDE, OS, build output.
-4. **Empty `lang/en.json` and `lang/pl.json`** — a starting key structure (`DEADLANDS.System.Title`, etc.).
-5. **Empty `module/deadlands-classic.mjs`** — an init-hook skeleton, a welcome console.log.
-6. **Empty `styles/deadlands-classic.css`** with `@import "./_variables.css"` imports.
-
-#### Part B — Working with Claude Code (10-15 files + memory update)
-
-**Priority split** — so as not to delay Phase 1:
-- **Essential** ✅ **(done, required before Phase 1):** #6 CLAUDE.md, #7 settings.json (with a SessionStart hook + a `Write|Edit|MultiEdit` matcher), #8 settings.local.json (narrowed to 6 user-specific entries), #9 hooks, #12 pre-commit, #13 verify-documenttypes.mjs, #14 biome+package.json, #15 memory update, #17 tests/ stub (smoke test), #19 `.claude/rules/` (5 files with `paths:` auto-scope frontmatter), #20 `.mcp.json` (Playwright + context7).
-- **Nice-to-have** ⏳ (filled in the background during Phases 1-3, as real needs become visible): #10 the remaining slash commands (besides `/verify-system` — `/add-archetype`, `/add-item-type`, `/pdf`, `/phase-test`, `/foundry-link`, `/new-phase`), #11 the remaining subagents (besides `pdf-reference-lookup` — `foundry-v14-checker`, `archetype-scaffolder`, `foundry-test-runner`, `mechanic-verifier`), #16 docs/claude-workflow.md, #18 ci.yml.
-
-6. **`CLAUDE.md`** (root) — the main project context loaded into every Claude session. **Workflow:** run the `/init` skill as a starting point (a quick draft that knows the repo conventions), then manually fill in the Deadlands specifics per the list below:
-   - Stack and conventions: **V14 only**, ES modules (.mjs) without a bundler, no TypeScript; JSDoc for the public core API
-   - Key architectural patterns: the **registry pattern** (link to plan section 2), TypeDataModel per type, ApplicationV2 + HandlebarsApplicationMixin
-   - Directory structure (link to section 4), the principle: a core agnostic to archetypes (section 3)
-   - Dev rules: conventional commits, `node --test` tests for pure core logic, EN+PL localization from the start (zero hardcoded strings in the UI)
-   - Links to the sources of truth: `docs/implementation-plan.md` (this document), `docs/notes.md`, `docs/architecture.md` (planned), memory files
-   - Reference rule: `DeadlandsClassic/` and `Deadlands-Classic/` in the repo — READ for patterns, do NOT copy (different license, older API). The rulebook PDF — page/mechanic lookup only, zero copy-paste of content into packs
-   - Editable-surface rule: don't edit files outside `module/`, `templates/`, `styles/`, `lang/`, `packs/`, `docs/`, `tools/`, `tests/`, `.claude/`, `.github/`, `.githooks/` without explicit user consent
-
-7. **`.claude/settings.json`** (committed, shared by all contributors) — permissions, hooks, env:
-   - `permissions.allow`: `Bash(node:*)`, `Bash(node --check:*)`, `Bash(node --test:*)`, `Bash(npm run test:*)`, `Bash(npm run fmt:*)`, `Bash(npm run lint:*)`, `Bash(git status:*)`, `Bash(git diff:*)`, `Bash(git log:*)`, `Bash(ln -s:*)`, `WebFetch(domain:foundryvtt.com)`, `WebFetch(domain:foundryvtt.wiki)`, `Bash(pdftotext:*)`
-   - The PDF scripts (`extract-pdf.sh`, `verify-pdf-extract.sh`) have been moved to `deadlands-rules-ref/scripts/` — invoked via `$DEADLANDS_RULES_PATH/scripts/`. `settings.local.json` is the proper place for any allow rules for those paths (user-specific).
-   - **Migration from `settings.local.json`** — the current `.claude/settings.local.json` holds project-scoped permissions (pdftotext, awk, WebFetch to foundryvtt). Move them into `settings.json` (all contributors need them); in `settings.local.json` keep only the user-specific ones (FOUNDRY_DATA path, ad-hoc experiments).
-   - `permissions.deny`: `Bash(rm -rf:*)`, `Bash(git push --force:*)`, `Bash(git reset --hard:*)`, `Bash(git clean -f:*)`
-   - `env.DEADLANDS_DEV=1` (for future gating of dev-only UI)
-   - **Optimization after 3-5 sessions:** run the `/fewer-permission-prompts` skill, which scans the transcript and adds the actually-used commands to the allowlist (instead of speculating now).
-
-8. **`.claude/settings.local.json`** — local overrides (`FOUNDRY_DATA` path, user-specific permissions). Git-ignored (already in #2).
-
-9. **Hooks** (in `.claude/settings.json`) — immediate validation, blocks regressions in the same turn:
-   - **SessionStart** → `git config core.hooksPath .githooks` (idempotent, eliminates the manual step after a clone — `.githooks/commit-msg` and `.githooks/pre-commit` work from the first session)
-   - **PostToolUse** on `Write|Edit|MultiEdit` for `*.mjs` → `node --check "$file_path"` — a syntax check; an error blocks further work and points to the line
-   - **PostToolUse** on `Write|Edit|MultiEdit` for `*.json` → a parse check (JSON.parse test)
-   - **PostToolUse** on `Write|Edit|MultiEdit` for `system.json` → additionally `node tools/verify-documenttypes.mjs`
-   - **PostToolUse** on `Write|Edit|MultiEdit` for `lang/*.json` → a check: the EN and PL keys pair up (a key diff = an error)
-   - **PreToolUse** on `Bash(git push --force:*)` → deny (independent of permissions, extra safety)
-   - **UserPromptSubmit** (optional) → inject the current branch + the version from `system.json` into the context
-
-10. **Custom slash commands** (`.claude/commands/*.md`):
-    - **`/add-archetype <id>`** — scaffolds `module/archetypes/<id>/{manifest,data,sheet}.mjs`, adds `documentTypes.Actor.<id>` to `system.json`, adds the `DEADLANDS.Archetype.<Id>.*` keys to `lang/en.json` + `lang/pl.json`. Delegates to the `archetype-scaffolder` subagent.
-    - **`/add-item-type <id>`** — analogously, for a new item type.
-    - **`/verify-system`** — `node tools/verify-documenttypes.mjs` + JSON lint + `node --check` recursively over `module/`. A short text report.
-    - **`/pdf <query>`** — invokes the `pdf-reference-lookup` subagent (see #11), returns a page number + a short quote.
-    - **`/phase-test <n>`** — pulls the **Test:** block for Phase n out of `docs/implementation-plan.md` and presents it as a checklist.
-    - **`/foundry-link`** — prints `ln -s $(pwd) "$FOUNDRY_DATA/Data/systems/deadlands-classic"` + a reload hint.
-    - **`/new-phase <n>`** — creates the branch `phase-<n>/<slug>`, loads the Phase n section from the plan as context, generates a file checklist.
-
-11. **Subagents** (`.claude/agents/*.md`) — each with a triggering description; Claude picks one automatically when the context matches:
-    - **`foundry-v14-checker`** — audits changes for V14 API. Blocks V13 patterns: `extends Application` (instead of `ApplicationV2`), `template.json`, `game.system.template`, `game.system.model`, TinyMCE refs, `Actor.create({type: "character"})` when there's no documentType in system.json. Tools: Read, Grep, WebFetch (foundryvtt wiki).
-    - **`pdf-reference-lookup`** — reads `memory/reference_pdf_lookup.md`, the catalog + per-book index, returns pages + a short fragment for mechanical queries. Tools: Read, Grep.
-    - **`archetype-scaffolder`** — writes a complete archetype (data model + sheet class + manifest + partials + i18n keys) following the `_base/` convention. Used by `/add-archetype`. Tools: Read, Write, Edit, Glob.
-    - **`foundry-test-runner`** — runs `node --test tests/` and summarizes failures with file:line pointers. Tools: Bash, Read.
-    - **`mechanic-verifier`** — for a mechanic being implemented (exploding dice, chip spend, poker eval) verifies the code's fidelity to the PDF: delegates the PDF lookup, compares with the implementation, reports discrepancies. Tools: Read, Grep.
-
-12. **`.githooks/pre-commit`** (git-level safety, independent of Claude — for contributors without Claude Code and as a last line of defense):
-    - `node --check` on staged `.mjs`
-    - JSON lint on staged `.json`
-    - `node tools/verify-documenttypes.mjs` if `system.json` is staged
-    - Instruction in the README: `git config core.hooksPath .githooks` once at clone time.
-
-13. **`tools/verify-documenttypes.mjs`** (MVP, extended in Phase 14) — parses `system.json`, imports `module/deadlands-classic.mjs`, compares `documentTypes.Actor/Item` with `ArchetypeRegistry.all()` + `ItemRegistry.all()`. Exit 1 on a mismatch with a text diff. Used by: hook #9, `/verify-system`, pre-commit #12, CI.
-
-14. **`.editorconfig` + `biome.json` + `package.json`** — **Biome** as the sole tool (JS+JSON+CSS, zero-config, ~100× faster than eslint+prettier). Scripts: `npm run fmt`, `npm run lint`, `npm run test` (`node --test tests/`). `package.json` — only dev deps + `"engines": { "node": ">=24" }` (V14 requires Node 24 — memory `v14_api_notes.md`) + `"type": "module"` so that `.mjs` files in `tests/` are treated consistently.
-
-15. **Update the memory files** (in `~/.claude/projects/-home-binn-projects-foundryvtt-deadlands-classic-fvtt/memory/`):
-    - **New** `architecture.md` — the registry pattern as the project's foundation (a summary of plan section 2 + the `ArchetypeDefinition` contract)
-    - **Update** `game_mechanics.md` — the Legend chip (4th color, worth 5 BP, reroll a bust), 5 wound severity levels (Light→Maimed), Harrowed as an overlay rather than an actor type
-    - **Update** `v14_api_notes.md` — snippets for `TypeDataModel`, `ApplicationV2 + HandlebarsApplicationMixin`, `documentTypes`, the `Cards` API for the action deck
-    - **New** `dev_workflow.md` — the list of slash commands, a "problem → subagent" map, hook behavior, when to use the built-in skills (`simplify` after a feature, `review` on a PR, `security-review` before a release, `frontend-design` for HBS+CSS sheets)
-
-16. **`docs/claude-workflow.md`** (new) — onboarding for a contributor using Claude Code:
-    - Installing Claude Code, hooking it up to the repo
-    - A symlink to `$FOUNDRY_DATA/Data/systems/`
-    - The list of slash commands with examples
-    - The subagent map: problem → agent
-    - Commit conventions — a link to `.claude/rules/commits.md`
-    - The PR flow with `.github/PULL_REQUEST_TEMPLATE.md`
-
-17. **`tests/` stub** — `tests/.gitkeep` + `tests/smoke.test.mjs` (`node:test`, one test `assert.ok(true)`) so that `npm run test` passes from Phase 0. Real tests are added in later phases: `exploding-roll.test.mjs` in Phase 3, `chip-rules.test.mjs` in Phase 5, `wound-track.test.mjs` in Phase 6, `poker-evaluator.test.mjs` in Phase 9.
-
-18. **`.github/workflows/ci.yml`** (optional but recommended already in Phase 0) — triggers on `push`/`pull_request`. Steps: `actions/setup-node@v4` (node-version `24`), `npm ci`, `npm run lint`, `npm run test`, `node tools/verify-documenttypes.mjs`. Duplicates pre-commit (#12), but pre-commit requires opt-in via `core.hooksPath` — CI is the guarantee for PRs from external contributors. `release.yml` (ZIP packaging) only in Phase 14.
-
-19. **`.claude/rules/` (a native Claude Code feature)** — 5 `.md` files with `paths:` frontmatter to be auto-loaded into context when Claude reads matching files:
-    - `commits.md` (always, no `paths:`) — conventional commits + the ban on `Co-Authored-By: Claude` (enforced by `.githooks/commit-msg`)
-    - `naming.md` (always, no `paths:`) — the convention table (camelCase / kebab-case / PascalCase / SCREAMING_SNAKE_CASE per context)
-    - `v14-api.md` (`paths: module/**/*.mjs`) — V13 anti-patterns + preferred V14 patterns
-    - `localization.md` (`paths: lang/**`, `module/**`, `templates/**`) — EN/PL parity, the `DEADLANDS.*` namespace
-    - `references.md` (`paths: vendor/**`) — the ban on copying code from the GPL-3.0 reference tree (`vendor/`)
-    Rules are passive (statements/prohibitions loaded into context), complementary to skills (active procedures) and subagents (specialized reviewers).
-
-20. **`.mcp.json`** (project-scoped, committed) — MCP servers that extend Claude's capabilities:
-    - **Playwright MCP** (`@playwright/mcp`) — driving a browser for E2E tests of Foundry sheets (open a world, create an actor, click a trait, verify a chat message). Closes the gap *"Foundry-dependent code is verified manually"*. Headed by default, downloads its own Chromium on first use (~200MB).
-    - **context7 MCP** (`@upstash/context7-mcp`) — a fast lookup of current library documentation (Foundry V14 API, Biome, Node.js, ProseMirror) without parsing HTML via WebFetch.
-    The servers require approval on first launch (*"Allow project-scoped MCP server 'X'?"*). Playwright artifacts (`test-results/`, `playwright-report/`, `.playwright/`) added to `.gitignore`.
-
-**Phase 0 test** (all must pass before Phase 1):
-- **Sanity pre-check:** `$DEADLANDS_RULES_PATH/index/dlc.md` and `$DEADLANDS_RULES_PATH/extracts/dlc/full.txt` exist (the PDF-index was migrated to the private repo `deadlands-rules-ref` — see CLAUDE.md »PDF rulebook«; lookup via the `pdf-reference-lookup` subagent).
-- The symlink to `Data/systems/deadlands-classic` works; Foundry opens a world without errors; the init hook logs a welcome. **Note:** creating an actor won't work until Phase 2 (no `dataModels` in `CONFIG.Actor`) — Phase 0 only tests booting the system and registering `documentTypes`.
-- `/verify-system` → OK (empty registries match the documentTypes from `system.json`, the EN/PL keys pair up)
-- `npm run test` → green (the placeholder `tests/smoke.test.mjs` passes)
-- `npm run lint` → no errors (Biome)
-- Editing a test `.mjs` with a deliberate syntax error → the `node --check` hook reports the error in the same turn
-- Editing `system.json` with a non-existent documentType → the hook runs `verify-documenttypes.mjs` and reports a diff
-- Editing `lang/en.json` (adding a key without a PL pair) → the hook reports the key-set difference
-- `pdf-reference-lookup` "fate chips rules" → `dlc` p.146-148; "hit location table" → `dlc` p.133 (the `/pdf` slash command still pending — nice-to-have)
-- `/add-archetype test-dummy` creates the folder, adds to `system.json` and `lang/*`; after a Foundry reload the new actor type is available in the UI → then we remove it (a test of the full scaffolding cycle + rollback)
-- Pre-commit rejects a commit with broken JSON in `system.json`
-- CI (if #18 is enabled) — green builds on a PR with correct code; a deliberately broken `.mjs` in a test PR gets blocked
-- Memory files updated — a new Claude session loads `architecture.md` and knows the registry pattern without asking; `game_mechanics.md` has 4 chip colors, 8 hit locations, the Harrowed overlay
-- README (V14-only, Classic-only in v1, new features) consistent with the plan — a visual inspection
-- `.claude/rules/` works: editing `lang/en.json` in a new session loads `localization.md` into context (visible from Claude applying EN/PL parity without being asked)
-- MCP servers available: after a session restart and approval, `mcp__playwright__*` and `mcp__context7__*` are visible in the tool list
-
-### Phase 1 — Core foundations: config + registries (5-7 files)
-
-**Status:** ✅ **CLOSED** (shipped in 0.1.0).
-
-1. `module/core/config.mjs` — DEADLANDS constants: `TRAITS`, `APTITUDES` (grouped by trait), `CHIP_COLORS`, `WOUND_SEVERITIES`, `HIT_LOCATIONS`, `TNS`, `CARD_RANKS`, `CARD_SUITS`.
-2. `module/core/archetype-registry.mjs` — the Registry class.
-3. `module/core/item-registry.mjs` — analogously for items.
-4. `module/core/overlay-registry.mjs` — for Harrowed and future overlays.
-5. `module/core/documents/deadlands-actor.mjs` — `class DeadlandsActor extends Actor` with base util methods (`rollTrait`, `spendFateChip`).
-6. `module/core/documents/deadlands-item.mjs` — analogously.
-7. Entry file: imports + an init hook using the registries (empty for now).
-
-**Test:** the console `game.deadlandsClassic.archetypes.all()` returns `[]`. The system loads without errors.
-
-### Phase 2 — Base character data + sheet (6-8 files)
-
-**Status:** ✅ **CLOSED** (shipped in 0.1.0).
-
-1. `module/archetypes/_base/base-character-data.mjs` — a TypeDataModel with all the common fields: 10 traits (each: `dieCount, dieType, modifier, aptitudes{}`), wounds per location (severity), wind (`value/max`), chips, grit, pace, size, bounty, biography, edges/hindrances list (items). **From the start:** `static migrateData(source)` (a stub) + `migrationVersion` in world settings — so that later schema changes (0.1→0.2) don't break existing worlds (see §8, migration risk).
-2. `module/archetypes/cowboy/data.mjs` — inherits from base, no extra schema.
-3. `module/archetypes/cowboy/manifest.mjs` — register.
-4. `module/archetypes/_base/base-character-sheet.mjs` — ApplicationV2 + HandlebarsApplicationMixin. Tabs: Traits, Combat, Gear, Bio. The associated contextPrepare.
-5. `module/archetypes/cowboy/sheet.mjs` — extends base, no-op.
-6. `templates/actor/parts/traits-tab.hbs` — the layout of traits and aptitudes (faithful to the sheet `dlc` p.412-413).
-7. `templates/actor/parts/combat-tab.hbs` — wounds widget, wind bar, chip count, weapon list.
-8. `templates/actor/parts/gear-tab.hbs` + `bio-tab.hbs`.
-
-**Test:** create an actor of type `cowboy`, the sheet opens, displays all 10 traits and 30+ aptitudes. Editing die/dieCount saves.
-
-### Phase 3 — Core dice engine (3 files)
-
-**Status:** ✅ **CLOSED** (shipped in 0.1.0).
-
-1. `module/core/dice/exploding-roll.mjs` — the function `rollExplodingPool({dieCount, dieType, modifier, tn})`, postprocessing for bust/raises.
-2. `module/core/dice/trait-roll.mjs` — sends to chat with a result card (success/raises/bust).
-3. `module/core/dice/damage-roll.mjs` — integration with armor reduction.
-
-**Test:** from the console: `game.deadlandsClassic.dice.rollTrait({dieCount: 4, dieType: "d8", tn: 5})` returns a result, a chat message appears. A max (8) explodes.
-
-### Phase 4 — Actor sheet ↔ dice integration (2-3 files)
-
-**Status:** ✅ **CLOSED** (shipped in 0.1.0).
-
-1. Modify `base-character-sheet.mjs` — a trait/aptitude click listener → an aptitude-selection dialog → `trait-roll`.
-2. `templates/dialogs/trait-roll-dialog.hbs` — dialog: choosing chips (white/red/blue/legend), modifiers, TN.
-3. `styles/chips.css` — the chip-spend widget.
-
-**Test:** in the sheet click "Shootin'", fill in the dialog, send the roll. Chat shows the result. A white chip is subtracted from the actor (from `system.chips` — the field exists since Phase 2, so the spend works without the pool), dieCount is incremented for the roll.
-
-> **Dependency (resolved after the audit):** Phase 4 spends from the **player's own chips** (`system.chips`, available since Phase 2) — it does NOT require the pool. The central Fate Pot + the `canSpend` validation (limit 1/action red/blue, bust-block) come in Phase 5. That's why the Phase 4 test is achievable within the phase (the dialog for non-white chips can be disabled/stubbed at this stage).
-
-### Phase 5 — Fate Pot & chip system (3-4 files)
-
-**Status:** ✅ **CLOSED** (shipped in 0.1.0).
-
-1. `module/core/chips/fate-pot.mjs` — the `FatePot` class over a **world setting** (`game.settings`, 4 integers `{white,red,blue,legend}`); registering the setting in `init`, the starting seed in `ready` (decision D2 — NOT Cards, NOT Actor).
-2. `module/core/chips/chip-widget.mjs` — a UI component in the sheet.
-3. `module/core/chips/chip-rules.mjs` — `canSpend(color, context)` (limit 1/action red/blue, bust-block, etc.).
-4. A "Draw Fate Chips" dialog (start of session): `game.deadlandsClassic.chips.drawForSession()` — 3 per player.
-5. **No pack** — the pool is a world setting; seed 50W/25R/10B/0L in `ready` (`FatePot.reset()`), not a compendium (D2).
-
-**Test:** the "Draw Fate" command in the GM menu hands out 3 random chips to each PC. The counter in the sheets updates. You can spend a chip on a roll (white → +1 die to the pool).
-
-### Phase 6 — Wounds, wind, hit locations (5-6 files)
-
-**Status:** ✅ **CLOSED** (shipped in 0.1.0).
-
-1. `module/core/wounds/wound-track.mjs` — the `WoundTrack` helper: `addWound(actor, location, severity)`, `healWound(...)`, the cumulative modifier computed in `prepareDerivedData` (code, not 8 independent AEs — §8). **Consumer:** extend `trait-roll` (Phase 3/4) with a `woundModifier` input so that wounds actually lower rolls — without that step nothing reads the wound ActiveEffects.
-2. `module/core/wounds/hit-location.mjs` — a rolltable helper + UI.
-3. `module/core/wounds/wind-calculator.mjs` — computes `wind.max` from Vigor+Spirit die values.
-4. Pack `packs/hit-location/` — a RollTable `1d20 → location`.
-5. Integration in `damage-roll.mjs` — after damage: roll location (or a "called shot" dialog), apply severity.
-6. `templates/actor/parts/wound-locations-widget.hbs` — a graphical rendering of the body (8 locations per PDF p.133: Noggin, Upper Guts, Lower Guts, Gizzards, Left/Right Arm, Left/Right Leg) with colored severity slots.
-
-**Test:** roll damage from a weapon, the system draws a location, applies a wound of the appropriate severity. Wind max reloads after a Vigor/Spirit change.
-
-### Phase 6A — Guts / fear checks (2-3 files) — THE CORE OF HORROR
-
-**Status:** ✅ **CLOSED** (shipped in 0.1.0).
-
-The fear mechanic was a gap in the original plan (added after the 2026-06-17 audit). Without it the system runs a generic Western, not Deadlands. **First verify the mechanic in `dlc` via `pdf-reference-lookup`** (the fear / Fear Level / Guts chapter) — don't code from memory.
-1. `module/core/dice/guts-check.mjs` — `gutsCheck(actor, {fearLevel, terror})`: a Guts roll (Spirit aptitude) vs TN from the fear level; postprocessing for the failure level.
-2. Integration: the effects of a failed Guts (e.g., loss of Wind, in the extreme a fear state as an ActiveEffect/condition on the token HUD).
-3. `templates/dialogs/guts-check.hbs` + a result chat-card.
-
-**Test:** `gutsCheck(actor, {fearLevel: 3})` → a Guts roll, chat shows success/failure and the effect; a failed check subtracts Wind / applies a state.
-
-### Phase 7 — NPC + Mook archetypes (3-4 files)
-
-**Status:** ✅ **CLOSED** (shipped in 0.1.0).
-
-Simpler than PCs. Mook = 1 wound track instead of 8; NPC = full but without chips.
-
-**Test:** create an `npc` and a `mook` actor; the NPC sheet opens with full traits but no chip widget; the mook has a single wound track. A trait roll works for both.
-
-### Phase 8 — Action Deck & Combat (5-7 files)
-
-**Status:** ✅ **CLOSED** (shipped in 0.1.0).
-
-1. `module/core/cards/action-deck.mjs` — a wrapper around the Cards API.
-2. `module/core/cards/deadlands-combat.mjs` — `class DeadlandsCombat extends Combat` with `rollInitiative` dealing cards.
-3. `module/core/cards/deadlands-combatant.mjs` — tracks the hand, the sleeved card.
-4. Pack `packs/action-deck/` — 54 cards (52 + 2 jokers) as a preset.
-5. `templates/dialogs/combatant-hand.hbs` — show the card/cards, a "Play card" button.
-6. A custom combat tracker widget: shows the order by cards, suit tiebreaker (♠>♥>♦>♣), joker highlighting.
-
-**Test:** start combat with 2 PCs + 2 mooks, the system deals cards (a Quickness roll vs TN 5 → 1 card + 1 per success and raise, max 5). Round-by-round: play the highest card. Red Joker → Fate Chip reward. Black Joker → penalty.
-
-### Phase 9 — Huckster archetype + hexes (6-8 files)
-
-**Status:** ✅ **CLOSED** (shipped in 0.1.0).
-
-1. `module/archetypes/huckster/data.mjs` — extends base + `hexesLearned`, `lastDraw`, `backlashPending`.
-2. `module/archetypes/huckster/sheet.mjs` — adds a "Hexes" tab.
-3. `module/archetypes/huckster/mechanics.mjs` — `castHex(hex)`: roll hexslingin' → success → draw N cards → evaluate poker hand → apply effect.
-4. `module/core/dice/poker-hand-evaluator.mjs` — an evaluator: Royal/Straight Flush, Four of a Kind, Full House, Flush, Straight, Three of a Kind, Two Pair, Pair, High Card.
-5. The `hex` item type registered in `ItemRegistry` via `huckster/manifest.mjs`.
-6. `templates/actor/parts/hexes-tab.hbs` + a casting dialog.
-7. Pack `packs/edges-srd/` — the Arcane Background (Huckster) edge with its mechanical effects.
-8. Pack `packs/hexes-srd/` — example hexes (Soul Blast, Private Eye, Shadow Walk, etc.) with TN/hand/speed/duration/range fields.
-
-**Test:** a PC with a Huckster sheet has a "Hexes" tab. Click "Cast Soul Blast" → a hexslingin' roll → a poker simulation → chat shows the result with the applied effect. Backlash if a Black Joker.
-
-### Phase 10 — Blessed + Shaman + Mad Scientist (3 × 4-5 files)
-
-**Status:** ✅ **CLOSED** (shipped in 0.1.0).
-
-Analogous to Huckster, each in a separate folder. Archetype-specific mechanics:
-- **Blessed** — `miracles.mjs`: a Faith roll vs. the miracle TN; a sin tracker (loss of Faith).
-- **Shaman** — `favors.mjs`: a ritual roll → appeasement points → spend on a favor.
-- **Mad Scientist** — `gizmos.mjs`: theory → blueprint (poker hand) → construction (Tinkerin' roll) → reliability (d20 check on use).
-
-**Test:** each of the 3 archetypes has its own tab; after one example act of power (miracle/favor/gizmo) it runs the full flow to a chat-card. Blessed: the sin tracker grows after a failure. Shaman: appeasement accumulates and can be spent. Mad Scientist: a gizmo gets a reliability and a d20 roll on use.
-
-### Phase 11 — Harrowed overlay (3-4 files)
-
-**Status:** ✅ **CLOSED** (shipped in 0.2.0).
-
-1. `module/archetypes/_overlays/harrowed/manifest.mjs` — `OverlayRegistry.register`.
-2. `data-schema.mjs` — extra fields: `isHarrowed: bool`, `dominion: {spiritControl, lastRoll}`, `harrowedPowers: []`, `countingCoup: {tally, deeds}`.
-3. `sheet-tab.mjs` — injects a "Harrowed" tab into the base sheet when `isHarrowed=true`.
-4. `mechanics.mjs` — `dominionRoll(actor)` (opposed Spirit + Dominion, per session) at the start of a session.
-
-**Test:** a PC with Harrowed activated has an extra tab with a dominion check. The dominion roll triggers **at the start of a session** (per game session, during sleep — NOT at the start of combat; `dlc` p.195/253).
-
-### Phase 12 — Edges, Hindrances, Aptitudes content packs (2-3 files + data)
-
-**Status:** ✅ **CLOSED** (shipped in 0.2.0).
-
-1. Pack `packs/edges-srd/` — ~30 edges with names, costs, a short mechanical description (no copy-paste flavor from the PDF).
-2. `packs/hindrances-srd/` — ~40 hindrances.
-3. `packs/aptitudes/` — a list of aptitudes as JournalEntries or a RollTable to ease selection (optional).
-4. ActiveEffect integration: edges like "Level-Headed" (draw an extra card) add flags that modify mechanics via hooks.
-
-**Note on copyright:** the pack content contains only mechanics (name, cost, a short technical 1-2 sentence description of the effect). Flavor text and long descriptions — users enter those themselves. The same as the SWADE community practices.
-
-**Test:** the pack builds via `fvtt package pack` from `packs/_source/`; after import, adding the "Level-Headed" edge to a PC adds a flag modifying initiative (a hook), and "Nerves o' Steel" adds an AE +1 to Guts.
-
-### Phase 13 — Localization completion (full EN/PL) (1-2 files)
-
-**Status:** ✅ **CLOSED** (shipped in 0.3.0).
-
-A pass through all `localize()` calls and making sure the keys are in both files. **PL: we adopt the canon of the official MAG translation ("Martwe Ziemie", 2001) — we do NOT invent terms.** Sources in `deadlands-rules-ref`: `pg-pl` (core + archetypes), `char-sheet-pl` (sheet field labels → direct equivalents for `lang/pl.json`), the per-archetype companions (`hnh-pl`, `ghost-dancers-pl`, `law-dogs-pl`, `fb-pl`). Canonical terms: "Cecha" (Trait), "Umiejętność" (Aptitude), **"Szton Losu"** (Fate Chip; Legend = "Szton-Legenda"; colors "biały/czerwony/niebieski"), archetypes "Kowboj / **Kanciarz** (Huckster) / Szaman / **Świątobliwy** (Blessed) / Szalony Naukowiec / **Wygrzebany** (Harrowed)". Magic: "Kantowanie" (Hexslingin'), "Rytuały" (Rituals), "Przysługi" (Favors).
-
-**Test:** switching the language to `pl` swaps all visible strings (zero `DEADLANDS.*` keys in the DOM); the terms match the MAG canon; `verify-documenttypes` confirms EN/PL key parity.
-
-### Phase 14 — Polish, release, CI (4-6 files)
-
-**Status:** ✅ **CLOSED** (delivered across 0.1.0-0.3.0 — `.github/workflows/ci.yml` in 0.1.0, tooling & docs in 0.2.0, the a11y pass in 0.3.0).
-
-1. ~~`.github/workflows/release.yml`~~ **ALREADY EXISTS** (built in the background of Phase 0.B; tag→ZIP→Release with a version guard). Here just end-to-end verification on a real tag. Add `.github/workflows/ci.yml` (lint + `node --test` + `verify-documenttypes`) — **without** Foundry E2E (see §8: CI can't run a licensed Foundry).
-2. `tools/verify-documenttypes.mjs` — extend: whether `system.json documentTypes` matches `ArchetypeRegistry.all()` + `ItemRegistry.all()`.
-3. `docs/architecture.md` — **extend the existing one** with a diagram + a description of the registry pattern; **document the registry/hooks/`game.deadlandsClassic` as a stable API with a SemVer policy** (extension modules depend on it — §8).
-4. `docs/extending-archetypes.md` — a step-by-step tutorial for adding a new archetype.
-5. `docs/migration-policy.md` + `tests/migration.test.mjs` — the world-data migration policy (§8; `migrationVersion` seeded since Phase 2).
-6. `CHANGELOG.md` → 0.1.0; `README.md` — screenshots, feature status, compatibility table (pin `verified` to a real build, e.g. `14.364`); **an a11y pass** (sepia/red contrast, keyboard accessibility, `aria-label` on the icons and the body widget).
-
-**Test:** a test tag → CI builds a ZIP with `system.json`, a Release is created with assets; a fresh install from the manifest URL loads in a clean Foundry V14.
+**Every phase below is closed.** The headings and one-line scopes are kept as the historical
+skeleton — the per-phase file lists and acceptance tests they used to carry were removed once the
+work shipped, because `CHANGELOG.md` is the accurate record of what each release actually
+contained. Release mapping is in §10; work still open after 0.4.0 is in §12.
+
+### Phase 0 — Repo configuration, metadata, and AI workshop
+**Closed** — pre-0.1.0. Manifest, licensing (GPL-3.0 → MIT), Biome, git hooks, CI, and the
+Claude Code workshop (`CLAUDE.md`, `.claude/rules/`, skills, subagents, `.mcp.json`).
+
+### Phase 1 — Core foundations: config + registries
+**Closed** — 0.1.0. `config.mjs` constants plus the three registries (archetype, item, overlay)
+and the `DeadlandsActor` / `DeadlandsItem` document subclasses.
+
+### Phase 2 — Base character data + sheet
+**Closed** — 0.1.0. `BaseCharacterDataModel` (traits, aptitudes, wounds, Wind, chips) and the
+Cowboy sheet on ApplicationV2, with `migrationVersion` in place from the start.
+
+### Phase 3 — Core dice engine
+**Closed** — 0.1.0. Exploding trait/aptitude rolls, damage rolls, and raise counting as pure,
+unit-tested modules.
+
+### Phase 4 — Actor sheet ↔ dice integration
+**Closed** — 0.1.0. Click-to-roll from the sheet through the roll dialog to a chat card.
+
+### Phase 5 — Fate Pot & chip system
+**Closed** — 0.1.0. The world-setting Fate Pot, the chip widget, and the spend rules
+(1/action, bust block, "No Going Back").
+
+### Phase 6 — Wounds, wind, hit locations
+**Closed** — 0.1.0. The 8-location wound track with severity accumulation, the maimed state,
+Wind, and hit-location draws.
+
+### Phase 6A — Guts / fear checks
+**Closed** — 0.1.0. Guts rolls against Fear Levels, the Terror table, and Scart — the horror
+core, and the marker for the playable 0.0.x preview.
+
+### Phase 7 — NPC + Mook archetypes
+**Closed** — 0.1.0. Two GM-facing actor types on compact sheets.
+
+### Phase 8 — Action Deck & Combat
+**Closed** — 0.1.0. Card initiative: `DeadlandsCombat` deals from a 54-card deck held as a
+Combat flag, with the combatant hand dialog and suit tiebreakers.
+
+### Phase 9 — Huckster archetype + hexes
+**Closed** — 0.1.0. The `hex` item type, the poker-hand evaluator, and the cast-hex flow
+including backlash.
+
+### Phase 10 — Blessed + Shaman + Mad Scientist
+**Closed** — 0.1.0. Three arcane archetypes with their `miracle` / `favor` / `gizmo` item types
+and their sin, ritual, and madness tables.
+
+### Phase 11 — Harrowed overlay
+**Closed** — 0.2.0. `OverlayRegistry` plus the conditional Harrowed sheet tab and the nightly
+Dominion roll — the pattern proof that an overlay is not an archetype.
+
+### Phase 12 — Edges, Hindrances, Aptitudes content packs
+**Closed** — 0.2.0. The `edges-srd`, `hindrances-srd`, `hexes-srd`, `hit-location` and
+`archetype-examples` packs, built from `packs/_source/` via the `fvtt` CLI. Coverage is partial —
+see §12.
+
+### Phase 13 — Localization completion (full EN/PL)
+**Closed** — 0.3.0. Full EN/PL key parity with PL terminology from the MAG translations, enforced
+by `tools/verify-documenttypes.mjs`.
+
+### Phase 14 — Polish, release, CI
+**Closed** — delivered across 0.1.0-0.3.0: `.github/workflows/ci.yml` in 0.1.0, tooling and docs
+in 0.2.0, the accessibility pass in 0.3.0.
 
 ---
 
