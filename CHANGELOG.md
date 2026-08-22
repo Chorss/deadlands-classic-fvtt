@@ -11,6 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Fixed
+
+## [0.4.0] — 2026-08-22
+
+### Added
+
 - **House-rule TN tiers 13/15/17/19** (Deadly, Nightmarish, Hellborn, Unearthly)
   in the trait-roll dialog's Target Number picker, added at the maintainer's
   explicit request. The core Difficulty ladder (dlc p.28) only names five
@@ -684,7 +692,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `CombatantHandDialog` and initiative-value path corrections after V14 runtime testing.
 - Multiple V14 API compatibility fixes across archetype sheets and mechanics.
 
-[Unreleased]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.3.4...HEAD
+[Unreleased]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.4.0...HEAD
+[0.4.0]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.3.4...0.4.0
 [0.3.4]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.3.3...0.3.4
 [0.3.3]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.3.2...0.3.3
 [0.3.2]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.3.1...0.3.2
