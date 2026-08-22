@@ -67,12 +67,6 @@
   border: none;
 }
 
-/* Double rule that closes a block  — NEW */
-.dlc-block-end {
-  border-top: 1px solid var(--dlc-rule-strong);
-  border-bottom: 3px double var(--dlc-rule-strong);
-}
-
 /* ── Labels ───────────────────────────────────────────────────────────────── */
 .dlc-label {
   font-family: var(--dlc-font-head);
@@ -98,7 +92,6 @@
 }
 
 /* ── Buttons — one primary per surface, ghost for the rest ─────────────────── */
-.dlc-btn /* legacy name kept = ghost button */,
 .dlc-btn-ghost {
   cursor: pointer;
   background: none;
@@ -114,7 +107,6 @@
     background 0.15s,
     color 0.15s;
 }
-.dlc-btn:hover,
 .dlc-btn-ghost:hover {
   background: color-mix(in srgb, var(--dlc-brass) 14%, transparent);
 }
@@ -133,16 +125,11 @@
   padding: 0.6em 1.2em;
 }
 
-/* Accent button variants — reuse for Dominion (plum), Take-wound (blood) */
+/* Accent button variant — reuse for Dominion (plum) */
 .dlc-btn-plum {
   background: var(--dlc-plum);
   color: var(--dlc-card);
   border: none;
-} /* NEW */
-.dlc-btn-blood {
-  background: none;
-  border: 1px solid var(--dlc-blood);
-  color: var(--dlc-blood);
 } /* NEW */
 
 /* ── Separator ────────────────────────────────────────────────────────────── */

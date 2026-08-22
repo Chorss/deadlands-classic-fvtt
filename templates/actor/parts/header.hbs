@@ -26,7 +26,7 @@
     {{!-- Whole-sheet edit-mode toggle (D1) — reveals the raw die-count/type/modifier
          controls on the Traits tab. See BaseCharacterSheet#toggleEditMode. --}}
     <button type="button" class="dlc-edit-toggle-btn dlc-btn-ghost" data-action="toggleEditMode"
-      aria-pressed="false" title="{{localize 'DEADLANDS.Sheet.EditMode.Toggle'}}">
+      aria-pressed="{{editMode}}" title="{{localize 'DEADLANDS.Sheet.EditMode.Toggle'}}">
       <i class="fas fa-pen" aria-hidden="true"></i>
       <span class="sr-only">{{localize 'DEADLANDS.Sheet.EditMode.Toggle'}}</span>
     </button>

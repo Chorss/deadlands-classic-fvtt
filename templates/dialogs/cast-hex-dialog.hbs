@@ -3,9 +3,9 @@
   <div class="dlc-dialog-kicker">{{localize "DEADLANDS.Huckster.Dialog.CastIntro"}}</div>
   <div class="dlc-dialog-title">{{hexName}}</div>
 
-  {{> "systems/deadlands-classic/templates/dialogs/parts/modifier-stepper.hbs" labelKey="DEADLANDS.Dialog.TraitRoll.Modifier"}}
+  {{> "systems/deadlands-classic/templates/dialogs/parts/modifier-stepper.hbs" labelKey="DEADLANDS.Dialog.Modifier"}}
 
   {{#if maxWhite}}
-  {{> "systems/deadlands-classic/templates/dialogs/parts/chip-spend.hbs" labelKey="DEADLANDS.Dialog.TraitRoll.WhiteChips" availMode="inline" availKey="DEADLANDS.Huckster.Dialog.Available"}}
+  {{> "systems/deadlands-classic/templates/dialogs/parts/chip-spend.hbs" labelKey="DEADLANDS.Dialog.WhiteChips" availMode="inline" availKey="DEADLANDS.Huckster.Dialog.Available"}}
   {{/if}}
 </form>

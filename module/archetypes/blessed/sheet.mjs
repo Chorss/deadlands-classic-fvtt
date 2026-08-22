@@ -42,22 +42,12 @@ export class BlessedSheet extends BaseCharacterSheet {
   static TABS = {
     sheet: {
       tabs: [
-        {
-          id: "traits",
-          group: "sheet",
-          icon: "fas fa-dice-d20",
-          label: "DEADLANDS.Sheet.Tab.Traits",
-        },
-        { id: "combat", group: "sheet", icon: "fas fa-gun", label: "DEADLANDS.Sheet.Tab.Combat" },
-        {
-          id: "miracles",
-          group: "sheet",
-          icon: "fas fa-cross",
-          label: "DEADLANDS.Sheet.Tab.Miracles",
-        },
+        { id: "traits", group: "sheet", label: "DEADLANDS.Sheet.Tab.Traits" },
+        { id: "combat", group: "sheet", label: "DEADLANDS.Sheet.Tab.Combat" },
+        { id: "miracles", group: "sheet", label: "DEADLANDS.Sheet.Tab.Miracles" },
         HARROWED_SHEET_TAB,
-        { id: "gear", group: "sheet", icon: "fas fa-box", label: "DEADLANDS.Sheet.Tab.Gear" },
-        { id: "bio", group: "sheet", icon: "fas fa-feather", label: "DEADLANDS.Sheet.Tab.Bio" },
+        { id: "gear", group: "sheet", label: "DEADLANDS.Sheet.Tab.Gear" },
+        { id: "bio", group: "sheet", label: "DEADLANDS.Sheet.Tab.Bio" },
       ],
       initial: "traits",
     },

@@ -43,22 +43,12 @@ export class ShamanSheet extends BaseCharacterSheet {
   static TABS = {
     sheet: {
       tabs: [
-        {
-          id: "traits",
-          group: "sheet",
-          icon: "fas fa-dice-d20",
-          label: "DEADLANDS.Sheet.Tab.Traits",
-        },
-        { id: "combat", group: "sheet", icon: "fas fa-gun", label: "DEADLANDS.Sheet.Tab.Combat" },
-        {
-          id: "favors",
-          group: "sheet",
-          icon: "fas fa-feather-alt",
-          label: "DEADLANDS.Sheet.Tab.Favors",
-        },
+        { id: "traits", group: "sheet", label: "DEADLANDS.Sheet.Tab.Traits" },
+        { id: "combat", group: "sheet", label: "DEADLANDS.Sheet.Tab.Combat" },
+        { id: "favors", group: "sheet", label: "DEADLANDS.Sheet.Tab.Favors" },
         HARROWED_SHEET_TAB,
-        { id: "gear", group: "sheet", icon: "fas fa-box", label: "DEADLANDS.Sheet.Tab.Gear" },
-        { id: "bio", group: "sheet", icon: "fas fa-feather", label: "DEADLANDS.Sheet.Tab.Bio" },
+        { id: "gear", group: "sheet", label: "DEADLANDS.Sheet.Tab.Gear" },
+        { id: "bio", group: "sheet", label: "DEADLANDS.Sheet.Tab.Bio" },
       ],
       initial: "traits",
     },

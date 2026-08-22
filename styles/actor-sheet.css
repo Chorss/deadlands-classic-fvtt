@@ -366,7 +366,7 @@
 }
 
 /* Aptitude at level 0 — rolled with 1 die and a -4 modifier (dlc p.29).
-   Applied conditionally in traits-tab.hbs; matches .dlc-unskilled-warn in dialogs.css.
+   Applied conditionally in traits-tab.hbs; matches .dlc-unskilled-warn in _base.css.
    Also used bare in a guts-check.mjs chat card (unrelated context, same meaning). */
 .dlc-unskilled {
   color: var(--dlc-ink-muted);
@@ -392,7 +392,9 @@
    Weapons block in combat-tab.hbs share this pattern).
    ═══════════════════════════════════════════════════════════════════════════ */
 
-.dlc-gear {
+/* .active-scoped: Foundry hides inactive .tab elements via `.tab { display: none }`;
+ * an unconditional `display` here would defeat that and show every tab at once. */
+.dlc-gear.active {
   display: flex;
   flex-direction: column;
   gap: 0.45rem;

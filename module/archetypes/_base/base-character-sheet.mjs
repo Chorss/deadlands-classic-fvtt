@@ -86,10 +86,12 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
   /**
    * Whole-sheet edit-mode flag (D1) — reveals the raw die-count/type/modifier
    * controls on the Traits tab in place of the "4d8 +2" notation. Held on the
-   * instance rather than in render context: the sheet's outer frame element
+   * instance rather than only in render context: the sheet's outer frame element
    * (`this.element`) is created once and survives every re-render triggered by
    * `submitOnChange`, so a class toggled on it here persists across edits —
-   * state stored in the Handlebars context would not.
+   * state stored only in the Handlebars context would not. Also mirrored into
+   * `_prepareContext`'s `editMode` so the header part's `aria-pressed`, which
+   * *is* re-rendered on every `submitOnChange` edit, stays in sync with it.
    */
   #editMode = false;
 
@@ -115,19 +117,14 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
   static TABS = {
     sheet: {
       tabs: [
-        {
-          id: "traits",
-          group: "sheet",
-          icon: "fas fa-dice-d20",
-          label: "DEADLANDS.Sheet.Tab.Traits",
-        },
-        { id: "combat", group: "sheet", icon: "fas fa-gun", label: "DEADLANDS.Sheet.Tab.Combat" },
+        { id: "traits", group: "sheet", label: "DEADLANDS.Sheet.Tab.Traits" },
+        { id: "combat", group: "sheet", label: "DEADLANDS.Sheet.Tab.Combat" },
         // harrowed is always declared in TABS so V14 ApplicationV2 builds its
         // state; the nav entry is removed from context.tabs when the overlay is
         // inactive, so the skull tab only appears for Harrowed characters.
         HARROWED_SHEET_TAB,
-        { id: "gear", group: "sheet", icon: "fas fa-box", label: "DEADLANDS.Sheet.Tab.Gear" },
-        { id: "bio", group: "sheet", icon: "fas fa-feather", label: "DEADLANDS.Sheet.Tab.Bio" },
+        { id: "gear", group: "sheet", label: "DEADLANDS.Sheet.Tab.Gear" },
+        { id: "bio", group: "sheet", label: "DEADLANDS.Sheet.Tab.Bio" },
       ],
       initial: "traits",
     },
@@ -140,6 +137,7 @@ export class BaseCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2)
     context.system = this.document.system;
     context.config = DEADLANDS;
     context.editable = this.isEditable;
+    context.editMode = this.#editMode;
     context.traitGroups = this.#prepareTraits();
     context.dieTypeChoices = Object.fromEntries(DEADLANDS.DIE_TYPES.map((d) => [d, d]));
     // Foundry's own document-subtype label — already localized for every

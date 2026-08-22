@@ -6,7 +6,9 @@
    FAVORS TAB (M5)
    ═══════════════════════════════════════════════════════════════════════════ */
 
-.dlc-favors {
+/* .active-scoped: Foundry hides inactive .tab elements via `.tab { display: none }`;
+ * an unconditional `display` here would defeat that and show every tab at once. */
+.dlc-favors.active {
   display: flex;
   flex-direction: column;
   gap: var(--dlc-section-gap);

@@ -236,9 +236,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   list and let a template use it with no rule behind it.
 - `MODULE_BACKLOG` is a frozen set of names rather than a count, so styling one
   backlog class while adding another unstyled one no longer cancels out unnoticed.
-- Removed the dead `.dlc-wind-label` rule (`header.hbs` uses `.dlc-stat-label`) and
-  corrected a `blessed.css` comment naming a sin-severity vocabulary that does not
-  exist (`light`/`heavy`; the real values are `minor`/`major`/`mortal`).
+- Removed the dead `.dlc-wind-label` rule (`header.hbs` used `.dlc-stat-label` at the
+  time; M3 later reintroduced `.dlc-wind-label` on purpose as a shared header/combat-tab
+  class, so this entry is historical — the class is live again) and corrected a
+  `blessed.css` comment naming a sin-severity vocabulary that does not exist
+  (`light`/`heavy`; the real values are `minor`/`major`/`mortal`).
 
 ## [0.3.4] — 2026-07-06
 

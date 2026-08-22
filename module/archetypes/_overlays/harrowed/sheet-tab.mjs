@@ -17,6 +17,5 @@ export const HARROWED_SHEET_PART = {
 export const HARROWED_SHEET_TAB = {
   id: "harrowed",
   group: "sheet",
-  icon: "fas fa-skull",
   label: "DEADLANDS.Harrowed.Sheet.Tab.Label",
 };
