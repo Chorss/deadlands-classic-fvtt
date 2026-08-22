@@ -4,7 +4,7 @@
 
 ## Context
 
-We are building a **game system** for Foundry VTT from scratch, supporting **Deadlands Classic 20th Anniversary Edition** (Weird West, 1876). The repository now holds a full working system (~65 `.mjs` files under `module/`, plus templates, styles, compendium packs, and unit tests). We have two reference projects in the repo under `vendor/` (`vendor/DeadlandsClassic/` — Dulux-Oz, newer; `vendor/Deadlands-Classic/` — RhombusWeasel, older v9) plus the original rulebook PDF (413 pages). We do not copy code from the references (different licenses, different assumptions), but we learn from their patterns.
+We are building a **game system** for Foundry VTT from scratch, supporting **Deadlands Classic 20th Anniversary Edition** (Weird West, 1876). The repository now holds a full working system (71 `.mjs` files under `module/`, plus templates, styles, compendium packs, and unit tests). We have two reference projects in the repo under `vendor/` (`vendor/DeadlandsClassic/` — Dulux-Oz, newer; `vendor/Deadlands-Classic/` — RhombusWeasel, older v9) plus the original rulebook PDF (413 pages). We do not copy code from the references (different licenses, different assumptions), but we learn from their patterns.
 
 **Why now, what for:** Previous attempts are abandoned or limited to older Foundry versions. We want a modern, community-developed system built on the V14+ API (TypeDataModel, ApplicationV2, documentTypes, ActiveEffect), released under MIT.
 
