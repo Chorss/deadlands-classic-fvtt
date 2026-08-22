@@ -1,6 +1,6 @@
 ---
 name: new-phase
-description: Start a new implementation phase — creates branch, extracts the checklist from docs/implementation-plan.pl.md, identifies companion PDFs to verify.
+description: Start a new implementation phase — creates branch, extracts the checklist from docs/implementation-plan.md, identifies companion PDFs to verify.
 allowed-tools: Bash(git fetch:*), Bash(git status:*), Bash(git log:*), Bash(git branch:*), Bash(git checkout:*), Bash(grep:*), Bash(awk:*), Read, Glob
 argument-hint: "[N] [slug]"
 ---
@@ -31,14 +31,14 @@ Stop and report if:
 
 ## Step 3 — Extract phase section from the plan
 
-Read the phase section from `docs/implementation-plan.pl.md`:
+Read the phase section from `docs/implementation-plan.md`:
 
 ```bash
-awk '/^### Faza '"N"' /,/^### Faza [0-9]/' docs/implementation-plan.pl.md | head -80
+awk '/^### Phase '"N"' /,/^### Phase [0-9]/' docs/implementation-plan.md | head -80
 ```
 
 Parse out:
-- **Title** — the text after `### Faza N — `
+- **Title** — the text after `### Phase N — `
 - **Slug** — derive from the title (lowercase, spaces→hyphens, drop Polish diacritics)
   or use the slug the user provided.
   Examples: "Harrowed overlay" → `harrowed`, "Edges, Hindrances" → `edges-hindrances`
