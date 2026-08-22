@@ -18,8 +18,9 @@
     "lint": "biome check",
     "fmt": "biome format --write",
     "verify": "node tools/verify-documenttypes.mjs",
-    "verify:all": "npm run verify && node tools/audit-css.mjs && node tools/audit-i18n.mjs && npm test",
+    "verify:all": "npm run verify && node tools/audit-css.mjs && node tools/audit-i18n.mjs && node tools/audit-docs.mjs && npm test",
     "audit:i18n": "node tools/audit-i18n.mjs",
+    "audit:docs": "node tools/audit-docs.mjs",
     "pack": "fvtt package pack --in packs/_source --out packs",
     "unpack": "fvtt package unpack --in packs --out packs/_source"
   },
