@@ -3,6 +3,7 @@
  * verify-package.mjs — positive content gate for a built distribution archive.
  *
  * Usage: node tools/verify-package.mjs <manifest.json> <archive.zip>
+ *                                        [--require-pinned-download]
  *
  * Every other check in this repo validates the *working tree*. This one validates
  * the artifact a user actually installs, by resolving every declared path **inside
@@ -21,6 +22,9 @@
  *   4. Every `url(...)` target in every shipped stylesheet resolves to a file in the
  *      archive. Resolution is relative to the **containing stylesheet**, not the
  *      entry point (`styles/_variables.css` → `../fonts/x.woff2` → `fonts/x.woff2`).
+ *   5. With --require-pinned-download: `download` points at a release tag rather
+ *      than `latest`. Opt-in because the committed manifest legitimately carries
+ *      the `latest` URL, which release.yml rewrites at build time.
  *
  * Deliberately generic over the manifest so the system zip and the content-module
  * zip share one gate — the module's paths are relative to the module root, which is
@@ -100,6 +104,28 @@ function checkPacks(manifest, entries) {
   }
 }
 
+/**
+ * The published `download` must point at a specific tag, not `latest`.
+ *
+ * The registry stores one manifest per released version, so a `download` on
+ * `releases/latest/download/…` makes installing an older version from the
+ * version history fetch whatever is newest instead. `manifest` deliberately
+ * stays on `latest` — that is the URL Foundry re-checks for updates.
+ *
+ * Only enforced with --require-pinned-download, because the committed manifest
+ * legitimately carries the `latest` URL; release.yml rewrites it at build time
+ * and passes the flag, so a reordered or broken pin step fails the build.
+ */
+function checkPinnedDownload(manifest) {
+  const url = manifest.download ?? "";
+  if (!/\/releases\/download\/[^/]+\/[^/]+$/.test(url)) {
+    err(
+      `download is not pinned to a release tag: "${url}" — ` +
+        "expected .../releases/download/<tag>/<asset>"
+    );
+  }
+}
+
 /** True for URLs that are not archive-relative file references. */
 function isExternalUrl(url) {
   return /^(data:|https?:|\/\/|\/)/.test(url);
@@ -142,9 +168,13 @@ function checkCssAssets(zipPath, entries) {
 
 // ── main ────────────────────────────────────────────────────────────────────
 
-const [manifestPath, zipPath] = process.argv.slice(2);
+const args = process.argv.slice(2);
+const requirePinnedDownload = args.includes("--require-pinned-download");
+const [manifestPath, zipPath] = args.filter((a) => !a.startsWith("--"));
 if (!manifestPath || !zipPath) {
-  console.error("usage: node tools/verify-package.mjs <manifest.json> <archive.zip>");
+  console.error(
+    "usage: node tools/verify-package.mjs <manifest.json> <archive.zip> [--require-pinned-download]"
+  );
   process.exit(2);
 }
 for (const p of [manifestPath, zipPath]) {
@@ -161,6 +191,9 @@ requireEntry(entries, path.basename(manifestPath), "manifest");
 checkDeclaredPaths(manifest, entries);
 checkPacks(manifest, entries);
 checkCssAssets(zipPath, entries);
+if (requirePinnedDownload) {
+  checkPinnedDownload(manifest);
+}
 
 if (errors.length) {
   console.error(`verify-package FAILED for ${path.basename(zipPath)}:`);

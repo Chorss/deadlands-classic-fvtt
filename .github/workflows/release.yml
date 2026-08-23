@@ -142,8 +142,10 @@ jobs:
       # archive. Purely negative checks let 0.4.0 ship with no packs and no fonts.
       - name: Verify archive contents against manifests
         run: |
-          node tools/verify-package.mjs system.json /tmp/deadlands-classic.zip
-          node tools/verify-package.mjs content/module.json /tmp/deadlands-classic-content.zip
+          node tools/verify-package.mjs system.json /tmp/deadlands-classic.zip \
+            --require-pinned-download
+          node tools/verify-package.mjs content/module.json /tmp/deadlands-classic-content.zip \
+            --require-pinned-download
 
       - name: Create GitHub Release with assets
         env:
