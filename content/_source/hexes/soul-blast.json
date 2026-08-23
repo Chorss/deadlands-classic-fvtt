@@ -5,14 +5,16 @@
   "img": "icons/magic/control/debuff-chains-blue.webp",
   "system": {
     "trait": "spirit",
-    "hand": "ace",
+    "hand": "pair",
     "speed": "1",
     "duration": "instant",
     "range": "50 yards/hex level",
-    "description": ""
+    "description": "<p>Fires a stream of ghostly energy that strikes the target like a bullet. Resolve it as an attack starting from an Easy (5) target number, ignoring range; the hexslingin' roll serves as both the attack roll and the draw. Damage scales with the hand drawn, takes extra dice for hit location, and ignores all armor and cover. No effect on inanimate objects. dlc p.162-163.</p>"
   },
   "folder": null,
   "sort": 0,
-  "ownership": { "default": 0 },
+  "ownership": {
+    "default": 0
+  },
   "flags": {}
 }
