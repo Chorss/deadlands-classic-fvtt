@@ -252,10 +252,13 @@ deadlands-classic-fvtt/
 │   └── pl.json
 ├── packs/                               # V14 LevelDB, built from packs/_source/ via `npm run pack`
 │   ├── _source/                         # source JSON per pack (source of truth)
-│   ├── action-deck/                     # 54-card preset deck (the Fate Pot is a world setting, §3.3)
-│   ├── edges-srd/                       # mechanical effects only, no flavor copy
-│   ├── hindrances-srd/
-│   ├── hexes-srd/
+│   └── action-deck/                     # 54-card preset deck (the Fate Pot is a world setting, §3.3)
+├── content/                             # companion content module (NOT in the registry build, 0.4.1)
+│   ├── module.json
+│   ├── _source/                         # source JSON per pack (source of truth)
+│   ├── edges/                           # mechanical effects only, no flavor copy
+│   ├── hindrances/
+│   ├── hexes/
 │   ├── hit-location/                    # RollTable
 │   └── archetype-examples/              # one example actor per archetype
 ├── assets/screenshots/                  # README captures, taken during an E2E session
@@ -338,9 +341,10 @@ and their sin, ritual, and madness tables.
 Dominion roll — the pattern proof that an overlay is not an archetype.
 
 ### Phase 12 — Edges, Hindrances, Aptitudes content packs
-**Closed** — 0.2.0. The `edges-srd`, `hindrances-srd`, `hexes-srd`, `hit-location` and
-`archetype-examples` packs, built from `packs/_source/` via the `fvtt` CLI. Coverage is partial —
-see §12.
+**Closed** — 0.2.0. The `edges`, `hindrances`, `hexes`, `hit-location` and `archetype-examples`
+packs, built via the `fvtt` CLI. Coverage is partial — see §12. As of 0.4.1 these five live in the
+companion content module (`content/_source/`, built by `npm run pack:content`) and the `-srd`
+suffix is gone; only `action-deck` remains in the system itself.
 
 ### Phase 13 — Localization completion (full EN/PL)
 **Closed** — 0.3.0. Full EN/PL key parity with PL terminology from the MAG translations, enforced
@@ -428,6 +432,8 @@ in 0.2.0, the accessibility pass in 0.3.0.
 | **The Cards API doesn't support initiative** — `deal/pass/draw` only between Cards documents; no bridge to Combat/Combatant. Card-initiative (Phase 8) stands on its own glue. | M×H | Prototype Combat↔Cards **early in Phase 8** before the tracker UI; fallback: a custom deck object. Source: foundryvtt.com/api Cards. |
 | **CI can't run Foundry** — a commercial license: the binaries may not be committed, the key = the owner's secret; external PRs won't run E2E. | H×M | **CLOSED — mitigation shipped.** CI runs only the license-free `npm run lint` + `npm run verify:all`; the Playwright E2E suite (`npm run test:e2e`) is a local pre-merge check, never a PR gate. Documented in `docs/testing-e2e.md`. Source: foundryvtt.com/article/license. |
 | **No pack-build tooling** — V14 packs = LevelDB built by `fvtt package pack` from JSON; `*.db/` is legacy NeDB. Phases 5/8/9/12 depend on a non-existent step. | H×M | `packs/_source/<slug>/*.json` → `fvtt package pack`; `@foundryvtt/foundryvtt-cli` dev-dep + an npm script; `.gitignore` → `!packs/_source/`. Source: github.com/foundryvtt/foundryvtt-cli. |
+| **Distribution build had no positive content gate** — every check validated the *working tree*; nothing verified what was actually inside the zip. Releases 0.2.0-0.4.0 therefore shipped `packs/_source/**.json` and **zero** built LevelDB (the workflow never ran the packer, and `npm run pack` was itself broken — `fvtt package pack` needs `-n <name>`), plus no `fonts/`, so all 9 `@font-face` rules 404'd. Foundry creates a missing compendium as empty and reports no error, so an install looked healthy. | H×H | **CLOSED — 0.4.1.** `tools/verify-package.mjs` resolves every `esmodules`/`styles`/`languages`/`packs[].path` entry and every CSS `url(...)` target **inside the archive**, and requires the LevelDB `CURRENT` sentinel per pack; `tools/build-packs.mjs` drives the build off the manifest. Both archives are gated in `release.yml`. The gate was verified to fail on a build with `fonts` dropped and on one with packs unbuilt before being wired in. |
+| **Favor / ritual count disagrees with the book** — the code comments describe "16 ritual types", while `dlc` p.191 tabulates **7 rituals + 13 favors = 20**. Whether this is a naming mismatch (favors counted as rituals) or a genuine content gap is unresolved. | M×M | **OPEN.** Re-verify against `dlc` p.191 before the favor/ritual picker is built; tracked in the post-listing roadmap. |
 | **No SemVer for the registry contract** — extension modules bind to `*Registry` + the `deadlandsClassic.*` hooks + `game.deadlandsClassic`. A silent signature change breaks all of them. | M×H | Document it as a stable API (`docs/architecture.md`), SemVer (breaking = major), a deprecation window, a versioned `ArchetypeDefinition`. |
 | **Bus factor (1 maintainer)** — 14 phases, ~28-35+ sessions; the Context notes that previous Deadlands attempts were abandoned. | M×H | Trim the MVP (a 0.0.x preview after Phase 6A — D3); `CONTRIBUTING.md` for non-Claude; a system runnable without the AI workshop. |
 | **Dependency on the private `deadlands-rules-ref`** — a contributor without `$DEADLANDS_RULES_PATH` can't verify mechanics or the PDF hooks. | M×M | Page numbers in code comments / a committed prose-free citation map; the scripts/hooks degrade cleanly when the variable is unset. |
@@ -541,7 +547,7 @@ generator, and it is cheaper to fix. The schemas already exist; only the content
 
 | Item type | Entries in `packs/_source/` | Book source |
 |---|---|---|
-| Edges | 31 | `dlc` p.63-70 |
+| Edges | 31 | `dlc` p.63-71 |
 | Hindrances | 58 | `dlc` p.52-62 |
 | Hexes | 3 | `dlc` p.156-164, plus `hnh` |
 | Miracles | 0 | `dlc` p.177-180, plus `fb` |
@@ -551,9 +557,20 @@ generator, and it is cheaper to fix. The schemas already exist; only the content
 | Critters / bestiary | 0 | `dlc` chapter 14, p.259-282, plus `rvc` |
 | Harrowed Powers / Counting Coup | free-text fields, no picker | `dlc` p.197-203, plus `bod` |
 
-The Edge and Hindrance packs are the only ones with meaningful coverage, and both are partial.
+The Edge and Hindrance packs are the only ones with meaningful coverage. As of 0.4.1 all five
+content packs live in the companion module (`content/_source/`), not in the system.
+
+**How complete are they, really?** Verified at 0.4.1: every one of the 31 Edge and 58 Hindrance
+entries is a genuine book entry inside its cited page range (checked name-by-name against the
+`dlc` extract). The converse — that these are *all* the Edges and Hindrances the book contains —
+**is not established.** The chapters are laid out in two columns, which the text extract
+interleaves, so a headword-by-headword count of the source is not reliable enough to support a
+"100% coverage" claim. Treat the counts as "31 and 58 verified present", not as "complete".
+Note also that the book's own index puts the Edges chapter at p.63-**71**, one page beyond the
+range cited here and in earlier drafts.
+
 Nothing here is a stub or a placeholder — the item types, sheets and mechanics all work; the
-packs are simply not populated.
+packs are simply not fully populated.
 
 ### Mechanics not implemented
 
