@@ -92,7 +92,7 @@ export function harrowedSchemaFields() {
             // The mechanical effect or power name granted by the coup.
             power: new f.StringField({ required: true, blank: false }),
             // Any curse, taint, or Hindrance that came with the coup.
-            // bod p.70: "there's always some sort of price to pay".
+            // bod p.70 notes a coup always carries some cost alongside its power.
             taint: new f.StringField({ initial: "" }),
           })
         ),

@@ -117,7 +117,7 @@ export async function executeSpend(actor, color, { mode = "normal", rollType = "
   // the pot write succeeds, so a rejected pot op can't vanish the chip.
   let marshalDraw = null;
   if (color === "legend" && mode === "reroll") {
-    // Permanent discard — "gone forever". dlc p.148.
+    // Permanently discarded — this chip does not return to the pot. dlc p.148.
     await FatePot.discard("legend", 1);
   } else {
     // Return the chip to the pot and, for red on a trait/aptitude roll, draw

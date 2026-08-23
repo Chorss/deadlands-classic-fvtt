@@ -8,7 +8,8 @@
  * Bridge design: Foundry's Cards API has no native link to Combatant#initiative
  * (deal/pass/draw work only between Cards documents). We encode the highest drawn
  * card as a numeric initiative value so Foundry's descending-sort order maps to
- * Deadlands' "highest card acts first" rule. `dlc` p.116-118 (initiative chapter).
+ * the Deadlands rule that the highest card acts first. `dlc` p.116-118
+ * (initiative chapter).
  *
  * @see docs/implementation-plan.md §3.2
  * @license MIT

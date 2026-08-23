@@ -42,11 +42,12 @@ export class WeaponDataModel extends foundry.abstract.TypeDataModel {
       // Ammo capacity. null for melee weapons.
       shots: new f.NumberField({ integer: true, nullable: true, initial: null }),
       rof: new f.NumberField({ integer: true, min: 1, initial: 1 }),
-      // Caliber / ammo type (dlc p.82: "Ammo").
+      // Caliber / ammo type — the weapon table's ammo column. dlc p.82.
       ammoType: new f.StringField({ initial: "", blank: true }),
       // Defense Bonus — melee weapons only. dlc p.82.
       defense: new f.StringField({ initial: "", blank: true }),
-      // Rulebook price column mixes currency ("$1,500") and the literal "Special".
+      // The rulebook price column mixes currency amounts with non-numeric entries,
+      // so this stays a string rather than a number. dlc p.82.
       price: new f.StringField({ initial: "", blank: true }),
       description: new f.HTMLField(),
     };
