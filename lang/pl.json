@@ -2,14 +2,12 @@
   "DEADLANDS.System.Title": "Deadlands Classic",
   "DEADLANDS.System.Loaded": "System Deadlands Classic załadowany.",
   "DEADLANDS.System.Marshal": "MG",
-
   "DEADLANDS.Settings.DisplayFont.Label": "Czcionka nagłówków",
   "DEADLANDS.Settings.DisplayFont.Hint": "Czcionka używana w nagłówkach, nazwach cech i tytułach sekcji. Wszystkie warianty są dołączone offline.",
   "DEADLANDS.Settings.DisplayFont.Rye": "Rye (Western)",
   "DEADLANDS.Settings.DisplayFont.Arvo": "Arvo (Gazeta)",
   "DEADLANDS.Settings.DisplayFont.Cinzel": "Cinzel (Klasyczna)",
   "DEADLANDS.Settings.DisplayFont.System": "Domyślna Foundry",
-
   "TYPES.Actor.cowboy": "Kowboj",
   "TYPES.Actor.huckster": "Kanciarz",
   "TYPES.Actor.shaman": "Szaman",
@@ -17,7 +15,6 @@
   "TYPES.Actor.madScientist": "Szalony Naukowiec",
   "TYPES.Actor.npc": "BN",
   "TYPES.Actor.mook": "Statysta",
-
   "TYPES.Item.weapon": "Broń",
   "TYPES.Item.armor": "Pancerz",
   "TYPES.Item.gear": "Ekwipunek",
@@ -25,7 +22,6 @@
   "TYPES.Item.hindrance": "Wada",
   "TYPES.Item.ammo": "Amunicja",
   "TYPES.Item.hex": "Hex",
-
   "DEADLANDS.Sheet.EditMode.Toggle": "Edytuj wartości",
   "DEADLANDS.Sheet.NamePlaceholder": "Imię postaci",
   "DEADLANDS.Sheet.Wind": "Dech",
@@ -33,21 +29,17 @@
   "DEADLANDS.Sheet.Size": "Rozmiar",
   "DEADLANDS.Sheet.Grit": "Hart",
   "DEADLANDS.Sheet.Bounty": "Nagroda",
-
   "DEADLANDS.Sheet.Aria.DieCount": "Liczba kości",
   "DEADLANDS.Sheet.Aria.DieType": "Typ kości",
   "DEADLANDS.Sheet.Aria.DieModifier": "Modyfikator",
   "DEADLANDS.Sheet.Aria.AptitudeLevel": "Poziom umiejętności",
   "DEADLANDS.Sheet.Aria.WoundSeverity": "Poziom ran",
-
   "DEADLANDS.Sheet.Tab.Traits": "Cechy",
   "DEADLANDS.Sheet.Tab.Combat": "Walka",
   "DEADLANDS.Sheet.Tab.Gear": "Ekwipunek",
   "DEADLANDS.Sheet.Tab.Bio": "Biografia",
-
   "DEADLANDS.Sheet.TraitGroup.Corporeal": "Cielesne",
   "DEADLANDS.Sheet.TraitGroup.Mental": "Umysłowe",
-
   "DEADLANDS.Sheet.Section.Chips": "Sztony Losu",
   "DEADLANDS.Sheet.Section.Wounds": "Rany",
   "DEADLANDS.Sheet.Section.Weapons": "Broń",
@@ -56,14 +48,12 @@
   "DEADLANDS.Sheet.Section.Ammo": "Amunicja",
   "DEADLANDS.Sheet.Section.Edges": "Zalety",
   "DEADLANDS.Sheet.Section.Hindrances": "Wady",
-
   "DEADLANDS.Sheet.Empty.Weapons": "Brak broni.",
   "DEADLANDS.Sheet.Empty.Armor": "Brak pancerza.",
   "DEADLANDS.Sheet.Empty.Gear": "Brak ekwipunku.",
   "DEADLANDS.Sheet.Empty.Ammo": "Brak amunicji.",
   "DEADLANDS.Sheet.Empty.Edges": "Brak zalet.",
   "DEADLANDS.Sheet.Empty.Hindrances": "Brak wad.",
-
   "DEADLANDS.Item.Weapon.Category.Label": "Kategoria",
   "DEADLANDS.Item.Weapon.Category.Automatics": "Broń automatyczna",
   "DEADLANDS.Item.Weapon.Category.Carbines": "Sztucery",
@@ -87,7 +77,6 @@
   "DEADLANDS.Item.Weapon.Price": "Cena",
   "DEADLANDS.Item.Edge.Points": "pkt",
   "DEADLANDS.Item.PostToChat": "Wyślij na czat",
-
   "DEADLANDS.Trait.Deftness.Label": "Zręczność",
   "DEADLANDS.Trait.Nimbleness.Label": "Sprawność",
   "DEADLANDS.Trait.Quickness.Label": "Szybkość",
@@ -98,7 +87,6 @@
   "DEADLANDS.Trait.Mien.Label": "Charyzma",
   "DEADLANDS.Trait.Smarts.Label": "Spryt",
   "DEADLANDS.Trait.Spirit.Label": "Duch",
-
   "DEADLANDS.Aptitude.Bow.Label": "Łuk",
   "DEADLANDS.Aptitude.Filchin.Label": "Kieszonkostwo",
   "DEADLANDS.Aptitude.Lockpickin.Label": "Włamywanie",
@@ -143,7 +131,6 @@
   "DEADLANDS.Aptitude.Survival.Label": "Przetrwanie",
   "DEADLANDS.Aptitude.Tinkerin.Label": "Majsterkowanie",
   "DEADLANDS.Aptitude.Guts.Label": "Jaja",
-
   "DEADLANDS.HitLocation.Body.Label": "Ciało",
   "DEADLANDS.HitLocation.Noggin.Label": "Czerep",
   "DEADLANDS.HitLocation.UpperGuts.Label": "Klata",
@@ -153,12 +140,10 @@
   "DEADLANDS.HitLocation.RightArm.Label": "Prawa ręka",
   "DEADLANDS.HitLocation.LeftLeg.Label": "Lewa noga",
   "DEADLANDS.HitLocation.RightLeg.Label": "Prawa noga",
-
   "DEADLANDS.Chip.White.Label": "Biały",
   "DEADLANDS.Chip.Red.Label": "Czerwony",
   "DEADLANDS.Chip.Blue.Label": "Niebieski",
   "DEADLANDS.Chip.Legend.Label": "Legendarny",
-
   "DEADLANDS.Roll.Bust": "Niefart!",
   "DEADLANDS.Roll.Success": "Sukces!",
   "DEADLANDS.Roll.Fail": "Niepowodzenie.",
@@ -168,7 +153,6 @@
   "DEADLANDS.Roll.ArmorReduction": "− {value} pancerza",
   "DEADLANDS.Roll.AcesCount": "Asy: {count}",
   "DEADLANDS.Roll.VersusTN": "PT {tn}",
-
   "DEADLANDS.TN.Foolproof": "Banalny",
   "DEADLANDS.TN.Fair": "Zwykły",
   "DEADLANDS.TN.Onerous": "Poważny",
@@ -178,13 +162,11 @@
   "DEADLANDS.TN.Nightmarish": "Koszmarny",
   "DEADLANDS.TN.Hellborn": "Piekielny",
   "DEADLANDS.TN.Unearthly": "Nieziemski",
-
   "DEADLANDS.Dialog.TraitRoll.Title": "Rzut na cechę",
   "DEADLANDS.Dialog.TraitRoll.TN": "Próg trudności",
   "DEADLANDS.Dialog.TraitRoll.Modifier": "Modyfikator",
   "DEADLANDS.Dialog.TraitRoll.WhiteChips": "Białe sztony",
   "DEADLANDS.Dialog.TraitRoll.Roll": "Rzuć!",
-
   "DEADLANDS.Chip.GMOnly": "Tylko MG może losować Sztony Losu na sesję.",
   "DEADLANDS.Chip.SessionDraw": "Losowanie Sztonów Losu na sesję",
   "DEADLANDS.Chip.Pot.Title": "Pula Sztonów Losu",
@@ -201,24 +183,19 @@
   "DEADLANDS.ChipRule.OnePerAction": "Tylko jeden czerwony, niebieski lub legendarny szton na akcję.",
   "DEADLANDS.ChipRule.NoGoingBack": "Bez odwrotu: po wydaniu czerwonego, niebieskiego lub legendarnego sztonu nie można już wydać białego sztonu w tej akcji.",
   "DEADLANDS.ChipRule.ActionFailedRefunded": "Akcja nie powiodła się — białe sztony zostały zwrócone.",
-
   "DEADLANDS.GmProxy.NoActiveGM": "Ta akcja wymaga aktywnego Mistrza Gry — poproś MG o zalogowanie się i spróbuj ponownie.",
   "DEADLANDS.GmProxy.QueryFailed": "Klient MG nie potwierdził akcji po kilku próbach — mogła zostać zastosowana lub nie. Sprawdź Pulę Losu / Talię Akcji przed ponowieniem.",
-
   "DEADLANDS.Wound.Severity.None": "Brak",
   "DEADLANDS.Wound.Severity.Light": "Lekkie",
   "DEADLANDS.Wound.Severity.Heavy": "Poważne",
   "DEADLANDS.Wound.Severity.Serious": "Ciężkie",
   "DEADLANDS.Wound.Severity.Critical": "Krytyczne",
   "DEADLANDS.Wound.Severity.Maimed": "Okaleczenie",
-
   "DEADLANDS.Wound.Winded": "Wyczerpany! Brak akcji w tej rundzie.",
-
   "DEADLANDS.Guts.Label": "Test Odwagi",
   "DEADLANDS.Guts.Success": "Nerwy ze stali — brak efektu.",
   "DEADLANDS.Guts.Fail": "Przestraszony!",
   "DEADLANDS.Guts.ScartRoll": "Tabela Cykora",
-
   "DEADLANDS.Scart.Uneasy.Label": "Nieswój",
   "DEADLANDS.Scart.Uneasy.Note": "Traci następną Kartę Akcji.",
   "DEADLANDS.Scart.Queasy.Label": "Mdłości",
@@ -243,7 +220,6 @@
   "DEADLANDS.Scart.HeartAttack.Note": "Trudny (9) rzut Wigoru. Porażka: Wigor obniżony + drugi trudny (9) rzut albo śmierć (Medycyna TN 11 w 2k6 rund). Śmierć jeśli Wigor < k4.",
   "DEADLANDS.Scart.CorporealAging.Label": "Przedwczesne starzenie",
   "DEADLANDS.Scart.CorporealAging.Note": "Atak serca + starzeje się o 1 rok. MG stosuje wszystkie efekty ataku serca.",
-
   "DEADLANDS.Combat.Card.Label": "{rank} {suit}",
   "DEADLANDS.Combat.Card.RedJoker": "Czerwony Joker",
   "DEADLANDS.Combat.Card.BlackJoker": "Czarny Joker",
@@ -255,14 +231,12 @@
   "DEADLANDS.Combat.Card.Rank.Q": "Dama",
   "DEADLANDS.Combat.Card.Rank.K": "Król",
   "DEADLANDS.Combat.Card.Rank.A": "As",
-
   "DEADLANDS.Combat.Initiative.Bust": "{name} ma niefarta — brak kart akcji w tej rundzie!",
   "DEADLANDS.Combat.Initiative.BlackJoker": "{name} dobił Czarnego Jokera! MG dobiera szton {chip}. Karta ze spodnika odrzucona. Talia przetasowywana na końcu rundy.",
   "DEADLANDS.Combat.Initiative.BlackJokerNPC": "{name} dobił Czarnego Jokera! Karta ze spodnika odrzucona. Talia przetasowywana na końcu rundy — brak sztonu dla drużyny przy dobraniu przez BN.",
   "DEADLANDS.Combat.Initiative.RedJoker": "{name} dobił Czerwonego Jokera! Dobiera szton {chip} i może działać w dowolnej chwili tej rundy.",
   "DEADLANDS.Combat.Initiative.RedJokerNPC": "{name} dobił Czerwonego Jokera! Może działać w dowolnej chwili tej rundy — brak sztonu przy dobraniu przez BN.",
   "DEADLANDS.Combat.Initiative.NoSleeveJoker": "Jokerów nie można trzymać w spodniku.",
-
   "DEADLANDS.Combat.Hand.Title": "Ręka akcji: {name}",
   "DEADLANDS.Combat.Hand.Kicker": "Twoja ręka akcji",
   "DEADLANDS.Combat.Hand.Play": "Zagraj kartę",
@@ -271,35 +245,27 @@
   "DEADLANDS.Combat.Hand.JokerAbbr": "JKR",
   "DEADLANDS.Combat.Hand.Empty": "Brak kart w ręce.",
   "DEADLANDS.Combat.Hand.Open": "Pokaż rękę kart",
-
   "DEADLANDS.Combat.Round.Reshuffle": "Talia kart akcji przetasowana (Czarny Joker).",
-
   "DEADLANDS.Sheet.Tab.Hexes": "Hexy",
   "DEADLANDS.Sheet.Empty.Hexes": "Brak wyuczonych hexów.",
-
   "DEADLANDS.Huckster.Hexslingin.Label": "Kantowanie",
   "DEADLANDS.Huckster.Hexslingin.Level": "Poziom",
   "DEADLANDS.Huckster.Hexslingin.Modifier": "Modyfikator",
-
   "DEADLANDS.Huckster.Section.Hexes": "Znane Hexy",
   "DEADLANDS.Huckster.LastDraw.Label": "Ostatnie Dobranie",
   "DEADLANDS.Huckster.BacklashPending": "⚠ Sprzężenie zwrotne oczekuje — MG do rozstrzygnięcia.",
-
   "DEADLANDS.Huckster.HexTable.Name": "Nazwa",
   "DEADLANDS.Huckster.HexTable.Trait": "Cecha",
   "DEADLANDS.Huckster.HexTable.Hand": "Min. Układ",
   "DEADLANDS.Huckster.HexTable.Speed": "Czas",
   "DEADLANDS.Huckster.HexTable.Duration": "Czas trwania",
   "DEADLANDS.Huckster.HexTable.Range": "Zasięg",
-
   "DEADLANDS.Huckster.Cast.Button": "Rzuć",
   "DEADLANDS.Huckster.Cast.SucceedsDespiteBacklash": "{name} — {hex} odpala mimo odrzutu!",
-
   "DEADLANDS.Huckster.Dialog.CastTitle": "Kantowanie: {hex}",
   "DEADLANDS.Huckster.Dialog.Cast": "Rzuć!",
   "DEADLANDS.Huckster.Dialog.CastIntro": "Kantowanie:",
   "DEADLANDS.Huckster.Dialog.Available": "dostępne",
-
   "DEADLANDS.Huckster.Chat.CastHeader": "kantuje",
   "DEADLANDS.Huckster.Chat.Backlash": "Sprzężenie zwrotne!",
   "DEADLANDS.Huckster.Chat.CardsDrawn": "kart dobranych",
@@ -307,7 +273,6 @@
   "DEADLANDS.Huckster.Chat.MinRequired": "wymagany min.",
   "DEADLANDS.Huckster.Chat.HexSuccess": "Hex się udał!",
   "DEADLANDS.Huckster.Chat.HexFail": "Hex nieudany — układ za słaby.",
-
   "DEADLANDS.Huckster.Hand.Ace": "As",
   "DEADLANDS.Huckster.Hand.Pair": "Para",
   "DEADLANDS.Huckster.Hand.Jacks": "Para figur",
@@ -320,7 +285,6 @@
   "DEADLANDS.Huckster.Hand.StraightFlush": "Poker",
   "DEADLANDS.Huckster.Hand.RoyalFlush": "Królewski poker",
   "DEADLANDS.Huckster.Hand.None": "Brak układu",
-
   "DEADLANDS.Huckster.Backlash.Header": "⚠ Rozszerzone Sprzężenie Zwrotne",
   "DEADLANDS.Huckster.Backlash.Casting": "kantując",
   "DEADLANDS.Huckster.Backlash.Roll": "Rzut na sprzężenie zwrotne",
@@ -331,7 +295,6 @@
   "DEADLANDS.Huckster.Backlash.Gate.ScartRoll": "Rzut na tabelę Scart",
   "DEADLANDS.Huckster.Backlash.Gate.WindLost": "Utracone Wind",
   "DEADLANDS.Huckster.Backlash.Gate.MarshalCall": "Decyzja Mistrza Gry, czy to pozbawia hucksterów przytomności (dlc p.141) — jeśli nie, hex mimo to odpala.",
-
   "DEADLANDS.Huckster.Backlash.MysticSputter.Label": "Mistyczna czkawka",
   "DEADLANDS.Huckster.Backlash.MysticSputter.Note": "Hex nieudany. Kantowanie −1 poziom na 1k6 dni.",
   "DEADLANDS.Huckster.Backlash.RandomWound.Label": "Uderzenie duchowe",
@@ -372,11 +335,9 @@
   "DEADLANDS.Huckster.Backlash.Madness.Note": "Hex nieudany. Rzut na Tabelę Obłędu — wynik jest trwały.",
   "DEADLANDS.Huckster.Backlash.TotalCorruption.Label": "Kompletne wypaczenie",
   "DEADLANDS.Huckster.Backlash.TotalCorruption.Note": "Hex nieudany. Rzut Ducha naprzeciwko — przy porażce manitou kontroluje ciało przez 10 minut.",
-
   "TYPES.Item.miracle": "Cud",
   "TYPES.Item.favor": "Przysługa",
   "TYPES.Item.gizmo": "Wynalazek",
-
   "DEADLANDS.Blessed.Faith.Label": "Wiara",
   "DEADLANDS.Blessed.Faith.Level": "Poziom",
   "DEADLANDS.Blessed.Faith.Modifier": "Modyfikator",
@@ -410,7 +371,6 @@
   "DEADLANDS.Blessed.Chat.FaithKept": "Wiara się utrzymuje — brak utraty poziomu.",
   "DEADLANDS.Sheet.Tab.Miracles": "Cuda",
   "DEADLANDS.Sheet.Empty.Miracles": "Brak cudów. Dodaj przedmiot Cud, aby odblokować sekcję.",
-
   "DEADLANDS.Shaman.Ritual.Label": "Umiejętność Rytuału",
   "DEADLANDS.Shaman.Ritual.Level": "Poziom",
   "DEADLANDS.Shaman.Ritual.Modifier": "Modyfikator",
@@ -464,7 +424,6 @@
   "DEADLANDS.Shaman.RitualType.Tattoo": "Tatuaż",
   "DEADLANDS.Shaman.RitualType.Tobacco": "Tytoń",
   "DEADLANDS.Shaman.RitualType.WarCry": "Okrzyk Wojenny",
-
   "DEADLANDS.MadScientist.Aptitudes.Label": "Umiejętności",
   "DEADLANDS.MadScientist.MadScience.Label": "Szalona Nauka",
   "DEADLANDS.MadScientist.MadScience.Modifier": "Modyfikator",
@@ -533,19 +492,16 @@
   "DEADLANDS.MadScientist.Madness.Paranoia.Note": "Przekonanie, że wszyscy czyhają na jego pomysły lub chcą go skrzywdzić.",
   "DEADLANDS.MadScientist.Madness.Schizophrenia.Label": "Schizofrenia",
   "DEADLANDS.MadScientist.Madness.Schizophrenia.Note": "Nastawienie i osobowość zmieniają się drastycznie z czasem — powtarzające się wyniki mogą wykształcić odrębne osobowości.",
-
   "DEADLANDS.Dialog.Modifier": "Modyfikator",
   "DEADLANDS.Dialog.WhiteChips": "Wydawane białe sztony",
   "DEADLANDS.Dialog.Stepper.Decrease": "Zmniejsz",
   "DEADLANDS.Dialog.Stepper.Increase": "Zwiększ",
   "DEADLANDS.Dialog.Stepper.Of": "z",
-
   "DEADLANDS.Harrowed.Label": "Wygrzebany",
   "DEADLANDS.Harrowed.Sheet.Tab.Label": "Wygrzebany",
   "DEADLANDS.Harrowed.IsHarrowed.Label": "Wygrzebany",
   "DEADLANDS.Harrowed.Warn.NotHarrowed": "Ta postać nie jest Wygrzebana.",
   "DEADLANDS.Harrowed.Activated": "{name} powrócił z zaświatów.",
-
   "DEADLANDS.Harrowed.Dominion.Label": "Dominacja",
   "DEADLANDS.Harrowed.Dominion.SpiritControl": "Kontrola Ducha",
   "DEADLANDS.Harrowed.Dominion.LastRoll": "Ostatni rzut",
@@ -559,11 +515,19 @@
   "DEADLANDS.Harrowed.Dominion.ManitouWins": "Manitou wygrywa — tracisz kontrolę!",
   "DEADLANDS.Harrowed.Dominion.NoChange": "Żaden nie triumfuje — Dominacja bez zmian.",
   "DEADLANDS.Harrowed.Dominion.TotalDominion": "Manitou postaci {name} sprawuje Pełną Dominację — brak rzutu na początku sesji, dopóki nie zainterweniuje Mistrz Gry lub magia.",
-
   "DEADLANDS.Harrowed.Powers.Label": "Moce Wygrzebańców",
   "DEADLANDS.Harrowed.Powers.Level": "Poziom",
   "DEADLANDS.Harrowed.Powers.Empty": "Brak mocy Wygrzebanego.",
-
   "DEADLANDS.Harrowed.CountingCoup.Label": "Counting Coup",
-  "DEADLANDS.Harrowed.CountingCoup.Empty": "Brak zdobytych coup."
+  "DEADLANDS.Harrowed.CountingCoup.Empty": "Brak zdobytych coup.",
+  "DEADLANDS.Legal.Title": "Nota prawna",
+  "DEADLANDS.Legal.MenuLabel": "Przeczytaj notę",
+  "DEADLANDS.Legal.MenuHint": "Informacje o znaku towarowym, treściach i licencji tego nieoficjalnego systemu fanowskiego.",
+  "DEADLANDS.Legal.Disclaimer": "Deadlands, Deadlands Classic i Weird West są znakami towarowymi Pinnacle Entertainment Group. To nieoficjalny system fanowski, niezwiązany z Pinnacle ani przez nie autoryzowany.",
+  "DEADLANDS.Legal.NoContent": "System nie zawiera tekstu, tabel ani grafik z podręczników. Do gry potrzebne są wydane podręczniki.",
+  "DEADLANDS.Legal.Terminology": "Polskie terminy podążają za oficjalnym tłumaczeniem MAG wyłącznie jako terminologia; prawa do tych tłumaczeń pozostają przy ich wydawcy.",
+  "DEADLANDS.Legal.Fonts": "Dołączone czcionki (Rye, Libre Baskerville, Arvo, Cinzel) są używane na licencji SIL Open Font License 1.1 — zob. fonts/OFL.txt.",
+  "DEADLANDS.Legal.Code": "Własny kod systemu i pakowanie są udostępnione na licencji MIT.",
+  "DEADLANDS.Huckster.Backlash.Source": "Tabela Backlash: hnh s.101-102",
+  "DEADLANDS.MadScientist.Madness.Source": "Tabela Szaleństwa: dlc s.250"
 }

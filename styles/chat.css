@@ -277,3 +277,16 @@
   font-size: 0.75rem;
   margin-top: 0.2rem;
 }
+
+/* Rulebook page citation for a reproduced table — the source note that a JSON
+ * language file cannot carry as a comment. See lang/*.json DEADLANDS.*.Source. */
+.dlc-chat-source {
+  margin-top: 0.5rem;
+  padding-top: 0.35rem;
+  border-top: 1px solid var(--dlc-rule-soft);
+  color: var(--dlc-ink-muted);
+  font-family: var(--dlc-font-data);
+  font-size: 0.65rem;
+  letter-spacing: 0.04em;
+  text-align: right;
+}
