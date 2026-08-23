@@ -1,12 +1,12 @@
 {
   "id": "deadlands-classic",
   "title": "Deadlands Classic",
-  "description": "A community-driven Foundry VTT game system for Deadlands Classic (Weird West). Features exploding dice (Aces), poker-card initiative, Fate Chips (White/Red/Blue/Legend) and location-based wounds.",
+  "description": "A community-driven Foundry VTT game system for Deadlands Classic (Weird West). Features exploding dice (Aces), poker-card initiative, Fate Chips (White/Red/Blue/Legend) and location-based wounds. No rulebook content is included — you supply your own Edges, Hindrances and Hexes, or install the optional companion content module. Unofficial fan project: Deadlands is a trademark of Pinnacle Entertainment Group, and this system is not affiliated with or endorsed by Pinnacle.",
   "version": "0.4.0",
   "type": "system",
   "compatibility": {
     "minimum": "14",
-    "verified": "14.364"
+    "verified": "14.367"
   },
   "authors": [
     {
@@ -89,41 +89,29 @@
       "path": "packs/action-deck",
       "type": "Cards",
       "system": "deadlands-classic"
+    }
+  ],
+  "license": "LICENSE",
+  "readme": "README.md",
+  "bugs": "https://github.com/Chorss/deadlands-classic-fvtt/issues",
+  "changelog": "https://github.com/Chorss/deadlands-classic-fvtt/blob/main/CHANGELOG.md",
+  "media": [
+    {
+      "type": "setup",
+      "url": "systems/deadlands-classic/assets/screenshots/character-sheet.png",
+      "thumbnail": "systems/deadlands-classic/assets/screenshots/character-sheet.png"
     },
     {
-      "name": "hexes-srd",
-      "label": "Hexes",
-      "path": "packs/hexes-srd",
-      "type": "Item",
-      "system": "deadlands-classic"
+      "type": "screenshot",
+      "url": "systems/deadlands-classic/assets/screenshots/combat-tracker-cards.png"
     },
     {
-      "name": "edges-srd",
-      "label": "Edges",
-      "path": "packs/edges-srd",
-      "type": "Item",
-      "system": "deadlands-classic"
+      "type": "screenshot",
+      "url": "systems/deadlands-classic/assets/screenshots/chip-widget.png"
     },
     {
-      "name": "hindrances-srd",
-      "label": "Hindrances",
-      "path": "packs/hindrances-srd",
-      "type": "Item",
-      "system": "deadlands-classic"
-    },
-    {
-      "name": "hit-location",
-      "label": "Hit Location Table",
-      "path": "packs/hit-location",
-      "type": "RollTable",
-      "system": "deadlands-classic"
-    },
-    {
-      "name": "archetype-examples",
-      "label": "Archetype Examples",
-      "path": "packs/archetype-examples",
-      "type": "Actor",
-      "system": "deadlands-classic"
+      "type": "screenshot",
+      "url": "systems/deadlands-classic/assets/screenshots/huckster-hex-casting.png"
     }
   ]
 }
