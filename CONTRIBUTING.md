@@ -65,7 +65,8 @@ deadlands-classic-fvtt/
 ├── templates/                  # Handlebars partials per sheet section
 ├── styles/                     # CSS entry + partials
 ├── lang/                       # en.json, pl.json (EN/PL key parity mandatory)
-├── packs/                      # compendium packs — built from packs/_source/ via `fvtt package pack`
+├── packs/                      # system compendium (action-deck) — built from packs/_source/ via `npm run pack`
+├── content/                    # companion content module — rulebook-derived packs, `npm run pack:content`
 ├── tools/                      # repo tooling (verify-documenttypes.mjs, …)
 ├── tests/                      # node:test unit tests for pure core logic
 ├── docs/                       # implementation-plan.md, notes.md

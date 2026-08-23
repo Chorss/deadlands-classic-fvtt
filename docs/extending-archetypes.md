@@ -203,11 +203,22 @@ Study `module/archetypes/huckster/` for a complete worked example.
 
 If the archetype ships with example items (spells, gizmos, etc.):
 
-1. Create `packs/_source/<pack-name>/` with one JSON file per item. Name the pack after its
-   contents, not after the archetype — the existing packs are `hexes-srd`, `edges-srd`,
-   `hindrances-srd`, `action-deck`, `hit-location`, `archetype-examples`. There is no `-items`
-   suffix convention.
-2. Run `npm run pack` to compile to LevelDB.
-3. Add the pack entry to `system.json → packs`; its `name` must match the folder name.
+Decide first **which package the pack belongs to**. Rulebook-derived content ships in the
+companion content module, not in the system — see `content/README.md` for why.
 
-See `packs/_source/hexes-srd/` for an example.
+- **Rulebook-derived content** (spells, gear, example items taken from a book): create
+  `content/_source/<pack-name>/`, add the entry to `content/module.json → packs`, and build
+  with `npm run pack:content`.
+- **Content with no rulebook provenance** (generic decks, tables you wrote yourself): create
+  `packs/_source/<pack-name>/`, add the entry to `system.json → packs`, and build with
+  `npm run pack`.
+
+Either way: one JSON file per item, and name the pack after its contents rather than the
+archetype — the existing packs are `action-deck` (system) and `edges`, `hindrances`, `hexes`,
+`hit-location`, `archetype-examples` (content module). There is no `-items` suffix convention,
+and no `-srd` suffix either — Deadlands has no SRD, so the suffix was dropped in 0.4.1.
+
+A pack's `name` must match its source folder name; `tools/build-packs.mjs` drives the build off
+the manifest, so a mismatch fails the build rather than shipping empty.
+
+See `content/_source/hexes/` for an example.
