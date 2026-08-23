@@ -21,8 +21,10 @@
     "verify:all": "npm run verify && node tools/audit-css.mjs && node tools/audit-i18n.mjs && node tools/audit-docs.mjs && npm test",
     "audit:i18n": "node tools/audit-i18n.mjs",
     "audit:docs": "node tools/audit-docs.mjs",
-    "pack": "fvtt package pack --in packs/_source --out packs",
-    "unpack": "fvtt package unpack --in packs --out packs/_source"
+    "pack": "node tools/build-packs.mjs system.json packs/_source packs",
+    "unpack": "fvtt package unpack --in packs --out packs/_source",
+    "pack:content": "node tools/build-packs.mjs content/module.json content/_source content/packs",
+    "unpack:content": "fvtt package unpack --in content/packs --out content/_source"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.10",
