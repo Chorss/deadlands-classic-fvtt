@@ -15,10 +15,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   hook and the `Stop` hook all get it). Hard errors: a tracked file pointing at a
   gitignored file, a relative Markdown link whose target is missing, and a
   rulebook citation whose slug is unknown or whose page is past the end of that
-  book. Warnings only: `docs/*.md` absent from `CLAUDE.md`'s Sources of truth
-  table, and backticked paths that do not exist. The citation check is skipped
-  when `$DEADLANDS_RULES_PATH` is unset, so CI and a fresh clone degrade rather
-  than fail.
+  book, and a `docs/*.md` absent from `CLAUDE.md`'s Sources of truth table — a
+  doc nobody is pointed at is a doc that goes stale unnoticed. Warning only:
+  backticked paths that do not exist, since the plan deliberately names
+  aspirational ones. The citation check is skipped when `$DEADLANDS_RULES_PATH`
+  is unset, so CI and a fresh clone degrade rather than fail.
 - `docs/implementation-plan.md` §12 — the state of the compendium packs, which no
   English-language document previously recorded: hexes 3, and miracles, gizmos,
   favors, weapons and the bestiary all empty. The item types and mechanics work;

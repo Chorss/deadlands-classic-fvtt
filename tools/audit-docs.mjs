@@ -24,13 +24,22 @@
  *      clone do not have the private rules repo, and this degrades rather than
  *      failing, the same way audit-css treats module/ more leniently than
  *      templates/.
+ *   4. A `docs/*.md` file missing from CLAUDE.md's "Sources of truth" table.
+ *      A doc nobody is pointed at is a doc that quietly goes stale, and CLAUDE.md
+ *      is what every session reads first, so the table is the index that has to
+ *      stay complete.
+ *
+ *      This ran as a warning until the table was corrected, because a hard
+ *      failure against an incorrect table would have left verify:all permanently
+ *      red — and the Stop hook runs verify:all on every dirty tree, so that would
+ *      have blocked every turn. The table is correct now, so the check is a hard
+ *      error, with one consequence worth stating plainly: **CLAUDE.md is outside
+ *      the editable surface Claude may touch unprompted.** A session that adds a
+ *      `docs/*.md` will therefore hit a gate it cannot clear on its own; the
+ *      failure message says so, and the answer is to ask the maintainer for the
+ *      one-line table addition, not to delete the doc or work around the check.
  *
  * WARNINGS (never affect the exit code)
- *   4. A `docs/*.md` file missing from CLAUDE.md's "Sources of truth" table.
- *      Deliberately not an error: CLAUDE.md is outside the editable surface, so
- *      a hard failure here would leave verify:all permanently red — and the Stop
- *      hook runs verify:all on every dirty tree, which would block every turn.
- *      Promote to an error once that table is corrected.
  *   5. A backticked path that does not exist. Warning-only because
  *      implementation-plan.md deliberately names things that do not exist yet
  *      (docs/claude-workflow.md, module/core/migration.mjs) — a decision recorded
@@ -344,10 +353,12 @@ if (fs.existsSync(claudeMd)) {
     .filter((f) => f.endsWith(".md") && !f.endsWith(".pl.md"));
   for (const doc of docs) {
     if (!text.includes(`docs/${doc}`) && !text.includes(`\`${doc}\``)) {
-      warn(
+      err(
         "CLAUDE.md",
         tableLine,
-        `docs/${doc} is not in the Sources of truth table (warning by design — CLAUDE.md is outside the editable surface)`
+        `docs/${doc} is missing from the Sources of truth table — add a row for it. ` +
+          `Note that CLAUDE.md is outside the editable surface, so a Claude session ` +
+          `must ask the maintainer for this rather than editing it unprompted.`
       );
     }
   }
