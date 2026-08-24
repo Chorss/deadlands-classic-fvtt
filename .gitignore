@@ -81,6 +81,9 @@ docs/*.pl.md
 .claude/cache/
 .claude/logs/
 
+# Codex — local MCP configuration may contain absolute paths to private repos.
+.codex/config.toml
+
 # Playwright MCP — test artifacts, traces, screenshots, recorded videos.
 test-results/
 playwright-report/
