@@ -47,7 +47,9 @@ Hooks.once("ready", () => {
 
 1. Add a function `migrateV0_1_to_V0_2(actor)` (pure — takes old document data, returns new).
 2. Register it in the migration table with the version range it covers.
-3. Add a `node:test` unit test in `tests/migration.test.mjs` covering the transform.
+3. Add a `node:test` unit test covering the transform to `tests/migration.test.mjs` — the file
+   already exists and currently holds the sentinel and self-migration cases for the 0.1.0 → 0.2.0
+   Harrowed fields; add new cases alongside them rather than creating a second file.
 4. Update the migration version sentinel after a successful pass.
 
 **Migration functions must be pure:** they receive plain data objects (from `toObject()`)
@@ -100,3 +102,5 @@ in `CHANGELOG.md`.
 | 0.3.1 | Font picker (world setting), CSS layer, `audit-css` tooling — no schema changes, no migration needed |
 | 0.3.2 | Formatting/tooling fixes only — no schema changes, no migration needed |
 | 0.3.3 | Bug-audit hotfixes (rolls, chips, wounds, concurrency) + internal dedupe — no schema changes, no migration needed |
+| 0.3.4 | GM proxy for shared-state writes, rule-fidelity hotfixes, `audit-i18n` tooling — no schema changes, no migration needed |
+| 0.4.0 | `weapon` moved off the untyped `{}` stub onto `WeaponDataModel` (`category`, `rangeType`, `damage`, `range`, `shots`, `rof`, `ammoType`, `defense`, `price`, `description`). **Self-migrating**: every field declares an `initial:`, so Foundry fills existing weapon items on load — no migration function needed. Ledger UI redesign, item sheets and the E2E suite touched no other schema. |

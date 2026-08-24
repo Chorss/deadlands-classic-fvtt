@@ -7,15 +7,16 @@ Chromium via [`@playwright/test`](https://playwright.dev/).
 > **Why local only, never CI:** Foundry VTT is commercially licensed — its
 > binaries may not be committed and the license key is the owner's secret, so
 > external PRs cannot run it (risk table, `implementation-plan.md` §8). CI
-> stays license-free (lint, `node --test`, `verify-documenttypes`); E2E is a
-> pre-merge check on the maintainer's machine, not a PR gate.
+> stays license-free (`npm run lint` + `npm run verify:all`); E2E is a pre-merge
+> check on the maintainer's machine, not a PR gate.
 
 ## Prerequisites
 
 1. **Local Foundry V14** listening on `http://localhost:30000`
    (override with the `FOUNDRY_URL` env var).
 2. A world named **`deadlands-dev`** using this system
-   (symlink setup: `CONTRIBUTING.md` §Development).
+   (symlink setup:
+   [`CONTRIBUTING.md` §Setting Up a Local Dev Environment](../CONTRIBUTING.md#setting-up-a-local-dev-environment)).
 3. The world **launched** before running the tests — the suite fails fast with
    an actionable message when Foundry serves `/setup` instead of `/join`.
 4. Two **passwordless** users in the world:
@@ -58,6 +59,8 @@ chip-spend-UI spec (widget-driven, not API-driven).
 
 ## Screenshots
 
-`README.md` §Screenshots lists planned captures (`assets/screenshots/`). Take
-them during an E2E session — the suite conveniently drives the sheets and
-combat tracker into presentable states.
+The four captures in `README.md` §Screenshots were taken this way and now ship
+in [`assets/screenshots/`](../assets/screenshots/): character sheet, combat
+tracker with Action Cards, Fate Chip widget, Huckster hex casting. Re-shoot them
+during an E2E session when the UI changes — the suite conveniently drives the
+sheets and combat tracker into presentable states.

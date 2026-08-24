@@ -63,10 +63,14 @@ books/
 # prototypes) — working material for the Ledger migration, never part of the system.
 Analiza projektu i wygląd/
 
-# Maintainer-local Polish translations of docs — repo docs are English; PL copies stay local & unpublished.
+# Maintainer-local Polish notes in docs/ — repo documentation is English. This is not for
+# translations: as of 2026-08-22 the in-place PL copies were deleted, because they had drifted
+# to an older revision of their English originals and disagreed with them about verified rules.
+# The rule now covers documents that are natively Polish and have no English counterpart
+# (e.g. planning checklists), which stay local & unpublished.
 docs/*.pl.md
 
-# Claude Code — commit shared `.claude/settings.json`, `.claude/commands/`,
+# Claude Code — commit shared `.claude/settings.json`, `.claude/skills/`,
 # `.claude/agents/`, `.claude/rules/` and `.claude/hooks/`, but keep
 # user-local overrides and runtime artifacts out of git.
 .claude/settings.local.json

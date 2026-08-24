@@ -73,7 +73,25 @@ op appliers, unit-tested in `tests/fate-pot-ops.test.mjs` / `tests/action-deck-o
   decks; with a single deck they can't occur at all. Splitting into two decks (keyed by PC vs NPC
   side) is future work — the mid-round exhaustion now recycles the discard pile rather than dealing
   duplicates, which was the acute bug.
-- Add a `media` entry to `system.json` once real screenshots exist in `assets/screenshots/`.
+- **`media` entry in `system.json` — condition met, key still missing.** The gate was "once real
+  screenshots exist"; four PNGs shipped in `assets/screenshots/` with 0.4.0 and are linked from
+  `README.md` §Screenshots. Adding the key touches the manifest that
+  `tools/verify-documenttypes.mjs` validates, so it is its own change, not a docs edit.
+
+---
+
+## House-rule TN tiers 13/15/17/19 (0.4.0) — a deliberate departure from RAW
+
+The core Difficulty ladder (`dlc` p.28) names five tiers, topping out at Incredible (11). The
+trait-roll dialog's Target Number picker adds four more — Deadly 13, Nightmarish 15, Hellborn 17,
+Unearthly 19 — at the maintainer's explicit request, to give the Marshal named steps above
+Incredible instead of a bare numeric field.
+
+**These four are not sourced from `deadlands-rules-ref`.** They are a house rule, and the one place
+in the system where a mechanical value does not trace to the rulebook. They live only in
+`TN_CHOICES` (`module/archetypes/_base/base-character-sheet.mjs`), whose JSDoc flags them so a
+future audit does not "correct" them into canon or file them as a rule-fidelity bug. `TNS` in
+`module/core/config.mjs` deliberately still holds the five RAW tiers and nothing else.
 
 ---
 
@@ -81,7 +99,7 @@ op appliers, unit-tested in `tests/fate-pot-ops.test.mjs` / `tests/action-deck-o
 
 In code comments, `dlc p.NNN` uses **physical PDF page numbers** (1-indexed from cover, offset +1
 from printed page numbers). A reader with a physical book should subtract 1 to find the printed
-page. Example: `dlc p.40` in code = printed p.39. The offset (+1) is documented in
+page. Example: `dlc p.40` in code = printed page 39. The offset (+1) is documented in
 `deadlands-rules-ref/index/README.md`. Consider adding a one-line note to this effect in a shared
 location so future contributors aren't confused.
 
@@ -155,8 +173,9 @@ this fixed map.
   the task.
 - They do something ("scaffold an archetype", "verify a mechanic against the rulebook", "run the
   system sanity check").
-- In this project: the `verify-mechanic` skill plus the `/add-archetype`, `/new-phase`,
-  `/release`, `/verify-system` commands.
+- All five live in `.claude/skills/`: `add-archetype`, `new-phase`, `release`, `verify-mechanic`,
+  `verify-system`. There is no `.claude/commands/` directory — a skill invoked as `/name` *is* the
+  slash command, so the two words name one mechanism, not two.
 
 **`.claude/agents/` — dedicated specialists.**
 - A subagent is a separate Claude session with its own context and a restricted toolset. The

@@ -24,15 +24,18 @@
 ```
 module/
 ├── deadlands-classic.mjs   # entry (init + ready hooks)
-├── core/                   # dice, cards, chips, wounds, registries — archetype-agnostic
-└── archetypes/             # self-contained per-archetype modules (_base/ + cowboy/, huckster/, …)
+├── core/                   # archetype-agnostic: dice, cards, chips, wounds, dialogs,
+│                           #   documents, items, registries, gm-proxy, op-dedup, font-settings
+└── archetypes/             # self-contained per-archetype modules (_base/ + cowboy/, huckster/,
+                            #   shaman/, blessed/, mad-scientist/, npc/, mook/, _overlays/harrowed/)
 templates/                  # Handlebars partials per sheet section
 styles/                     # CSS entry + partials per concern
 lang/                       # en.json, pl.json (key sets MUST match)
 packs/                      # LevelDB compendium packs (V14 format)
-tools/                      # verify-documenttypes.mjs, audit-css.mjs, audit-i18n.mjs
+tools/                      # verify-documenttypes.mjs, audit-css.mjs, audit-i18n.mjs, audit-docs.mjs
 tests/                      # node:test unit tests for pure core logic
-docs/                       # plan, architecture, v14-api-notes, mechanics-reference, notes
+docs/                       # plan, architecture, v14-api-notes, mechanics-reference,
+                            #   migration-policy, testing-e2e, notes
 ```
 
 Full layout: `docs/implementation-plan.md` §4.
@@ -50,7 +53,7 @@ matching file is read or written (`code-quality.md`, `v14-api.md`, `localization
 - **Branch per feature.** Use `.github/PULL_REQUEST_TEMPLATE.md` on PRs.
 - **V14 API only** — no V13 fallbacks, no deprecated APIs. → `v14-api.md`
 - **Localization** — EN/PL key parity mandatory, no hardcoded UI strings. → `localization.md`
-- **Game rules — one source of truth.** All mechanics come from `deadlands-rules-ref` (full catalog in `index/README.md`); `docs/mechanics-reference.md` is only a paraphrase; re-verify a mechanic before coding it. → rule `rulebook-authority.md`, skill `/verify-mechanic` (before coding), subagent `mechanic-verifier` (audit written code/packs), plus a non-blocking post-write reminder on mechanics files.
+- **Game rules — one source of truth.** All mechanics come from `deadlands-rules-ref` (full catalog in `index/README.md`); `docs/mechanics-reference.md` is only an index of page cites; re-verify a mechanic before coding it. → rule `rulebook-authority.md`, skill `/verify-mechanic` (before coding), subagent `mechanic-verifier` (audit written code/packs), plus a non-blocking post-write reminder on mechanics files.
 - **Naming conventions** — casing matrix for keys, folders, classes, i18n. → `naming.md`
 - **Code quality** — Biome-enforced lint rules, SOLID boundaries, OWASP patterns, cognitive complexity ≤ 15, CSS/template coverage. Scoped to `module/`, `tools/`, `tests/` `.mjs`. → `code-quality.md`
 - **Tests for core logic** — pure modules (exploding-roll, poker-evaluator, chip-rules, wound-track) ship with `node:test` unit tests. Foundry-dependent code is verified manually.
@@ -64,8 +67,10 @@ matching file is read or written (`code-quality.md`, `v14-api.md`, `localization
 | Implementation roadmap | `docs/implementation-plan.md` |
 | Architecture + registry contract | `docs/architecture.md` |
 | V14 API patterns & code snippets | `docs/v14-api-notes.md` |
-| Mechanics quick reference (⚠ **paraphrase** — subordinate to the rulebook source below) | `docs/mechanics-reference.md` |
+| Mechanics citation index (⚠ **pointers, not the source** — subordinate to the rulebook below) | `docs/mechanics-reference.md` |
 | Extending with a new archetype | `docs/extending-archetypes.md` |
+| World-data migration policy | `docs/migration-policy.md` |
+| Local Playwright E2E suite | `docs/testing-e2e.md` |
 | Open questions / licensing notes | `docs/notes.md` |
 | **Game rules — single authoritative source** (full rulebook catalog) | `$DEADLANDS_RULES_PATH/index/README.md` (catalog of every book) + `<slug>.md`; discipline → `.claude/rules/rulebook-authority.md` |
 | Persistent memory across Claude sessions | `~/.claude/projects/.../memory/` (key knowledge distilled into `docs/`) |
@@ -79,7 +84,7 @@ Two upstream projects vendored for pattern research under `vendor/`: `vendor/Dea
 **`deadlands-rules-ref` is the single authoritative source for all Deadlands game rules.** Its catalog
 `index/README.md` lists **every** indexed rulebook — core (`dlc`), the archetype companions (`hnh`,
 `ghost-dancers`, `fb`, `snr`, `bod`), regional sourcebooks, adventures, magazines, the Polish MAG
-translations (`*-pl`, the PL terminology canon), and conversions (~50 books, each with a page offset and
+translations (`*-pl`, the PL terminology canon), and conversions (71 books, each with a page offset and
 extract-quality flag). When a rule is in question this source wins — over memory, over the paraphrased
 `docs/mechanics-reference.md`, and over the `vendor/` reference projects. Re-verify a mechanic here (via
 the `pdf-reference-lookup` subagent) before coding it. Discipline: `.claude/rules/rulebook-authority.md`.
@@ -150,7 +155,7 @@ Before declaring a task done:
 
 ```bash
 npm run lint          # Biome — formatting + lint rules
-npm run verify:all    # manifest + EN/PL parity → CSS coverage → i18n keys → unit tests
+npm run verify:all    # manifest + EN/PL parity → CSS coverage → i18n keys → docs → unit tests
 ```
 
 These are the same two commands CI runs, so green locally means green on the PR.

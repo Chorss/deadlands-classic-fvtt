@@ -74,7 +74,7 @@ past them. Treat them as a typo-catcher, not a security boundary.
   returns `<slug> p.NNN` + paraphrase. Delegates to `pdf-reference-lookup`
 - `/release [major|minor|patch]` — cut a versioned release (bumps, tags, pushes; CI builds the zip)
 - `/new-phase [N] [slug]` — create branch `phase-N/<slug>`, extract checklist + test block from
-  `docs/implementation-plan.pl.md`, list companion PDFs to verify
+  `docs/implementation-plan.md`, list companion PDFs to verify
 - `/add-archetype <kebab-name> [--mechanics|--overlay]` — full archetype scaffold; delegates to
   `archetype-scaffolder`
 

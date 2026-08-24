@@ -11,7 +11,7 @@ paths:
 All Deadlands game rules (mechanics, numbers, tables, page cites) come from **one** place: the
 private rules repo **`deadlands-rules-ref`** (`$DEADLANDS_RULES_PATH`). Its catalog
 `index/README.md` lists **every** indexed rulebook — core (`dlc`), the archetype companions, regional
-sourcebooks, adventures, magazines, the Polish MAG translations (`*-pl`), and conversions (~50 books,
+sourcebooks, adventures, magazines, the Polish MAG translations (`*-pl`), and conversions (71 books,
 each with slug, page offset, and a PASS/WARN/FAIL extract-quality flag).
 
 ## The rule

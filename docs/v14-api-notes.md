@@ -1,7 +1,9 @@
 # Foundry V14 API notes
 
 > Patterns, snippets, and breaking changes for building this system on Foundry VTT V14.
-> Verified against **Foundry 14.364** (2026-06-17). V14+ only — no V13 back-compat shims.
+> Verified against **Foundry 14.364**. Last reviewed against the system's own code at 0.4.0
+> (2026-08-22); the 14.364 pin is unchanged since the 2026-06-17 API pass.
+> V14+ only — no V13 back-compat shims.
 
 ## Support target
 
@@ -100,7 +102,7 @@ class CowboySheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   static TABS = {
     sheet: {
       tabs: [
-        { id: "traits", group: "sheet", icon: "fas fa-dice-d20", label: "DEADLANDS.Sheet.Tab.Traits" },
+        { id: "traits", group: "sheet", label: "DEADLANDS.Sheet.Tab.Traits" },
         /* …one entry per content part (combat, gear, bio)… */
       ],
       initial: "traits"
@@ -141,6 +143,79 @@ fixed in 0.3.3). Rules:
   exported descriptors (`HARROWED_SHEET_PART`, `HARROWED_SHEET_TAB` from
   `module/archetypes/_overlays/harrowed/sheet-tab.mjs`) — see `module/archetypes/huckster/sheet.mjs`
   (same in blessed/shaman/mad-scientist).
+
+### A part that is always declared but conditionally shown
+
+`PARTS` and `TABS` are read once as static class properties, so a part cannot be added or removed
+per-document. Declare it unconditionally and drop the **nav entry** at render time instead:
+
+```js
+async _prepareContext(options) {
+  const context = await super._prepareContext(options);
+  // …
+  context.harrowed = this.#prepareHarrowed();
+  context.tabs = this._prepareTabs("sheet");   // build the full set first
+  if (!context.harrowed.isHarrowed) {
+    delete context.tabs.harrowed;              // then hide this one
+  }
+  return context;
+}
+```
+
+The part still renders (ApplicationV2 has its state), but nothing in the nav points at it, so the
+Harrowed tab appears only for Harrowed characters. Live implementation:
+`module/archetypes/_base/base-character-sheet.mjs`. Ordering matters — `_prepareTabs` must run
+before the `delete`, or the removed entry is rebuilt.
+
+## Item sheets — ItemSheetV2
+
+Item sheets follow the same mixin shape as actor sheets, one class hierarchy down:
+`BaseItemSheet` (`module/core/items/_base/base-item-sheet.mjs`) carries the shared
+`DEFAULT_OPTIONS`, the enriched-description context and the `postToChat` action; `WeaponSheet`
+and `EdgeSheet` add only their own `static PARTS` and extra context.
+
+```js
+const { HandlebarsApplicationMixin } = foundry.applications.api;
+const { ItemSheetV2 } = foundry.applications.sheets;
+
+export class BaseItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
+  static DEFAULT_OPTIONS = {
+    classes: ["deadlands-classic", "sheet", "item"],
+    position: { width: 420, height: "auto" },
+    form: { submitOnChange: true, closeOnSubmit: false },
+    actions: { postToChat: BaseItemSheet.#onPostToChat },
+  };
+}
+```
+
+Registration mirrors the actor side, driven by `ItemRegistry` in the `init` hook:
+`DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, def.sheetClass, { types: [def.id], makeDefault: true })`.
+
+⚠ **No `<form>` wrapper in the template.** An ApplicationV2 document sheet already renders its root
+element as a `<form>`. Wrapping the part's body in a second `<form>` is invalid HTML, and the
+browser assigns each input's form ownership to the *nearest* ancestor — so `FormData` built from
+the root form never sees those fields and `submitOnChange` silently discards every edit. Use a
+plain `<div>` as the template root. Caught live in Foundry and fixed in 0.4.0
+(`templates/item/weapon-sheet.hbs`, `edge-sheet.hbs`).
+
+## Relocated V13 globals
+
+Two helpers this system uses moved out of the global namespace in V14:
+
+```js
+// The enrichHTML entry point. `.implementation` is required — the bare
+// namespace object is the class registry, not the class.
+const TextEditor = foundry.applications.ux.TextEditor.implementation;
+await TextEditor.enrichHTML(html, { secrets, rollData, relativeTo });
+
+// Preloading Handlebars partials referenced via {{> "..."}}.
+await foundry.applications.handlebars.loadTemplates([
+  "systems/deadlands-classic/templates/dialogs/parts/modifier-stepper.hbs",
+]);
+```
+
+Live use: `module/archetypes/_base/base-character-sheet.mjs`,
+`module/core/items/_base/base-item-sheet.mjs`, `module/deadlands-classic.mjs`.
 
 ## Cards API
 
