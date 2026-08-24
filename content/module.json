@@ -2,7 +2,7 @@
   "id": "deadlands-classic-content",
   "title": "Deadlands Classic — Content Packs",
   "description": "Optional compendium content for the Deadlands Classic (Community Edition) game system: Edges, Hindrances, Hexes, the hit-location table and example actors. Distributed separately from the system and installed by manifest URL. Unofficial fan project — Deadlands is a trademark of Pinnacle Entertainment Group; not affiliated with or endorsed by Pinnacle.",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "compatibility": {
     "minimum": "14",
     "verified": "14.367"
