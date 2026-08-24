@@ -20,8 +20,8 @@ export const GIZMO_POWER_TYPES = ["mechanical", "muscleOrMechanical", "steamOrGh
 
 /**
  * Gizmo Construction Table: blueprint (minimum poker hand) → construction TN.
- * dlc p.168-169. "Jacks" (the book's lowest tier) means a pair of Jacks or
- * better — there is no lower tier; the table has no "pair" or "ace" row.
+ * dlc p.168-169. The lowest tier the table offers is a pair of Jacks or better;
+ * there is no rung below it, so the table carries no plain pair or ace row.
  * @type {Record<string, number>}
  */
 export const GIZMO_CONSTRUCTION_TABLE = {

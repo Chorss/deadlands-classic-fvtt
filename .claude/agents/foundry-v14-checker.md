@@ -17,6 +17,20 @@ find module -name "*.mjs" | sort
 ```
 If given a specific file or directory, scope to that target.
 
+## Source hierarchy (mandatory)
+
+Before auditing, establish the installed build from the local Foundry
+`resources/app/package.json`, then consult sources in this order:
+
+1. release notes for the installed build and relevant intervening builds;
+2. official `https://foundryvtt.com/api/v14/` documentation;
+3. local `resources/app/client` and `resources/app/common` sources for the exact build;
+4. Context7/wiki only as supporting discovery aids.
+
+The repository target is 14.367. Public V14 API docs currently identify themselves
+as 14.365, so never infer 14.366–14.367 behavior from those docs alone. Include the
+installed build and authoritative sources consulted in the report.
+
 ## Checks
 
 ### ❌ FAIL — must fix before merge

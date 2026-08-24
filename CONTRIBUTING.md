@@ -27,7 +27,7 @@ This project adheres to the [Contributor Covenant Code of Conduct](CODE_OF_CONDU
 
 ### Prerequisites
 
-- [Foundry VTT](https://foundryvtt.com/) (license required), **V14+** (V13 not supported; verified 14.364)
+- [Foundry VTT](https://foundryvtt.com/) (license required), **V14+** (V13 not supported; verified 14.367)
 - [Node.js](https://nodejs.org/) **24+** (required by Foundry V14)
 - [Git](https://git-scm.com/)
 
@@ -50,7 +50,11 @@ This project adheres to the [Contributor Covenant Code of Conduct](CODE_OF_CONDU
 
 3. **Launch Foundry VTT**. The system should appear in the Game Systems list.
 
-4. Create a test World using the **Deadlands Classic** system and begin testing.
+4. Create a throwaway test World named **`deadlands-test`** using the **Deadlands Classic** system.
+
+5. Run the complete local Foundry gate with `npm run test:e2e`; it validates the
+   installation and starts or reuses the world automatically. Details:
+   [`docs/testing-e2e.md`](docs/testing-e2e.md).
 
 ---
 
@@ -65,7 +69,8 @@ deadlands-classic-fvtt/
 ├── templates/                  # Handlebars partials per sheet section
 ├── styles/                     # CSS entry + partials
 ├── lang/                       # en.json, pl.json (EN/PL key parity mandatory)
-├── packs/                      # compendium packs — built from packs/_source/ via `fvtt package pack`
+├── packs/                      # system compendium (action-deck) — built from packs/_source/ via `npm run pack`
+├── content/                    # companion content module — rulebook-derived packs, `npm run pack:content`
 ├── tools/                      # repo tooling (verify-documenttypes.mjs, …)
 ├── tests/                      # node:test unit tests for pure core logic
 ├── docs/                       # implementation-plan.md, notes.md

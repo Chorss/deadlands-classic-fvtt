@@ -27,6 +27,8 @@ import { DeadlandsActor } from "./core/documents/deadlands-actor.mjs";
 import { DeadlandsItem } from "./core/documents/deadlands-item.mjs";
 import { applyFont, registerFontSettings, SETTING_KEY } from "./core/font-settings.mjs";
 import { ItemRegistry } from "./core/item-registry.mjs";
+import { registerLegalNotice } from "./core/legal-notice.mjs";
+import { migrateWorld } from "./core/migration.mjs";
 import { OverlayRegistry } from "./core/overlay-registry.mjs";
 import { drawHitLocation, resolveHitLocation } from "./core/wounds/hit-location.mjs";
 import {
@@ -133,6 +135,10 @@ Hooks.once("init", () => {
 
   // Display-font picker — 4 bundled offline fonts, live CSS-var update.
   registerFontSettings(SYSTEM_ID);
+
+  // Trademark / content disclaimer, reachable from the settings menu. The
+  // README is not visible from inside Foundry; this is.
+  registerLegalNotice(SYSTEM_ID);
   applyFont(game.settings.get(SYSTEM_ID, SETTING_KEY));
 
   // World-data migration version — seeded from day one so future schema changes
@@ -178,7 +184,15 @@ Hooks.once("init", () => {
   };
 });
 
-Hooks.once("ready", () => {
+Hooks.once("ready", async () => {
+  try {
+    await migrateWorld();
+  } catch (error) {
+    console.error(`${LOG_PREFIX} World migration failed`, error);
+    if (game.user?.isGM) {
+      ui.notifications.error("DEADLANDS.Migration.Failed", { localize: true, permanent: true });
+    }
+  }
   console.log(`${LOG_PREFIX} ${game.i18n.localize("DEADLANDS.System.Loaded")}`);
 });
 

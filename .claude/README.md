@@ -70,6 +70,8 @@ past them. Treat them as a typo-catcher, not a security boundary.
 ## Skills
 
 - `/verify-system` — `npm run lint` + `npm run verify:all`, one-paragraph report
+- `/verify-foundry` — establish the exact Foundry build and authoritative API sources before
+  Foundry-dependent edits; run the doctor and all local E2E flows afterward
 - `/verify-mechanic` — verify a mechanic against `deadlands-rules-ref` **before** coding it;
   returns `<slug> p.NNN` + paraphrase. Delegates to `pdf-reference-lookup`
 - `/release [major|minor|patch]` — cut a versioned release (bumps, tags, pushes; CI builds the zip)
@@ -132,14 +134,20 @@ npm run verify:all    # verify-documenttypes → audit-css → audit-i18n → te
 git config core.hooksPath .githooks    # done automatically by SessionStart hook
 ```
 
-Set the private rules-repo path in `settings.local.json`:
+Set private rules and Foundry paths in `settings.local.json`:
 
 ```json
 {
   "env": {
-    "DEADLANDS_RULES_PATH": "/absolute/path/to/deadlands-rules-ref"
+    "DEADLANDS_RULES_PATH": "/absolute/path/to/deadlands-rules-ref",
+    "FOUNDRY_EXECUTABLE": "/absolute/path/to/foundryvtt",
+    "FOUNDRY_DATA_PATH": "/absolute/path/to/FoundryVTT",
+    "FOUNDRY_WORLD": "deadlands-test"
   }
 }
 ```
 
 Without it, the post-extract quality gate hook will skip verification (no local fallback — scripts now live in `deadlands-rules-ref`).
+Never store license keys or passwords here. `.mcp.json` starts the pinned
+`@playwright/mcp@0.0.79` and `@upstash/context7-mcp@4.0.3` executables from
+`node_modules`; run `npm ci` before using either server.

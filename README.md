@@ -5,7 +5,10 @@
 [![GitHub Stars](https://img.shields.io/github/stars/Chorss/deadlands-classic-fvtt?style=flat-square)](https://github.com/Chorss/deadlands-classic-fvtt/stargazers)
 [![GitHub Issues](https://img.shields.io/github/issues/Chorss/deadlands-classic-fvtt?style=flat-square)](https://github.com/Chorss/deadlands-classic-fvtt/issues)
 
-> *"There's a reason they call it the Weird West, amigo. The Devil's been real busy since Gettysburg — and someone's gotta stop him."*
+> *There's a reason they call it the Weird West, amigo. The Devil's been real busy
+> since Gettysburg — and someone's gotta stop him.*
+>
+> — flavor text written for this project, not a quotation from any rulebook
 
 A community-maintained Foundry VTT game system for **Deadlands Classic** (Weird West, 1876). Born from the ashes of two abandoned projects, this Community Edition rebuilds the full Classic experience on modern Foundry VTT V14+ APIs.
 
@@ -29,8 +32,8 @@ A community-maintained Foundry VTT game system for **Deadlands Classic** (Weird 
 - **Harrowed Overlay** — Any PC can come back from the dead. Harrowed is an overlay applicable to *any* archetype, not a separate actor type.
 - **Full Actor Support** — Cowboys, Hucksters, Shamans, Blessed, Mad Scientists, NPCs and Mooks.
 - **Core Item Types** — Weapons, Armor, Gear, Edges, Hindrances, Ammo. (Archetype-specific items — Hexes, Miracles, Favors, Gizmos — registered by their archetype modules.)
-- **Localization** — English and Polish supported from v0.1. Polish terminology follows the official MAG translation canon ("Wygrzebany", "Dominacja", "Kanciarz", etc.).
-- **Content Packs** — `edges-srd` (31 edges from dlc p.63-70), `hindrances-srd` (58 hindrances from dlc p.52-62), `hit-location` RollTable (1d20), `archetype-examples` (one example actor per type).
+- **Localization** — English and Polish supported from v0.1. Polish terminology follows the official MAG translation canon ("Wygrzebany", "Dominacja", "Kanciarz", etc.) — see [Terminology and rights](#terminology-and-rights).
+- **Bundled Compendium** — an `action-deck` Cards pack (52 cards + 2 Jokers) for card initiative. Rulebook-derived content (Edges, Hindrances, Hexes, the hit-location table, example actors) ships separately — see [Content packs](#content-packs).
 
 ---
 
@@ -64,6 +67,23 @@ Captured from a local V14 session (see `docs/testing-e2e.md`); source files live
 2. Extract the archive into your Foundry VTT `Data/systems/` directory.
 3. The folder must be named `deadlands-classic`.
 4. Restart Foundry VTT.
+
+### Content packs
+
+The system ships the **engine** plus one compendium of plain playing cards. It
+deliberately ships **no rulebook-derived content** — see
+[Terminology and rights](#terminology-and-rights) for why.
+
+Edges, Hindrances, Hexes, the hit-location RollTable and the example actors live in a
+separate companion module, installed by manifest URL:
+
+```
+https://github.com/Chorss/deadlands-classic-fvtt/releases/latest/download/module.json
+```
+
+Install it under **Add-on Modules → Install Module**, then enable it in your world.
+It is published from this repository's releases and is **not** listed in the Foundry
+package registry. Source and details: [`content/`](content/README.md).
 
 ---
 
@@ -117,6 +137,39 @@ For a full version history, see [CHANGELOG.md](CHANGELOG.md).
 
 ## License
 
-This project is licensed under the **MIT License**. See [LICENSE](LICENSE) for the full text.
+This project's own code, templates and packaging are licensed under the **MIT License**.
+See [LICENSE](LICENSE) for the full text.
 
-Deadlands Classic, Hell on Earth Classic, and Lost Colony Classic are trademarks of [Pinnacle Entertainment Group](https://peginc.com/). This is an unofficial, fan-made project and is not affiliated with or endorsed by Pinnacle Entertainment Group.
+### Trademark
+
+Deadlands Classic, Hell on Earth Classic, and Lost Colony Classic are trademarks of
+[Pinnacle Entertainment Group](https://peginc.com/). This is an unofficial, fan-made
+project and is not affiliated with or endorsed by Pinnacle Entertainment Group. The same
+notice is shown inside Foundry under **Settings → Deadlands Classic → Legal notice**.
+
+### Terminology and rights
+
+No rulebook text, tables or artwork are distributed with this system. Compendium entries
+in the companion content module carry names and mechanical values with descriptions
+written in our own words, cited to the page they came from; they are a mechanical index,
+not a reproduction. You need the published rulebooks to play.
+
+Polish terms follow the official **MAG** translation where one exists, and are used as
+terminology only. Those translations remain the property of their publisher, who is a
+separate rights holder from Pinnacle.
+
+Every compendium icon is a core Foundry VTT asset; no artwork from any rulebook is
+included.
+
+### Bundled fonts
+
+Four families are bundled so no stylesheet reaches a font CDN at runtime. All are used
+under the **SIL Open Font License 1.1**; the full license and each family's copyright
+notice travel with the files in [`fonts/OFL.txt`](fonts/OFL.txt).
+
+| Family | Files | Upstream |
+|---|---|---|
+| Rye | `Rye-Regular` | [google/fonts · ofl/rye](https://github.com/google/fonts/tree/main/ofl/rye) |
+| Libre Baskerville | `Regular`, `Bold`, `Italic` | [google/fonts · ofl/librebaskerville](https://github.com/google/fonts/tree/main/ofl/librebaskerville) |
+| Arvo | `Regular`, `Bold`, `Italic` | [google/fonts · ofl/arvo](https://github.com/google/fonts/tree/main/ofl/arvo) |
+| Cinzel | `Regular`, `Bold` | [google/fonts · ofl/cinzel](https://github.com/google/fonts/tree/main/ofl/cinzel) |

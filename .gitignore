@@ -44,6 +44,10 @@ dist/
 packs/*
 !packs/_source/
 
+# Same split for the companion content module (content/_source/ -> content/packs/).
+# Built by `npm run pack:content`; only the JSON source is tracked.
+content/packs/
+
 # Environment / secrets
 .env
 .env.local
@@ -84,3 +88,6 @@ playwright-report/
 .playwright-mcp/
 # Root-level screenshots from manual test sessions.
 /*.png
+
+# Build artifact: LICENSE is copied into content/ when packaging the content module.
+content/LICENSE

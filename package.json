@@ -1,6 +1,6 @@
 {
   "name": "deadlands-classic-fvtt",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "private": true,
   "type": "module",
   "description": "Community-maintained Foundry VTT game system for Deadlands Classic.",
@@ -14,19 +14,23 @@
   },
   "scripts": {
     "test": "node --test tests/*.test.mjs",
-    "test:e2e": "playwright test",
+    "test:e2e": "node tools/foundry-e2e-doctor.mjs && playwright test",
     "lint": "biome check",
     "fmt": "biome format --write",
     "verify": "node tools/verify-documenttypes.mjs",
     "verify:all": "npm run verify && node tools/audit-css.mjs && node tools/audit-i18n.mjs && node tools/audit-docs.mjs && npm test",
     "audit:i18n": "node tools/audit-i18n.mjs",
     "audit:docs": "node tools/audit-docs.mjs",
-    "pack": "fvtt package pack --in packs/_source --out packs",
-    "unpack": "fvtt package unpack --in packs --out packs/_source"
+    "pack": "node tools/build-packs.mjs system.json packs/_source packs",
+    "unpack": "fvtt package unpack --in packs --out packs/_source",
+    "pack:content": "node tools/build-packs.mjs content/module.json content/_source content/packs",
+    "unpack:content": "fvtt package unpack --in content/packs --out content/_source"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.10",
     "@foundryvtt/foundryvtt-cli": "^3.0.4",
-    "@playwright/test": "^1.61.1"
+    "@playwright/mcp": "0.0.79",
+    "@playwright/test": "^1.61.1",
+    "@upstash/context7-mcp": "4.0.3"
   }
 }

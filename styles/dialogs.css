@@ -312,3 +312,39 @@
   font-size: 0.7rem;
   color: var(--dlc-ink-muted);
 }
+
+/* ── Legal notice ─────────────────────────────────────────────────────────────
+ * Trademark + content disclaimer, reachable from the system settings menu.
+ * See module/core/legal-notice.mjs.
+ */
+
+.dlc-legal-notice {
+  --dlc-legal-max: 30rem;
+}
+
+.dlc-legal-notice .window-content {
+  max-width: var(--dlc-legal-max);
+}
+
+.dlc-legal-notice-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 0.4rem 0.2rem;
+  font-family: var(--dlc-font-body);
+  color: var(--dlc-ink-soft);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.dlc-legal-disclaimer {
+  margin: 0;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid var(--dlc-rule);
+  color: var(--dlc-ink);
+  font-weight: 700;
+}
+
+.dlc-legal-line {
+  margin: 0;
+}

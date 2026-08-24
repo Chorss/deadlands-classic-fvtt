@@ -8,6 +8,11 @@
 
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
+import {
+  migrateFaithDenialActor,
+  migrateWorld,
+  planFaithDenialMigration,
+} from "../module/core/migration.mjs";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -98,5 +103,116 @@ describe("v0.1.0 → v0.2.0 Harrowed overlay fields", () => {
     assert.equal(harrowedActorData.harrowed.dominion.spiritControl, 3);
     assert.equal(harrowedActorData.harrowed.harrowedPowers.length, 1);
     assert.equal(harrowedActorData.harrowed.countingCoup.length, 1);
+  });
+});
+
+// ── v0.4.0 → v0.4.1 — Blessed faith denial Active Effect ────────────────────
+
+function legacyBlessed(overrides = {}) {
+  return {
+    type: "blessed",
+    system: {
+      faithDeniedUntil: 4_600,
+      faithDeniedSeverity: "minor",
+      ...overrides.system,
+    },
+    effects: overrides.effects ?? [],
+  };
+}
+
+describe("v0.4.0 → v0.4.1 faith-denial migration", () => {
+  it("moves an active timestamp to one V14 Active Effect with remaining time", () => {
+    const plan = planFaithDenialMigration(legacyBlessed(), 1_000, {
+      effectName: "Miracle Access Denied",
+    });
+
+    assert.deepEqual(plan.actorUpdate, {
+      "system.faithDeniedUntil": 0,
+      "system.faithDeniedSeverity": "none",
+    });
+    assert.equal(plan.effectData.name, "Miracle Access Denied");
+    assert.equal(plan.effectData.duration.value, 3_600);
+    assert.equal(plan.effectData.duration.units, "seconds");
+    assert.equal(plan.effectData.duration.expiry, null);
+    assert.deepEqual(plan.effectData.system.changes, []);
+    assert.equal(plan.effectData.flags["deadlands-classic"].faithDenial.severity, "minor");
+  });
+
+  it("clears an expired timestamp without creating an effect", () => {
+    const plan = planFaithDenialMigration(legacyBlessed(), 4_600, {
+      effectName: "Miracle Access Denied",
+    });
+
+    assert.equal(plan.effectData, null);
+    assert.ok(plan.actorUpdate);
+  });
+
+  it("does not duplicate an existing marked effect", () => {
+    const actor = legacyBlessed({
+      effects: [
+        {
+          flags: { "deadlands-classic": { faithDenial: { severity: "major" } } },
+        },
+      ],
+    });
+    const plan = planFaithDenialMigration(actor, 1_000, {
+      effectName: "Miracle Access Denied",
+    });
+
+    assert.equal(plan.effectData, null);
+    assert.ok(plan.actorUpdate);
+  });
+
+  it("is a no-op on a second run after the bridge fields were cleared", async () => {
+    const source = legacyBlessed();
+    let createCalls = 0;
+    let updateCalls = 0;
+    const actor = {
+      toObject: () => structuredClone(source),
+      createEmbeddedDocuments: async (_type, [effect]) => {
+        createCalls += 1;
+        source.effects.push(effect);
+      },
+      update: async (changes) => {
+        updateCalls += 1;
+        source.system.faithDeniedUntil = changes["system.faithDeniedUntil"];
+        source.system.faithDeniedSeverity = changes["system.faithDeniedSeverity"];
+      },
+    };
+
+    await migrateFaithDenialActor(actor, 1_000, "Miracle Access Denied");
+    await migrateFaithDenialActor(actor, 1_000, "Miracle Access Denied");
+
+    assert.equal(createCalls, 1);
+    assert.equal(updateCalls, 1);
+  });
+
+  it("does not stamp migrationVersion when any document migration fails", async () => {
+    let versionSet = false;
+    const gameInstance = {
+      user: { isGM: true },
+      users: { activeGM: { isSelf: true } },
+      settings: {
+        get: () => "0.4.0",
+        set: async () => {
+          versionSet = true;
+        },
+      },
+      i18n: { localize: () => "Miracle Access Denied" },
+      time: { worldTime: 1_000 },
+      actors: [
+        {
+          uuid: "Actor.failure",
+          toObject: () => legacyBlessed(),
+          createEmbeddedDocuments: async () => {
+            throw new Error("database unavailable");
+          },
+        },
+      ],
+      scenes: [],
+    };
+
+    await assert.rejects(() => migrateWorld(gameInstance), /database unavailable/);
+    assert.equal(versionSet, false);
   });
 });

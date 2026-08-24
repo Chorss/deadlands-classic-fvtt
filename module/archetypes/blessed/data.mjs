@@ -8,10 +8,8 @@
  * New fields:
  *   faith          — level + modifier for the faith Aptitude.
  *   sinPending     — true when a sin check is queued after an action.
- *   faithDeniedUntil — game.time.worldTime (seconds) when the patron restores
- *     miracle access; 0 when no denial is active. fb p.103-104 doesn't specify
- *     real-world vs in-game time, so this uses the world clock (story time).
- *   faithDeniedSeverity — "none" | "minor" | "major" | "mortal"
+ *   faithDeniedUntil / faithDeniedSeverity — deprecated 0.4.1 migration bridge;
+ *     retained until 0.5.0 so migration never depends on private `_source`.
  *
  * Sources: dlc p.44, p.177-181; fb p.26, p.35-36, p.103-105.
  *
@@ -36,11 +34,10 @@ export class BlessedDataModel extends BaseCharacterDataModel {
     // Awaiting sin resolution — set by invoking a miracle sinfully or committing a sin.
     base.sinPending = new f.BooleanField({ initial: false });
 
-    // game.time.worldTime (seconds) until which the patron denies miracle
-    // access; 0 = no active denial. fb p.103-104.
+    // Deprecated migration bridge. Active Effects V2 are authoritative in 0.4.1.
     base.faithDeniedUntil = new f.NumberField({ integer: true, min: 0, initial: 0 });
 
-    // Severity of the active denial (determines duration). fb p.103-104.
+    // Deprecated migration bridge. Remove together with faithDeniedUntil in 0.5.0.
     base.faithDeniedSeverity = new f.StringField({
       choices: SIN_SEVERITIES,
       initial: "none",

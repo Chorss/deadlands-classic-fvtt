@@ -2,21 +2,16 @@
   "mcpServers": {
     "playwright": {
       "type": "stdio",
-      "command": "npx",
+      "command": "./node_modules/.bin/playwright-mcp",
       "args": [
-        "-y",
-        "@playwright/mcp@latest",
         "--browser",
         "chromium"
       ]
     },
     "context7": {
       "type": "stdio",
-      "command": "npx",
-      "args": [
-        "-y",
-        "@upstash/context7-mcp@latest"
-      ]
+      "command": "./node_modules/.bin/context7-mcp",
+      "args": []
     },
     "phpstorm": {
       "url": "http://127.0.0.1:64443/stream",

@@ -73,10 +73,12 @@ op appliers, unit-tested in `tests/fate-pot-ops.test.mjs` / `tests/action-deck-o
   decks; with a single deck they can't occur at all. Splitting into two decks (keyed by PC vs NPC
   side) is future work — the mid-round exhaustion now recycles the discard pile rather than dealing
   duplicates, which was the acute bug.
-- **`media` entry in `system.json` — condition met, key still missing.** The gate was "once real
-  screenshots exist"; four PNGs shipped in `assets/screenshots/` with 0.4.0 and are linked from
-  `README.md` §Screenshots. Adding the key touches the manifest that
-  `tools/verify-documenttypes.mjs` validates, so it is its own change, not a docs edit.
+- **`media` entry in `system.json` — CLOSED in 0.4.1.** Added as a `setup` entry plus three
+  `screenshot` entries, all pointing inside the installed system
+  (`systems/deadlands-classic/assets/screenshots/…`), never at repository URLs. Note that on the
+  dnd5e manifest the `cover` entry carries no `url` at all, which suggests the package-page cover
+  image is set through the website form rather than read from the manifest — so expect to upload
+  one when submitting, and do not count on `media` to produce the gallery card.
 
 ---
 
@@ -154,6 +156,29 @@ question.
   `id` is practically irreversible after the first public Release (changing it breaks world
   updates) — **reconsider at publication time** (either written PEG permission or a neutral name).
 - Source: shop.peginc.com/pages/licensing. Full risk register: `implementation-plan.md` §8.
+
+### D1 revisited at the 0.4.1 registry submission (2026-08-23)
+
+The gate D1 set for itself — "reconsider at the first public Release" — was taken at 0.4.1, the
+release prepared for the Foundry package registry. **The `id` stays `deadlands-classic`.** What
+changed instead:
+
+1. **The disclaimer left the README**, which nobody reads from inside Foundry, and now also lives
+   in `system.json`'s `description` (the string the package browser renders) and in an in-app
+   **Legal notice** settings menu (`module/core/legal-notice.mjs`,
+   `DEADLANDS.Legal.*` in both language files). A "Trademark notice" block under the MIT text in
+   `LICENSE` was proposed and **not** applied — `LICENSE` is outside the editable surface and
+   needs the maintainer's explicit go-ahead.
+2. **Rulebook-derived content left the registry build.** Edges, Hindrances, Hexes, the
+   hit-location table and the example actors moved to a companion module (`content/`) that is
+   distributed by manifest URL and deliberately **not** submitted to the registry. The system
+   submitted for listing carries the engine and a deck of ordinary playing cards. This follows the
+   CoC7 / vtm5e precedent, both of which list while shipping no book content.
+3. No migration was needed: **no published release ever contained built packs**, so there were no
+   populated compendiums to move. See the 0.4.1 CHANGELOG entry.
+
+**The window for changing `id` closes the moment the package is listed** — from then on a rename
+breaks world updates for every installed user, not just for us.
 
 ## AI workshop — why this split (rules + skills + subagents + MCP)?
 

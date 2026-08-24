@@ -117,7 +117,7 @@ export async function dominionRoll(actor) {
   // Dominion pool = the character's Spirit die *face value* (d6→6, d8→8…),
   // not die count — confirmed by bod's pregen Harrowed templates (p.15-18),
   // which all show a pool of 6 for a d6 Spirit regardless of die count.
-  // bod p.12: "a Harrowed has as many Dominion points as his Spirit."
+  // bod p.12 ties the Dominion pool size directly to the character's Spirit.
   const pool = dieFace(spirit?.dieType);
   const pcDominion = harrowed.dominion.spiritControl ?? 0;
 
@@ -229,7 +229,7 @@ export async function activateHarrowed(actor) {
 
   let startingControl;
   if (pcResult.bust) {
-    // "If you go bust, the manitou has total Dominion." bod p.12.
+    // Busting the roll hands the manitou complete Dominion. bod p.12.
     startingControl = 0;
   } else {
     const half = Math.floor(pool / 2);

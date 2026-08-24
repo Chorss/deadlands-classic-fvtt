@@ -2,14 +2,12 @@
   "DEADLANDS.System.Title": "Deadlands Classic",
   "DEADLANDS.System.Loaded": "Deadlands Classic system ready.",
   "DEADLANDS.System.Marshal": "Marshal",
-
   "DEADLANDS.Settings.DisplayFont.Label": "Display font",
   "DEADLANDS.Settings.DisplayFont.Hint": "Font used for headings, trait names and section titles. All options are bundled offline.",
   "DEADLANDS.Settings.DisplayFont.Rye": "Rye (Western)",
   "DEADLANDS.Settings.DisplayFont.Arvo": "Arvo (Gazette)",
   "DEADLANDS.Settings.DisplayFont.Cinzel": "Cinzel (Classical)",
   "DEADLANDS.Settings.DisplayFont.System": "Foundry default",
-
   "TYPES.Actor.cowboy": "Cowboy",
   "TYPES.Actor.huckster": "Huckster",
   "TYPES.Actor.shaman": "Shaman",
@@ -17,7 +15,6 @@
   "TYPES.Actor.madScientist": "Mad Scientist",
   "TYPES.Actor.npc": "NPC",
   "TYPES.Actor.mook": "Mook",
-
   "TYPES.Item.weapon": "Weapon",
   "TYPES.Item.armor": "Armor",
   "TYPES.Item.gear": "Gear",
@@ -25,7 +22,6 @@
   "TYPES.Item.hindrance": "Hindrance",
   "TYPES.Item.ammo": "Ammo",
   "TYPES.Item.hex": "Hex",
-
   "DEADLANDS.Sheet.EditMode.Toggle": "Edit values",
   "DEADLANDS.Sheet.NamePlaceholder": "Character Name",
   "DEADLANDS.Sheet.Wind": "Wind",
@@ -33,21 +29,17 @@
   "DEADLANDS.Sheet.Size": "Size",
   "DEADLANDS.Sheet.Grit": "Grit",
   "DEADLANDS.Sheet.Bounty": "Bounty",
-
   "DEADLANDS.Sheet.Aria.DieCount": "Die Count",
   "DEADLANDS.Sheet.Aria.DieType": "Die Type",
   "DEADLANDS.Sheet.Aria.DieModifier": "Modifier",
   "DEADLANDS.Sheet.Aria.AptitudeLevel": "Aptitude Level",
   "DEADLANDS.Sheet.Aria.WoundSeverity": "Wound Severity",
-
   "DEADLANDS.Sheet.Tab.Traits": "Traits",
   "DEADLANDS.Sheet.Tab.Combat": "Combat",
   "DEADLANDS.Sheet.Tab.Gear": "Gear",
   "DEADLANDS.Sheet.Tab.Bio": "Biography",
-
   "DEADLANDS.Sheet.TraitGroup.Corporeal": "Corporeal",
   "DEADLANDS.Sheet.TraitGroup.Mental": "Mental",
-
   "DEADLANDS.Sheet.Section.Chips": "Fate Chips",
   "DEADLANDS.Sheet.Section.Wounds": "Wounds",
   "DEADLANDS.Sheet.Section.Weapons": "Weapons",
@@ -56,14 +48,12 @@
   "DEADLANDS.Sheet.Section.Ammo": "Ammo",
   "DEADLANDS.Sheet.Section.Edges": "Edges",
   "DEADLANDS.Sheet.Section.Hindrances": "Hindrances",
-
   "DEADLANDS.Sheet.Empty.Weapons": "No weapons.",
   "DEADLANDS.Sheet.Empty.Armor": "No armor.",
   "DEADLANDS.Sheet.Empty.Gear": "No gear.",
   "DEADLANDS.Sheet.Empty.Ammo": "No ammo.",
   "DEADLANDS.Sheet.Empty.Edges": "No edges.",
   "DEADLANDS.Sheet.Empty.Hindrances": "No hindrances.",
-
   "DEADLANDS.Item.Weapon.Category.Label": "Category",
   "DEADLANDS.Item.Weapon.Category.Automatics": "Automatics",
   "DEADLANDS.Item.Weapon.Category.Carbines": "Carbines",
@@ -87,7 +77,6 @@
   "DEADLANDS.Item.Weapon.Price": "Price",
   "DEADLANDS.Item.Edge.Points": "pts",
   "DEADLANDS.Item.PostToChat": "Post to Chat",
-
   "DEADLANDS.Trait.Deftness.Label": "Deftness",
   "DEADLANDS.Trait.Nimbleness.Label": "Nimbleness",
   "DEADLANDS.Trait.Quickness.Label": "Quickness",
@@ -98,7 +87,6 @@
   "DEADLANDS.Trait.Mien.Label": "Mien",
   "DEADLANDS.Trait.Smarts.Label": "Smarts",
   "DEADLANDS.Trait.Spirit.Label": "Spirit",
-
   "DEADLANDS.Aptitude.Bow.Label": "Bow",
   "DEADLANDS.Aptitude.Filchin.Label": "Filchin'",
   "DEADLANDS.Aptitude.Lockpickin.Label": "Lockpickin'",
@@ -143,7 +131,6 @@
   "DEADLANDS.Aptitude.Survival.Label": "Survival",
   "DEADLANDS.Aptitude.Tinkerin.Label": "Tinkerin'",
   "DEADLANDS.Aptitude.Guts.Label": "Guts",
-
   "DEADLANDS.HitLocation.Body.Label": "Body",
   "DEADLANDS.HitLocation.Noggin.Label": "Noggin",
   "DEADLANDS.HitLocation.UpperGuts.Label": "Upper Guts",
@@ -153,12 +140,10 @@
   "DEADLANDS.HitLocation.RightArm.Label": "Right Arm",
   "DEADLANDS.HitLocation.LeftLeg.Label": "Left Leg",
   "DEADLANDS.HitLocation.RightLeg.Label": "Right Leg",
-
   "DEADLANDS.Chip.White.Label": "White",
   "DEADLANDS.Chip.Red.Label": "Red",
   "DEADLANDS.Chip.Blue.Label": "Blue",
   "DEADLANDS.Chip.Legend.Label": "Legend",
-
   "DEADLANDS.Roll.Bust": "Bust!",
   "DEADLANDS.Roll.Success": "Success!",
   "DEADLANDS.Roll.Fail": "Failure.",
@@ -168,7 +153,6 @@
   "DEADLANDS.Roll.ArmorReduction": "− {value} armor",
   "DEADLANDS.Roll.AcesCount": "Aces: {count}",
   "DEADLANDS.Roll.VersusTN": "vs TN {tn}",
-
   "DEADLANDS.TN.Foolproof": "Foolproof",
   "DEADLANDS.TN.Fair": "Fair",
   "DEADLANDS.TN.Onerous": "Onerous",
@@ -178,13 +162,11 @@
   "DEADLANDS.TN.Nightmarish": "Nightmarish",
   "DEADLANDS.TN.Hellborn": "Hellborn",
   "DEADLANDS.TN.Unearthly": "Unearthly",
-
   "DEADLANDS.Dialog.TraitRoll.Title": "Trait Roll",
   "DEADLANDS.Dialog.TraitRoll.TN": "Target Number",
   "DEADLANDS.Dialog.TraitRoll.Modifier": "Modifier",
   "DEADLANDS.Dialog.TraitRoll.WhiteChips": "White Chips",
   "DEADLANDS.Dialog.TraitRoll.Roll": "Roll!",
-
   "DEADLANDS.Chip.GMOnly": "Only the GM can draw Fate Chips for the session.",
   "DEADLANDS.Chip.SessionDraw": "Fate Chip Session Draw",
   "DEADLANDS.Chip.Pot.Title": "Fate Pot",
@@ -201,24 +183,19 @@
   "DEADLANDS.ChipRule.OnePerAction": "Only one red, blue, or legend chip per action.",
   "DEADLANDS.ChipRule.NoGoingBack": "No Going Back: once a red, blue, or Legend chip is spent, no more white chips may be spent this action.",
   "DEADLANDS.ChipRule.ActionFailedRefunded": "The action failed — your white chips have been refunded.",
-
   "DEADLANDS.GmProxy.NoActiveGM": "This action requires an active Game Master — ask your GM to log in and try again.",
   "DEADLANDS.GmProxy.QueryFailed": "The GM's client did not confirm the action after several attempts — it may or may not have applied. Check the Fate Pot / Action Deck before retrying.",
-
   "DEADLANDS.Wound.Severity.None": "None",
   "DEADLANDS.Wound.Severity.Light": "Light",
   "DEADLANDS.Wound.Severity.Heavy": "Heavy",
   "DEADLANDS.Wound.Severity.Serious": "Serious",
   "DEADLANDS.Wound.Severity.Critical": "Critical",
   "DEADLANDS.Wound.Severity.Maimed": "Maimed",
-
   "DEADLANDS.Wound.Winded": "Winded! No actions this round.",
-
   "DEADLANDS.Guts.Label": "Guts Check",
   "DEADLANDS.Guts.Success": "Steeled nerves — no effect.",
   "DEADLANDS.Guts.Fail": "Spooked!",
   "DEADLANDS.Guts.ScartRoll": "Scart roll",
-
   "DEADLANDS.Scart.Uneasy.Label": "Uneasy",
   "DEADLANDS.Scart.Uneasy.Note": "Loses next Action Card.",
   "DEADLANDS.Scart.Queasy.Label": "Queasy",
@@ -243,7 +220,6 @@
   "DEADLANDS.Scart.HeartAttack.Note": "Hard (9) Vigor roll. Fail: Vigor reduced + second Hard (9) Vigor or dies (Medicine TN 11 in 2d6 rounds). Die if Vigor < d4.",
   "DEADLANDS.Scart.CorporealAging.Label": "Corporeal Aging",
   "DEADLANDS.Scart.CorporealAging.Note": "Heart Attack + ages 1 year. GM applies all Heart Attack consequences.",
-
   "DEADLANDS.Combat.Card.Label": "{rank} of {suit}",
   "DEADLANDS.Combat.Card.RedJoker": "Red Joker",
   "DEADLANDS.Combat.Card.BlackJoker": "Black Joker",
@@ -255,14 +231,12 @@
   "DEADLANDS.Combat.Card.Rank.Q": "Queen",
   "DEADLANDS.Combat.Card.Rank.K": "King",
   "DEADLANDS.Combat.Card.Rank.A": "Ace",
-
   "DEADLANDS.Combat.Initiative.Bust": "{name} went bust — no action cards this round!",
   "DEADLANDS.Combat.Initiative.BlackJoker": "{name} drew the Black Joker! Marshal draws a {chip} chip. Sleeve discarded. Deck reshuffles at round end.",
   "DEADLANDS.Combat.Initiative.BlackJokerNPC": "{name} drew the Black Joker! Sleeve discarded. Deck reshuffles at round end — no Fate Chip for the posse on an NPC draw.",
   "DEADLANDS.Combat.Initiative.RedJoker": "{name} drew the Red Joker! Draws a {chip} chip and may act at any time this round.",
   "DEADLANDS.Combat.Initiative.RedJokerNPC": "{name} drew the Red Joker! May act at any time this round — no Fate Chip on an NPC draw.",
   "DEADLANDS.Combat.Initiative.NoSleeveJoker": "Jokers cannot be kept up your sleeve.",
-
   "DEADLANDS.Combat.Hand.Title": "Action Hand: {name}",
   "DEADLANDS.Combat.Hand.Kicker": "Your action hand",
   "DEADLANDS.Combat.Hand.Play": "Play Card",
@@ -271,35 +245,27 @@
   "DEADLANDS.Combat.Hand.JokerAbbr": "JKR",
   "DEADLANDS.Combat.Hand.Empty": "No cards in hand.",
   "DEADLANDS.Combat.Hand.Open": "Show Action Hand",
-
   "DEADLANDS.Combat.Round.Reshuffle": "Action Deck reshuffled (Black Joker).",
-
   "DEADLANDS.Sheet.Tab.Hexes": "Hexes",
   "DEADLANDS.Sheet.Empty.Hexes": "No hexes learned.",
-
   "DEADLANDS.Huckster.Hexslingin.Label": "Hexslingin'",
   "DEADLANDS.Huckster.Hexslingin.Level": "Level",
   "DEADLANDS.Huckster.Hexslingin.Modifier": "Modifier",
-
   "DEADLANDS.Huckster.Section.Hexes": "Learned Hexes",
   "DEADLANDS.Huckster.LastDraw.Label": "Last Draw",
   "DEADLANDS.Huckster.BacklashPending": "⚠ Backlash pending — GM to resolve.",
-
   "DEADLANDS.Huckster.HexTable.Name": "Name",
   "DEADLANDS.Huckster.HexTable.Trait": "Trait",
   "DEADLANDS.Huckster.HexTable.Hand": "Min. Hand",
   "DEADLANDS.Huckster.HexTable.Speed": "Speed",
   "DEADLANDS.Huckster.HexTable.Duration": "Duration",
   "DEADLANDS.Huckster.HexTable.Range": "Range",
-
   "DEADLANDS.Huckster.Cast.Button": "Cast",
   "DEADLANDS.Huckster.Cast.SucceedsDespiteBacklash": "{name} — {hex} fires despite the backlash!",
-
   "DEADLANDS.Huckster.Dialog.CastTitle": "Cast: {hex}",
   "DEADLANDS.Huckster.Dialog.Cast": "Cast!",
   "DEADLANDS.Huckster.Dialog.CastIntro": "Casting:",
   "DEADLANDS.Huckster.Dialog.Available": "available",
-
   "DEADLANDS.Huckster.Chat.CastHeader": "casts",
   "DEADLANDS.Huckster.Chat.Backlash": "Backlash!",
   "DEADLANDS.Huckster.Chat.CardsDrawn": "cards drawn",
@@ -307,7 +273,6 @@
   "DEADLANDS.Huckster.Chat.MinRequired": "min. required",
   "DEADLANDS.Huckster.Chat.HexSuccess": "Hex succeeds!",
   "DEADLANDS.Huckster.Chat.HexFail": "Hex fails — hand too low.",
-
   "DEADLANDS.Huckster.Hand.Ace": "Ace",
   "DEADLANDS.Huckster.Hand.Pair": "Pair",
   "DEADLANDS.Huckster.Hand.Jacks": "Jacks or Better",
@@ -320,7 +285,6 @@
   "DEADLANDS.Huckster.Hand.StraightFlush": "Straight Flush",
   "DEADLANDS.Huckster.Hand.RoyalFlush": "Royal Flush",
   "DEADLANDS.Huckster.Hand.None": "No qualifying hand",
-
   "DEADLANDS.Huckster.Backlash.Header": "⚠ Extended Backlash",
   "DEADLANDS.Huckster.Backlash.Casting": "casting",
   "DEADLANDS.Huckster.Backlash.Roll": "Backlash roll",
@@ -331,7 +295,6 @@
   "DEADLANDS.Huckster.Backlash.Gate.ScartRoll": "Scart roll",
   "DEADLANDS.Huckster.Backlash.Gate.WindLost": "Wind lost",
   "DEADLANDS.Huckster.Backlash.Gate.MarshalCall": "Marshal's call whether this knocks the huckster out (dlc p.141) — if not, the hex still fires.",
-
   "DEADLANDS.Huckster.Backlash.MysticSputter.Label": "Mystic Sputter",
   "DEADLANDS.Huckster.Backlash.MysticSputter.Note": "Hex fails. Hexslingin' −1 level for 1d6 days.",
   "DEADLANDS.Huckster.Backlash.RandomWound.Label": "Random Wound",
@@ -372,11 +335,9 @@
   "DEADLANDS.Huckster.Backlash.Madness.Note": "Hex fails. Roll on Dementia Table — result is permanent.",
   "DEADLANDS.Huckster.Backlash.TotalCorruption.Label": "Total Corruption",
   "DEADLANDS.Huckster.Backlash.TotalCorruption.Note": "Hex fails. Opposed Spirit roll — on failure the manitou controls the body for 10 minutes.",
-
   "TYPES.Item.miracle": "Miracle",
   "TYPES.Item.favor": "Favor",
   "TYPES.Item.gizmo": "Gizmo",
-
   "DEADLANDS.Blessed.Faith.Label": "Faith",
   "DEADLANDS.Blessed.Faith.Level": "Level",
   "DEADLANDS.Blessed.Faith.Modifier": "Modifier",
@@ -389,6 +350,7 @@
   "DEADLANDS.Blessed.Sin.Duration.Major": "1 day",
   "DEADLANDS.Blessed.Sin.Duration.Mortal": "1 week",
   "DEADLANDS.Blessed.Warn.AccessDenied": "{name}'s patron denies access to miracles ({label}).",
+  "DEADLANDS.Blessed.Effect.FaithDenial": "Miracle Access Denied",
   "DEADLANDS.Blessed.Section.Miracles": "Known Miracles",
   "DEADLANDS.Blessed.MiracleTable.Name": "Name",
   "DEADLANDS.Blessed.MiracleTable.TN": "TN",
@@ -410,7 +372,6 @@
   "DEADLANDS.Blessed.Chat.FaithKept": "Faith holds — no level lost.",
   "DEADLANDS.Sheet.Tab.Miracles": "Miracles",
   "DEADLANDS.Sheet.Empty.Miracles": "No miracles. Add a Miracle item to unlock this section.",
-
   "DEADLANDS.Shaman.Ritual.Label": "Ritual Aptitude",
   "DEADLANDS.Shaman.Ritual.Level": "Level",
   "DEADLANDS.Shaman.Ritual.Modifier": "Modifier",
@@ -464,7 +425,6 @@
   "DEADLANDS.Shaman.RitualType.Tattoo": "Tattoo",
   "DEADLANDS.Shaman.RitualType.Tobacco": "Tobacco",
   "DEADLANDS.Shaman.RitualType.WarCry": "War Cry",
-
   "DEADLANDS.MadScientist.Aptitudes.Label": "Aptitudes",
   "DEADLANDS.MadScientist.MadScience.Label": "Mad Science",
   "DEADLANDS.MadScientist.MadScience.Modifier": "Modifier",
@@ -533,19 +493,16 @@
   "DEADLANDS.MadScientist.Madness.Paranoia.Note": "Convinced everyone is out to steal their ideas or do them harm.",
   "DEADLANDS.MadScientist.Madness.Schizophrenia.Label": "Schizophrenia",
   "DEADLANDS.MadScientist.Madness.Schizophrenia.Note": "Attitude and personality shift drastically over time — repeated results can split off distinct personalities.",
-
   "DEADLANDS.Dialog.Modifier": "Modifier",
   "DEADLANDS.Dialog.WhiteChips": "White chips to spend",
   "DEADLANDS.Dialog.Stepper.Decrease": "Decrease",
   "DEADLANDS.Dialog.Stepper.Increase": "Increase",
   "DEADLANDS.Dialog.Stepper.Of": "of",
-
   "DEADLANDS.Harrowed.Label": "Harrowed",
   "DEADLANDS.Harrowed.Sheet.Tab.Label": "Harrowed",
   "DEADLANDS.Harrowed.IsHarrowed.Label": "Harrowed",
   "DEADLANDS.Harrowed.Warn.NotHarrowed": "This character is not Harrowed.",
   "DEADLANDS.Harrowed.Activated": "{name} has returned from beyond the pale.",
-
   "DEADLANDS.Harrowed.Dominion.Label": "Dominion",
   "DEADLANDS.Harrowed.Dominion.SpiritControl": "Spirit Control",
   "DEADLANDS.Harrowed.Dominion.LastRoll": "Last Roll",
@@ -559,11 +516,20 @@
   "DEADLANDS.Harrowed.Dominion.ManitouWins": "The manitou wins — you lose control!",
   "DEADLANDS.Harrowed.Dominion.NoChange": "Neither side prevails — no change in Dominion.",
   "DEADLANDS.Harrowed.Dominion.TotalDominion": "{name}'s manitou holds Total Dominion — no session roll until the Marshal or magic intervenes.",
-
   "DEADLANDS.Harrowed.Powers.Label": "Harrowed Powers",
   "DEADLANDS.Harrowed.Powers.Level": "Level",
   "DEADLANDS.Harrowed.Powers.Empty": "No Harrowed powers.",
-
   "DEADLANDS.Harrowed.CountingCoup.Label": "Counting Coup",
-  "DEADLANDS.Harrowed.CountingCoup.Empty": "No coup powers yet."
+  "DEADLANDS.Harrowed.CountingCoup.Empty": "No coup powers yet.",
+  "DEADLANDS.Legal.Title": "Legal notice",
+  "DEADLANDS.Legal.MenuLabel": "Read the notice",
+  "DEADLANDS.Legal.MenuHint": "Trademark, content and licensing information for this unofficial fan system.",
+  "DEADLANDS.Migration.Failed": "Deadlands Classic could not finish the world-data migration. Check the console before continuing.",
+  "DEADLANDS.Legal.Disclaimer": "Deadlands, Deadlands Classic and the Weird West are trademarks of Pinnacle Entertainment Group. This is an unofficial, fan-made game system, not affiliated with or endorsed by Pinnacle.",
+  "DEADLANDS.Legal.NoContent": "No rulebook text, tables or artwork are distributed with this system. You need the published rulebooks to play.",
+  "DEADLANDS.Legal.Terminology": "Polish terms follow the official MAG translation as terminology only; those translations remain the property of their publisher.",
+  "DEADLANDS.Legal.Fonts": "Bundled fonts (Rye, Libre Baskerville, Arvo, Cinzel) are used under the SIL Open Font License 1.1 — see fonts/OFL.txt.",
+  "DEADLANDS.Legal.Code": "The system's own code and packaging are released under the MIT License.",
+  "DEADLANDS.Huckster.Backlash.Source": "Backlash table: hnh p.101-102",
+  "DEADLANDS.MadScientist.Madness.Source": "Madness table: dlc p.250"
 }

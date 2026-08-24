@@ -9,10 +9,12 @@
     "speed": "1",
     "duration": "concentration or 1 Wind/round",
     "range": "1 mile/hex level",
-    "description": ""
+    "description": "<p>Lets the huckster see and hear at a distance through the senses of another person or creature. Sustained by concentration, at a cost of 1 Wind per round. dlc p.162.</p>"
   },
   "folder": null,
   "sort": 0,
-  "ownership": { "default": 0 },
+  "ownership": {
+    "default": 0
+  },
   "flags": {}
 }

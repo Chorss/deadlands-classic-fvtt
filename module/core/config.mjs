@@ -33,24 +33,23 @@ export const TRAITS = {
 
 /**
  * Standard Aptitudes grouped by governing Trait (nested model — `dlc` p.41-51,
- * every entry lists "Associated Trait"). Core ships only the *standard*
- * aptitudes available to any character.
+ * where each aptitude entry names the trait it is rolled against). Core ships
+ * only the *standard* aptitudes available to any character.
  *
  * Deliberately EXCLUDED (added by their archetype modules to keep core
  * archetype-agnostic — each maps 1:1 to an Arcane Background):
  *   hexslingin' → Huckster, ritual → Shaman, faith → Blessed,
  *   mad science → Mad Scientist.
  *
- * `concentrations: true` flags aptitudes that split into named specializations
- * per p.41: "Concentrations are listed in italics below some of these
- * Aptitudes. If Concentrations are listed, then one must be chosen." All 18
- * aptitudes that carry a concentration list on p.41-51 are flagged below
- * (verified against the full extract, not spot-checked) — but the boolean is
- * a partial model: Professional (p.47-48) and Trade (p.51) concentrations
- * "are never considered related" and must be bought as separate Aptitudes,
- * unlike Shootin'/Fightin'-style concentrations. That distinction needs a
- * richer shape than `true`/absent; re-verify against p.41-51 when the full
- * concentration schema is built in Phase 2.
+ * `concentrations: true` flags aptitudes that split into named specializations.
+ * Per `dlc` p.41, an aptitude that lists concentrations requires the character
+ * to pick one. All 18 aptitudes carrying a concentration list on p.41-51 are
+ * flagged below (verified against the full extract, not spot-checked) — but the
+ * boolean is a partial model: per p.47-48 and p.51, Professional and Trade
+ * concentrations are treated as unrelated to one another and must be bought as
+ * separate aptitudes, unlike Shootin'/Fightin'-style concentrations. That
+ * distinction needs a richer shape than `true`/absent; re-verify against
+ * p.41-51 when the full concentration schema is built in Phase 2.
  *
  * @type {Record<string, Record<string, { concentrations?: boolean }>>}
  */
@@ -271,27 +270,27 @@ export const GUTS_TN_TABLE = [
 /**
  * Scart Table — outcomes on a failed Guts check. `dlc` p.222.
  * `windDice` = number of d6 Wind damage; `windDieType` = "d6".
- * Wind loss uses open-ended dice (Aces count). `dlc` p.221: "Count Aces."
+ * Wind loss is rolled open-ended, i.e. Aces count. `dlc` p.221.
  * @type {ReadonlyArray<{ min: number, max: number, key: string, windDice: number }>}
  */
 export const SCART_TABLE = [
-  // Wind damage is open-ended (Aces count). dlc p.221: "Count Aces when rolling these dice."
-  // Rows 7–15: Wind damage stated explicitly in each row. dlc p.222.
-  // Rows 19–30: text says "goes Weak in the Knees" (rows 13–15) by reference — rulebook does
-  //   not repeat the 1d6 Wind explicitly in those rows. Design decision: apply 1d6 Wind for the
-  //   "Weak in the Knees" component so the cascade matches the referenced effect. dlc p.222.
-  // Row 36+: "has a Heart Attack" by reference — 3d6 Wind applies via cascade. dlc p.222.
+  // Wind damage is open-ended — Aces count when rolling it. dlc p.221.
+  // Rows 7–15: each row states its Wind damage explicitly. dlc p.222.
+  // Rows 19–30: these rows invoke the rows 13–15 result by name instead of restating
+  //   its Wind cost. Design decision: apply that result's 1d6 Wind here too, so the
+  //   cascade matches the effect it refers to. dlc p.222.
+  // Row 36+: invokes the rows 31–35 result by name — its 3d6 Wind applies. dlc p.222.
   { min: 1, max: 3, key: "uneasy", windDice: 0 },
   { min: 4, max: 6, key: "queasy", windDice: 0 },
-  { min: 7, max: 9, key: "willies", windDice: 1 }, // dlc p.222: "1d6 Wind"
-  { min: 10, max: 12, key: "heebieJeebies", windDice: 1 }, // dlc p.222: "1d6 Wind"
-  { min: 13, max: 15, key: "weakKnees", windDice: 1 }, // dlc p.222: "1d6 Wind"
-  { min: 16, max: 18, key: "deadFaint", windDice: 3 }, // dlc p.222: "3d6 Wind"
+  { min: 7, max: 9, key: "willies", windDice: 1 }, // dlc p.222
+  { min: 10, max: 12, key: "heebieJeebies", windDice: 1 }, // dlc p.222
+  { min: 13, max: 15, key: "weakKnees", windDice: 1 }, // dlc p.222
+  { min: 16, max: 18, key: "deadFaint", windDice: 3 }, // dlc p.222
   { min: 19, max: 21, key: "minorPhobia", windDice: 1 }, // Weak in the Knees cascade
   { min: 22, max: 24, key: "majorPhobia", windDice: 1 }, // Weak in the Knees cascade
   { min: 25, max: 27, key: "corporealAlteration", windDice: 1 }, // Minor Phobia cascade
   { min: 28, max: 30, key: "theShakes", windDice: 1 }, // Major Phobia cascade
-  { min: 31, max: 35, key: "heartAttack", windDice: 3 }, // dlc p.222: "3d6 Wind"
+  { min: 31, max: 35, key: "heartAttack", windDice: 3 }, // dlc p.222
   { min: 36, max: Infinity, key: "corporealAging", windDice: 3 }, // Heart Attack cascade
 ];
 

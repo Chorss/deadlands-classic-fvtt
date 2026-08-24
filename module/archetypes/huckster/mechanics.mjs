@@ -29,16 +29,16 @@ import { woundsFromDamage } from "../../core/wounds/wound-track.mjs";
  *   - `"stun"` (rows 2, 7, 12, 17): the row's stated damage triggers a real
  *     Stun check (Vigor vs the wound's level, dlc p.140-141); the hex fails
  *     only if that check busts (huckster loses consciousness).
- *   - `"scart"` (row 4): fails only if the Scart roll comes back "Willies"
+ *   - `"scart"` (row 4): fails only if the Scart roll comes back The Willies
  *     or worse (hnh p.101).
  *   - `"marshal"` (rows 3, 8): the row is pure Wind loss with no wound, and
- *     dlc p.141 leaves "loses consciousness" from Wind alone to the
- *     Marshal's judgment ("It really depends on the situation") — there's
- *     no dice formula to automate, so this defaults to failing the hex and
- *     the chat card flags it as the Marshal's call.
- * `guaranteedMinimum` (rows 5, 10) means the hex "has at least the minimum
- * success" regardless of the drawn poker hand (hnh p.101) — `castHex` must
- * not gate their follow-up on `handMeets`.
+ *     dlc p.141 leaves a knockout from Wind alone to the Marshal's judgment
+ *     of the situation — there's no dice formula to automate, so this
+ *     defaults to failing the hex and the chat card flags it as the
+ *     Marshal's call.
+ * `guaranteedMinimum` (rows 5, 10) means the hex takes effect at no less than
+ * its minimum level of success regardless of the drawn poker hand (hnh p.101) —
+ * `castHex` must not gate their follow-up on `handMeets`.
  * Resolved at runtime by `_resolveGate`; see there for the dice.
  *
  * @type {ReadonlyArray<{ roll: number, key: string, hexSucceeds: boolean, gate?: string, guaranteedMinimum?: boolean, damageDice?: number, windDice?: number, scartDice?: number }>}
@@ -222,15 +222,15 @@ function _resolveGate(actor, entry) {
   if (entry.gate === "scart") {
     const scartTotal = _rollRawDice(entry.scartDice, 6);
     const scartEntry = lookupScart(scartTotal);
-    // "Willies" or worse fails the hex; anything milder (Uneasy/Queasy) doesn't. hnh p.101.
+    // The Willies or worse fails the hex; milder results (Uneasy/Queasy) do not. hnh p.101.
     const failsHex = Boolean(scartEntry && scartEntry.min >= 7);
     return { hexSucceeds: !failsHex, scartTotal };
   }
   if (entry.gate === "marshal") {
-    // dlc p.141: Wind-only knockout ("winded") has no formula — "it really
-    // depends on the situation," the Marshal's call. Default to the hex
-    // failing (matching this row's book-listed outcome); the chat card
-    // flags the roll so the Marshal can override to a success.
+    // dlc p.141 gives no formula for a Wind-only knockout — it is left to the
+    // Marshal to judge from the situation. Default to the hex failing (matching
+    // this row's book-listed outcome); the chat card flags the roll so the
+    // Marshal can override it to a success.
     const windLost = _rollRawDice(entry.windDice, 6);
     return { hexSucceeds: false, marshalWindLost: windLost };
   }

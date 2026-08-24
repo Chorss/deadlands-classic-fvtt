@@ -1,0 +1,20 @@
+{
+  "_id": "shadowWalk001",
+  "name": "Shadow Walk",
+  "type": "hex",
+  "img": "icons/magic/control/teleport-silhouette-purple.webp",
+  "system": {
+    "trait": "smarts",
+    "hand": "jacks",
+    "speed": "1",
+    "duration": "instant",
+    "range": "self",
+    "description": "<p>The huckster steps into one shadow and emerges from another. Both shadows must be large and dark enough to hide the caster completely; the Marshal has the final say on what qualifies. The minimum hand rises with the distance covered, from Jacks at 2 yards up to a Royal Flush for anywhere in line of sight. dlc p.162.</p>"
+  },
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {}
+}

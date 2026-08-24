@@ -6,14 +6,14 @@
  * duplicate cards; player-side writes were also rejected by server
  * permissions outright.
  *
- * Prerequisites (docs/testing-e2e.md): world `deadlands-dev` launched with
+ * Prerequisites (docs/testing-e2e.md): world `deadlands-test` with
  * passwordless users "Gamemaster" and "Player".
  *
  * @license MIT
  */
 
 import { expect, test } from "@playwright/test";
-import { joinAs } from "./helpers/foundry-session.mjs";
+import { ensurePasswordlessPlayer, joinAs } from "./helpers/foundry-session.mjs";
 
 const OPS_PER_CLIENT = 5;
 const CARDS_PER_CLIENT = 5;
@@ -36,6 +36,7 @@ test("concurrent GM + player writes neither lose chips nor duplicate cards", asy
     const gmPage = await gmContext.newPage();
     const playerPage = await playerContext.newPage();
     await joinAs(gmPage, "Gamemaster");
+    await ensurePasswordlessPlayer(gmPage, "Player");
     await joinAs(playerPage, "Player");
 
     // ── Fate Pot: concurrent returnToPool from both clients ────────────────
