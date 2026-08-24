@@ -33,10 +33,16 @@ export function buildChipContext(chips) {
  *
  * @param {Actor} actor
  * @param {string[]} colors — chips to add (may include duplicates)
- * @returns {Promise<{ kept: string[], bpGained: number }>}
+ * @param {object} [opts]
+ * @param {"pot"|"external"} [opts.source="external"] — whether the chips were
+ *   already removed from the Fate Pot
+ * @returns {Promise<{ kept: string[], converted: string[], bpGained: number }>}
  */
-export async function grantChips(actor, colors) {
-  const { kept, bpGained } = applyChipCap(actor.system.chips, colors);
+export async function grantChips(actor, colors, { source = "external" } = {}) {
+  if (!["pot", "external"].includes(source)) {
+    throw new Error(`Unknown chip grant source "${source}".`);
+  }
+  const { kept, converted, bpGained } = applyChipCap(actor.system.chips, colors);
 
   const update = {};
   for (const color of kept) {
@@ -47,10 +53,31 @@ export async function grantChips(actor, colors) {
     update["system.bounty"] = (actor.system.bounty ?? 0) + bpGained;
   }
 
-  if (Object.keys(update).length) {
-    await actor.update(update);
+  try {
+    if (Object.keys(update).length) {
+      await actor.update(update);
+    }
+  } catch (error) {
+    // A pot-backed grant has already removed every incoming chip. Restore the
+    // full batch if the actor write fails so the draw is lossless.
+    if (source === "pot" && colors.length > 0) {
+      try {
+        await FatePot.returnBatch(colors);
+      } catch (rollbackError) {
+        throw new AggregateError(
+          [error, rollbackError],
+          "Actor chip grant failed and the Fate Pot rollback also failed.",
+          { cause: error }
+        );
+      }
+    }
+    throw error;
   }
-  return { kept, bpGained };
+
+  if (source === "pot" && converted.length > 0) {
+    await FatePot.returnBatch(converted);
+  }
+  return { kept, converted, bpGained };
 }
 
 /**

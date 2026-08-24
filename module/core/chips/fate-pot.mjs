@@ -88,6 +88,19 @@ function requireCount(n) {
   }
 }
 
+/** Return a validated mixed-color batch without mutating the input pot. */
+function returnBatchPure(pot, colors) {
+  if (!Array.isArray(colors) || colors.length === 0) {
+    throw new Error("Returned chip batch must be a non-empty array.");
+  }
+  const next = { ...pot };
+  for (const color of colors) {
+    requireColor(color);
+    next[color] = (next[color] ?? 0) + 1;
+  }
+  return next;
+}
+
 /**
  * Apply one wire-protocol operation to a plain pot object. Pure — shared by
  * the GM-side query handler and unit tests. Throws on any malformed op so a
@@ -96,6 +109,7 @@ function requireCount(n) {
  * @param {{ white:number, red:number, blue:number, legend:number }} pot
  * @param {{ op:"patch", patch:object } | { op:"drawBlind", n:number } |
  *          { op:"returnToPool", color:string, n:number } |
+ *          { op:"returnBatch", colors:string[] } |
  *          { op:"discard", color:string, n:number } | { op:"reset" }} op
  * @param {() => number} [rng] — injectable for deterministic tests
  * @returns {{ pot: {white:number,red:number,blue:number,legend:number}, drawn?: string[] }}
@@ -122,6 +136,9 @@ export function applyFatePotOp(pot, op, rng = Math.random) {
       requireColor(op.color);
       requireCount(op.n);
       return { pot: { ...pot, [op.color]: (pot[op.color] ?? 0) + op.n } };
+    }
+    case "returnBatch": {
+      return { pot: returnBatchPure(pot, op.colors) };
     }
     case "discard": {
       requireColor(op.color);
@@ -174,8 +191,9 @@ export function assertFatePotOpAuthorized(op, { isGM }) {
       }
       return;
     case "returnToPool":
+    case "returnBatch":
     case "discard":
-      if (!isGM && op.n > CHIP_LIMIT) {
+      if (!isGM && (op.n ?? op.colors?.length) > CHIP_LIMIT) {
         throw new Error(`Chip count exceeds the per-request limit (${CHIP_LIMIT}).`);
       }
       return;
@@ -304,6 +322,17 @@ export class FatePot {
   }
 
   /**
+   * Atomically return a mixed batch of chips in one GM-routed pot update.
+   * @param {string[]} colors
+   */
+  static async returnBatch(colors) {
+    if (colors.length === 0) {
+      return;
+    }
+    await dispatchGmOp(FATE_POT_OP, { op: "returnBatch", colors });
+  }
+
+  /**
    * Permanently remove chips (Legend Reroll only). dlc p.148.
    * @param {string} color
    * @param {number} [n=1]
@@ -362,12 +391,16 @@ export class FatePot {
     const log = [];
     for (const actor of pcs) {
       const drawn = await FatePot.drawBlind(chipsPerPlayer);
-      const delta = {};
-      for (const color of drawn) {
-        delta[`system.chips.${color}`] = (actor.system.chips[color] ?? 0) + 1;
-      }
-      await actor.update(delta);
-      log.push(`${actor.name}: ${drawn.join(", ")}`);
+      // Dynamic import avoids a FatePot → chip-widget → FatePot module cycle.
+      const { grantChips } = await import("./chip-widget.mjs");
+      const { kept, bpGained } = await grantChips(actor, drawn, { source: "pot" });
+      log.push(
+        game.i18n.format("DEADLANDS.Chip.SessionActorDraw", {
+          name: actor.name,
+          chips: kept.join(", ") || "—",
+          bp: bpGained,
+        })
+      );
     }
 
     // Marshal draws too. dlc p.146.

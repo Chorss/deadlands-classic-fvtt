@@ -169,6 +169,7 @@
   "DEADLANDS.Dialog.TraitRoll.Roll": "Roll!",
   "DEADLANDS.Chip.GMOnly": "Only the GM can draw Fate Chips for the session.",
   "DEADLANDS.Chip.SessionDraw": "Fate Chip Session Draw",
+  "DEADLANDS.Chip.SessionActorDraw": "{name}: kept {chips}; surplus converted to {bp} BP",
   "DEADLANDS.Chip.Pot.Title": "Fate Pot",
   "DEADLANDS.Chip.Pot.MenuLabel": "Fate Pot",
   "DEADLANDS.Chip.Pot.MenuHint": "Draw Fate Chips for the session or refill the pot to its starting seed.",

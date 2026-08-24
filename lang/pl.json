@@ -169,6 +169,7 @@
   "DEADLANDS.Dialog.TraitRoll.Roll": "Rzuć!",
   "DEADLANDS.Chip.GMOnly": "Tylko MG może losować Sztony Losu na sesję.",
   "DEADLANDS.Chip.SessionDraw": "Losowanie Sztonów Losu na sesję",
+  "DEADLANDS.Chip.SessionActorDraw": "{name}: zachowuje {chips}; nadmiar zamieniony na {bp} PF",
   "DEADLANDS.Chip.Pot.Title": "Pula Sztonów Losu",
   "DEADLANDS.Chip.Pot.MenuLabel": "Pula Sztonów Losu",
   "DEADLANDS.Chip.Pot.MenuHint": "Wylosuj Sztony Losu na sesję albo uzupełnij pulę do stanu początkowego.",
