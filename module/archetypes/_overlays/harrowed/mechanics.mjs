@@ -140,7 +140,7 @@ export async function dominionRoll(actor) {
 
   // Manitou rolls its own Spirit, fixed at Harrowed creation (bod p.87) —
   // not re-derived from the PC's Spirit every check.
-  const npcRoll = _rollManitouSpirit(harrowed.dominion.manitouSpirit);
+  const npcRoll = await _rollManitouSpirit(harrowed.dominion.manitouSpirit);
 
   const outcome = resolveDominionRoll({
     pcRoll: pcResult.highest,
@@ -219,7 +219,7 @@ export async function activateHarrowed(actor) {
   const spirit = actor.system.traits.spirit;
   const pool = dieFace(spirit?.dieType); // "as many Dominion points as his Spirit." bod p.12.
 
-  const card = _drawSingleCard();
+  const card = await _drawSingleCard();
   const manitouSpirit = manitouSpiritFromCard(card, spirit);
 
   const pcResult = rollExplodingPool(spirit?.dieCount ?? 1, spirit?.dieType ?? "d6", {
@@ -233,7 +233,7 @@ export async function activateHarrowed(actor) {
     startingControl = 0;
   } else {
     const half = Math.floor(pool / 2);
-    const npcRoll = _rollManitouSpirit(manitouSpirit);
+    const npcRoll = await _rollManitouSpirit(manitouSpirit);
     const outcome = resolveDominionRoll({
       pcRoll: pcResult.highest,
       pcDominion: 0,
@@ -264,9 +264,9 @@ export async function activateHarrowed(actor) {
 /**
  * Roll the manitou's Spirit for a Dominion contest.
  * @param {{ kind: "normal"|"legion"|"greater", dieCount: number, dieType: string }} [manitouSpirit]
- * @returns {number}
+ * @returns {Promise<number>}
  */
-function _rollManitouSpirit(manitouSpirit) {
+async function _rollManitouSpirit(manitouSpirit) {
   if (manitouSpirit?.kind === "greater") {
     // Spirit 3d12+4 — a flat roll, not a Trait-style die pool. bod p.87.
     return _rollRawDice(3, 12) + 4;
@@ -277,7 +277,9 @@ function _rollManitouSpirit(manitouSpirit) {
     // rulebook" — the referenced table is the character-creation Traits
     // Table (pg p.37, echoed for extras at dlc p.213-214): card rank sets
     // the die type, suit sets the die count (level).
-    const { dieCount, dieType } = _legionSpiritFromCard(_drawSingleCard(), _drawSingleCard);
+    const card = await _drawSingleCard();
+    const jokerSuitCard = card?.joker ? await _drawSingleCard() : null;
+    const { dieCount, dieType } = _legionSpiritFromCard(card, () => jokerSuitCard);
     return rollExplodingPool(dieCount, dieType, { modifier: 0, tn: 5 }).highest;
   }
   return rollExplodingPool(manitouSpirit?.dieCount ?? 1, manitouSpirit?.dieType ?? "d6", {
@@ -324,10 +326,10 @@ function _legionSpiritFromCard(card, drawAnother) {
   return { dieCount: _dieCountFromSuit(card?.suit), dieType: _dieTypeFromRank(card?.rank) };
 }
 
-/** Draw a single card from the active combat's Action Deck, or a fresh deck. */
-function _drawSingleCard() {
+/** Draw a single card from the active combat's Action Deck, or a fresh local deck. */
+async function _drawSingleCard() {
   const cards = game.combat
-    ? ActionDeck.deal(game.combat, 1)
+    ? await ActionDeck.deal(game.combat, 1)
     : shuffleDeck(buildFullDeck()).slice(0, 1);
   return cards[0];
 }

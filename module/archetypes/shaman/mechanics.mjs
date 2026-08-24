@@ -198,7 +198,7 @@ export async function spendFavor(actor, favorItem) {
  */
 async function _resolveManitouAttack(actor) {
   const cards = game.combat
-    ? ActionDeck.deal(game.combat, 1)
+    ? await ActionDeck.deal(game.combat, 1)
     : shuffleDeck(buildFullDeck()).slice(0, 1);
   const card = cards[0];
 
