@@ -30,6 +30,7 @@ Wired in `settings.json` under `hooks`:
 | Event | Matcher / filter | Script | What it does |
 |---|---|---|---|
 | `SessionStart` | — | inline | `git config core.hooksPath .githooks` so the `commit-msg` / `pre-commit` hooks apply on every clone |
+| `PreToolUse` | `Write \| Edit \| Bash` | `hooks/protect-paths.mjs` | Blocks direct file-tool writes and common shell writes to protected repository paths. This is defense in depth; the OS sandbox is the security boundary. |
 | `PostToolUse` | `Write \| Edit` | `hooks/post-write.sh` | `node --check` on `.mjs`, `JSON.parse` on `.json`, re-run `verify-documenttypes` after `system.json` / `lang/*.json` edits. Also nudges on mechanics files |
 | `PostToolUse` | `Bash` + `if: Bash(*extract-pdf.sh *)` | `hooks/post-extract-verify.sh` | After an `extract-pdf.sh` call, runs `$DEADLANDS_RULES_PATH/scripts/verify-pdf-extract.sh`. FAIL injects `decision: block` so Claude stops before indexing a broken extract |
 | `Stop` | — | `hooks/stop-verify.sh` | When the working tree is dirty, runs `npm run verify:all` and blocks the end of the turn with the failure text if it is red |
@@ -50,22 +51,30 @@ Three details worth knowing:
 
 `settings.json` splits into two kinds of deny rule, and they are not equally strong.
 
-**Path rules — enforced.** `CLAUDE.md` says never to modify `vendor/`, `books/`,
-`.pdf-extract/` or `LICENSE`; these make it true regardless of what Claude decides:
+**Path rules — file tools only.** `CLAUDE.md` says never to modify `.git/`, `.agents/`,
+`.codex/`, `vendor/`, `books/`, `.pdf-extract/` or `LICENSE`; `Edit(...)` deny rules
+block Write/Edit tool calls to those targets:
 
 ```json
-"Edit(vendor/**)", "Edit(books/**)", "Edit(.pdf-extract/**)", "Edit(LICENSE)"
+"Edit(/vendor/**)", "Edit(/books/**)", "Edit(/.pdf-extract/**)", "Edit(/LICENSE)"
 ```
 
-They must be written as `Edit(...)`, **not** `Write(...)`. Claude Code checks file
-permissions against `Edit(path)` and `Read(path)` rules only; a `Write(path)` rule is
-accepted, never consulted, and warned about at startup. `Edit(...)` also covers the target
-of a shell output redirection, so `sed ... > vendor/x` is blocked too.
+They must be written as `Edit(...)`, **not** `Write(...)`. These permission rules do not
+inspect shell redirections or subprocesses. Bash and its children are instead confined by
+`sandbox.filesystem.denyWrite`, enforced by bubblewrap on Linux. The PreToolUse guard rejects
+obvious attempts earlier and provides a readable error, but it is not a shell parser and must
+not be treated as the isolation boundary.
 
 **Bash argument rules — soft.** The `rm -rf`, `git push --force`, `git reset --hard` and
 `git clean` entries are a speed bump, not a guarantee. Patterns that try to constrain
 command arguments are fragile: `rm -fr`, `find -delete` and similar spellings sail straight
 past them. Treat them as a typo-catcher, not a security boundary.
+
+The sandbox is fail-closed (`failIfUnavailable: true`) and the unsandboxed escape hatch is
+disabled. Sandboxed commands are auto-approved inside the workspace, while dependency
+mutations such as `npm install` are denied and must be performed as a reviewed maintainer
+operation. The network proxy permits only the domains listed in `settings.json` plus local
+Foundry test traffic. Adding a domain is a reviewed repository change.
 
 ## Skills
 
@@ -132,19 +141,18 @@ npm run verify:all    # verify-documenttypes → audit-css → audit-i18n → te
 
 ```bash
 git config core.hooksPath .githooks    # done automatically by SessionStart hook
+command -v bwrap
+command -v socat
+claude doctor
 ```
 
-Set private rules and Foundry paths in `settings.local.json`:
+Export private rules and Foundry paths in your shell or an untracked environment manager:
 
-```json
-{
-  "env": {
-    "DEADLANDS_RULES_PATH": "/absolute/path/to/deadlands-rules-ref",
-    "FOUNDRY_EXECUTABLE": "/absolute/path/to/foundryvtt",
-    "FOUNDRY_DATA_PATH": "/absolute/path/to/FoundryVTT",
-    "FOUNDRY_WORLD": "deadlands-test"
-  }
-}
+```bash
+export DEADLANDS_RULES_PATH=/path/to/deadlands-rules-ref
+export FOUNDRY_EXECUTABLE=/path/to/foundryvtt
+export FOUNDRY_DATA_PATH=/path/to/FoundryVTT
+export FOUNDRY_WORLD=deadlands-test
 ```
 
 Without it, the post-extract quality gate hook will skip verification (no local fallback — scripts now live in `deadlands-rules-ref`).
