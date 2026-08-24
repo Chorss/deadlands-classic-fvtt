@@ -60,7 +60,7 @@ export class BaseCharacterDataModel extends foundry.abstract.TypeDataModel {
       traits: new f.SchemaField(traitFields),
       wounds: new f.SchemaField(woundFields),
       wind: new f.SchemaField({
-        value: new f.NumberField({ integer: true, min: 0, initial: 0 }),
+        value: new f.NumberField({ integer: true, initial: 0 }),
         max: new f.NumberField({ integer: true, min: 0, initial: 0 }),
       }),
       chips: new f.SchemaField({

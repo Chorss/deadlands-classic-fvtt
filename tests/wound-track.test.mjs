@@ -1,8 +1,8 @@
 /**
  * Unit tests for wound-track pure helpers and hit-location/wind-calculator utilities.
  *
- * Foundry-integrated functions (applyWounds, tickBleeding, recoverWind) are
- * tested manually in Foundry — they require a live actor document.
+ * Foundry-integrated functions are exercised with actor test doubles here and
+ * with a live actor in the negative-Wind Playwright regression.
  *
  * @license MIT
  */
@@ -19,13 +19,19 @@ import {
   computeWindMax,
   gutsWoundsFromNegativeWind,
   isWinded,
+  planWindLoss,
   WIND_TICK_COUNT,
 } from "../module/core/wounds/wind-calculator.mjs";
 import {
   accumulateWounds,
+  applyWindLoss,
+  applyWounds,
   getBleedingRate,
   gutsTotal,
   highestWoundPenalty,
+  planWoundApplication,
+  recoverWind,
+  tickBleeding,
   totalBleedingRate,
   windDiceCount,
   woundsFromDamage,
@@ -65,6 +71,30 @@ describe("accumulateWounds", () => {
 
   it("stays at 0 when adding 0", () => {
     assert.equal(accumulateWounds(0, 0), 0);
+  });
+});
+
+describe("planWoundApplication", () => {
+  it("preserves severity 7 before storing Maimed and reports overflow 2", () => {
+    assert.deepEqual(planWoundApplication(4, 3), {
+      woundAmount: 3,
+      preventedWounds: 0,
+      appliedWounds: 3,
+      totalBeforeCap: 7,
+      storedSeverity: 5,
+      overflow: 2,
+    });
+  });
+
+  it("subtracts prevention before accumulation and overflow", () => {
+    assert.deepEqual(planWoundApplication(4, 3, { preventedWounds: 2 }), {
+      woundAmount: 3,
+      preventedWounds: 2,
+      appliedWounds: 1,
+      totalBeforeCap: 5,
+      storedSeverity: 5,
+      overflow: 0,
+    });
   });
 });
 
@@ -295,6 +325,97 @@ describe("gutsWoundsFromNegativeWind (dlc p.141-142)", () => {
 
   it("returns 2 at two full intervals", () => {
     assert.equal(gutsWoundsFromNegativeWind(-24, 12), 2);
+  });
+});
+
+describe("planWindLoss (dlc p.141-142)", () => {
+  it("Wind 1 to -12 crosses the first threshold at max 12", () => {
+    assert.deepEqual(planWindLoss(1, 13, 12), {
+      previousWind: 1,
+      newWind: -12,
+      thresholdsCrossed: 1,
+    });
+  });
+
+  it("-13 to -24 adds only the newly crossed second threshold", () => {
+    assert.equal(planWindLoss(-13, 11, 12).thresholdsCrossed, 1);
+  });
+
+  it("counts every threshold crossed by one large loss", () => {
+    assert.equal(planWindLoss(5, 42, 12).thresholdsCrossed, 3);
+  });
+});
+
+describe("Foundry-integrated wound updates", () => {
+  function fakeActor({ wounds = {}, wind = { value: 12, max: 12 }, size = 6 } = {}) {
+    const actor = {
+      system: { wounds, wind, size },
+      updates: [],
+      async update(update) {
+        actor.updates.push(update);
+      },
+    };
+    return actor;
+  }
+
+  it("applyWounds returns the full overflow plan and uses one actor update", async () => {
+    const actor = fakeActor({ wounds: { leftArm: { severity: 4 } } });
+    const result = await applyWounds(actor, "leftArm", 18, { _rng: () => 0 });
+    assert.equal(result.woundAmount, 3);
+    assert.equal(result.appliedWounds, 3);
+    assert.equal(result.totalBeforeCap, 7);
+    assert.equal(result.storedSeverity, 5);
+    assert.equal(result.overflow, 2);
+    assert.equal(actor.updates.length, 1);
+    assert.equal(actor.updates[0]["system.wounds.leftArm.severity"], 5);
+    assert.equal(actor.updates[0]["system.wind.value"], 9);
+  });
+
+  it("applyWounds accounts for prevented wounds before the cap", async () => {
+    const actor = fakeActor({ wounds: { leftArm: { severity: 4 } } });
+    const result = await applyWounds(actor, "leftArm", 18, {
+      preventedWounds: 2,
+      _rng: () => 0,
+    });
+    assert.equal(result.appliedWounds, 1);
+    assert.equal(result.totalBeforeCap, 5);
+    assert.equal(result.overflow, 0);
+  });
+
+  it("applyWindLoss stores Wind and canonical upper-guts wound together", async () => {
+    const actor = fakeActor({
+      wounds: { upperGuts: { severity: 0 }, lowerGuts: { severity: 0 } },
+      wind: { value: 1, max: 12 },
+    });
+    const result = await applyWindLoss(actor, 13);
+    assert.equal(result.newWind, -12);
+    assert.equal(result.thresholdsCrossed, 1);
+    assert.equal(actor.updates.length, 1);
+    assert.deepEqual(actor.updates[0], {
+      "system.wounds.upperGuts.severity": 1,
+      "system.wind.value": -12,
+    });
+  });
+
+  it("bleeding uses the same Wind threshold transaction", async () => {
+    const actor = fakeActor({
+      wounds: { leftArm: { severity: 3 }, upperGuts: { severity: 0 } },
+      wind: { value: -11, max: 12 },
+    });
+    assert.equal(await tickBleeding(actor), 1);
+    assert.deepEqual(actor.updates[0], {
+      "system.wounds.upperGuts.severity": 1,
+      "system.wind.value": -12,
+    });
+  });
+
+  it("recoverWind never adds threshold wounds", async () => {
+    const actor = fakeActor({
+      wounds: { upperGuts: { severity: 0 } },
+      wind: { value: -24, max: 12 },
+    });
+    assert.equal(await recoverWind(actor, 1), -23);
+    assert.deepEqual(actor.updates[0], { "system.wind.value": -23 });
   });
 });
 

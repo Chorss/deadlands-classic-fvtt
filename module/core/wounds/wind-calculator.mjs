@@ -49,6 +49,29 @@ export function gutsWoundsFromNegativeWind(windValue, windMax) {
   return Math.floor(Math.abs(windValue) / windMax);
 }
 
+/**
+ * Plan a Wind loss and count only the new negative-Wind thresholds crossed by
+ * this loss. Thresholds are cumulative at -windMax, -2×windMax, and so on;
+ * comparing the counts before and after prevents repeated wounds on later
+ * updates. dlc p.141-142.
+ *
+ * @param {number} previousWind
+ * @param {number} amount — non-negative Wind loss
+ * @param {number} windMax
+ * @returns {{ previousWind:number, newWind:number, thresholdsCrossed:number }}
+ */
+export function planWindLoss(previousWind, amount, windMax) {
+  const loss = Math.max(0, amount);
+  const newWind = previousWind - loss;
+  const previousThresholds = gutsWoundsFromNegativeWind(previousWind, windMax);
+  const newThresholds = gutsWoundsFromNegativeWind(newWind, windMax);
+  return {
+    previousWind,
+    newWind,
+    thresholdsCrossed: Math.max(0, newThresholds - previousThresholds),
+  };
+}
+
 /** Segments in the sheet's Combat-tab Wind meter (styles/combat.css
  * `.dlc-wind-track`). A visual approximation, not 1 tick per Wind point —
  * windMax varies per character (Vigor + Spirit die faces), a fixed-length
