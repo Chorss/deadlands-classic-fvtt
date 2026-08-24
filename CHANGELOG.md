@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- GitHub workflows now use the Node 24-native `actions/checkout@v7` and
+  `actions/setup-node@v7`, removing the deprecated Node 20 action-runtime warnings.
+
 ### Fixed
 
 ## [0.4.2] — 2026-08-24
