@@ -6,7 +6,8 @@ and GMs upgrading from older versions.
 
 ## Versioning
 
-Schema changes follow Semantic Versioning (see `docs/architecture.md §Versioning`):
+Schema changes normally follow Semantic Versioning (see `docs/architecture.md §Versioning`).
+The maintainer explicitly approved the 0.4.1 faith-denial behavior migration as a patch exception:
 
 - **PATCH** (`0.1.0 → 0.1.1`): bug fixes only, no schema changes.
 - **MINOR** (`0.1.0 → 0.2.0`): new optional fields added to existing documents; backward-compatible.
@@ -25,21 +26,14 @@ game.settings.register(SYSTEM_ID, "migrationVersion", {
 });
 ```
 
-A `ready`-hook migration guard that reads this value and runs pending migrations is **not
-implemented yet** — it will be added together with the first real migration, alongside
-`module/core/migration.mjs` (see §Migration table shape below). Today the system's `ready`
-hook only logs. The planned shape of the guard:
+A real `ready`-hook runner now lives in `module/core/migration.mjs`. It runs only on the
+single active GM client, migrates all world and synthetic token Actors, and writes the
+sentinel only after every document operation succeeds. A partial failure is therefore
+safe to retry on the next launch.
 
 ```js
-// Planned — to be added when the first migration ships.
-Hooks.once("ready", () => {
-  const worldVersion = game.settings.get(SYSTEM_ID, "migrationVersion");
-  if (worldVersion === "") {
-    // Fresh world — nothing to migrate.
-    game.settings.set(SYSTEM_ID, "migrationVersion", game.system.version);
-    return;
-  }
-  migrateWorld(worldVersion, game.system.version);
+Hooks.once("ready", async () => {
+  await migrateWorld(); // internally guarded by game.users.activeGM.isSelf
 });
 ```
 
@@ -56,29 +50,25 @@ Hooks.once("ready", () => {
 and return the updated object. No `actor.update()` inside the function — callers apply
 the returned update.
 
-### Migration table shape (future implementation)
+### Migration implementation
 
 ```js
-// module/core/migration.mjs (to be created when the first breaking change arrives)
-const MIGRATIONS = [
-  {
-    from: "0.1.0",
-    to:   "0.2.0",
-    migrate: migrateV0_1_to_V0_2,
-  },
-];
+const plan = planFaithDenialMigration(actor.toObject(), game.time.worldTime);
+if (plan.effectData) await actor.createEmbeddedDocuments("ActiveEffect", [plan.effectData]);
+if (plan.actorUpdate) await actor.update(plan.actorUpdate);
 ```
 
 ## What gets migrated
 
-Each migration pass iterates:
+The 0.4.1 faith-denial migration iterates:
 
 1. `game.actors` — all actor documents.
-2. Actors' embedded items — `actor.items`.
-3. `game.items` — world-level items (compendium imports).
-4. Scene tokens — `scene.tokens.map(t => t.actor)`.
+2. Scene-token Actors — `scene.tokens.map(t => t.actor)`, including synthetic Actors.
 
-The planned `ready`-hook guard (above) will ensure migrations only run once per world.
+Future migrations must add any other applicable document collections explicitly; the
+runner does not scan unrelated Items for an Actor-only schema change.
+
+The `ready`-hook guard ensures migrations run once per world after full success.
 
 ## Backward compatibility promise
 
@@ -104,3 +94,4 @@ in `CHANGELOG.md`.
 | 0.3.3 | Bug-audit hotfixes (rolls, chips, wounds, concurrency) + internal dedupe — no schema changes, no migration needed |
 | 0.3.4 | GM proxy for shared-state writes, rule-fidelity hotfixes, `audit-i18n` tooling — no schema changes, no migration needed |
 | 0.4.0 | `weapon` moved off the untyped `{}` stub onto `WeaponDataModel` (`category`, `rangeType`, `damage`, `range`, `shots`, `rof`, `ammoType`, `defense`, `price`, `description`). **Self-migrating**: every field declares an `initial:`, so Foundry fills existing weapon items on load — no migration function needed. Ledger UI redesign, item sheets and the E2E suite touched no other schema. |
+| 0.4.1 | First real runner. Active Blessed `faithDeniedUntil` / `faithDeniedSeverity` state moves to one marked, timed Active Effect with the remaining duration. Expired state is only cleared. Existing marked effects prevent duplicates. The legacy schema fields remain as a deprecated bridge until 0.5.0. |

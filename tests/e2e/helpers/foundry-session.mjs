@@ -2,7 +2,7 @@
  * Shared helpers for driving a local Foundry VTT session in E2E specs.
  *
  * Prerequisites (docs/testing-e2e.md): a local Foundry V14 on FOUNDRY_URL
- * (default http://localhost:30000) with the `deadlands-dev` world LAUNCHED and
+ * (default http://localhost:30000) with the `deadlands-test` world and
  * passwordless users "Gamemaster" and "Player".
  *
  * @license MIT
@@ -57,18 +57,47 @@ export async function joinAs(page, userName) {
 
   if (page.url().includes("/setup") || page.url().includes("/auth")) {
     throw new Error(
-      "Foundry is not serving /join — launch the `deadlands-dev` world (and mind the setup admin password) before running E2E. See docs/testing-e2e.md."
+      "Foundry is not serving /join for `deadlands-test`. Run npm run test:e2e so the doctor can diagnose the local setup."
     );
   }
 
-  // Join form: user picker + blank password + submit.
-  const userSelect = page.locator('select[name="userid"]');
-  await expect(userSelect, "join form user picker not found — Foundry UI change?").toBeVisible();
-  await userSelect.selectOption({ label: userName });
-  await page.locator('button[name="join"], button[type="submit"]').first().click();
+  // V14.366 replaced the user select with an autocomplete-enabled text field.
+  const username = page.locator('input[name="username"]');
+  const password = page.locator('input[name="password"]');
+  await expect(username, "join username input not found — Foundry UI change?").toBeVisible();
+  await username.fill(userName);
+  await password.fill("");
+  await page.locator('button[name="join"]').click();
 
   // The game view is up once `game.ready` flips true.
   await page.waitForFunction(() => globalThis.game?.ready === true, null, { timeout: 30_000 });
+}
+
+/**
+ * Ensure the race-test Player exists. Existing users are never modified: a
+ * password on an existing Player remains a doctor error, never something the
+ * test silently clears.
+ */
+export async function ensurePasswordlessPlayer(page, userName = "Player") {
+  return inGame(
+    page,
+    async (name) => {
+      const existing = game.users.getName(name);
+      if (existing) {
+        if (existing.password) {
+          throw new Error(`Existing Player user "${name}" has a password; E2E will not change it.`);
+        }
+        return existing.id;
+      }
+      const player = await User.implementation.create({
+        name,
+        role: CONST.USER_ROLES.PLAYER,
+        password: "",
+      });
+      return player.id;
+    },
+    userName
+  );
 }
 
 /**

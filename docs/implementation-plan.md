@@ -121,7 +121,7 @@ export class ArchetypeRegistry {
 - Integration with the Foundry Combat tracker: `DeadlandsCombat extends Combat`, overrides `rollInitiative()` to deal cards instead of rolling a d20. Black Joker: the **Marshal** (not the player) draws a chip from the pool + the player discards their "up the sleeve" card + a reshuffle at the end of the round (`dlc` p.118).
 
 ### 3.3 Fate Pot & Chips (`core/chips/`)
-- **Fate Pot = a world-level setting** (`game.settings.register`, `scope: "world"`) holding 4 integers `{white, red, blue, legend}` (decision D2, §8). The pool is **fungible counters**, not a deck of cards — the `Cards` API is for unique cards and stays with the Action Deck (§3.2). **Zero `documentTypes`, zero document-type migration, no `fate-pot` pack.** Implementation (verified vs Foundry 14.364): a single setting of type **DataModel** `{white,red,blue,legend}` (type-safe — `game.settings.register` accepts a DataModel as `type`), `config: false` (hidden in the settings UI), registered in the `init` hook.
+- **Fate Pot = a world-level setting** (`game.settings.register`, `scope: "world"`) holding 4 integers `{white, red, blue, legend}` (decision D2, §8). The pool is **fungible counters**, not a deck of cards — the `Cards` API is for unique cards and stays with the Action Deck (§3.2). **Zero `documentTypes`, zero document-type migration, no `fate-pot` pack.** Implementation (reverified vs Foundry 14.367): a single setting of type **DataModel** `{white,red,blue,legend}` (type-safe — `game.settings.register` accepts a DataModel as `type`), `config: false` (hidden in the settings UI), registered in the `init` hook.
 - Starting pot: 50×White, 25×Red, 10×Blue, 0×Legend (Legend grows only by being earned). Confirmed: `dlc` p.145 (PL `pg-pl` p.143 → "50 white, 25 red, 10 blue").
 - The `FatePot` class (`core/chips/fate-pot.mjs`) — a pure-logic API: `drawBlind(n)` (a weighted random pick from the pool), `returnToPool(color, n)`, `reset()`. Testable in `chip-rules.test.mjs` without Foundry. An optional admin dialog for the GM (pool preview/correction).
 - **Player** chips live on the actor (`system.chips.{white,red,blue,legend}` as integers) — independent of the pool.
@@ -160,7 +160,7 @@ The data models for these types live in `module/core/items/*.mjs` (`hex-data.mjs
 
 ---
 
-## 4. Directory structure (as shipped in 0.4.0)
+## 4. Directory structure (as shipped in 0.4.1)
 
 Generated from the working tree — 71 `.mjs` files under `module/`.
 
@@ -288,7 +288,7 @@ deadlands-classic-fvtt/
 **Every phase below is closed.** The headings and one-line scopes are kept as the historical
 skeleton — the per-phase file lists and acceptance tests they used to carry were removed once the
 work shipped, because `CHANGELOG.md` is the accurate record of what each release actually
-contained. Release mapping is in §10; work still open after 0.4.0 is in §12.
+contained. Release mapping is in §10; work still open after 0.4.1 is in §12.
 
 ### Phase 0 — Repo configuration, metadata, and AI workshop
 **Closed** — pre-0.1.0. Manifest, licensing (GPL-3.0 → MIT), Biome, git hooks, CI, and the
@@ -409,13 +409,13 @@ in 0.2.0, the accessibility pass in 0.3.0.
 - **Icons** — SVG where possible (cards, chips). Bitmaps only where we must (background, portraits).
 - **Commit style** — conventional commits. `feat:`, `fix:`, `docs:`, `chore:`. Branch-per-feature, PRs with the template from `.github/`. Full rules in `.claude/rules/commits.md` (enforced by `.githooks/commit-msg`).
 - **Naming convention** — documentType keys in `system.json` and registry keys use `camelCase` (e.g. `madScientist`). Folders and files use `kebab-case` (e.g. `module/archetypes/mad-scientist/data.mjs`). i18n keys — `PascalCase` segments (e.g. `DEADLANDS.Archetype.MadScientist.Label`). JS classes — `PascalCase` (e.g. `MadScientistDataModel`). Constants — `SCREAMING_SNAKE_CASE` in `config.mjs`.
-- **ApplicationV2 paths (V14)** — `foundry.applications.api.ApplicationV2`, `foundry.applications.api.HandlebarsApplicationMixin`, `foundry.applications.sheets.ActorSheetV2`, `foundry.applications.sheets.ItemSheetV2`. **✅ Verified vs Foundry 14.364** (context7/wiki, 2026-06-17 audit): the pattern `class S extends HandlebarsApplicationMixin(ActorSheetV2)`; per-type registration via `DocumentSheetConfig.registerSheet(Actor, "deadlands-classic", Sheet, { types: ["cowboy"], makeDefault })` in the `init` hook. At the next V14.x minor, check again in case something shifts.
-- **V14 novelties relevant to the project (vs 14.364):** ActiveEffects have extended expiration (expiration events, "until the end of combat" effects) and can modify the Token — beneficial for wounds / Harrowed (dominion per session) / Guts, but watch out for aggregation (§8 R9). Measured Templates replaced by **Scene Regions** (`RegionDocument`, the first removed fundamental V14 data structure) — any AoE (e.g. hexes) should be built on Scene Regions, not `MeasuredTemplate`.
+- **ApplicationV2 paths (V14)** — `foundry.applications.api.ApplicationV2`, `foundry.applications.api.HandlebarsApplicationMixin`, `foundry.applications.sheets.ActorSheetV2`, `foundry.applications.sheets.ItemSheetV2`. **✅ Verified vs local Foundry 14.367 source and E2E**: the pattern `class S extends HandlebarsApplicationMixin(ActorSheetV2)`; per-type registration via `DocumentSheetConfig.registerSheet(Actor, "deadlands-classic", Sheet, { types: ["cowboy"], makeDefault })` in the `init` hook. Native detached windows are exercised without system-specific detach code.
+- **V14 capabilities in use:** Active Effects V2 owns timed Blessed faith denial and keeps core `expiryAction="update"`; ApplicationV2 owns detached windows. Measured Templates remain forbidden: future AoE must use **Scene Regions** (`RegionDocument`) once a concrete hex or miracle needs it, without an empty abstraction in advance.
 - **Hook deadlock protection** — the PostToolUse hooks fire `node --check` / verify; if a hook times out or hangs, save the diagnostics and avoid recursive edits within a single hook callback.
 - **Test layers** — a clear split so as not to confuse the tools:
   - **Pure logic** (`module/core/dice`, `chips`, `wounds`, `cards`) → `node:test` in `tests/`. No Foundry, no browser. Fast.
-  - **Foundry integration** (sheet render, document CRUD, hooks) → Playwright MCP in a headed browser with Foundry running on `localhost:30000`. A dedicated dev world (e.g. `deadlands-dev`) with a system symlink.
-  - **API lookup / documentation** → context7 MCP for libraries (Foundry V14, ProseMirror, Biome), the `pdf-reference-lookup` subagent for rulebook mechanics.
+  - **Foundry integration** (sheet render, document CRUD, hooks) → `npm run test:e2e` on `deadlands-test`; the doctor launches Foundry 14.367 when needed and reuses a matching running server.
+  - **API lookup / documentation** → exact-build release notes, official `/api/v14`, then local installed sources; Context7/wiki only supplement those sources. The `pdf-reference-lookup` subagent remains authoritative for rulebook mechanics.
 
 ---
 
@@ -446,7 +446,7 @@ in 0.2.0, the accessibility pass in 0.3.0.
 | **Dynamic eval in dice/poker** — `damage-roll` parses formulas; a user-supplied string to `eval/Function` = injection. | L×M | Only the `Roll` API + validation; a `security-review` on `core/dice/` before release. |
 | **No "definition of done" / a11y** — §9 has a scenario, but no "shippable" criterion, playtest, or a11y. | M×L | A DoD checklist per release + 1 real playtest; an a11y pass (contrast, keyboard, `aria-label`) in Phase 14. |
 | **Archetypes from supplements** (HoE/LC different aptitudes). | L×L | The registry pattern is ready; supplements as separate modules `deadlands-hoe-expansion`. |
-| **Foundry V14.x minor breaks.** **Good news: V14 is GA** (stable since 14.359, April 2026; latest 14.364). | L×M | Pin `compatibility.verified` to a **specific build** (e.g. `14.364`), not bare `"14"`; stable ApplicationV2 API. Source: foundryvtt.com/releases/14.359. |
+| **Foundry V14.x minor breaks.** V14 is GA, but 14.366 still changed the login DOM. | L×M | Pin `compatibility.verified` to `14.367`; `/verify-foundry` requires exact-build release notes → official API → local installed source, and the doctor rejects build drift. |
 
 ### Resolved decisions (2026-06-17 audit)
 - **D1 — name/`id`:** stays `deadlands-classic` + disclaimer; the trademark risk is consciously accepted.
@@ -507,6 +507,7 @@ If the whole scenario passes without manual hacking — v0.1 is ready.
 | **0.3.3** | Bug-audit hotfixes (Dominion Roll, stale chip-spend + race conditions, guts wound-pool, Harrowed tab) | shipped 2026-07-01 |
 | **0.3.4** | GM proxy for shared-state writes (Queries API), rule-fidelity fixes (No Going Back, Joker draws, Armor die-step), `tools/audit-i18n.mjs` | shipped 2026-07-06 |
 | **0.4.0** | Ledger UI redesign (M1-M7: tokens, sheet layout, chat cards, archetype tabs, dialogs, item sheets), `WeaponDataModel`, the local Playwright E2E suite, `npm run verify:all`, house-rule TN tiers | shipped 2026-08-22 |
+| **0.4.1** | Foundry 14.367 target, self-starting six-flow E2E, Active Effects V2 faith denial + first real migration runner, detached-sheet coverage, exact-build Claude workshop | target 2026-08-24 |
 | **1.0.0** | Stable, a 3-month bug-hunt, full PL localization (MAG canon) | +X |
 | **1.x** | Classic supplements (Smith & Robards, Book o' the Dead, etc.) as separate modules |
 | **2.0** | Hell on Earth Classic as a separate fork or module |
@@ -519,13 +520,12 @@ If the whole scenario passes without manual hacking — v0.1 is ready.
 
 ## 11. Immediate next step
 
-**All phases 0-14 are closed ✅.** The system is at **0.4.0** on `main` (scope per phase in §5,
+**All phases 0-14 are closed ✅.** The current target is **0.4.1** (scope per phase in §5,
 release history in §10).
 
-0.4.0 was a minor release with a feature programme, not a patch: the Ledger UI redesign across
-seven milestones (PRs #24-#28), the `weapon` data model, item sheets, and a local Playwright E2E
-suite. The 0.3.x working loop — playtest → issue → hotfix branch → PR → patch release — still
-holds for defects, but feature work now goes through §12.
+The maintainer explicitly approved the Foundry 14.367 E2E, Active Effects V2 and detached-window
+work for 0.4.1 despite the new behavior. The legacy Blessed denial fields remain through this
+release and are removed in 0.5.0 after every existing world has a public migration path.
 
 The Phase 0.B nice-to-haves that never proved necessary (`/add-item-type`, `/pdf`, `/phase-test`,
 `/foundry-link`, the `foundry-test-runner` subagent, `docs/claude-workflow.md`) remain open —
@@ -533,7 +533,7 @@ added only **when a real need arises**, not ahead of it.
 
 ---
 
-## 12. Open work after 0.4.0
+## 12. Open work after 0.4.1
 
 Numbered phases are done; what follows is tracked as work items, not phases.
 
@@ -585,6 +585,19 @@ Deliberately deferred, roughly in order of how much they limit play:
 - Smaller gaps, all playable around: mounts and vehicles with stats, encumbrance, the Duel as its
   own subsystem, reloading as a rule, Massive Damage, Vamoosin', innocent bystanders, Tests o'
   Wills as a helper, Tale-Tellin' as downtime chip income, and a full world-settings menu.
+
+### Assessed Foundry roadmap (2026 review)
+
+- **Scene Regions** remain the mandatory foundation for future area effects. Add one only with
+  a concrete hex or miracle; `MeasuredTemplate` stays forbidden.
+- **Planned Movement, Spawn Tokens, Particle Generator and Anime.js** do not close a current
+  product gap. They are evaluated backlog candidates, not implementation work for 0.4.1.
+- The announced **V14.5 Launcher** may later replace manual installation updates. Current local
+  scripts remain tied to the installed 14.367 runtime until the launcher actually ships.
+- **V15** requires no code now. Every system sheet already uses ApplicationV2, including native
+  detachment, so announced Application V1 removal does not create a migration task here.
+- Low V14 adoption reduces today's audience but does not change the explicit **V14-only** target;
+  avoiding a V13 compatibility layer remains the lower-risk maintenance choice.
 
 ### Publication
 

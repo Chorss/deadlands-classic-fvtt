@@ -11,7 +11,13 @@ import { runWithWhiteSpend } from "../../core/chips/chip-widget.mjs";
 import { stepperActions } from "../../core/dialogs/stepper-actions.mjs";
 import { BaseCharacterSheet } from "../_base/base-character-sheet.mjs";
 import { HARROWED_SHEET_PART, HARROWED_SHEET_TAB } from "../_overlays/harrowed/sheet-tab.mjs";
-import { invokeMiracle, isMiracleAccessDenied, sinDenialLabel, trackSin } from "./mechanics.mjs";
+import {
+  activeFaithDenialSeverity,
+  invokeMiracle,
+  isMiracleAccessDenied,
+  sinDenialLabel,
+  trackSin,
+} from "./mechanics.mjs";
 
 const TEMPLATE_ROOT = "systems/deadlands-classic/templates/actor/parts";
 const DIALOG_ROOT = "systems/deadlands-classic/templates/dialogs";
@@ -89,7 +95,7 @@ export class BlessedSheet extends BaseCharacterSheet {
   }
 
   #prepareSinState() {
-    const severity = this.document.system.faithDeniedSeverity ?? "none";
+    const severity = activeFaithDenialSeverity(this.document);
     const denied = isMiracleAccessDenied(this.document);
     return {
       denied,

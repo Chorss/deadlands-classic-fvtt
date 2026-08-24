@@ -16,6 +16,11 @@
  */
 
 import { rollExplodingPool } from "../../core/dice/exploding-roll.mjs";
+import {
+  faithDenialSeverity,
+  getActiveFaithDenialEffect,
+  replaceFaithDenialEffect,
+} from "./faith-denial.mjs";
 
 /**
  * Sin severity → TN for the Spirit roll that avoids faith loss. fb p.103-104.
@@ -70,12 +75,12 @@ export const SIN_DENIAL_SECONDS = {
  * @returns {boolean}
  */
 export function isMiracleAccessDenied(actor) {
-  const severity = actor.system.faithDeniedSeverity ?? "none";
-  if (severity === "none") {
-    return false;
-  }
-  const until = actor.system.faithDeniedUntil ?? 0;
-  return (game.time?.worldTime ?? 0) < until;
+  return Boolean(getActiveFaithDenialEffect(actor));
+}
+
+/** Return the severity of the actor's active denial, or "none". */
+export function activeFaithDenialSeverity(actor) {
+  return faithDenialSeverity(getActiveFaithDenialEffect(actor)) ?? "none";
 }
 
 // ── Miracle invocation workflow ───────────────────────────────────────────────
@@ -90,19 +95,14 @@ export function isMiracleAccessDenied(actor) {
  */
 export async function invokeMiracle(actor, miracleItem, opts = {}) {
   if (isMiracleAccessDenied(actor)) {
+    const severity = activeFaithDenialSeverity(actor);
     ui.notifications.warn(
       game.i18n.format("DEADLANDS.Blessed.Warn.AccessDenied", {
         name: actor.name,
-        label: sinDenialLabel(actor.system.faithDeniedSeverity),
+        label: sinDenialLabel(severity),
       })
     );
     return;
-  }
-
-  // Denial window elapsed but the flag/timestamp weren't cleared yet — lift it
-  // now instead of leaving stale state on the actor. fb p.104 (automatic lift).
-  if ((actor.system.faithDeniedSeverity ?? "none") !== "none") {
-    await actor.update({ "system.faithDeniedSeverity": "none", "system.faithDeniedUntil": 0 });
   }
 
   const modifier = opts.modifier ?? 0;
@@ -147,11 +147,9 @@ export async function trackSin(actor, severity = "minor") {
   const spiritDieCount = traitData?.dieCount ?? 1;
 
   // Patron immediately denies miracle access for the duration. fb p.103-104.
-  await actor.update({
-    "system.faithDeniedSeverity": severity,
-    "system.faithDeniedUntil": (game.time?.worldTime ?? 0) + denialSeconds,
-    "system.sinPending": false,
-  });
+  // A new sin replaces every earlier marked denial with one V14 Active Effect.
+  await replaceFaithDenialEffect(actor, severity, denialSeconds);
+  await actor.update({ "system.sinPending": false });
 
   // Spirit roll vs sin TN — failure = lose 1 faith. dlc p.177.
   const spiritRoll = rollExplodingPool(spiritDieCount, spiritDie, { modifier: 0, tn: sinTN });

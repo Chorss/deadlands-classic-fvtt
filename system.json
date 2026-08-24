@@ -2,7 +2,7 @@
   "id": "deadlands-classic",
   "title": "Deadlands Classic",
   "description": "A community-driven Foundry VTT game system for Deadlands Classic (Weird West). Features exploding dice (Aces), poker-card initiative, Fate Chips (White/Red/Blue/Legend) and location-based wounds. No rulebook content is included — you supply your own Edges, Hindrances and Hexes, or install the optional companion content module. Unofficial fan project: Deadlands is a trademark of Pinnacle Entertainment Group, and this system is not affiliated with or endorsed by Pinnacle.",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "type": "system",
   "compatibility": {
     "minimum": "14",

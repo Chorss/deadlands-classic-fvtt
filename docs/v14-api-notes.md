@@ -1,15 +1,25 @@
 # Foundry V14 API notes
 
 > Patterns, snippets, and breaking changes for building this system on Foundry VTT V14.
-> Verified against **Foundry 14.364**. Last reviewed against the system's own code at 0.4.0
-> (2026-08-22); the 14.364 pin is unchanged since the 2026-06-17 API pass.
+> Verified against local **Foundry 14.367** source and runtime for system 0.4.1
+> (2026-08-24). The public V14 API currently identifies itself as **14.365**;
+> 14.366–14.367 differences therefore come from official release notes and the
+> exact installed source.
 > V14+ only — no V13 back-compat shims.
 
 ## Support target
 
 - `compatibility.minimum: "14"`. Pin `compatibility.verified` to a concrete tested build
-  (e.g. `14.364`), not a bare `"14"` — V14 only reached Stable at 14.359 (April 2026).
+  (currently `14.367`), not a bare `"14"` — V14 only reached Stable at 14.359 (April 2026).
 - **Node.js 24+** (required by V14; V13 does not run on Node 24).
+
+## Source hierarchy
+
+For build-sensitive work use, in order: the exact build's release notes, official
+`/api/v14`, local sources from the installed build, then Context7/wiki only as
+supporting discovery aids. This matters now because the public API is 14.365 while
+the maintained runtime is 14.367. In particular, 14.366 changed world login from a
+user select to `input[name="username"]`; 14.367 is a patch over that behavior.
 
 ## documentTypes (system.json)
 
@@ -236,7 +246,7 @@ deals cards instead of rolling 1d20; suit tiebreaker (♠>♥>♦>♣) via a num
 
 The GM proxy (`module/core/gm-proxy.mjs`) uses Foundry's native Queries API to execute Fate Pot /
 Action Deck mutations on the single active GM client. Facts below were verified against the local
-Foundry **14.364** installation source (`client/documents/user.mjs`,
+Foundry **14.367** installation source (`client/documents/user.mjs`,
 `client/documents/collections/users.mjs`, `common/constants.mjs`, server relay in
 `dist/components/activity.mjs`):
 
@@ -261,7 +271,7 @@ Foundry **14.364** installation source (`client/documents/user.mjs`,
 - **Self-dispatch:** a query to yourself round-trips the server — `dispatchGmOp` short-circuits
   the `activeGM.isSelf` case to a local handler call instead.
 
-Server permissions this design works around (also verified in 14.364 source): world-scope
+Server permissions this design works around (also verified in 14.367 source): world-scope
 `game.settings.set` requires `SETTINGS_MODIFY` (default: ASSISTANT), and non-GM `Combat` updates
 are whitelisted to `_id/round/turn/combatants` — `flags` writes from players are rejected.
 `Combatant` flags, by contrast, *are* owner-writable (that's why `setHand` needs no proxy).
@@ -275,13 +285,20 @@ are whitelisted to `_id/round/turn/combatants` — `flags` writes from players a
 
 ## New in V14 (relevant to us)
 
-- **ActiveEffects expanded** — richer expiration (events, "until combat ends") and effects can alter
-  the Token. Useful for wounds / Harrowed / Guts. Don't stack 8 AEs on one field — compute the
-  cumulative wound penalty in `prepareDerivedData`.
+- **Active Effects V2** — richer expiration (events, "until combat ends") and effects can alter
+  the Token. Faith denial now uses an Actor-embedded effect with `duration.value`,
+  `duration.units: "seconds"`, `duration.expiry: null`, and an empty `system.changes`.
+  Native world-time refresh marks it expired under the core default
+  `CONFIG.ActiveEffect.expiryAction = "update"`; the system does not override that global policy.
+  Don't stack 8 wound AEs on one field — compute the cumulative wound penalty in
+  `prepareDerivedData`.
+- **Detached ApplicationV2 windows** — the core header action `detach` moves an already-rendered
+  sheet into a popup. Actor sheets require no system-specific detach code; the E2E suite verifies
+  rendering, tabs/actions and form persistence after the move.
 - **Measured Templates → Scene Regions** — V14 removed the `MeasuredTemplate` data type (the first core
   Document type ever removed). Build any AoE (e.g. hex effects) on **Scene Regions** (`RegionDocument`),
   not `MeasuredTemplate`.
 
 ## Reference
 
-Foundry V14 API: <https://foundryvtt.com/api/> · Community wiki: <https://foundryvtt.wiki/>
+Foundry V14 API: <https://foundryvtt.com/api/v14/> · [14.366 release notes](https://foundryvtt.com/releases/14.366) · [14.367 release notes](https://foundryvtt.com/releases/14.367)

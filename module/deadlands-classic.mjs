@@ -28,6 +28,7 @@ import { DeadlandsItem } from "./core/documents/deadlands-item.mjs";
 import { applyFont, registerFontSettings, SETTING_KEY } from "./core/font-settings.mjs";
 import { ItemRegistry } from "./core/item-registry.mjs";
 import { registerLegalNotice } from "./core/legal-notice.mjs";
+import { migrateWorld } from "./core/migration.mjs";
 import { OverlayRegistry } from "./core/overlay-registry.mjs";
 import { drawHitLocation, resolveHitLocation } from "./core/wounds/hit-location.mjs";
 import {
@@ -183,7 +184,15 @@ Hooks.once("init", () => {
   };
 });
 
-Hooks.once("ready", () => {
+Hooks.once("ready", async () => {
+  try {
+    await migrateWorld();
+  } catch (error) {
+    console.error(`${LOG_PREFIX} World migration failed`, error);
+    if (game.user?.isGM) {
+      ui.notifications.error("DEADLANDS.Migration.Failed", { localize: true, permanent: true });
+    }
+  }
   console.log(`${LOG_PREFIX} ${game.i18n.localize("DEADLANDS.System.Loaded")}`);
 });
 

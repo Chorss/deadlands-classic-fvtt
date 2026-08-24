@@ -31,8 +31,12 @@ test("trait roll from the cowboy sheet produces a chat card", async ({ page }) =
     await page.waitForFunction((before) => game.messages.size > before, messagesBefore, {
       timeout: 15_000,
     });
-    const lastMessage = await inGame(page, () => game.messages.contents.at(-1).content);
-    expect(lastMessage).toContain("E2E Trait Roll");
+    const lastMessage = await inGame(page, () => {
+      const message = game.messages.contents.at(-1);
+      return { content: message.content, speakerAlias: message.speaker.alias };
+    });
+    expect(lastMessage.speakerAlias).toBe("E2E Trait Roll");
+    expect(lastMessage.content).toContain("Deftness");
   } finally {
     await page.evaluate(async (id) => {
       const actor = game.actors.get(id);

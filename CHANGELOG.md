@@ -9,7 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.1] — 2026-08-24
+
 ### Added
+
+- Active Effects V2 faith denial for Blessed actors, including native world-time expiry,
+  localized effect metadata, replacement on a later sin, and an idempotent active-GM
+  migration from the deprecated timestamp/severity fields.
+- Complete local Foundry 14.367 gate behind one `npm run test:e2e`: installation/world/user/
+  browser doctor, self-starting or reusable Foundry server, and new Active Effect and detached
+  ApplicationV2 sheet flows (six flows total).
+- Claude Code `/verify-foundry` skill and exact-build source hierarchy: release notes, official
+  V14 API, local installed source, then Context7/wiki only as supporting aids.
 
 - `tools/audit-docs.mjs`, wired into `npm run verify:all` (so CI, the pre-commit
   hook and the `Stop` hook all get it). Hard errors: a tracked file pointing at a
@@ -29,6 +40,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   they were recorded only in the changelog.
 
 ### Changed
+
+- Target system/package release is 0.4.1 with `compatibility.verified` pinned to 14.367.
+  Playwright login follows 14.366's username autocomplete form and all local docs use the
+  `deadlands-test` world name.
+- Playwright MCP and Context7 MCP are pinned to local dev dependencies
+  (`@playwright/mcp@0.0.79`, `@upstash/context7-mcp@4.0.3`) instead of `@latest` downloads.
 
 - **`docs/mechanics-reference.md` is now a citation index rather than a
   paraphrase.** The "in brief" column survives only for claims verified
@@ -760,7 +777,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `CombatantHandDialog` and initiative-value path corrections after V14 runtime testing.
 - Multiple V14 API compatibility fixes across archetype sheets and mechanics.
 
-[Unreleased]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.4.0...HEAD
+[Unreleased]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.4.1...HEAD
+[0.4.1]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.4.0...0.4.1
 [0.4.0]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.3.4...0.4.0
 [0.3.4]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.3.3...0.3.4
 [0.3.3]: https://github.com/Chorss/deadlands-classic-fvtt/compare/0.3.2...0.3.3

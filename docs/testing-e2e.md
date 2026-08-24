@@ -1,66 +1,61 @@
 # E2E testing (Playwright) — local only
 
-Automated smoke tests for the Foundry-dependent layer (sheets, rolls, GM-proxy)
-that unit tests cannot cover. They drive a **real, local Foundry instance** in
-Chromium via [`@playwright/test`](https://playwright.dev/).
+The suite drives a real, licensed Foundry **14.367** world in Chromium. CI remains
+license-free; this is the maintainer's local pre-merge gate.
 
-> **Why local only, never CI:** Foundry VTT is commercially licensed — its
-> binaries may not be committed and the license key is the owner's secret, so
-> external PRs cannot run it (risk table, `implementation-plan.md` §8). CI
-> stays license-free (`npm run lint` + `npm run verify:all`); E2E is a pre-merge
-> check on the maintainer's machine, not a PR gate.
+## One-time setup
 
-## Prerequisites
+1. Install Foundry 14.367. Defaults assume the Linux executable at
+   `~/foundryvtt/foundryvtt` and data at `~/.local/share/FoundryVTT`.
+2. Create a throwaway world named **`deadlands-test`** using `deadlands-classic`.
+3. Symlink this checkout as `Data/systems/deadlands-classic`.
+4. Keep a passwordless Gamemaster named `Gamemaster`. A missing passwordless
+   `Player` is created by the race spec; an existing Player is never modified.
+5. Install the browser once: `npx playwright install chromium`.
 
-1. **Local Foundry V14** listening on `http://localhost:30000`
-   (override with the `FOUNDRY_URL` env var).
-2. A world named **`deadlands-dev`** using this system
-   (symlink setup:
-   [`CONTRIBUTING.md` §Setting Up a Local Dev Environment](../CONTRIBUTING.md#setting-up-a-local-dev-environment)).
-3. The world **launched** before running the tests — the suite fails fast with
-   an actionable message when Foundry serves `/setup` instead of `/join`.
-4. Two **passwordless** users in the world:
-   - `Gamemaster` (role: Gamemaster)
-   - `Player` (role: Player) — needed by the two-client race spec.
-5. One-time browser install: `npx playwright install chromium`.
+Override local paths without committing secrets:
 
-⚠ **The suite mutates the dev world** (creates/deletes temporary actors and
-combats, temporarily bumps the Fate Pot). Use a throwaway world, never a real
-campaign.
+```bash
+FOUNDRY_EXECUTABLE=/path/to/foundryvtt \
+FOUNDRY_DATA_PATH=/path/to/FoundryVTT \
+FOUNDRY_WORLD=deadlands-test \
+npm run test:e2e
+```
+
+`FOUNDRY_PORT` defaults to `30000`; `FOUNDRY_URL` can override the complete URL.
+No Foundry license key, administrator password, or world-user password belongs in
+repo configuration.
 
 ## Running
 
 ```bash
-npm run test:e2e                          # default: http://localhost:30000
-FOUNDRY_URL=http://localhost:30001 npm run test:e2e
-npx playwright test tests/e2e/boot.spec.mjs   # single spec
+npm run test:e2e
 ```
 
-Specs run sequentially (`workers: 1`) — one shared world means shared mutable
-state. Failure screenshots land in `test-results/` (gitignored).
+That one command runs the doctor and then Playwright. The doctor blocks on a missing
+world, wrong system, broken/wrong symlink, missing Chromium, user mismatch, or an
+installed build different from `system.json.compatibility.verified`.
 
-## What is covered
+Playwright reuses a running server only when `/join` identifies `deadlands-test`; it
+does not stop that process. If the server is down, `webServer` launches the world
+directly through `ELECTRON_RUN_AS_NODE=1`, using Foundry 14.367's embedded Node 24.15,
+with update checks, IP discovery and UPnP disabled. A small preload removes Electron's
+desktop-runtime marker so Foundry follows its server-only path. Playwright stops only the
+process it launched.
+
+The world is shared mutable state, so all specs run with one worker. Failure screenshots
+land in `test-results/` (gitignored). Use only a throwaway test world.
+
+## Covered flows
 
 | Spec | Verifies |
 |---|---|
-| `boot.spec.mjs` | World boots with `deadlands-classic` active, public API shape, zero console errors |
-| `actor-sheets.spec.mjs` | Every registered actor type renders its sheet with no raw `DEADLANDS.*` i18n keys |
-| `trait-roll.spec.mjs` | Click-to-roll flow: sheet → roll dialog → chat card |
-| `fate-pot-race.spec.mjs` | **GM-proxy regression**: two clients (GM + player, separate browser contexts) concurrently return chips and deal cards — no lost updates, no duplicate cards (`module/core/gm-proxy.mjs`) |
+| `boot.spec.mjs` | world/system boot, public API shape, clean console |
+| `actor-sheets.spec.mjs` | every actor type fully renders without raw i18n keys |
+| `trait-roll.spec.mjs` | sheet → trait dialog → chat card |
+| `fate-pot-race.spec.mjs` | concurrent GM/player Fate Pot and Action Deck writes |
+| `faith-denial-effect.spec.mjs` | Active Effect creation, severity and native world-time expiry |
+| `detached-sheet.spec.mjs` | native ApplicationV2 detach, tabs/actions, persisted form edit and popup cleanup |
 
-Deliberately deferred follow-ups: an i18n-switch spec (EN↔PL) and a
-chip-spend-UI spec (widget-driven, not API-driven).
-
-## Manual checks not automated
-
-- **No-GM hard block**: log out the GM, spend a white chip as a player → a
-  localized warning appears and the actor's chips stay untouched. (Automating
-  this needs a GM-less world state that would break the other specs' setup.)
-
-## Screenshots
-
-The four captures in `README.md` §Screenshots were taken this way and now ship
-in [`assets/screenshots/`](../assets/screenshots/): character sheet, combat
-tracker with Action Cards, Fate Chip widget, Huckster hex casting. Re-shoot them
-during an E2E session when the UI changes — the suite conveniently drives the
-sheets and combat tracker into presentable states.
+Every created Actor and Combat is deleted in `finally`; detached popups and browser
+contexts are closed. A manually started Foundry server remains running.

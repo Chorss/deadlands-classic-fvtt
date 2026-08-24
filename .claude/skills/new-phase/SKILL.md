@@ -43,7 +43,7 @@ awk '/^### Phase '"N"' /{f=1;print;next} f&&/^### Phase /{exit} f' \
 one line.)
 
 **Phases 0-14 are all closed** and §5 now holds only their heading plus a one-line scope, so the
-extraction returns no file list and no test block for them. New work after 0.4.0 is tracked in
+extraction returns no file list and no test block for them. New work after 0.4.1 is tracked in
 §12 of the plan, not as a numbered phase — read that section instead of inventing a Phase 15.
 
 Parse out:
