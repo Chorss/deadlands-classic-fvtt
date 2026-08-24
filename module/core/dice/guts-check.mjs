@@ -17,6 +17,7 @@
 
 import { GUTS_TN_TABLE, SCART_TABLE } from "../config.mjs";
 import { toPascal } from "../utils.mjs";
+import { applyWindLoss } from "../wounds/wound-track.mjs";
 import { rollExplodingPool } from "./exploding-roll.mjs";
 
 // ── Pure helpers ──────────────────────────────────────────────────────────────
@@ -111,8 +112,7 @@ export async function rollGutsCheck(
   if (scartEntry?.windDice > 0) {
     const windPool = rollExplodingPool(scartEntry.windDice, "d6", { modifier: 0, tn: 1, _rng });
     windLost = windPool.dice.reduce((sum, d) => sum + d.total, 0);
-    const currentWind = actor.system.wind?.value ?? 0;
-    await actor.update({ "system.wind.value": currentWind - windLost });
+    await applyWindLoss(actor, windLost);
   }
 
   await _postGutsChat({

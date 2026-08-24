@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Wound application now preserves pre-cap severity, prevented wounds, and overflow details, while
+  negative Wind persists and adds one shared-guts wound per newly crossed threshold (RULE-003/004).
 - Session and Red Joker Fate Chip draws now enforce the ten-chip cap, convert surplus to Bounty
   Points, return pot-backed overflow atomically, and roll back failed actor grants (RULE-006).
 - Shaman manitou attacks and Harrowed activation/Dominion flows now await Action Deck deals;

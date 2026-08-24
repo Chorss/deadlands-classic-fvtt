@@ -3,7 +3,8 @@
  *
  * Mechanics verified against dlc p.138-142:
  *   - Wounds per hit = floor(damage / size). dlc p.138.
- *   - Wounds accumulate (ADD) per location; cap 5 (Maimed). dlc p.139.
+ *   - Wounds accumulate per location; storage caps at 5 (Maimed), while the
+ *     application plan preserves overflow for Fate prevention. dlc p.139-140.
  *   - Gizzards/upperGuts/lowerGuts share one accumulation pool for severity
  *     purposes — see `gutsTotal`. dlc p.139 (docs/notes.md, resolved).
  *   - Wind per hit = woundAmount × 1d6 open-ended; minimum 1d6 even with 0 wounds. dlc p.141.
@@ -11,7 +12,7 @@
  *   - Bleeding per round: Serious −1 Wind, Critical −2 Wind, Maimed limb −3 Wind. dlc p.142.
  *   - Wind recovery: 1/minute naturally; Medicine TN 3 resets to full (~5 min). dlc p.144.
  *
- * `woundsFromDamage`, `getBleedingRateForLocation` are pure for unit tests.
+ * `woundsFromDamage`, `planWoundApplication`, and the bleeding helpers are pure.
  * `applyWounds`, `tickBleeding`, `recoverWind` require a live Foundry actor.
  *
  * @license MIT
@@ -19,6 +20,7 @@
 
 import { HIT_LOCATIONS, WOUND_MAX, WOUND_PENALTIES } from "../config.mjs";
 import { rollExplodingPool } from "../dice/exploding-roll.mjs";
+import { planWindLoss } from "./wind-calculator.mjs";
 
 const GUTS_LOCATIONS = Object.keys(HIT_LOCATIONS).filter((id) => HIT_LOCATIONS[id].gutsGroup);
 
@@ -39,14 +41,40 @@ export function woundsFromDamage(damageTotal, size = 6) {
 }
 
 /**
- * Compute new severity for a location after adding wounds.
+ * Preserve the full wound transaction before storage clamps severity at
+ * Maimed. Fate prevention is represented in the plan even though its UI is a
+ * later milestone. dlc p.139-140, p.147-148.
  *
  * @param {number} current — current severity (0–5)
- * @param {number} adding  — wounds to add
- * @returns {number} — new severity, capped at WOUND_MAX (5)
+ * @param {number} woundAmount — wounds caused by this hit
+ * @param {object} [opts]
+ * @param {number} [opts.preventedWounds=0]
+ * @returns {{ woundAmount:number, preventedWounds:number, appliedWounds:number,
+ *   totalBeforeCap:number, storedSeverity:number, overflow:number }}
+ */
+export function planWoundApplication(current, woundAmount, { preventedWounds = 0 } = {}) {
+  const incoming = Math.max(0, woundAmount);
+  const prevented = Math.min(incoming, Math.max(0, preventedWounds));
+  const appliedWounds = incoming - prevented;
+  const totalBeforeCap = Math.max(0, current) + appliedWounds;
+  const storedSeverity = Math.min(WOUND_MAX, totalBeforeCap);
+  return {
+    woundAmount: incoming,
+    preventedWounds: prevented,
+    appliedWounds,
+    totalBeforeCap,
+    storedSeverity,
+    overflow: Math.max(0, totalBeforeCap - WOUND_MAX),
+  };
+}
+
+/**
+ * Compatibility wrapper for callers that only need persisted severity. It is
+ * insufficient for future Fate-spend transactions because it discards the
+ * pre-cap total and overflow; new code should use planWoundApplication().
  */
 export function accumulateWounds(current, adding) {
-  return Math.min(WOUND_MAX, current + adding);
+  return planWoundApplication(current, adding).storedSeverity;
 }
 
 /**
@@ -134,6 +162,52 @@ export function totalBleedingRate(woundLocations) {
   return total;
 }
 
+function copyWounds(woundLocations) {
+  const copy = {};
+  for (const [id, data] of Object.entries(woundLocations ?? {})) {
+    copy[id] = { severity: data?.severity ?? 0 };
+  }
+  for (const id of GUTS_LOCATIONS) {
+    copy[id] ??= { severity: 0 };
+  }
+  return copy;
+}
+
+/** Apply a stored-severity plan to one location or the shared guts pool. */
+function applyPlanToWounds(woundLocations, location, plan) {
+  const next = copyWounds(woundLocations);
+  if (GUTS_LOCATIONS.includes(location)) {
+    const currentPool = gutsTotal(next);
+    const delta = Math.max(0, plan.storedSeverity - currentPool);
+    next[location].severity += delta;
+  } else {
+    next[location] ??= { severity: 0 };
+    next[location].severity = plan.storedSeverity;
+  }
+  return next;
+}
+
+/** Plan Wind and the resulting canonical upper-guts threshold wounds. */
+function planWindConsequences(actor, amount, woundLocations) {
+  const previousWind = actor.system.wind?.value ?? actor.system.wind?.max ?? 0;
+  const windMax = actor.system.wind?.max ?? 0;
+  const wind = planWindLoss(previousWind, amount, windMax);
+  const currentGuts = gutsTotal(woundLocations);
+  const gutsWounds = planWoundApplication(currentGuts, wind.thresholdsCrossed);
+  const wounds = applyPlanToWounds(woundLocations, "upperGuts", gutsWounds);
+  return { wind, gutsWounds, wounds };
+}
+
+function woundUpdates(before, after) {
+  const update = {};
+  for (const [location, data] of Object.entries(after)) {
+    if ((before?.[location]?.severity ?? 0) !== data.severity) {
+      update[`system.wounds.${location}.severity`] = data.severity;
+    }
+  }
+  return update;
+}
+
 // ── Foundry-integrated ────────────────────────────────────────────────────────
 
 /**
@@ -143,30 +217,67 @@ export function totalBleedingRate(woundLocations) {
  * @param {string} location — HIT_LOCATIONS key (e.g. "upperGuts", "leftArm")
  * @param {number} damageTotal — net damage after armor
  * @param {object} [opts]
+ * @param {number} [opts.preventedWounds=0]
  * @param {() => number} [opts._rng]
- * @returns {Promise<{ woundAmount: number, newSeverity: number, windLost: number }>}
+ * @returns {Promise<object>} full wound plan plus Wind and threshold-wound data
  */
-export async function applyWounds(actor, location, damageTotal, { _rng = Math.random } = {}) {
+export async function applyWounds(
+  actor,
+  location,
+  damageTotal,
+  { preventedWounds = 0, _rng = Math.random } = {}
+) {
   const size = actor.system.size ?? 6;
   const woundAmount = woundsFromDamage(damageTotal, size);
 
-  const current = actor.system.wounds?.[location]?.severity ?? 0;
-  const newSeverity = accumulateWounds(current, woundAmount);
+  const beforeWounds = copyWounds(actor.system.wounds ?? {});
+  const current = GUTS_LOCATIONS.includes(location)
+    ? gutsTotal(beforeWounds)
+    : (beforeWounds[location]?.severity ?? 0);
+  const woundPlan = planWoundApplication(current, woundAmount, { preventedWounds });
+  const afterHitWounds = applyPlanToWounds(beforeWounds, location, woundPlan);
 
   // Wind roll: woundAmount × 1d6 open-ended (sum), min 1d6. dlc p.141.
-  const dieCount = windDiceCount(woundAmount);
+  const dieCount = windDiceCount(woundPlan.appliedWounds);
   const windPool = rollExplodingPool(dieCount, "d6", { modifier: 0, tn: 1, _rng });
   const windLost = windPool.dice.reduce((sum, d) => sum + d.total, 0);
 
-  const currentWind = actor.system.wind?.value ?? actor.system.wind?.max ?? 0;
-  const newWind = currentWind - windLost;
+  const consequences = planWindConsequences(actor, windLost, afterHitWounds);
 
   await actor.update({
-    [`system.wounds.${location}.severity`]: newSeverity,
-    "system.wind.value": newWind,
+    ...woundUpdates(beforeWounds, consequences.wounds),
+    "system.wind.value": consequences.wind.newWind,
   });
 
-  return { woundAmount, newSeverity, windLost };
+  return {
+    ...woundPlan,
+    newSeverity: woundPlan.storedSeverity,
+    windLost,
+    wind: consequences.wind,
+    negativeWindWounds: consequences.wind.thresholdsCrossed,
+    negativeWindWoundPlan: consequences.gutsWounds,
+  };
+}
+
+/**
+ * Apply a Wind loss and any newly crossed negative-Wind wounds in one actor
+ * update. Threshold wounds always enter the shared guts pool at upperGuts.
+ *
+ * @param {Actor} actor
+ * @param {number} amount
+ * @returns {Promise<object>} Wind plan plus the threshold wound plan
+ */
+export async function applyWindLoss(actor, amount) {
+  const beforeWounds = copyWounds(actor.system.wounds ?? {});
+  const consequences = planWindConsequences(actor, amount, beforeWounds);
+  await actor.update({
+    ...woundUpdates(beforeWounds, consequences.wounds),
+    "system.wind.value": consequences.wind.newWind,
+  });
+  return {
+    ...consequences.wind,
+    gutsWounds: consequences.gutsWounds,
+  };
 }
 
 /**
@@ -180,8 +291,7 @@ export async function tickBleeding(actor) {
   const totalDrain = totalBleedingRate(actor.system.wounds ?? {});
 
   if (totalDrain > 0) {
-    const current = actor.system.wind?.value ?? 0;
-    await actor.update({ "system.wind.value": current - totalDrain });
+    await applyWindLoss(actor, totalDrain);
   }
 
   return totalDrain;

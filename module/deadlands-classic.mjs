@@ -35,8 +35,10 @@ import {
   computeWindMax,
   gutsWoundsFromNegativeWind,
   isWinded,
+  planWindLoss,
 } from "./core/wounds/wind-calculator.mjs";
 import {
+  applyWindLoss,
   applyWounds,
   getBleedingRate,
   highestWoundPenalty,
@@ -172,6 +174,7 @@ Hooks.once("init", () => {
     wounds: {
       woundsFromDamage,
       applyWounds,
+      applyWindLoss,
       tickBleeding,
       getBleedingRate,
       highestWoundPenalty,
@@ -180,6 +183,7 @@ Hooks.once("init", () => {
       computeWindMax,
       isWinded,
       gutsWoundsFromNegativeWind,
+      planWindLoss,
     },
   };
 });
