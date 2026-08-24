@@ -70,6 +70,21 @@ describe("applyFatePotOp", () => {
     });
   });
 
+  describe("returnBatch", () => {
+    it("atomically adds a mixed batch", () => {
+      const { pot: next } = applyFatePotOp(pot(), {
+        op: "returnBatch",
+        colors: ["white", "red", "white", "legend"],
+      });
+      assert.deepEqual(next, { white: 7, red: 4, blue: 2, legend: 2 });
+    });
+
+    it("rejects an empty batch and unknown colors", () => {
+      assert.throws(() => applyFatePotOp(pot(), { op: "returnBatch", colors: [] }), /non-empty/);
+      assert.throws(() => applyFatePotOp(pot(), { op: "returnBatch", colors: ["gold"] }), /color/);
+    });
+  });
+
   describe("discard", () => {
     it("removes n chips, flooring at zero", () => {
       const { pot: next } = applyFatePotOp(pot(), { op: "discard", color: "legend", n: 5 });
@@ -171,6 +186,20 @@ describe("assertFatePotOpAuthorized", () => {
     assert.throws(
       () =>
         assertFatePotOpAuthorized({ op: "discard", color: "white", n: CHIP_LIMIT + 1 }, asPlayer),
+      /per-request limit/
+    );
+    assert.doesNotThrow(() =>
+      assertFatePotOpAuthorized(
+        { op: "returnBatch", colors: Array(CHIP_LIMIT).fill("white") },
+        asPlayer
+      )
+    );
+    assert.throws(
+      () =>
+        assertFatePotOpAuthorized(
+          { op: "returnBatch", colors: Array(CHIP_LIMIT + 1).fill("white") },
+          asPlayer
+        ),
       /per-request limit/
     );
   });

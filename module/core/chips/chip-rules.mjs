@@ -72,7 +72,7 @@ export function canSpend(
  *
  * @param {{ white:number, red:number, blue:number, legend:number }} currentChips
  * @param {string[]} incoming — array of color strings to add
- * @returns {{ kept: string[], bpGained: number }}
+ * @returns {{ kept: string[], converted: string[], bpGained: number }}
  */
 export function applyChipCap(currentChips, incoming) {
   const total = Object.values(currentChips).reduce((s, n) => s + n, 0);
@@ -81,16 +81,18 @@ export function applyChipCap(currentChips, incoming) {
   let held = total;
   let bpGained = 0;
   const kept = [];
+  const converted = [];
 
   for (const color of incoming) {
     if (held < CHIP_LIMIT) {
       kept.push(color);
       held++;
     } else {
+      converted.push(color);
       bpGained += BP_VALUE[color] ?? 1;
     }
   }
-  return { kept, bpGained };
+  return { kept, converted, bpGained };
 }
 
 // ── Execution (Foundry-integrated) ────────────────────────────────────────────

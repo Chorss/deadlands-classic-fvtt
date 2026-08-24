@@ -129,7 +129,7 @@ export class DeadlandsCombat extends Combat {
     if (drawsChip) {
       [chip] = await FatePot.drawBlind(1);
       if (chip && combatant.actor) {
-        await grantChips(combatant.actor, [chip]);
+        await grantChips(combatant.actor, [chip], { source: "pot" });
       }
     }
     await this._postSystemMessage(

@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Session and Red Joker Fate Chip draws now enforce the ten-chip cap, convert surplus to Bounty
+  Points, return pot-backed overflow atomically, and roll back failed actor grants (RULE-006).
 - Shaman manitou attacks and Harrowed activation/Dominion flows now await Action Deck deals;
   Legion consumes its second card only when a Joker needs a suit (RULE-005).
 - Successful Quickness rolls now deal the success card in addition to the base card and raises,

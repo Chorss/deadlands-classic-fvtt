@@ -6,7 +6,8 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { applyChipCap, canSpend } from "../module/core/chips/chip-rules.mjs";
-import { drawBlindPure } from "../module/core/chips/fate-pot.mjs";
+import { grantChips } from "../module/core/chips/chip-widget.mjs";
+import { drawBlindPure, FatePot } from "../module/core/chips/fate-pot.mjs";
 
 describe("canSpend", () => {
   it("allows white with no constraints", () => {
@@ -56,26 +57,124 @@ describe("canSpend", () => {
 describe("applyChipCap", () => {
   it("keeps chips when under cap", () => {
     const chips = { white: 2, red: 1, blue: 0, legend: 0 };
-    const { kept, bpGained } = applyChipCap(chips, ["white", "red"]);
+    const { kept, converted, bpGained } = applyChipCap(chips, ["white", "red"]);
     assert.deepEqual(kept, ["white", "red"]);
+    assert.deepEqual(converted, []);
     assert.equal(bpGained, 0);
   });
 
   it("converts surplus to BP at correct rates", () => {
     // Actor at cap (10 chips) receives white + blue → both convert
     const chips = { white: 4, red: 3, blue: 2, legend: 1 }; // total = 10
-    const { kept, bpGained } = applyChipCap(chips, ["white", "blue", "legend"]);
+    const { kept, converted, bpGained } = applyChipCap(chips, ["white", "blue", "legend"]);
     assert.deepEqual(kept, []);
+    assert.deepEqual(converted, ["white", "blue", "legend"]);
     // white = 1 BP, blue = 3 BP, legend = 5 BP → 9 total
     assert.equal(bpGained, 1 + 3 + 5);
   });
 
   it("fills up to cap then converts remainder", () => {
     const chips = { white: 9, red: 0, blue: 0, legend: 0 }; // total = 9
-    const { kept, bpGained } = applyChipCap(chips, ["white", "red", "blue"]);
+    const { kept, converted, bpGained } = applyChipCap(chips, ["white", "red", "blue"]);
     // 1 slot left → keep first chip (white), convert red (2 BP) and blue (3 BP)
     assert.deepEqual(kept, ["white"]);
+    assert.deepEqual(converted, ["red", "blue"]);
     assert.equal(bpGained, 2 + 3);
+  });
+
+  it("uses White 1, Red 2, Blue 3, and Legend 5 BP values", () => {
+    const chips = { white: 10, red: 0, blue: 0, legend: 0 };
+    const result = applyChipCap(chips, ["white", "red", "blue", "legend"]);
+    assert.deepEqual(result.converted, ["white", "red", "blue", "legend"]);
+    assert.equal(result.bpGained, 1 + 2 + 3 + 5);
+  });
+});
+
+describe("grantChips", () => {
+  function fakeActor(chips, bounty = 0, updateImpl) {
+    const actor = {
+      system: { chips: { ...chips }, bounty },
+      updates: [],
+      async update(update) {
+        actor.updates.push(update);
+        if (updateImpl) {
+          return updateImpl(update);
+        }
+        for (const [path, value] of Object.entries(update)) {
+          if (path === "system.bounty") {
+            actor.system.bounty = value;
+          } else {
+            actor.system.chips[path.split(".").at(-1)] = value;
+          }
+        }
+      },
+    };
+    return actor;
+  }
+
+  it("keeps two of three pot-backed chips at a total of eight and returns the third", async () => {
+    const actor = fakeActor({ white: 8, red: 0, blue: 0, legend: 0 });
+    const returned = [];
+    const original = FatePot.returnBatch;
+    FatePot.returnBatch = async (colors) => returned.push(...colors);
+    try {
+      const result = await grantChips(actor, ["white", "red", "blue"], { source: "pot" });
+      assert.deepEqual(result, { kept: ["white", "red"], converted: ["blue"], bpGained: 3 });
+      assert.equal(actor.system.chips.white, 9);
+      assert.equal(actor.system.chips.red, 1);
+      assert.equal(actor.system.bounty, 3);
+      assert.deepEqual(returned, ["blue"]);
+    } finally {
+      FatePot.returnBatch = original;
+    }
+  });
+
+  it("converts every chip at the cap and returns the whole pot-backed batch", async () => {
+    const actor = fakeActor({ white: 10, red: 0, blue: 0, legend: 0 });
+    const returned = [];
+    const original = FatePot.returnBatch;
+    FatePot.returnBatch = async (colors) => returned.push(...colors);
+    try {
+      const result = await grantChips(actor, ["white", "red", "legend"], { source: "pot" });
+      assert.deepEqual(result.converted, ["white", "red", "legend"]);
+      assert.equal(result.bpGained, 8);
+      assert.equal(actor.system.bounty, 8);
+      assert.deepEqual(returned, ["white", "red", "legend"]);
+    } finally {
+      FatePot.returnBatch = original;
+    }
+  });
+
+  it("does not return converted external grants to the Fate Pot", async () => {
+    const actor = fakeActor({ white: 10, red: 0, blue: 0, legend: 0 });
+    let returnCalls = 0;
+    const original = FatePot.returnBatch;
+    FatePot.returnBatch = async () => returnCalls++;
+    try {
+      const result = await grantChips(actor, ["legend"], { source: "external" });
+      assert.deepEqual(result, { kept: [], converted: ["legend"], bpGained: 5 });
+      assert.equal(returnCalls, 0);
+    } finally {
+      FatePot.returnBatch = original;
+    }
+  });
+
+  it("returns every drawn color and rethrows when the actor update fails", async () => {
+    const actor = fakeActor({ white: 8, red: 0, blue: 0, legend: 0 }, 0, async () => {
+      throw new Error("actor update failed");
+    });
+    const returned = [];
+    const original = FatePot.returnBatch;
+    FatePot.returnBatch = async (colors) => returned.push(...colors);
+    try {
+      await assert.rejects(
+        grantChips(actor, ["white", "red", "blue"], { source: "pot" }),
+        /actor update failed/
+      );
+      assert.deepEqual(returned, ["white", "red", "blue"]);
+    } finally {
+      FatePot.returnBatch = original;
+    }
   });
 });
 
