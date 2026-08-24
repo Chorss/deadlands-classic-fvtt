@@ -218,23 +218,25 @@ describe("shuffleDeck", () => {
 
 describe("quicknessCardCount (dlc p.116)", () => {
   it("bust → 0 cards", () => {
-    assert.equal(quicknessCardCount({ bust: true, raises: 0 }), 0);
+    assert.equal(quicknessCardCount({ bust: true, success: true, raises: 4 }), 0);
   });
 
-  it("no raises → 1 card (base)", () => {
-    assert.equal(quicknessCardCount({ bust: false, raises: 0 }), 1);
+  it("failure without a bust → 1 base card", () => {
+    assert.equal(quicknessCardCount({ bust: false, success: false, raises: 0 }), 1);
   });
 
-  it("1 raise → 2 cards", () => {
-    assert.equal(quicknessCardCount({ bust: false, raises: 1 }), 2);
+  it("success without raises → 2 cards", () => {
+    assert.equal(quicknessCardCount({ bust: false, success: true, raises: 0 }), 2);
   });
 
-  it("4 raises → 5 cards (max)", () => {
-    assert.equal(quicknessCardCount({ bust: false, raises: 4 }), 5);
+  it("each raise adds one card after a success", () => {
+    assert.equal(quicknessCardCount({ bust: false, success: true, raises: 1 }), 3);
+    assert.equal(quicknessCardCount({ bust: false, success: true, raises: 2 }), 4);
   });
 
-  it("5+ raises → capped at 5", () => {
-    assert.equal(quicknessCardCount({ bust: false, raises: 10 }), 5);
+  it("3+ raises → capped at 5", () => {
+    assert.equal(quicknessCardCount({ bust: false, success: true, raises: 3 }), 5);
+    assert.equal(quicknessCardCount({ bust: false, success: true, raises: 10 }), 5);
   });
 });
 

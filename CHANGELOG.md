@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Successful Quickness rolls now deal the success card in addition to the base card and raises,
+  while preserving the one-card non-bust fallback and five-card cap (RULE-001).
+- Sleeved Action Cards now persist between combat rounds; only the current round's hand and
+  initiative are cleared at round end (RULE-002).
+
 ### Added
 
 - Rulebook-verified feature gap audit and development roadmap covering the core rules and all five

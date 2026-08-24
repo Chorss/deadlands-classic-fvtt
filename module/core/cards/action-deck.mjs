@@ -118,16 +118,17 @@ export function shuffleDeck(cards, rng = Math.random) {
 
 /**
  * Cards to deal based on a Quickness roll result.
- * `dlc` p.116: bust → 0; otherwise 1 (base) + 1 per raise, capped at MAX_ACTION_CARDS.
+ * `dlc` p.116: bust → 0; failure → 1 base card; success → a second
+ * card; each raise adds one more, capped at MAX_ACTION_CARDS.
  *
- * @param {{ bust: boolean, raises: number }} rollResult
+ * @param {{ bust: boolean, success: boolean, raises: number }} rollResult
  * @returns {number}
  */
-export function quicknessCardCount({ bust, raises }) {
+export function quicknessCardCount({ bust, success, raises }) {
   if (bust) {
     return 0;
   }
-  return Math.min(DEADLANDS.MAX_ACTION_CARDS, 1 + raises);
+  return Math.min(DEADLANDS.MAX_ACTION_CARDS, 1 + Number(Boolean(success)) + raises);
 }
 
 /**

@@ -58,7 +58,8 @@ export class DeadlandsCombat extends Combat {
 
   /**
    * Roll Quickness vs TN 5 and return the number of Action Cards to deal.
-   * `dlc` p.116: bust → 0; 1 (base) + 1 per raise, capped at MAX_ACTION_CARDS.
+   * `dlc` p.116: bust → 0; failure → 1; success → 2; each raise adds
+   * one, capped at MAX_ACTION_CARDS.
    * @param {DeadlandsCombatant} combatant
    * @returns {Promise<number>}
    */
@@ -158,8 +159,8 @@ export class DeadlandsCombat extends Combat {
     const played = [];
     for (const combatant of this.combatants) {
       played.push(...(combatant.hand ?? []));
-      if (typeof combatant.clearHand === "function") {
-        await combatant.clearHand();
+      if (typeof combatant.clearRoundHand === "function") {
+        await combatant.clearRoundHand();
       }
     }
     const reshuffled = await ActionDeck.maybeReshuffleAtRoundEnd(this);
