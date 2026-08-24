@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Rulebook-verified feature gap audit and development roadmap covering the core rules and all five
+  supernatural companion books, with correctness defects, dependencies, priorities, milestone exit
+  criteria, and a shared definition of done.
+
 ## [0.4.1] — 2026-08-24
 
 ### Added

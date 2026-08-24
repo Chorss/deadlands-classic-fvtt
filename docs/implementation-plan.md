@@ -535,6 +535,10 @@ added only **when a real need arises**, not ahead of it.
 
 ## 12. Open work after 0.4.1
 
+The detailed, rulebook-verified coverage matrix, correctness findings, priorities, dependencies and
+definition of done now live in `docs/feature-gap-roadmap.md`. This section remains the 0.4.1 content
+snapshot; use the gap roadmap to choose and sequence new work.
+
 Numbered phases are done; what follows is tracked as work items, not phases.
 
 ### The largest gap: empty content packs
@@ -566,7 +570,7 @@ entries is a genuine book entry inside its cited page range (checked name-by-nam
 **is not established.** The chapters are laid out in two columns, which the text extract
 interleaves, so a headword-by-headword count of the source is not reliable enough to support a
 "100% coverage" claim. Treat the counts as "31 and 58 verified present", not as "complete".
-Note also that the book's own index puts the Edges chapter at p.63-**71**, one page beyond the
+Note also that the book's own index puts the Edges chapter on physical pages 63-**71**, one page beyond the
 range cited here and in earlier drafts.
 
 Nothing here is a stub or a placeholder — the item types, sheets and mechanics all work; the

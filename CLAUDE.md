@@ -35,7 +35,7 @@ packs/                      # LevelDB compendium packs (V14 format)
 tools/                      # verify-documenttypes.mjs, audit-css.mjs, audit-i18n.mjs, audit-docs.mjs
 tests/                      # node:test unit tests for pure core logic
 docs/                       # plan, architecture, v14-api-notes, mechanics-reference,
-                            #   migration-policy, testing-e2e, notes
+                            #   feature-gap-roadmap, migration-policy, testing-e2e, notes
 ```
 
 Full layout: `docs/implementation-plan.md` §4.
@@ -65,6 +65,7 @@ matching file is read or written (`code-quality.md`, `v14-api.md`, `localization
 | Topic | Location |
 |---|---|
 | Implementation roadmap | `docs/implementation-plan.md` |
+| Rulebook-to-code gap audit and development priorities | `docs/feature-gap-roadmap.md` |
 | Architecture + registry contract | `docs/architecture.md` |
 | V14 API patterns & code snippets | `docs/v14-api-notes.md` |
 | Mechanics citation index (⚠ **pointers, not the source** — subordinate to the rulebook below) | `docs/mechanics-reference.md` |
@@ -161,4 +162,3 @@ npm run verify:all    # manifest + EN/PL parity → CSS coverage → i18n keys �
 These are the same two commands CI runs, so green locally means green on the PR.
 The `/verify-system` skill wraps them in a one-paragraph report, and a `Stop` hook
 runs `verify:all` before the turn ends whenever the working tree is dirty.
-
