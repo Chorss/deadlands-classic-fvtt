@@ -21,6 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   ApplicationV2 sheet flows (six flows total).
 - Claude Code `/verify-foundry` skill and exact-build source hierarchy: release notes, official
   V14 API, local installed source, then Context7/wiki only as supporting aids.
+- Automated Foundry package publication after each successful GitHub Release, including API
+  validation, rate-limit retries, idempotent reruns, and least-privilege workflow permissions.
 
 - `tools/audit-docs.mjs`, wired into `npm run verify:all` (so CI, the pre-commit
   hook and the `Stop` hook all get it). Hard errors: a tracked file pointing at a
