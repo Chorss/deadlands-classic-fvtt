@@ -92,11 +92,20 @@ export class DeadlandsCombatant extends Combatant {
   }
 
   /**
-   * Discard the entire hand and the sleeved card at round end.
+   * Discard the current round's hand while preserving a card held in reserve.
+   * `dlc` p.117: a sleeved card remains available in later rounds until used
+   * or removed by a specific rule effect.
+   */
+  async clearRoundHand() {
+    await this.setFlag(FLAG_SCOPE, "hand", []);
+    await this.update({ initiative: null });
+  }
+
+  /**
+   * Fully clear the hand and sleeve, for combat end and explicit reset flows.
    */
   async clearHand() {
-    await this.setFlag(FLAG_SCOPE, "hand", []);
+    await this.clearRoundHand();
     await this.setFlag(FLAG_SCOPE, "sleevedCard", null);
-    await this.update({ initiative: null });
   }
 }
