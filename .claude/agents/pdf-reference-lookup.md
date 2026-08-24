@@ -20,6 +20,13 @@ Never bulk-dump rulebook prose.
 
 ## Resolving the extract path
 
+If the local `deadlands-rules-ref` MCP server is available, prefer it: call
+`rules_search`, then `rules_read_pages` only for the returned short range, and
+finish with `rules_validate_citations`. Return the server's physical pages as
+`<slug> p.NNN`; paraphrase rather than copying prose.
+
+Only when MCP is unavailable, use the extract fallback below.
+
 At the start of every lookup, run:
 
 ```bash

@@ -22,9 +22,10 @@ each with slug, page offset, and a PASS/WARN/FAIL extract-quality flag).
 - **`docs/mechanics-reference.md` is a paraphrase, not the source.** It's a convenience summary and
   has been observed to drift from the books (2026-06-17 audit). Treat it as a hint; if it disagrees
   with `deadlands-rules-ref`, the rulebook is right — fix the doc.
-- **Re-verify before coding.** Before implementing any mechanic, confirm it against the extracts via
-  the `pdf-reference-lookup` subagent (returns `<slug> p.NNN` + a short fragment). Never code a rule
-  from memory.
+- **Re-verify before coding.** Prefer the local `deadlands-rules-ref` MCP (`rules_search` → bounded
+  `rules_read_pages` → `rules_validate_citations`); use the `pdf-reference-lookup` subagent and
+  existing extract commands only as a fallback. Both routes return `<slug> p.NNN` + short evidence.
+  Never code a rule from memory.
 - **Page cites, not prose.** Cite `<slug> p.NNN` in code comments / PR bodies where it aids review.
   **Never paste rulebook prose** into code, comments, packs, commits, issues, or PRs — it's Pinnacle
   IP (see `CLAUDE.md` §PDF rulebook).

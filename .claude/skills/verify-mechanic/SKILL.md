@@ -13,9 +13,10 @@ never trust it (or training memory) as ground truth. Run this before committing 
 
 1. **State the mechanic** you are about to implement (or just implemented) in one sentence — include
    the exact value / formula / table you plan to encode.
-2. **Look it up at the source.** Delegate to the `pdf-reference-lookup` subagent with a precise
-   question (e.g. *"Fate chips: what does a Red chip do, and is it max 1/action?"*). It returns
-   `<slug> p.NNN` + a short verifying fragment.
+2. **Look it up at the source.** Prefer the registered local `deadlands-rules-ref` MCP: use
+   `rules_search`, then bounded `rules_read_pages`, and validate the chosen citation with
+   `rules_validate_citations`. If MCP is unavailable, delegate to the `pdf-reference-lookup`
+   subagent with a precise question. Either route returns `<slug> p.NNN` plus short evidence.
 3. **Compare** the returned rule to your plan:
    - **Match** → cite the page in a code comment (`// <slug> p.NNN — <your paraphrase>`), paraphrase
      in your own words, and proceed.

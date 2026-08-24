@@ -73,6 +73,7 @@ matching file is read or written (`code-quality.md`, `v14-api.md`, `localization
 | World-data migration policy | `docs/migration-policy.md` |
 | Local Playwright E2E suite | `docs/testing-e2e.md` |
 | Open questions / licensing notes | `docs/notes.md` |
+| Private local rules MCP setup (no corpus) | `docs/rules-reference-mcp.md` |
 | **Game rules — single authoritative source** (full rulebook catalog) | `$DEADLANDS_RULES_PATH/index/README.md` (catalog of every book) + `<slug>.md`; discipline → `.claude/rules/rulebook-authority.md` |
 | Persistent memory across Claude sessions | `~/.claude/projects/.../memory/` (key knowledge distilled into `docs/`) |
 
