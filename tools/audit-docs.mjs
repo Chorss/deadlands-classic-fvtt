@@ -63,6 +63,7 @@ import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { extractSourcesOfTruthTable, findCitationIssues } from "./audit-docs-lib.mjs";
 
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -149,9 +150,6 @@ const BACKTICK_PATH_RE =
 // it does not exist is the opposite of a broken pointer, so check 5 stays quiet.
 const NEGATED_RE =
   /\bthere is no\b|\bdoes not exist\b|\bno longer\b|\bwas removed\b|\bnever created\b/i;
-// A rulebook citation: `slug p.NNN` or `slug p.NNN-MMM`, slug usually backticked.
-const CITE_RE = /`?\b([a-z][a-z0-9-]{1,24})`?\s+p\.(\d{1,4})(?:-(\d{1,4}))?/g;
-
 /** Top-level entries that actually exist, used to tell a repo path from prose. */
 const ROOT_ENTRIES = new Set(fs.readdirSync(REPO_ROOT));
 
@@ -277,22 +275,16 @@ function checkCitations(file, lineNo, line) {
   if (!catalog) {
     return;
   }
-  for (const m of line.matchAll(CITE_RE)) {
-    const [, slug, from, to] = m;
-    // Only slugs the catalog knows are treated as citation attempts. An unknown
-    // word before "p." is far more likely to be prose than a mis-cite.
-    const pages = catalog.get(slug);
-    if (pages === undefined) {
-      continue;
-    }
-    for (const page of [from, to].filter(Boolean).map(Number)) {
-      if (page < 1 || page > pages) {
-        err(
-          file,
-          lineNo,
-          `citation out of range: \`${slug} p.${page}\` — ${slug} has ${pages} pages`
-        );
-      }
+  for (const issue of findCitationIssues(line, catalog)) {
+    if (issue.type === "unknown-slug") {
+      err(file, lineNo, `citation uses unknown rulebook slug: \`${issue.slug}\``);
+    } else {
+      err(
+        file,
+        lineNo,
+        `citation out of range: \`${issue.slug} p.${issue.page}\` — ` +
+          `${issue.slug} has ${issue.pages} pages`
+      );
     }
   }
 }
@@ -347,19 +339,23 @@ for (const { file, line, target } of ignoredCandidates) {
 const claudeMd = path.join(REPO_ROOT, "CLAUDE.md");
 if (fs.existsSync(claudeMd)) {
   const text = fs.readFileSync(claudeMd, "utf8");
-  const tableLine = text.split("\n").findIndex((l) => l.includes("| Topic | Location |")) + 1;
+  const table = extractSourcesOfTruthTable(text);
   const docs = fs
     .readdirSync(path.join(REPO_ROOT, "docs"))
     .filter((f) => f.endsWith(".md") && !f.endsWith(".pl.md"));
-  for (const doc of docs) {
-    if (!text.includes(`docs/${doc}`) && !text.includes(`\`${doc}\``)) {
-      err(
-        "CLAUDE.md",
-        tableLine,
-        `docs/${doc} is missing from the Sources of truth table — add a row for it. ` +
-          `Note that CLAUDE.md is outside the editable surface, so a Claude session ` +
-          `must ask the maintainer for this rather than editing it unprompted.`
-      );
+  if (!table.text) {
+    err("CLAUDE.md", table.line, 'missing the "Sources of truth" table');
+  } else {
+    for (const doc of docs) {
+      if (!table.text.includes(`\`docs/${doc}\``)) {
+        err(
+          "CLAUDE.md",
+          table.line,
+          `docs/${doc} is missing from the Sources of truth table — add a row for it. ` +
+            `Note that CLAUDE.md is outside the editable surface, so a Claude session ` +
+            `must ask the maintainer for this rather than editing it unprompted.`
+        );
+      }
     }
   }
 }

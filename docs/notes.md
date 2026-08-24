@@ -101,7 +101,7 @@ future audit does not "correct" them into canon or file them as a rule-fidelity 
 
 In code comments, `dlc p.NNN` uses **physical PDF page numbers** (1-indexed from cover, offset +1
 from printed page numbers). A reader with a physical book should subtract 1 to find the printed
-page. Example: `dlc p.40` in code = printed p.39. The offset (+1) is documented in
+page. Example: `dlc p.40` in code = printed page 39. The offset (+1) is documented in
 `deadlands-rules-ref/index/README.md`. Consider adding a one-line note to this effect in a shared
 location so future contributors aren't confused.
 

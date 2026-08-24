@@ -136,7 +136,7 @@ export class ArchetypeRegistry {
 
 ### 3.4 Wounds & Wind (`core/wounds/`)
 - **Hit-location table** (`dlc` p.133, `1d20` roll): `1–4` Legs, `5–9` Lower Guts, `10` Gizzards, `11–14` Arms, `15–19` Upper Guts, `20` Noggin. L/R sub-roll: **any die**, even = right / odd = left (NOT `1d2`). Splitting the limbs into L/R yields **8 slots** of the wound track (a design decision, not a number taken directly from the table): Noggin, Upper Guts, Lower Guts, Gizzards, Left/Right Arm, Left/Right Leg.
-- **Severity levels** per the Wound Severity table `dlc` **p.139** (the character sheet p.412-413 repeats the Wound Key): Light (1) → Heavy (2) → Serious (3) → Critical (4) → Maimed (5). Each location has a `severity: 0-5` slot.
+- **Severity levels** per the Wound Severity table `dlc` **p.139** (the character sheet on pages 412-413 repeats the Wound Key): Light (1) → Heavy (2) → Serious (3) → Critical (4) → Maimed (5). Each location has a `severity: 0-5` slot.
 - `HitLocationTable` — a RollTable in a compendium, `1d20` → location (+ a sub-roll with any die, odd/even, for arms/legs).
 - **Raises = location adjust** (`dlc` p.133): the attacker may shift the result by ±1 per raise — implemented via a "Called Shot / Raise Adjust" dialog after the damage roll.
 - **Wind** — a single counter (fields `system.wind.value` / `system.wind.max` — consistent with the manifest's `primaryTokenAttribute: "wind.value"` and the Foundry idiom for resource bars `{value, max}`), max computed in `prepareDerivedData` as `Vigor.die + Spirit.die` in face values (d6=6, d8=8, etc.) — `dlc` p.40.
@@ -144,7 +144,7 @@ export class ArchetypeRegistry {
 
 ### 3.5 Core Item Types (`core/items/`)
 - `weapon` — `rangeType (melee|ranged)`, `shots`, `rof`, `range`, `damage`, `ammoType`, `defense` (for melee)
-- `armor` — `location[]`, `armorValue` (die-type reduction — per the PDF armor rule on p.134)
+- `armor` — `location[]`, `armorValue` (die-type reduction — per the PDF armor rule on page 134)
 - `gear` — an ordinary item: `price`, `weight`, `quantity`
 - `edge` — `cost`, `category`, `requirements[]`, `effects[]` (ActiveEffects)
 - `hindrance` — `value` (points gained), `category`, `effects[]`
