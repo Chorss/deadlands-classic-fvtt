@@ -9,10 +9,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+### Changed
+
+### Fixed
+
+## [0.4.2] — 2026-08-24
+
+### Added
+
+- Rulebook-verified feature gap audit and development roadmap covering the core rules and all five
+  supernatural companion books, with correctness defects, dependencies, priorities, milestone exit
+  criteria, and a shared definition of done.
+
 ### Fixed
 
 - Wound application now preserves pre-cap severity, prevented wounds, and overflow details, while
-  negative Wind persists and adds one shared-guts wound per newly crossed threshold (RULE-003/004).
+  negative Wind persists and adds one shared-guts wound per newly crossed threshold (RULE-003 and
+  RULE-004).
 - Session and Red Joker Fate Chip draws now enforce the ten-chip cap, convert surplus to Bounty
   Points, return pot-backed overflow atomically, and roll back failed actor grants (RULE-006).
 - Shaman manitou attacks and Harrowed activation/Dominion flows now await Action Deck deals;
@@ -22,11 +37,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Sleeved Action Cards now persist between combat rounds; only the current round's hand and
   initiative are cleared at round end (RULE-002).
 
-### Added
+### Changed
 
-- Rulebook-verified feature gap audit and development roadmap covering the core rules and all five
-  supernatural companion books, with correctness defects, dependencies, priorities, milestone exit
-  criteria, and a shared definition of done.
+- World data format is unchanged in 0.4.2. Existing worlds require no migration, and the migration
+  sentinel intentionally remains at 0.4.1 because this release adds no data transform.
 
 ## [0.4.1] — 2026-08-24
 

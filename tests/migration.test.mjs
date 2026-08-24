@@ -9,6 +9,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
+  FAITH_DENIAL_MIGRATION_VERSION,
   migrateFaithDenialActor,
   migrateWorld,
   planFaithDenialMigration,
@@ -49,6 +50,10 @@ describe("migrationVersion sentinel", () => {
     // skip migration and just stamp the current version.
     const defaultValue = "";
     assert.equal(defaultValue, "");
+  });
+
+  it("remains at 0.4.1 for the schema-compatible 0.4.2 release", () => {
+    assert.equal(FAITH_DENIAL_MIGRATION_VERSION, "0.4.1");
   });
 });
 
