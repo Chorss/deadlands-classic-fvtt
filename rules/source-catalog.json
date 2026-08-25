@@ -1,0 +1,291 @@
+{
+  "schemaVersion": 1,
+  "sourceRevision": "a4053e7e6d6d4a5f075e4b5a50c62b76523d75c5",
+  "sources": {
+    "adv-adios-amigo": {
+      "pages": 65,
+      "sha256": "42cac437670cfbf58f53b09f7414838c6bc38f64b2878aafd1c3f6a5ffd143f2"
+    },
+    "adv-adios-amigo-pl": {
+      "pages": 67,
+      "sha256": "6529825da559dce9792fcd2c8d905ca135ca40d6f6dd0343e5dbf95197eb6f2e"
+    },
+    "adv-forbidden-god": {
+      "pages": 65,
+      "sha256": "89a2685633a7f4490ab9a98ab27a5a61cc410643a596173856a8b1e90a5ff36b"
+    },
+    "adv-ground-zero": {
+      "pages": 65,
+      "sha256": "a79356f892db08d4df62ae4df30911d2d80eef93b1b3d7c6a7b20706768769a1"
+    },
+    "adv-independence-day": {
+      "pages": 61,
+      "sha256": "1160365b04a98c5eeba8cab08d08a9200a6d6a0ea1d42383932c044cad2792d9"
+    },
+    "adv-independence-day-pl": {
+      "pages": 67,
+      "sha256": "08278b574660a4fc3bf55571ecd4c7d9001bd6be1d95e95cebb3302392529eaa"
+    },
+    "adv-night-train": {
+      "pages": 66,
+      "sha256": "2b2ae8022615085d0e56b48a0bb2b147e167dcd21ef14fcad2870b76f536667d"
+    },
+    "adv-night-train-pl": {
+      "pages": 66,
+      "sha256": "593607c3f44c60682325991a5cab7ffcc74bd13afa7ce40883e8c34f5cadae37"
+    },
+    "adv-paradise-lost": {
+      "pages": 34,
+      "sha256": "033541e81388f7e8586e6acfbc48d3074ba5183eea985c49050dd4a475a421c5"
+    },
+    "adv-perditions-daughter": {
+      "pages": 80,
+      "sha256": "a53af9a6e852f5a9e7a99bf763463f0dd48eefa06219256c721be5c34e38b1a2"
+    },
+    "adv-perditions-daughter-pl": {
+      "pages": 83,
+      "sha256": "70052c0cd2e8a73d16c6d260f31345b0c3937f54294ce19504e3ddbf79581487"
+    },
+    "adv-savage-passage": {
+      "pages": 65,
+      "sha256": "2759cfbc3362a53520813da7c2e60b617e4788f7cc1fdd8822fc1ff82ad562d1"
+    },
+    "adv-skinners": {
+      "pages": 65,
+      "sha256": "439c123ef3a6737cdc1df70d020c0041fa231d5477457fb001ee847480585fe2"
+    },
+    "adv-strange-bedfellows": {
+      "pages": 65,
+      "sha256": "0f582723d7b242e7cb48e98f60184e6614111c02d40d7d7c0d6046dd51c481ea"
+    },
+    "adv-worms": {
+      "pages": 65,
+      "sha256": "ba4512da52843094b2076e26fe9407800ba82acb4b0a402555ee656694ed8302"
+    },
+    "agency": {
+      "pages": 129,
+      "sha256": "79585df2d856654520e125c9250a826c7f2280e4bb269d6e66383620a5c0b9c3"
+    },
+    "back-east-north": {
+      "pages": 129,
+      "sha256": "f8eaf77564d03323bf8bd13df72c05d5ebc127d462a1b96c4d8e174d4bc89f04"
+    },
+    "back-east-south": {
+      "pages": 129,
+      "sha256": "b5ab6f07ef858b27164c6f1ddb0f0cb16dc9dd227eb30e3cbe1626bc5e4e0542"
+    },
+    "black-circle": {
+      "pages": 129,
+      "sha256": "171fa521ece187739591083ef3a3701cdf665ac7d85c6c913375f3eda5d43153"
+    },
+    "bloody-muddy": {
+      "pages": 49,
+      "sha256": "40142a3fca49a0da475a66d8fcaedd88806f55e6c1fbc6663ab8cac6ef45aa9c"
+    },
+    "bod": {
+      "pages": 129,
+      "sha256": "4eafa2d995e78cb7b2b4530d102ecb65c2320bb097dd7e42644710eda46b1b9a"
+    },
+    "boomtowns": {
+      "pages": 92,
+      "sha256": "b209d8013bff301e655f26a24626c60fceb463df7124ca7705eea3a347b950ed"
+    },
+    "canyon-doom": {
+      "pages": 129,
+      "sha256": "ae0ffcd3da61690617d20caa15e36fb8d679298d66b1c1dec3f5d25ffa2acd7d"
+    },
+    "char-sheet-pl": {
+      "pages": 2,
+      "sha256": "043a4e775fd66346889071c5e27ff237aff3e784d8759e33248ce9e32c1700d6"
+    },
+    "cog": {
+      "pages": 206,
+      "sha256": "4b3b12f7dad121391d581f56ef6d887f6c27afb2cad91907b76a66bf813a7ae2"
+    },
+    "collegium": {
+      "pages": 129,
+      "sha256": "f3dd6745a89c68f524e1e8beadefde2e37b5224b7b55c58e49d8376a447218ce"
+    },
+    "conversion-guide": {
+      "pages": 28,
+      "sha256": "fef748c3c4e6fd09070dabf8713dfab3e0c9f098698bbafd3dc5b4e3278bb1ca"
+    },
+    "dead-presidents": {
+      "pages": 66,
+      "sha256": "195ddf7ad016b72e11c7634922921e943219668ed026943517a2275a5c6e2805"
+    },
+    "dlc": {
+      "pages": 413,
+      "sha256": "50e8e073a0a050a14de0515b1cd0b76342914ac8928560807ceb971dfe147b6e"
+    },
+    "dlcc-horrors": {
+      "pages": 8,
+      "sha256": "eb41e5ef01f08ad3a25c91bc101f7d4190e3b510f491a6d457671abe6d9b3817"
+    },
+    "dlcc-infernal-devices": {
+      "pages": 8,
+      "sha256": "d03c077d62363d686c51fed4f690a923a8c7c91db4944b5abfb79144387b6b29"
+    },
+    "dlcc-starter": {
+      "pages": 16,
+      "sha256": "6969d835b0cc5902343ccbec07d93cff2db806862f1665d86d4c158380dde1a8"
+    },
+    "doomtown": {
+      "pages": 145,
+      "sha256": "2453b6918c5b930e90a4fdc95d9bd64cceb2c6dce2ab74791198772744d99745"
+    },
+    "epitaph-1": {
+      "pages": 66,
+      "sha256": "ac971c7787984060704fefa3b37cceabc52d1c332b36a203fcc6a57a38b73034"
+    },
+    "epitaph-2": {
+      "pages": 65,
+      "sha256": "b47a202be9bb2849b563ad58c6f2244306e4059b2a6c17521dfd08f2a16bca19"
+    },
+    "epitaph-3": {
+      "pages": 65,
+      "sha256": "2c74b274b95e67ecf00867593bb519577f6e202b537e3d043f0f87c7597ad276"
+    },
+    "epitaph-4": {
+      "pages": 129,
+      "sha256": "556bc43969b578c8ffa844d7e181a3a16d523d04a0f6a847dc842789efab987b"
+    },
+    "epitaph-preview-2016": {
+      "pages": 13,
+      "sha256": "0064aaf5490ce2c2a618bf701b36d2bd312df9faccb24e1d015ea2e1559b17ad"
+    },
+    "fb": {
+      "pages": 130,
+      "sha256": "34ae1d1c1a5394339c126a586a4832ce19c6e8de7eadf06c038e4a2f90bcd3ce"
+    },
+    "fb-pl": {
+      "pages": 131,
+      "sha256": "36e1d28e0689e503af93552ae811fbb33bddc15c60292fe96cdaf0a59d05cc86"
+    },
+    "fof": {
+      "pages": 182,
+      "sha256": "16b16a8afa5a5f26a2decea04a80df3eff916fc838b1f385a62b70f479290e9b"
+    },
+    "ghost-dancers": {
+      "pages": 129,
+      "sha256": "b1f637d64b74c4fab778ed7d60978b1c8bc94b92380e31174b6278133d4e71e7"
+    },
+    "ghost-dancers-pl": {
+      "pages": 130,
+      "sha256": "3f51b5715da502660bfcd70974696a8af3ba25420d6750635d9af04f99d9b32c"
+    },
+    "ghostbusters": {
+      "pages": 68,
+      "sha256": "f2125344506ce518f4815f2e53d49b358c0d469fa8f30e2e9012d1f79b96c109"
+    },
+    "gm": {
+      "pages": 197,
+      "sha256": "067cc4f31996f492ae8339482737cb26c733c386391a3f5ef9ebe48edc9f118b"
+    },
+    "great-weird-north": {
+      "pages": 129,
+      "sha256": "6b6b76fc091e80f30cb56c191b2a404f30dd137bb451d9a3c52f9d0cd6bf30ee"
+    },
+    "heart-darkness": {
+      "pages": 50,
+      "sha256": "1872e5cb98fdf76da8ce2846520b9913ac2437fcab1db934e3133489f927a350"
+    },
+    "hexarcana": {
+      "pages": 129,
+      "sha256": "abebbe797a30cc1f2bf571ddc94f8921f8070194f3e1cc289b9899e7d0569690"
+    },
+    "hnh": {
+      "pages": 129,
+      "sha256": "1978d45fba52cb868df2a0672a69a9d1b064d55bc1d6afc03772d0feb9f0ac80"
+    },
+    "hnh-pl": {
+      "pages": 130,
+      "sha256": "8205b25ed7ed8adb708675e8a5fb2b0ab1668f0bbce5d824a684504f6eb1b8dc"
+    },
+    "hoe-pl": {
+      "pages": 225,
+      "sha256": "dc085bdaaaf4df326003cf77e91d1d2618d43f638840d629d0b594443fe0946e"
+    },
+    "la": {
+      "pages": 128,
+      "sha256": "5410fe116799ad675326d994c1b649ac084557475404c6c9afab068624258cf9"
+    },
+    "law-dogs": {
+      "pages": 129,
+      "sha256": "bcc8287de83dcf017bf631ebc21539b32d5353b005076c1d300ccb9ca1d9f4bb"
+    },
+    "law-dogs-pl": {
+      "pages": 131,
+      "sha256": "a5663cde0ece8ce936fb2a55548704209f779f37c61933ce86438f844d9078a9"
+    },
+    "lone-stars": {
+      "pages": 129,
+      "sha256": "0d2291bb9a90a0458ff05e1d56daad07d7b4a6838e791eb43e77fd43657b948e"
+    },
+    "marshal-law": {
+      "pages": 54,
+      "sha256": "086ee1bc07f511735502f760732ccfe17accf14f46afc3a8b623d70f95d29dee"
+    },
+    "marshals-log": {
+      "pages": 29,
+      "sha256": "b310dd80380c487a81914d205aff439e13753cbdc99001fcf70eda5df695a9f3"
+    },
+    "mh": {
+      "pages": 208,
+      "sha256": "4447962058208865d9c816770ca54662036a6cc3fe0ff9c0e7f79e20e7ef8f97"
+    },
+    "mh-pl": {
+      "pages": 211,
+      "sha256": "0835838b8148fdf0199203e4e220ac7421dca7cf01c4beb29c38596097f229ed"
+    },
+    "pg": {
+      "pages": 208,
+      "sha256": "69af3c480c42dcb2b5c4040c5e7eeeb843cf0023b27cfba4554275de80fc4425"
+    },
+    "pg-pl": {
+      "pages": 208,
+      "sha256": "2d31e24bbe73fc8bfabd7ac4b379488b724e4d4b4830634352b6a989a4fc1f5f"
+    },
+    "quick-dead": {
+      "pages": 143,
+      "sha256": "b97f8c617f6af95495d35b25df74394e655f2a5485f4dc94b9c0a2c00608188b"
+    },
+    "rain-terror": {
+      "pages": 66,
+      "sha256": "521cf903ceeac427e27c479f19789a8acfd1e5280ff7f7a5804d45b9bafa7372"
+    },
+    "river-blood": {
+      "pages": 197,
+      "sha256": "fec8a4f3747db3b789b7fbe55a0c6bc500e79085d939b32ea4df0984366783fc"
+    },
+    "road-to-hell": {
+      "pages": 50,
+      "sha256": "827ad7b7a99704b742cdd800a1ed9de031346566047b3f33973b6ab41d57bf4a"
+    },
+    "rvc": {
+      "pages": 129,
+      "sha256": "976c650ee46e45613dcbffb88f85da175a0d3336260d04096cb6c735dc0eff0a"
+    },
+    "rvc2": {
+      "pages": 130,
+      "sha256": "9448e5ec7895da49e279b62ae7eaae0f26f70a79cc637867ba82ae75e33693bf"
+    },
+    "snr": {
+      "pages": 129,
+      "sha256": "8b594b82d21cd66de8707189705d130834a786db8c196615bb32ca23d6d89829"
+    },
+    "south-border": {
+      "pages": 130,
+      "sha256": "844cf582f399930b332c095aab5aabbb7b492e2322802515a8657e4e77da2023"
+    },
+    "tales-terror": {
+      "pages": 130,
+      "sha256": "171bafbde1f598fd684ececbd5265b8d70b48ac7bbf5b33505d09331be7298dc"
+    },
+    "twisted-tales": {
+      "pages": 66,
+      "sha256": "d9fc7bf127c306a7a0ef24bc99bfd216d74d5a73e8b148186f13dd04fd26fbb5"
+    }
+  },
+  "catalogSha256": "4e5c7491af749b1ec2bdaa9410a6beddc8c2af03474c27e32115b8520af32ebc"
+}

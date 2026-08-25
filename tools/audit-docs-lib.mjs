@@ -5,8 +5,11 @@
  * @license MIT
  */
 
-// A rulebook citation: `slug p.NNN` or `slug p.NNN-MMM`, slug usually backticked.
-const CITE_RE = /`?\b([a-z][a-z0-9-]{1,24})`?\s+p\.(\d{1,4})(?:-(\d{1,4}))?/g;
+// A rulebook citation: `slug` p.NNN, `slug p.NNN`, or slug p.NNN.
+// Unknown bare words are ignored because ordinary prose such as "levels p.139"
+// is not citation-shaped unless the alleged slug is explicitly backticked.
+const CITE_RE =
+  /(?:(`)([a-z][a-z0-9-]{1,24})`?\s+p\.(\d{1,4})(?:-(\d{1,4}))?`?|\b([a-z][a-z0-9-]{1,24})\s+p\.(\d{1,4})(?:-(\d{1,4}))?)/g;
 
 /**
  * Validate every citation-shaped token in one line.
@@ -25,10 +28,15 @@ const CITE_RE = /`?\b([a-z][a-z0-9-]{1,24})`?\s+p\.(\d{1,4})(?:-(\d{1,4}))?/g;
 export function findCitationIssues(line, catalog) {
   const issues = [];
   for (const match of line.matchAll(CITE_RE)) {
-    const [, slug, from, to] = match;
+    const [, quoted, quotedSlug, quotedFrom, quotedTo, bareSlug, bareFrom, bareTo] = match;
+    const slug = quotedSlug ?? bareSlug;
+    const from = quotedFrom ?? bareFrom;
+    const to = quotedTo ?? bareTo;
     const pages = catalog.get(slug);
     if (pages === undefined) {
-      issues.push({ type: "unknown-slug", slug });
+      if (quoted) {
+        issues.push({ type: "unknown-slug", slug });
+      }
       continue;
     }
     for (const page of [from, to].filter(Boolean).map(Number)) {
