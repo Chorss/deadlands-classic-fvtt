@@ -17,10 +17,6 @@
       "type": "stdio",
       "command": "./node_modules/.bin/context7-mcp",
       "args": []
-    },
-    "phpstorm": {
-      "url": "http://127.0.0.1:64443/stream",
-      "type": "http"
     }
   }
 }

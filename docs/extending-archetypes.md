@@ -147,11 +147,11 @@ Add any archetype-specific sheet keys under `DEADLANDS.Archetype.FooBar.*`.
 ## Step 6 — Verify
 
 ```bash
-npm run lint          # Biome — formatting + lint rules
-npm run verify:all    # manifest + EN/PL parity → CSS coverage → i18n keys → unit tests
+npm run verify:ci     # canonical lint + project + AI-workshop + rule-source gate
 ```
 
-These are the two commands CI runs. `verify:all` starts with `verify-documenttypes.mjs`, which
+This is the command CI runs. Its five-check `verify:all` stage starts with
+`verify-documenttypes.mjs`, which
 reports if `documentTypes.Actor` and `ArchetypeRegistry` are out of sync.
 
 ---
