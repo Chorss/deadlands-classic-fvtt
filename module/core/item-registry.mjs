@@ -5,7 +5,7 @@
  * `core/items/*`; archetype-specific types (hex, miracle, favor, gizmo) register
  * from their archetype `manifest.mjs`. Mirrors {@link ArchetypeRegistry}.
  *
- * @see docs/implementation-plan.md §3.5–3.6
+ * @see docs/architecture.md
  * @license MIT
  */
 

@@ -7,3 +7,8 @@ sandbox_mode = "workspace-write"
 
 [sandbox_workspace_write]
 network_access = false
+
+[mcp_servers.deadlands-rules-ref]
+command = "./tools/deadlands-rules-mcp.sh"
+enabled = true
+default_tools_approval_mode = "approve"

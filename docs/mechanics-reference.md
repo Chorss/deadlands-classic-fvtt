@@ -15,8 +15,8 @@
 >
 > Page citations (`dlc` = *Deadlands Classic 20th Anniversary Edition*) are **physical PDF pages**,
 > matching the `[p.NNN]` markers in the extracts — no offset adjustment applies. **Never paste
-> rulebook prose** into code, packs, commits, or issues. Full design detail:
-> `implementation-plan.md` §3.
+> rulebook prose** into code, packs, commits, or issues. Architecture details live in
+> `architecture.md`.
 
 ## 1. Core resolution
 

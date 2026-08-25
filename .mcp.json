@@ -1,5 +1,10 @@
 {
   "mcpServers": {
+    "deadlands-rules-ref": {
+      "type": "stdio",
+      "command": "./tools/deadlands-rules-mcp.sh",
+      "args": []
+    },
     "playwright": {
       "type": "stdio",
       "command": "./node_modules/.bin/playwright-mcp",

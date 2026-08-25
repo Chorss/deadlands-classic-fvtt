@@ -2,10 +2,10 @@
  * Deadlands Classic — Community Edition
  * Entry point. Registers the document classes and data-model registries, and
  * exposes the public `game.deadlandsClassic` API. Subsystem wiring (dice, cards,
- * chips, wounds) and the per-archetype manifests are added in later phases.
+ * chips, wounds) and the per-archetype manifests.
  *
  * @see https://github.com/Chorss/deadlands-classic-fvtt
- * @see docs/implementation-plan.md §11 (Phase 1)
+ * @see docs/architecture.md
  * @license MIT
  */
 
@@ -88,7 +88,7 @@ Hooks.once("init", () => {
   CONFIG.Combat.documentClass = DeadlandsCombat;
   CONFIG.Combatant.documentClass = DeadlandsCombatant;
 
-  // Type data models from the registries. Empty in Phase 1 — archetype and item
+  // Type data models from the registries. Archetype and item
   // manifests populate these as they are imported in later phases.
   CONFIG.Actor.dataModels = ArchetypeRegistry.dataModels();
   CONFIG.Item.dataModels = ItemRegistry.dataModels();

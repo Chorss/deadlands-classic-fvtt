@@ -1,6 +1,6 @@
 ---
 name: pdf-reference-lookup
-description: Find mechanic rules, tables, statblocks in the Deadlands rulebook PDFs via local extracts and per-book indices. Use when the user asks "where is X in the book?", "what page covers Y?", or when implementing a mechanic and you need to verify against the source. Returns page numbers + short quoted fragments, never bulk rulebook prose.
+description: Find mechanic rules, tables, and statblocks through the Deadlands rules MCP or the configured private repository. Returns validated page citations and paraphrases, never rulebook prose.
 tools: Read, Grep, Glob, Bash
 model: sonnet
 ---
@@ -14,7 +14,7 @@ Given a mechanic query (e.g. "hit location table", "fate chip spend rules", "exp
 
 1. **Book slug** (usually `dlc` — Deadlands Classic 20th Anniversary Edition).
 2. **Physical page number(s)** in the PDF.
-3. **One short quoted fragment** (≤3 lines) confirming the match.
+3. **One short paraphrase** confirming the match.
 
 Never bulk-dump rulebook prose.
 
@@ -30,12 +30,12 @@ Only when MCP is unavailable, use the extract fallback below.
 At the start of every lookup, run:
 
 ```bash
-echo "${DEADLANDS_RULES_PATH:-}"
+test -n "${DEADLANDS_RULES_PATH:-}"
 ```
 
-- If non-empty (e.g. `/home/binn/projects/foundryvtt/deadlands-rules-ref`):
-  use `$DEADLANDS_RULES_PATH/extracts/<slug>/` for all extract reads.
-- If empty: fall back to `.pdf-extract/<slug>/` in the current repo.
+- If non-empty, run `$DEADLANDS_RULES_PATH/scripts/verify-pdf-extract.sh <slug>`, then use
+  `$DEADLANDS_RULES_PATH/extracts/<slug>/` for the bounded lookup.
+- If empty, stop with a clear setup error. Public-repository extracts are forbidden.
 
 Store the resolved base in your reasoning and use it for all subsequent Grep/Read calls.
 
@@ -51,10 +51,10 @@ Store the resolved base in your reasoning and use it for all subsequent Grep/Rea
 ## Output shape
 
 > **dlc p.147** — Fate Chip spending rules. White = +1 die on Trait/Aptitude, multiple allowed.
-> *"A White chip allows the hero to add one extra die..."*
+> Paraphrase: a white chip adds one die to the relevant roll.
 
 ## Must NOT do
 
-- Copy more than ~3 lines verbatim from the rulebook.
+- Copy rulebook prose into the response or repository.
 - Write full mechanic implementations — citation only.
 - Invent pages when the index is missing the topic.

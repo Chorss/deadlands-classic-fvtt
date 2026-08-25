@@ -73,7 +73,7 @@ deadlands-classic-fvtt/
 ├── content/                    # companion content module — rulebook-derived packs, `npm run pack:content`
 ├── tools/                      # repo tooling (verify-documenttypes.mjs, …)
 ├── tests/                      # node:test unit tests for pure core logic
-├── docs/                       # implementation-plan.md, notes.md
+├── docs/                       # architecture, mechanics, testing, and maintenance notes
 ├── .github/                    # issue templates + PULL_REQUEST_TEMPLATE.md
 ├── system.json                 # Foundry VTT manifest (documentTypes, V14)
 └── CHANGELOG.md, CONTRIBUTING.md, LICENSE, README.md

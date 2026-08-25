@@ -19,7 +19,7 @@ use sources in this order:
 
 The maintained local target is **14.367**. The public V14 API is currently generated
 for **14.365**, so changes introduced in 14.366–14.367 must be checked in their release
-notes and, when necessary, `/home/binn/foundryvtt/resources/app/{client,common}`.
+notes and, when necessary, `${FOUNDRY_EXECUTABLE%/*}/resources/app/{client,common}`.
 
 ## V13 anti-patterns — never write these
 

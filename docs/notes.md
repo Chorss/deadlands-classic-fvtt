@@ -1,6 +1,6 @@
 # Open questions & design notes
 
-## Guts wound-pool consolidation (Phase 6, resolved)
+## Guts wound-pool consolidation (resolved)
 
 **Mechanic:** `dlc [p.139]` — wounds dealt to the gizzards and the upper/lower guts accumulate in
 the shared guts area. The three sub-locations (`lowerGuts`, `gizzards`, `upperGuts`) form a
@@ -29,7 +29,7 @@ visual display but adds complexity.
 `WOUND_MAX`; `highestWoundPenalty()` and `totalBleedingRate()` (bleeding drain, dlc p.142) both
 read the pooled total for guts locations instead of each one independently. No schema migration.
 
-Tracked by: Phase 6 implementation, `module/core/wounds/wound-track.mjs`.
+Tracked by `module/core/wounds/wound-track.mjs`.
 
 ---
 
@@ -155,7 +155,7 @@ question.
   not affiliated with Pinnacle" disclaimer (README §License, in place). **Note:** the manifest
   `id` is practically irreversible after the first public Release (changing it breaks world
   updates) — **reconsider at publication time** (either written PEG permission or a neutral name).
-- Source: shop.peginc.com/pages/licensing. Full risk register: `implementation-plan.md` §8.
+- Source: shop.peginc.com/pages/licensing. The accepted risk and mitigations are recorded here.
 
 ### D1 revisited at the 0.4.1 registry submission (2026-08-23)
 
@@ -193,14 +193,13 @@ this fixed map.
 - Rules in this project: `commits.md`, `naming.md` (always); `code-quality.md`, `v14-api.md`,
   `localization.md`, `references.md`, `rulebook-authority.md` (contextual, via `paths:`).
 
-**`.claude/skills/` — active procedures.**
+**`.agents/skills/` — canonical active procedures.**
 - Invoked via `/name` in a prompt, or automatically when the `description:` semantically matches
   the task.
 - They do something ("scaffold an archetype", "verify a mechanic against the rulebook", "run the
   system sanity check").
-- All five live in `.claude/skills/`: `add-archetype`, `new-phase`, `release`, `verify-mechanic`,
-  `verify-system`. There is no `.claude/commands/` directory — a skill invoked as `/name` *is* the
-  slash command, so the two words name one mechanism, not two.
+- The five shared procedures are `add-archetype`, `release`, `verify-foundry`,
+  `verify-mechanic`, and `verify-system`. Claude uses thin adapters in `.claude/skills/`.
 
 **`.claude/agents/` — dedicated specialists.**
 - A subagent is a separate Claude session with its own context and a restricted toolset. The

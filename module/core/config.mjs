@@ -49,7 +49,7 @@ export const TRAITS = {
  * concentrations are treated as unrelated to one another and must be bought as
  * separate aptitudes, unlike Shootin'/Fightin'-style concentrations. That
  * distinction needs a richer shape than `true`/absent; re-verify against
- * p.41-51 when the full concentration schema is built in Phase 2.
+ * p.41-51 before expanding the concentration schema.
  *
  * @type {Record<string, Record<string, { concentrations?: boolean }>>}
  */

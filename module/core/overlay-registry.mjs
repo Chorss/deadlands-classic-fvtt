@@ -10,7 +10,7 @@
  * schema fields merged into the base character model and a tab shown only when
  * the overlay is active on a given actor.
  *
- * @see docs/implementation-plan.md §2, Phase 11
+ * @see docs/architecture.md
  * @license MIT
  */
 
