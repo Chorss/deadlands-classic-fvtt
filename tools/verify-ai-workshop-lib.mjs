@@ -15,6 +15,7 @@ export const RELEASE_MANIFESTS = [
   "package-lock.json",
   "content/module.json",
 ];
+export const PROJECT_MCP_SERVERS = ["deadlands-rules-ref", "playwright"];
 
 const PRIVATE_PATH_RE =
   /(?:\/home\/[A-Za-z0-9._-]+\/|\/Users\/[A-Za-z0-9._-]+\/|[A-Za-z]:\\Users\\[^\\]+\\)/g;
@@ -161,6 +162,27 @@ export function findLocalIdeMcpIssues(mcp) {
       /https?:\/\/(?:127\.0\.0\.1|localhost):\d+/i.test(server.url);
     if (localUrl || /phpstorm|idea|ide/i.test(name)) {
       issues.push(`shared local IDE MCP: ${name}`);
+    }
+  }
+  return issues;
+}
+
+export function findProjectMcpIssues(mcp) {
+  const actual = Object.keys(mcp.mcpServers ?? {}).sort();
+  const expected = [...PROJECT_MCP_SERVERS].sort();
+  if (JSON.stringify(actual) === JSON.stringify(expected)) {
+    return [];
+  }
+  return [`project MCP servers: expected ${expected.join(", ")}; found ${actual.join(", ")}`];
+}
+
+export function findUnpinnedActionIssues(workflows) {
+  const issues = [];
+  for (const [file, text] of workflows) {
+    for (const match of text.matchAll(/uses:\s*([^\s#]+)@([^\s#]+)/g)) {
+      if (!/^[0-9a-f]{40}$/.test(match[2])) {
+        issues.push(`${file}: action is not pinned to a full SHA: ${match[1]}@${match[2]}`);
+      }
     }
   }
   return issues;

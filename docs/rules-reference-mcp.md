@@ -14,6 +14,10 @@ The tracked Claude and Codex configurations both call `tools/deadlands-rules-mcp
 resolves the environment variable at runtime and exits with a clear setup error when it is missing;
 no local path is persisted in shared configuration.
 
+The shared MCP profile intentionally contains only this evidence launcher and the repository's
+Playwright browser bridge. IDE servers and other localhost integrations belong in untracked
+user-level configuration; never commit their ports or installation paths.
+
 ## Public metadata catalog
 
 `rules/source-catalog.json` is the CI-safe index of the evidence corpus. It contains only a

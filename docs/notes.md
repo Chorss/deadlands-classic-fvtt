@@ -215,8 +215,13 @@ this fixed map.
 - **Playwright MCP** — gives Claude browser control. Without it, verifying Foundry sheets is
   manual ("take a screenshot, paste what you see"). With it: Claude opens the world itself,
   clicks, reads the DOM, and reports whether it works.
-- **context7 MCP** — concise library-docs lookup. An alternative to `WebFetch`, which returns raw
-  HTML. Especially useful for the Foundry V14 API — faster and cheaper in context.
+- **deadlands-rules-ref MCP** — the portable, environment-selected evidence service documented in
+  `docs/rules-reference-mcp.md`.
+
+IDE bridges, local HTTP ports, advertising integrations, and general documentation services are
+user-level opt-ins. Keep them in personal configuration rather than `.mcp.json` or
+`.codex/config.toml`; shared MCP configuration must work after a fresh clone without knowing a
+contributor's editor, home directory, or credentials.
 
 **Why not everything as skills?**
 Skills are designed for "I can perform procedure X" — forcing standing prohibitions ("don't write

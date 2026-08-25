@@ -28,7 +28,6 @@
 
 /* ── Section heading = Cinzel label + hairline rule (no box) ───────────────── */
 .dlc-section-title,
-.dlc-section-heading,
 .dlc-column-title {
   font-family: var(--dlc-font-head);
   font-size: var(--dlc-fs-section);
@@ -167,7 +166,6 @@
 
 /* ── Warnings — unskilled / bust now use --dlc-blood (was two conflicting) ─── */
 .dlc-warn,
-.dlc-warning,
 .dlc-unskilled-warn {
   color: var(--dlc-blood);
   font-family: var(--dlc-font-body);
