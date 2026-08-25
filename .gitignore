@@ -81,8 +81,8 @@ docs/*.pl.md
 .claude/cache/
 .claude/logs/
 
-# Codex — local MCP configuration may contain absolute paths to private repos.
-.codex/config.toml
+# Codex — project sandbox/MCP configuration is portable and tracked.
+# Personal servers and secrets belong in the user-level Codex configuration.
 
 # Playwright MCP — test artifacts, traces, screenshots, recorded videos.
 test-results/
