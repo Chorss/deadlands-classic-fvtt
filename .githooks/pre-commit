@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Pre-commit hook: Biome lint, syntax check for .mjs / .json, manifest sanity
+# Pre-commit hook: fast subset only. The complete gate is `npm run verify:ci`.
 # when system.json or lang/*.json is staged. Opt-in once per clone:
 #
 #   git config core.hooksPath .githooks
@@ -11,7 +11,7 @@ STAGED=$(git diff --cached --name-only --diff-filter=ACMR || true)
 
 fail() { echo "pre-commit: $1" >&2; exit 1; }
 
-npm run lint 2>&1 || fail "biome check failed — run: npx biome check --write --unsafe"
+npm run verify:fast 2>&1 || fail "verify:fast failed — run npm run verify:fast"
 
 while IFS= read -r f; do
   [ -f "$f" ] || continue
@@ -25,17 +25,5 @@ while IFS= read -r f; do
       ;;
   esac
 done <<< "$STAGED"
-
-if echo "$STAGED" | grep -qE '^(system\.json|lang/.*\.json)$'; then
-  node tools/verify-documenttypes.mjs || fail "verify-documenttypes failed"
-fi
-
-if echo "$STAGED" | grep -qE '\.(hbs|css|mjs)$'; then
-  node tools/audit-css.mjs || fail "audit-css: CSS classes used in templates but missing from styles/ — add rules before committing"
-fi
-
-if echo "$STAGED" | grep -qE '\.(mjs|hbs)$|^lang/'; then
-  node tools/audit-i18n.mjs || fail "audit-i18n: i18n keys referenced in code/templates but missing from lang/ — add them before committing"
-fi
 
 exit 0

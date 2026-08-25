@@ -224,7 +224,7 @@ Exit criteria:
 - all six defects have regression coverage;
 - no current world loses wound or sleeve information during a normal round;
 - existing 0.4.1 worlds migrate safely if wound/Wind storage changes;
-- `npm run lint` and `npm run verify:all` pass.
+- `npm run verify:ci` passes.
 
 ### Milestone B — one complete combat vertical slice
 
@@ -354,7 +354,7 @@ A work item is complete only when all applicable checks below are satisfied:
    Marshal adjudication.
 7. **Localization:** EN and PL keys remain identical; terminology follows the project conventions.
 8. **Verification:** relevant unit tests and at least one Foundry E2E path pass, followed by
-   `npm run lint` and `npm run verify:all`.
+   `npm run verify:ci`.
 9. **Content legality:** source page metadata is stored, mechanical facts are independently phrased,
    and no rulebook prose or art is committed.
 

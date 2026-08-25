@@ -33,7 +33,7 @@ Wired in `settings.json` under `hooks`:
 | `PreToolUse` | `Write \| Edit \| Bash` | `hooks/protect-paths.mjs` | Blocks direct file-tool writes and common shell writes to protected repository paths. This is defense in depth; the OS sandbox is the security boundary. |
 | `PostToolUse` | `Write \| Edit` | `hooks/post-write.sh` | `node --check` on `.mjs`, `JSON.parse` on `.json`, re-run `verify-documenttypes` after `system.json` / `lang/*.json` edits. Also nudges on mechanics files |
 | `PostToolUse` | `Bash` + `if: Bash(*extract-pdf.sh *)` | `hooks/post-extract-verify.sh` | After an `extract-pdf.sh` call, runs `$DEADLANDS_RULES_PATH/scripts/verify-pdf-extract.sh`. FAIL injects `decision: block` so Claude stops before indexing a broken extract |
-| `Stop` | — | `hooks/stop-verify.sh` | When the working tree is dirty, runs `npm run verify:all` and blocks the end of the turn with the failure text if it is red |
+| `Stop` | — | `hooks/stop-verify.sh` | When the working tree is dirty, runs `npm run verify:ci` on every invocation and blocks while it is red |
 
 Three details worth knowing:
 
@@ -131,6 +131,10 @@ One complete definition of green, shared by CI, the Stop hook and `/verify-syste
 ```bash
 npm run verify:ci
 ```
+
+`verify:all` contains exactly five functional checks: document types/locales, CSS, i18n,
+documentation integrity, and unit tests. `verify:ci` adds lint, `verify:ai`, and `verify:rules`.
+The pre-commit hook runs only `verify:fast`; it is intentionally not the complete gate.
 
 ## Local setup (one-time)
 

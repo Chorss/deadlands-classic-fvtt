@@ -21,8 +21,5 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Lint (Biome)
-        run: npm run lint
-
-      - name: Verify (manifest, EN/PL parity, CSS coverage, i18n, tests)
-        run: npm run verify:all
+      - name: Canonical repository gate
+        run: npm run verify:ci
