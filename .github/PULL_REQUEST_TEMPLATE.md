@@ -1,30 +1,56 @@
-## Description
+## Summary
 
-What does this PR do? Why is it needed?
+<!-- What changed, why it is needed, and the main risk. -->
 
 Closes #
 
-## Type of Change
+## Change type
 
 - [ ] Bug fix
-- [ ] New feature / mechanic implementation
-- [ ] Refactor / code cleanup
-- [ ] Documentation update
+- [ ] Feature or mechanic
+- [ ] Refactor or cleanup
+- [ ] Documentation or workshop configuration
 - [ ] Dependency update
+- [ ] Release preparation
 
-## Testing
+## Foundry impact
 
-Describe how you tested this change in Foundry VTT.
+Choose exactly one:
 
-- Foundry VTT version tested:
-- Steps to verify:
+- [ ] No Foundry runtime, UI, or API impact
+- [ ] Foundry runtime, UI, or API impact — E2E is required
 
-## Checklist
+Choose exactly one verification result:
 
-- [ ] Tested locally in Foundry VTT V14
+- [ ] Foundry E2E not required — no runtime, UI, or API impact
+- [ ] Foundry E2E passed — 10/10 on Foundry 14.367
+
+Foundry build and result details:
+
+## Deadlands mechanics and content
+
+Choose exactly one:
+
+- [ ] No Deadlands mechanic or content impact
+- [ ] Deadlands mechanic or content impact — evidence is required
+
+## Rulebook evidence
+
+<!-- Write `N/A`, or list validated citations in `<slug> p.N` format and summarize the comparison. -->
+
+## Verification
+
+- [ ] `npm run verify:ci` passes
+
+Result or CI link:
+
+## Untested
+
+<!-- Write `None`, or explicitly list every part that was not tested and why. -->
+
+## Final checklist
+
 - [ ] No unrelated files changed
-- [ ] `CHANGELOG.md` updated under `[Unreleased]`
-- [ ] `system.json` version bumped (release PRs only)
-- [ ] `npm run fmt` + `npm run lint` pass (Biome owns formatting)
-- [ ] Conventional-commit prefix; no `Co-Authored-By: Claude` trailer
-- [ ] No secrets or personal data included
+- [ ] User-visible changes are recorded under `CHANGELOG.md` `[Unreleased]`
+- [ ] Release PRs synchronize `system.json`, `package.json`, `package-lock.json`, and `content/module.json`
+- [ ] No secrets, private paths, personal data, rulebook prose, or generated private artifacts are included
