@@ -2,7 +2,7 @@
 /**
  * audit-docs.mjs — documentation integrity check.
  *
- * Four checks over the Markdown that ships in git. All of them are static: this
+ * Three checks over the Markdown that ships in git. All of them are static: this
  * tool reads text, it does not judge whether a sentence is still true. Prose
  * drift is a review problem; what is mechanised here is the subset a script can
  * decide.
@@ -18,13 +18,7 @@
  *      handful of ignored files that are named on purpose.
  *   2. A relative Markdown link in docs/, README.md or CONTRIBUTING.md whose
  *      target does not exist on disk.
- *   3. A `<slug> p.NNN` rulebook citation whose slug is absent from the
- *      deadlands-rules-ref catalog, or whose page is past the end of that book.
- *      **Skipped entirely when $DEADLANDS_RULES_PATH is unset** — CI and a fresh
- *      clone do not have the private rules repo, and this degrades rather than
- *      failing, the same way audit-css treats module/ more leniently than
- *      templates/.
- *   4. A `docs/*.md` file missing from AGENTS.md's "Sources of truth" table.
+ *   3. A `docs/*.md` file missing from AGENTS.md's "Sources of truth" table.
  *      A doc nobody is pointed at is a doc that quietly goes stale, and CLAUDE.md
  *      is what every agent reads first, so the table is the index that has to
  *      stay complete.
@@ -36,7 +30,7 @@
  *      error.
  *
  * WARNINGS (never affect the exit code)
- *   5. A backticked path that does not exist. Warning-only because
+ *   4. A backticked path that does not exist. Warning-only because
  *      examples may deliberately name things that do not exist yet.
  *
  * EN/PL parity is deliberately not checked: repo docs are English, the only
@@ -57,7 +51,7 @@ import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { extractSourcesOfTruthTable, findCitationIssues } from "./audit-docs-lib.mjs";
+import { extractSourcesOfTruthTable } from "./audit-docs-lib.mjs";
 
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -200,28 +194,6 @@ function withoutFences(lines) {
   });
 }
 
-// ── Load the rulebook catalog, if it is reachable ────────────────────────────
-
-/** @returns {Map<string, number>|null} slug → physical page count, or null when unavailable */
-function loadCatalog() {
-  const root = process.env.DEADLANDS_RULES_PATH;
-  if (!root) {
-    return null;
-  }
-  const file = path.join(root, "index", "catalog.json");
-  if (!fs.existsSync(file)) {
-    return null;
-  }
-  try {
-    const parsed = JSON.parse(fs.readFileSync(file, "utf8"));
-    return new Map(parsed.books.map((b) => [b.slug, b.physicalPages]));
-  } catch {
-    return null;
-  }
-}
-
-const catalog = loadCatalog();
-
 // ── Per-line checks, one concern each ───────────────────────────────────────
 
 /** Check 2 — every relative Markdown link resolves to something on disk. */
@@ -253,7 +225,7 @@ function collectReferences(line, dir) {
   return referenced;
 }
 
-/** Check 5 — a referenced path that is not on disk, minus the known exemptions. */
+/** Check 4 — a referenced path that is not on disk, minus the known exemptions. */
 function shouldWarnMissing(file, line, target) {
   if (file === "CHANGELOG.md" || NEGATED_RE.test(line)) {
     return false;
@@ -262,25 +234,6 @@ function shouldWarnMissing(file, line, target) {
     return false;
   }
   return !fs.existsSync(path.join(REPO_ROOT, target));
-}
-
-/** Check 3 — rulebook citations point at a real book and a page inside it. */
-function checkCitations(file, lineNo, line) {
-  if (!catalog) {
-    return;
-  }
-  for (const issue of findCitationIssues(line, catalog)) {
-    if (issue.type === "unknown-slug") {
-      err(file, lineNo, `citation uses unknown rulebook slug: \`${issue.slug}\``);
-    } else {
-      err(
-        file,
-        lineNo,
-        `citation out of range: \`${issue.slug} p.${issue.page}\` — ` +
-          `${issue.slug} has ${issue.pages} pages`
-      );
-    }
-  }
 }
 
 // ── Walk the tracked Markdown ────────────────────────────────────────────────
@@ -301,8 +254,6 @@ for (const file of files) {
     if (linksChecked) {
       checkLinks(file, lineNo, line, dir);
     }
-    checkCitations(file, lineNo, line);
-
     for (const target of collectReferences(line, dir)) {
       if (ASPIRATIONAL_OK.has(target) || IGNORED_OK.has(target) || !isRepoPath(target)) {
         continue;
@@ -328,7 +279,7 @@ for (const { file, line, target } of ignoredCandidates) {
   }
 }
 
-// ── Check 4: AGENTS.md's "Sources of truth" table covers every doc ───────────
+// ── Check 3: AGENTS.md's "Sources of truth" table covers every doc ───────────
 
 const agentsMd = path.join(REPO_ROOT, "AGENTS.md");
 if (fs.existsSync(agentsMd)) {
@@ -354,12 +305,6 @@ if (fs.existsSync(agentsMd)) {
 }
 
 // ── Report ───────────────────────────────────────────────────────────────────
-
-if (!catalog) {
-  console.log(
-    "audit-docs: DEADLANDS_RULES_PATH unset or unreadable — skipping rulebook citation checks."
-  );
-}
 
 if (warnings.length > 0) {
   console.log(`\naudit-docs: ${warnings.length} warning(s):`);

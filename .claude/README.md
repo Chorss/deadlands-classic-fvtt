@@ -133,7 +133,9 @@ npm run verify:ci
 ```
 
 `verify:all` contains exactly five functional checks: document types/locales, CSS, i18n,
-documentation integrity, and unit tests. `verify:ci` adds lint, `verify:ai`, and `verify:rules`.
+documentation integrity, and unit tests. `verify:ci` adds lint, `verify:ai`, and the mandatory
+public-catalog citation/content audit in `verify:rules`; that audit never depends on a private
+checkout being present in CI.
 The pre-commit hook runs only `verify:fast`; it is intentionally not the complete gate.
 
 ## Local setup (one-time)

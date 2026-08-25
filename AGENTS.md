@@ -97,7 +97,8 @@ cache data must stay outside this repository. See `docs/rules-reference-mcp.md`.
   and unit tests. It excludes E2E and workshop-specific audits.
 - `npm run verify:ai` — agent JSON/TOML/shell, hooks, skills, MCP, release manifests, and path
   protections.
-- `npm run verify:rules` — mandatory public catalog and citation validation.
+- `npm run verify:rules` — mandatory public catalog integrity, citation slug/page-range, and
+  mechanic-content evidence validation across documentation, code, and content JSON.
 - `npm run verify:ci` — canonical green gate: lint + `verify:all` + `verify:ai` +
   `verify:rules`.
 - `npm run test:e2e` — all Playwright flows on the exact Foundry build declared in
