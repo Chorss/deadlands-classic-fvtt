@@ -154,6 +154,19 @@ export function findReleaseManifestIssues(skillText, workflowText) {
   return issues;
 }
 
+export function findReleaseVersionIssues(manifests) {
+  const issues = [];
+  const expected = manifests[0]?.version;
+  for (const manifest of manifests) {
+    if (typeof manifest.version !== "string" || manifest.version === "") {
+      issues.push(`${manifest.file}: release version is missing`);
+    } else if (manifest.version !== expected) {
+      issues.push(`${manifest.file}: version ${manifest.version} does not match ${expected}`);
+    }
+  }
+  return issues;
+}
+
 export function findLocalIdeMcpIssues(mcp) {
   const issues = [];
   for (const [name, server] of Object.entries(mcp.mcpServers ?? {})) {

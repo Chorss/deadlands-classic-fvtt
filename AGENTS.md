@@ -57,7 +57,8 @@ data, absolute local paths, IDE ports, or generated package archives.
 
 Preserve unrelated local changes. Do not use destructive Git commands, rewrite shared history,
 force-push, or bypass hooks. Use one branch per logical change and conventional commit prefixes.
-Do not add AI co-author trailers. A PR description and green tests do not replace review.
+Do not add AI co-author trailers. Use risk-appropriate review; AI review is recommended for
+high-risk changes but is never a merge gate and never overrides public CI.
 
 ## Localization and code quality
 

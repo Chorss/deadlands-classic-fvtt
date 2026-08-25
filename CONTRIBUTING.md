@@ -90,20 +90,28 @@ deadlands-classic-fvtt/
 
 2. Make your changes. Keep commits focused and atomic.
 
-3. **Test your changes** in Foundry VTT before submitting.
+3. Run `npm run verify:ci`. For runtime, UI, or Foundry API changes, also run the complete 10/10
+   E2E suite on Foundry 14.367.
 
 4. Push your branch and open a **Pull Request** against `main`.
 
-5. Fill out the PR template completely — describe what changed and why.
+5. Fill out the PR template completely. The required CI status validates its impact, Foundry,
+   rulebook-evidence, verification, and untested-work declarations; editing the body reruns CI.
 
 6. Be responsive to review feedback. PRs that go stale for more than 30 days may be closed.
 
 ### PR Checklist
 
-- [ ] Code tested locally in Foundry VTT V14
+- [ ] `npm run verify:ci` passes
+- [ ] Runtime/UI/API work passed 10/10 E2E on Foundry 14.367, or is explicitly marked not required
 - [ ] No unrelated files changed
 - [ ] CHANGELOG.md updated under `[Unreleased]`
-- [ ] `system.json` version bumped if this is a release PR
+- [ ] Release PR manifests all use one version
+
+`main` accepts pull requests only. Its required `Lint, test & verify` status is strict, applies to
+administrators, and unresolved conversations block merging. No approval count or AI review is a
+hard gate. AI-assisted review is recommended for high-risk mechanic, migration, security, release,
+and Foundry API changes, but it can neither replace nor override public CI.
 
 ---
 

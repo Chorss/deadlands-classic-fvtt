@@ -10,6 +10,7 @@ import {
   findPrivatePathIssues,
   findProjectMcpIssues,
   findReleaseManifestIssues,
+  findReleaseVersionIssues,
   findSkillParityIssues,
   findTomlIssues,
   findUnpinnedActionIssues,
@@ -117,10 +118,17 @@ const settings = parseJson(".claude/settings.json");
 const mcp = parseJson(".mcp.json");
 const packageJson = parseJson("package.json");
 const codexConfig = read(".codex/config.toml");
+const releaseVersions = [
+  ["system.json", parseJson("system.json")],
+  ["package.json", packageJson],
+  ["package-lock.json", parseJson("package-lock.json")],
+  ["content/module.json", parseJson("content/module.json")],
+].map(([file, manifest]) => ({ file, version: manifest.version }));
 errors.push(...findTomlIssues(codexConfig).map((issue) => `.codex/config.toml: ${issue}`));
 errors.push(...findBroadPermissionIssues(settings));
 errors.push(...findLocalIdeMcpIssues(mcp));
 errors.push(...findProjectMcpIssues(mcp));
+errors.push(...findReleaseVersionIssues(releaseVersions));
 errors.push(
   ...findUnpinnedActionIssues(
     filesBelow(".github/workflows", (file) => file.endsWith(".yml")).map((file) => [

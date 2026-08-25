@@ -6,6 +6,7 @@ import {
   findPrivatePathIssues,
   findProjectMcpIssues,
   findReleaseManifestIssues,
+  findReleaseVersionIssues,
   findTomlIssues,
   findUnpinnedActionIssues,
   findWorkflowReferenceIssues,
@@ -43,6 +44,16 @@ describe("AI workshop validation", () => {
   it("requires all four version manifests in skill and release workflow", () => {
     const incomplete = "system.json package.json";
     assert.equal(findReleaseManifestIssues(incomplete, incomplete).length, 4);
+  });
+
+  it("blocks release preparation when manifest versions diverge", () => {
+    assert.deepEqual(
+      findReleaseVersionIssues([
+        { file: "system.json", version: "1.2.3" },
+        { file: "package.json", version: "1.2.4" },
+      ]),
+      ["package.json: version 1.2.4 does not match 1.2.3"]
+    );
   });
 
   it("rejects shared local IDE MCP servers", () => {

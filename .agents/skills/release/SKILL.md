@@ -18,11 +18,15 @@ This workflow prepares a reviewable release PR. It never creates or pushes a tag
 4. Move `[Unreleased]` entries into `## [<version>] — YYYY-MM-DD` in `CHANGELOG.md` and create a
    fresh `[Unreleased]` section. Keep release notes English.
 5. Run `npm run verify:ci`, `npm audit`, `npm run test:e2e`, and the Foundry publisher dry run.
-   Release readiness requires every Playwright flow to pass on the supported build.
+   Release readiness requires exactly 10/10 Playwright flows to pass on Foundry 14.367, zero known
+   npm vulnerabilities, and exact equality across all four manifests. Do not open the PR with a
+   dirty tree or any required result omitted from the PR template.
 6. Commit only the four manifests and changelog with `chore: release <version>`, push the release
    branch, and open a PR using the repository template. Do not tag.
 
 After the PR is merged, a maintainer starts from a fresh, current `main`, requires a clean tree,
 re-runs `npm ci`, `npm run verify:ci`, `npm run test:e2e`, `npm audit`, version equality, and the
-publisher dry run. Only then may the maintainer create the lightweight `<version>` tag from that
-exact `main` commit and push it. Never tag a release-PR branch and never auto-push a tag.
+publisher dry run. Require 10/10 E2E on Foundry 14.367, then confirm the tree is still clean and
+`HEAD` equals the freshly fetched `origin/main`. Only then may the maintainer create the lightweight
+`<version>` tag from that exact `main` commit and push it. Never tag a release-PR branch and never
+auto-push a tag.
