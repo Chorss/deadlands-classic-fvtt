@@ -9,8 +9,8 @@
  *
  * Only quoted, PascalCase keys that end at the closing quote are validated.
  * Keys assembled at runtime — template literals (`DEADLANDS.Trait.${id}.Label`)
- * or Handlebars `concat` with a trailing-dot prefix — cannot be resolved
- * statically; the `${…}` form is reported as a note, never as a failure.
+ * — must have an exact, reviewed key contract in i18n-runtime-keys.json.
+ * New expressions, missing keys, broad patterns, and obsolete contracts fail.
  *
  * Exit 0 — every statically-used key exists in en.json.
  * Exit 1 — a used key is missing (prints a file:line list).
@@ -19,6 +19,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { findRuntimeContractIssues } from "./audit-i18n-lib.mjs";
 
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -40,6 +41,9 @@ const DYNAMIC_KEY_RE = /["'`](DEADLANDS\.[A-Za-z0-9.]*)\$\{[^"'`]*["'`]/g;
 
 const en = JSON.parse(fs.readFileSync(path.join(REPO_ROOT, "lang/en.json"), "utf8"));
 const knownKeys = new Set(Object.keys(en));
+const runtimeContracts = JSON.parse(
+  fs.readFileSync(path.join(REPO_ROOT, "tools/i18n-runtime-keys.json"), "utf8")
+);
 
 const files = [
   ...collectFiles(path.join(REPO_ROOT, "module"), ".mjs"),
@@ -64,21 +68,25 @@ for (const file of files) {
   });
 }
 
-if (missing.length === 0) {
+const runtimeIssues = findRuntimeContractIssues(dynamic, knownKeys, runtimeContracts);
+
+if (missing.length === 0 && runtimeIssues.length === 0) {
+  const runtimeKeyCount = runtimeContracts.contracts.reduce(
+    (count, contract) => count + contract.keys.length,
+    0
+  );
   console.log("audit-i18n OK — every static DEADLANDS.* key used in code exists in lang/en.json.");
-  if (dynamic.size > 0) {
-    console.log(`  note: ${dynamic.size} runtime-built key prefix(es) skipped:`);
-    for (const d of [...dynamic].sort()) {
-      console.log(`    ${d}`);
-    }
-  }
+  console.log(
+    `  ${dynamic.size} runtime expression contract(s), ${runtimeKeyCount} explicit key(s) verified.`
+  );
   process.exit(0);
 }
 
-console.error(
-  `audit-i18n FAILED — ${missing.length} key(s) used in code but missing from lang/en.json:\n`
-);
+console.error(`audit-i18n FAILED — ${missing.length + runtimeIssues.length} error(s):\n`);
 for (const m of missing.sort()) {
-  console.error(`  ${m}`);
+  console.error(`  missing static key: ${m}`);
+}
+for (const issue of runtimeIssues.sort()) {
+  console.error(`  ${issue}`);
 }
 process.exit(1);

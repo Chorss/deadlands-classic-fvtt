@@ -12,11 +12,6 @@
         "--browser",
         "chromium"
       ]
-    },
-    "context7": {
-      "type": "stdio",
-      "command": "./node_modules/.bin/context7-mcp",
-      "args": []
     }
   }
 }

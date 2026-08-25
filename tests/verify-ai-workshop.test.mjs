@@ -4,8 +4,10 @@ import {
   findBroadPermissionIssues,
   findLocalIdeMcpIssues,
   findPrivatePathIssues,
+  findProjectMcpIssues,
   findReleaseManifestIssues,
   findTomlIssues,
+  findUnpinnedActionIssues,
   findWorkflowReferenceIssues,
 } from "../tools/verify-ai-workshop-lib.mjs";
 
@@ -48,5 +50,24 @@ describe("AI workshop validation", () => {
       mcpServers: { phpstorm: { type: "http", url: "http://127.0.0.1:12345/stream" } },
     };
     assert.deepEqual(findLocalIdeMcpIssues(mcp), ["shared local IDE MCP: phpstorm"]);
+  });
+
+  it("allows only the two portable project MCP servers", () => {
+    const portable = { mcpServers: { playwright: {}, "deadlands-rules-ref": {} } };
+    assert.deepEqual(findProjectMcpIssues(portable), []);
+    assert.equal(
+      findProjectMcpIssues({ mcpServers: { ...portable.mcpServers, context7: {} } }).length,
+      1
+    );
+  });
+
+  it("requires GitHub Actions to use full commit SHAs", () => {
+    assert.deepEqual(findUnpinnedActionIssues([["ci.yml", "uses: actions/checkout@v7"]]), [
+      "ci.yml: action is not pinned to a full SHA: actions/checkout@v7",
+    ]);
+    assert.deepEqual(
+      findUnpinnedActionIssues([["ci.yml", `uses: actions/checkout@${"a".repeat(40)} # v7`]]),
+      []
+    );
   });
 });

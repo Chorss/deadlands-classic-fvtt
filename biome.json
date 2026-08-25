@@ -1,9 +1,10 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.4.12/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.5.10/schema.json",
   "files": {
     "includes": [
       "module/**/*.mjs",
       "tools/**/*.mjs",
+      "tools/**/*.json",
       "tests/**/*.mjs",
       "styles/**/*.css",
       "lang/**/*.json",
@@ -28,7 +29,7 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
+      "preset": "recommended",
       "complexity": {
         "noStaticOnlyClass": "off",
         "noThisInStatic": "off",

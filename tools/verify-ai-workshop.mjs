@@ -8,9 +8,11 @@ import {
   findBroadPermissionIssues,
   findLocalIdeMcpIssues,
   findPrivatePathIssues,
+  findProjectMcpIssues,
   findReleaseManifestIssues,
   findSkillParityIssues,
   findTomlIssues,
+  findUnpinnedActionIssues,
   findWorkflowReferenceIssues,
 } from "./verify-ai-workshop-lib.mjs";
 
@@ -61,6 +63,26 @@ function checkShellFiles() {
   }
 }
 
+function checkRulesLauncher() {
+  const launcher = path.join(ROOT, "tools/deadlands-rules-mcp.sh");
+  const env = { ...process.env };
+  delete env.DEADLANDS_RULES_PATH;
+  const result = spawnSync("bash", [launcher], { encoding: "utf8", env });
+  if (result.status !== 64 || !result.stderr.includes("DEADLANDS_RULES_PATH is not set")) {
+    errors.push("deadlands-rules MCP launcher lacks the missing-environment diagnostic");
+  }
+}
+
+function checkSharedRulesLauncher(mcp, codexText) {
+  const expected = "./tools/deadlands-rules-mcp.sh";
+  if (mcp.mcpServers?.["deadlands-rules-ref"]?.command !== expected) {
+    errors.push(".mcp.json: deadlands-rules-ref does not use the portable launcher");
+  }
+  if (!codexText.includes("[mcp_servers.deadlands-rules-ref]") || !codexText.includes(expected)) {
+    errors.push(".codex/config.toml: deadlands-rules-ref does not use the portable launcher");
+  }
+}
+
 function checkPrivatePaths() {
   const files = [
     "AGENTS.md",
@@ -94,12 +116,22 @@ function checkSkillsAndWorkflows(packageJson) {
 const settings = parseJson(".claude/settings.json");
 const mcp = parseJson(".mcp.json");
 const packageJson = parseJson("package.json");
-errors.push(
-  ...findTomlIssues(read(".codex/config.toml")).map((issue) => `.codex/config.toml: ${issue}`)
-);
+const codexConfig = read(".codex/config.toml");
+errors.push(...findTomlIssues(codexConfig).map((issue) => `.codex/config.toml: ${issue}`));
 errors.push(...findBroadPermissionIssues(settings));
 errors.push(...findLocalIdeMcpIssues(mcp));
+errors.push(...findProjectMcpIssues(mcp));
+errors.push(
+  ...findUnpinnedActionIssues(
+    filesBelow(".github/workflows", (file) => file.endsWith(".yml")).map((file) => [
+      file,
+      read(file),
+    ])
+  )
+);
 checkShellFiles();
+checkRulesLauncher();
+checkSharedRulesLauncher(mcp, codexConfig);
 checkPrivatePaths();
 checkSkillsAndWorkflows(packageJson);
 

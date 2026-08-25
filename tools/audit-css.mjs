@@ -20,11 +20,11 @@
  * `"dlc-*"` string literals — `classList.add()`, `DEFAULT_OPTIONS.classes` and
  * computed class names never appear inside a `class="…"` attribute.
  *
- * Skips dynamic class fragments (e.g. `dlc-chip-{{color}}`, `${outcomeClass}`) —
- * these cannot be statically resolved and are reported separately as a note.
+ * Dynamic class fragments (e.g. `dlc-chip-{{color}}`, `${outcomeClass}`) must
+ * match the exact reviewed contract below. New or obsolete exceptions fail.
  *
  * Exit 0  — all template and module classes covered.
- * Exit 1  — uncovered template and/or module classes found (prints a list).
+ * Exit 1  — uncovered classes or dynamic-contract drift found (prints a list).
  *
  * Used by: `npm run verify:all` (hence CI and `/verify-system`) and
  *   `.githooks/pre-commit` on *.hbs, *.css or *.mjs changes.
@@ -43,6 +43,22 @@ const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..
  * swap (style one, add another) still trips the check.
  */
 const MODULE_BACKLOG = new Set([]);
+
+/**
+ * These templates select a finite style variant from runtime game state. Exact
+ * fragments are safer than a prefix wildcard: a newly constructed class must
+ * be reviewed here, while an exception removed from markup cannot linger.
+ */
+const DYNAMIC_FRAGMENT_CONTRACTS = new Set([
+  `dlc-chat-card dlc-night \${outcomeClass}`,
+  `dlc-chat-card dlc-night \${outcomeClass} dlc-harrowed-dominion`,
+  "dlc-chip-{{chip.color}}",
+  "dlc-chip-{{this.color}}",
+  "dlc-joker-{{card.joker}}",
+  "dlc-sin-{{severity}}",
+  "dlc-sin-{{sev}}",
+  "dlc-{{group.id}}",
+]);
 
 function collectFiles(dir, ext) {
   if (!fs.existsSync(dir)) {
@@ -151,12 +167,18 @@ const dynamicPrefixes = [...dynamicFragments]
 const unusedSelectors = [...definedClasses].filter((c) => !allUsed.has(c)).sort();
 const maybeCovered = unusedSelectors.filter((c) => dynamicPrefixes.some((p) => c.startsWith(p)));
 const deadSelectors = unusedSelectors.filter((c) => !maybeCovered.includes(c));
+const unexpectedDynamic = [...dynamicFragments].filter(
+  (fragment) => !DYNAMIC_FRAGMENT_CONTRACTS.has(fragment)
+);
+const obsoleteDynamic = [...DYNAMIC_FRAGMENT_CONTRACTS].filter(
+  (fragment) => !dynamicFragments.has(fragment)
+);
 
 function reportDynamicFragments(write) {
   if (dynamicFragments.size === 0) {
     return;
   }
-  write(`\n  note: ${dynamicFragments.size} dynamic fragment(s) skipped (runtime-built classes):`);
+  write(`\n  ${dynamicFragments.size} reviewed dynamic class contract(s):`);
   for (const f of [...dynamicFragments].sort()) {
     write(`    ${f}`);
   }
@@ -169,6 +191,16 @@ function reportList(heading, classes) {
   console.log(heading);
   for (const c of classes) {
     console.log(`    .${c}`);
+  }
+}
+
+function reportFragments(heading, fragments) {
+  if (fragments.length === 0) {
+    return;
+  }
+  console.error(heading);
+  for (const fragment of fragments) {
+    console.error(`    ${fragment}`);
   }
 }
 
@@ -209,7 +241,12 @@ function reportModuleFailures() {
   }
 }
 
-if (missingFromTemplates.length > 0 || missingFromModule.length > 0) {
+if (
+  missingFromTemplates.length > 0 ||
+  missingFromModule.length > 0 ||
+  unexpectedDynamic.length > 0 ||
+  obsoleteDynamic.length > 0
+) {
   if (missingFromTemplates.length > 0) {
     console.error(
       `audit-css FAILED — ${missingFromTemplates.length} class(es) used in templates but missing from styles/:\n`
@@ -219,6 +256,8 @@ if (missingFromTemplates.length > 0 || missingFromModule.length > 0) {
     }
   }
   reportDynamicFragments((m) => console.error(m));
+  reportFragments("\n  unexpected dynamic class fragments:", unexpectedDynamic);
+  reportFragments("\n  obsolete dynamic class exceptions:", obsoleteDynamic);
   reportModuleFailures();
   process.exit(1);
 }

@@ -1,0 +1,281 @@
+{
+  "schemaVersion": 1,
+  "contracts": [
+    {
+      "expression": "DEADLANDS.Aptitude.${…}",
+      "keys": [
+        "DEADLANDS.Aptitude.Academia.Label",
+        "DEADLANDS.Aptitude.AnimalWranglin.Label",
+        "DEADLANDS.Aptitude.AreaKnowledge.Label",
+        "DEADLANDS.Aptitude.Artillery.Label",
+        "DEADLANDS.Aptitude.Arts.Label",
+        "DEADLANDS.Aptitude.Bluff.Label",
+        "DEADLANDS.Aptitude.Bow.Label",
+        "DEADLANDS.Aptitude.Climbin.Label",
+        "DEADLANDS.Aptitude.Demolition.Label",
+        "DEADLANDS.Aptitude.Disguise.Label",
+        "DEADLANDS.Aptitude.Dodge.Label",
+        "DEADLANDS.Aptitude.Drivin.Label",
+        "DEADLANDS.Aptitude.Fightin.Label",
+        "DEADLANDS.Aptitude.Filchin.Label",
+        "DEADLANDS.Aptitude.Gamblin.Label",
+        "DEADLANDS.Aptitude.Guts.Label",
+        "DEADLANDS.Aptitude.HorseRidin.Label",
+        "DEADLANDS.Aptitude.Language.Label",
+        "DEADLANDS.Aptitude.Leadership.Label",
+        "DEADLANDS.Aptitude.Lockpickin.Label",
+        "DEADLANDS.Aptitude.Medicine.Label",
+        "DEADLANDS.Aptitude.Overawe.Label",
+        "DEADLANDS.Aptitude.Performin.Label",
+        "DEADLANDS.Aptitude.Persuasion.Label",
+        "DEADLANDS.Aptitude.Professional.Label",
+        "DEADLANDS.Aptitude.QuickDraw.Label",
+        "DEADLANDS.Aptitude.Ridicule.Label",
+        "DEADLANDS.Aptitude.Science.Label",
+        "DEADLANDS.Aptitude.Scroungin.Label",
+        "DEADLANDS.Aptitude.Scrutinize.Label",
+        "DEADLANDS.Aptitude.Search.Label",
+        "DEADLANDS.Aptitude.Shootin.Label",
+        "DEADLANDS.Aptitude.SleightOfHand.Label",
+        "DEADLANDS.Aptitude.Sneak.Label",
+        "DEADLANDS.Aptitude.SpeedLoad.Label",
+        "DEADLANDS.Aptitude.Streetwise.Label",
+        "DEADLANDS.Aptitude.Survival.Label",
+        "DEADLANDS.Aptitude.Swimmin.Label",
+        "DEADLANDS.Aptitude.TaleTellin.Label",
+        "DEADLANDS.Aptitude.Teamster.Label",
+        "DEADLANDS.Aptitude.Throwin.Label",
+        "DEADLANDS.Aptitude.Tinkerin.Label",
+        "DEADLANDS.Aptitude.Trackin.Label",
+        "DEADLANDS.Aptitude.Trade.Label"
+      ]
+    },
+    {
+      "expression": "DEADLANDS.Chip.${…}",
+      "keys": [
+        "DEADLANDS.Chip.Blue.Label",
+        "DEADLANDS.Chip.Legend.Label",
+        "DEADLANDS.Chip.Red.Label",
+        "DEADLANDS.Chip.White.Label"
+      ]
+    },
+    {
+      "expression": "DEADLANDS.Combat.Card.${…}",
+      "keys": ["DEADLANDS.Combat.Card.BlackJoker", "DEADLANDS.Combat.Card.RedJoker"]
+    },
+    {
+      "expression": "DEADLANDS.Combat.Card.Rank.${…}",
+      "keys": [
+        "DEADLANDS.Combat.Card.Rank.A",
+        "DEADLANDS.Combat.Card.Rank.J",
+        "DEADLANDS.Combat.Card.Rank.K",
+        "DEADLANDS.Combat.Card.Rank.Q"
+      ]
+    },
+    {
+      "expression": "DEADLANDS.Combat.Card.Suit.${…}",
+      "keys": [
+        "DEADLANDS.Combat.Card.Suit.Clubs",
+        "DEADLANDS.Combat.Card.Suit.Diamonds",
+        "DEADLANDS.Combat.Card.Suit.Hearts",
+        "DEADLANDS.Combat.Card.Suit.Spades"
+      ]
+    },
+    {
+      "expression": "DEADLANDS.HitLocation.${…}",
+      "keys": [
+        "DEADLANDS.HitLocation.Body.Label",
+        "DEADLANDS.HitLocation.Gizzards.Label",
+        "DEADLANDS.HitLocation.LeftArm.Label",
+        "DEADLANDS.HitLocation.LeftLeg.Label",
+        "DEADLANDS.HitLocation.LowerGuts.Label",
+        "DEADLANDS.HitLocation.Noggin.Label",
+        "DEADLANDS.HitLocation.RightArm.Label",
+        "DEADLANDS.HitLocation.RightLeg.Label",
+        "DEADLANDS.HitLocation.UpperGuts.Label"
+      ]
+    },
+    {
+      "expression": "DEADLANDS.Huckster.Backlash.${…}",
+      "keys": [
+        "DEADLANDS.Huckster.Backlash.BrainDrain.Label",
+        "DEADLANDS.Huckster.Backlash.BrainDrain.Note",
+        "DEADLANDS.Huckster.Backlash.CompanionWindLoss.Label",
+        "DEADLANDS.Huckster.Backlash.CompanionWindLoss.Note",
+        "DEADLANDS.Huckster.Backlash.CompanionWound.Label",
+        "DEADLANDS.Huckster.Backlash.CompanionWound.Note",
+        "DEADLANDS.Huckster.Backlash.HeavyWindLoss.Label",
+        "DEADLANDS.Huckster.Backlash.HeavyWindLoss.Note",
+        "DEADLANDS.Huckster.Backlash.HexBlocked.Label",
+        "DEADLANDS.Huckster.Backlash.HexBlocked.Note",
+        "DEADLANDS.Huckster.Backlash.HexHitsCompanions.Label",
+        "DEADLANDS.Huckster.Backlash.HexHitsCompanions.Note",
+        "DEADLANDS.Huckster.Backlash.HexSkillPenaltyTemp.Label",
+        "DEADLANDS.Huckster.Backlash.HexSkillPenaltyTemp.Note",
+        "DEADLANDS.Huckster.Backlash.HexTurnsOnCaster.Label",
+        "DEADLANDS.Huckster.Backlash.HexTurnsOnCaster.Note",
+        "DEADLANDS.Huckster.Backlash.ItemDestroyed.Label",
+        "DEADLANDS.Huckster.Backlash.ItemDestroyed.Note",
+        "DEADLANDS.Huckster.Backlash.LimbBlocked.Label",
+        "DEADLANDS.Huckster.Backlash.LimbBlocked.Note",
+        "DEADLANDS.Huckster.Backlash.Madness.Label",
+        "DEADLANDS.Huckster.Backlash.Madness.Note",
+        "DEADLANDS.Huckster.Backlash.MysticSputter.Label",
+        "DEADLANDS.Huckster.Backlash.MysticSputter.Note",
+        "DEADLANDS.Huckster.Backlash.PersonalBacklash.Label",
+        "DEADLANDS.Huckster.Backlash.PersonalBacklash.Note",
+        "DEADLANDS.Huckster.Backlash.RandomWound.Label",
+        "DEADLANDS.Huckster.Backlash.RandomWound.Note",
+        "DEADLANDS.Huckster.Backlash.ScartCheck.Label",
+        "DEADLANDS.Huckster.Backlash.ScartCheck.Note",
+        "DEADLANDS.Huckster.Backlash.ScartCheckHeavy.Label",
+        "DEADLANDS.Huckster.Backlash.ScartCheckHeavy.Note",
+        "DEADLANDS.Huckster.Backlash.TemporaryMadness.Label",
+        "DEADLANDS.Huckster.Backlash.TemporaryMadness.Note",
+        "DEADLANDS.Huckster.Backlash.TotalCorruption.Label",
+        "DEADLANDS.Huckster.Backlash.TotalCorruption.Note",
+        "DEADLANDS.Huckster.Backlash.WindLoss.Label",
+        "DEADLANDS.Huckster.Backlash.WindLoss.Note",
+        "DEADLANDS.Huckster.Backlash.WoundCurse.Label",
+        "DEADLANDS.Huckster.Backlash.WoundCurse.Note"
+      ]
+    },
+    {
+      "expression": "DEADLANDS.Huckster.Hand.${…}",
+      "keys": [
+        "DEADLANDS.Huckster.Hand.Ace",
+        "DEADLANDS.Huckster.Hand.Flush",
+        "DEADLANDS.Huckster.Hand.FourOfAKind",
+        "DEADLANDS.Huckster.Hand.FullHouse",
+        "DEADLANDS.Huckster.Hand.Jacks",
+        "DEADLANDS.Huckster.Hand.None",
+        "DEADLANDS.Huckster.Hand.Pair",
+        "DEADLANDS.Huckster.Hand.RoyalFlush",
+        "DEADLANDS.Huckster.Hand.Straight",
+        "DEADLANDS.Huckster.Hand.StraightFlush",
+        "DEADLANDS.Huckster.Hand.ThreeOfAKind",
+        "DEADLANDS.Huckster.Hand.TwoPair"
+      ]
+    },
+    {
+      "expression": "DEADLANDS.Item.Weapon.Category.${…}",
+      "keys": [
+        "DEADLANDS.Item.Weapon.Category.Automatics",
+        "DEADLANDS.Item.Weapon.Category.Carbines",
+        "DEADLANDS.Item.Weapon.Category.Derringers",
+        "DEADLANDS.Item.Weapon.Category.MeleeWeapon",
+        "DEADLANDS.Item.Weapon.Category.Other",
+        "DEADLANDS.Item.Weapon.Category.OtherRanged",
+        "DEADLANDS.Item.Weapon.Category.PistolDA",
+        "DEADLANDS.Item.Weapon.Category.PistolSA",
+        "DEADLANDS.Item.Weapon.Category.Rifles",
+        "DEADLANDS.Item.Weapon.Category.Shotguns"
+      ]
+    },
+    {
+      "expression": "DEADLANDS.Item.Weapon.RangeType.${…}",
+      "keys": ["DEADLANDS.Item.Weapon.RangeType.Melee", "DEADLANDS.Item.Weapon.RangeType.Ranged"]
+    },
+    {
+      "expression": "DEADLANDS.MadScientist.Madness.${…}",
+      "keys": [
+        "DEADLANDS.MadScientist.Madness.AbsentMinded.Label",
+        "DEADLANDS.MadScientist.Madness.AbsentMinded.Note",
+        "DEADLANDS.MadScientist.Madness.Delusion.Label",
+        "DEADLANDS.MadScientist.Madness.Delusion.Note",
+        "DEADLANDS.MadScientist.Madness.Depression.Label",
+        "DEADLANDS.MadScientist.Madness.Depression.Note",
+        "DEADLANDS.MadScientist.Madness.Eccentricity.Label",
+        "DEADLANDS.MadScientist.Madness.Eccentricity.Note",
+        "DEADLANDS.MadScientist.Madness.EvilDeeds.Label",
+        "DEADLANDS.MadScientist.Madness.EvilDeeds.Note",
+        "DEADLANDS.MadScientist.Madness.MajorPhobia.Label",
+        "DEADLANDS.MadScientist.Madness.MajorPhobia.Note",
+        "DEADLANDS.MadScientist.Madness.MinorPhobia.Label",
+        "DEADLANDS.MadScientist.Madness.MinorPhobia.Note",
+        "DEADLANDS.MadScientist.Madness.Mumbler.Label",
+        "DEADLANDS.MadScientist.Madness.Mumbler.Note",
+        "DEADLANDS.MadScientist.Madness.Paranoia.Label",
+        "DEADLANDS.MadScientist.Madness.Paranoia.Note",
+        "DEADLANDS.MadScientist.Madness.Schizophrenia.Label",
+        "DEADLANDS.MadScientist.Madness.Schizophrenia.Note"
+      ]
+    },
+    {
+      "expression": "DEADLANDS.Scart.${…}",
+      "keys": [
+        "DEADLANDS.Scart.CorporealAging.Label",
+        "DEADLANDS.Scart.CorporealAging.Note",
+        "DEADLANDS.Scart.CorporealAlteration.Label",
+        "DEADLANDS.Scart.CorporealAlteration.Note",
+        "DEADLANDS.Scart.DeadFaint.Label",
+        "DEADLANDS.Scart.DeadFaint.Note",
+        "DEADLANDS.Scart.HeartAttack.Label",
+        "DEADLANDS.Scart.HeartAttack.Note",
+        "DEADLANDS.Scart.HeebieJeebies.Label",
+        "DEADLANDS.Scart.HeebieJeebies.Note",
+        "DEADLANDS.Scart.MajorPhobia.Label",
+        "DEADLANDS.Scart.MajorPhobia.Note",
+        "DEADLANDS.Scart.MinorPhobia.Label",
+        "DEADLANDS.Scart.MinorPhobia.Note",
+        "DEADLANDS.Scart.Queasy.Label",
+        "DEADLANDS.Scart.Queasy.Note",
+        "DEADLANDS.Scart.TheShakes.Label",
+        "DEADLANDS.Scart.TheShakes.Note",
+        "DEADLANDS.Scart.Uneasy.Label",
+        "DEADLANDS.Scart.Uneasy.Note",
+        "DEADLANDS.Scart.WeakKnees.Label",
+        "DEADLANDS.Scart.WeakKnees.Note",
+        "DEADLANDS.Scart.Willies.Label",
+        "DEADLANDS.Scart.Willies.Note"
+      ]
+    },
+    {
+      "expression": "DEADLANDS.Shaman.Medicine.${…}",
+      "keys": [
+        "DEADLANDS.Shaman.Medicine.Blessing",
+        "DEADLANDS.Shaman.Medicine.Earth",
+        "DEADLANDS.Shaman.Medicine.Ghost",
+        "DEADLANDS.Shaman.Medicine.Trickster",
+        "DEADLANDS.Shaman.Medicine.Visionseeking",
+        "DEADLANDS.Shaman.Medicine.War"
+      ]
+    },
+    {
+      "expression": "DEADLANDS.Shaman.RitualType.${…}",
+      "keys": [
+        "DEADLANDS.Shaman.RitualType.AnimalSacrifice",
+        "DEADLANDS.Shaman.RitualType.BodyPainting",
+        "DEADLANDS.Shaman.RitualType.Dance",
+        "DEADLANDS.Shaman.RitualType.Fast",
+        "DEADLANDS.Shaman.RitualType.JimsonWeed",
+        "DEADLANDS.Shaman.RitualType.Maim",
+        "DEADLANDS.Shaman.RitualType.Peyote",
+        "DEADLANDS.Shaman.RitualType.Pledge",
+        "DEADLANDS.Shaman.RitualType.SandPainting",
+        "DEADLANDS.Shaman.RitualType.Scar",
+        "DEADLANDS.Shaman.RitualType.SpiritSong",
+        "DEADLANDS.Shaman.RitualType.StarGazing",
+        "DEADLANDS.Shaman.RitualType.SweatLodge",
+        "DEADLANDS.Shaman.RitualType.Tattoo",
+        "DEADLANDS.Shaman.RitualType.Tobacco",
+        "DEADLANDS.Shaman.RitualType.WarCry"
+      ]
+    },
+    {
+      "expression": "DEADLANDS.Trait.${…}",
+      "keys": [
+        "DEADLANDS.Trait.Cognition.Label",
+        "DEADLANDS.Trait.Deftness.Label",
+        "DEADLANDS.Trait.Knowledge.Label",
+        "DEADLANDS.Trait.Mien.Label",
+        "DEADLANDS.Trait.Nimbleness.Label",
+        "DEADLANDS.Trait.Quickness.Label",
+        "DEADLANDS.Trait.Smarts.Label",
+        "DEADLANDS.Trait.Spirit.Label",
+        "DEADLANDS.Trait.Strength.Label",
+        "DEADLANDS.Trait.Vigor.Label"
+      ]
+    }
+  ]
+}
