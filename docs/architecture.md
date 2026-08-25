@@ -1,7 +1,7 @@
 # Architecture — registry pattern
 
-> The load-bearing design decision. Full roadmap context: `implementation-plan.md` §2 — treat the
-> plan as the source of truth where they disagree. This doc is the contributor-facing summary.
+> The load-bearing design decision. Current registries and tests are the final contract where this
+> contributor-facing summary differs from code.
 
 ## Core principle
 

@@ -11,7 +11,7 @@
  * the Deadlands rule that the highest card acts first. `dlc` p.116-118
  * (initiative chapter).
  *
- * @see docs/implementation-plan.md §3.2
+ * @see docs/architecture.md
  * @license MIT
  */
 

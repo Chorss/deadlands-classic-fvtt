@@ -2,8 +2,8 @@
  * Trait/Aptitude roll — Foundry-integrated wrapper around rollExplodingPool.
  *
  * Sends a ChatMessage with the result. Exposed on `game.deadlandsClassic.dice`.
- * Accepts either an actor+traitId pair (sheet integration, Phase 4+) or a raw
- * parameter object (console testing, Phase 3).
+ * Accepts either an actor+traitId pair for sheet integration or a raw parameter
+ * object for console testing.
  *
  * @license MIT
  */
@@ -17,7 +17,7 @@ import { rollExplodingPool } from "./exploding-roll.mjs";
  * Signature A — raw params (console / testing):
  *   rollTrait({ dieCount, dieType, tn?, modifier?, label? })
  *
- * Signature B — actor context (sheet, Phase 4+):
+ * Signature B — actor context (sheet):
  *   rollTrait(actor, traitId, { aptitudeId?, modifier?, tn? })
  *
  * @returns {Promise<import("./exploding-roll.mjs").PoolResult>}

@@ -7,7 +7,7 @@
  * The entry point reads the registry in the `init` hook to wire
  * `CONFIG.Actor.dataModels` and the per-type sheets.
  *
- * @see docs/implementation-plan.md §2
+ * @see docs/architecture.md
  * @see .claude/rules/naming.md — registry keys are camelCase, matching system.json
  * @license MIT
  */

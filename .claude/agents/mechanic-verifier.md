@@ -15,11 +15,12 @@ you report discrepancies with citations; the parent applies fixes.
 (a paraphrase that has drifted), over the `vendor/` reference projects. Resolve its path first:
 
 ```bash
-echo "${DEADLANDS_RULES_PATH:-}"
+test -n "${DEADLANDS_RULES_PATH:-}"
 ```
 
-- Non-empty → use `$DEADLANDS_RULES_PATH/extracts/<slug>/` and `$DEADLANDS_RULES_PATH/index/`.
-- Empty → fall back to `.pdf-extract/<slug>/` in the repo. If neither exists, say so and stop.
+- Non-empty → first run `$DEADLANDS_RULES_PATH/scripts/verify-pdf-extract.sh <slug>`, then use
+  `$DEADLANDS_RULES_PATH/extracts/<slug>/` and `$DEADLANDS_RULES_PATH/index/`.
+- Empty → say so and stop. Public-repository extracts are forbidden.
 
 ## Procedure
 

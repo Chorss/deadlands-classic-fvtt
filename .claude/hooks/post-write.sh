@@ -41,7 +41,7 @@ esac
 # source (deadlands-rules-ref). Path-scoped `.claude/rules` don't fire on Write
 # (Claude Code #23478), so nudge here — on save — via additionalContext.
 case "$REL" in
-  module/core/config.mjs|module/core/dice/*|module/core/chips/*|module/core/wounds/*|module/core/cards/*|module/archetypes/*/mechanics.mjs)
+  module/core/config.mjs|module/core/dice/*|module/core/chips/*|module/core/wounds/*|module/core/cards/*|module/archetypes/*/mechanics.mjs|packs/_source/*.json|content/_source/*.json|docs/mechanics-reference.md)
     node -e '
       const rel = process.argv[1];
       const msg = "Mechanics file saved: " + rel +

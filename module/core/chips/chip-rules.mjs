@@ -10,7 +10,7 @@
  *   - Red on trait/aptitude → Marshal's Tithe. dlc p.148.
  *   - Actor cap = 10 chips; surplus converts to BP. dlc p.147.
  *
- * `canSpend` is pure (no Foundry I/O) for unit tests (chip-rules.test.mjs, Phase 5).
+ * `canSpend` is pure (no Foundry I/O) for unit tests in chip-rules.test.mjs.
  *
  * @license MIT
  */

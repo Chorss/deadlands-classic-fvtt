@@ -1,5 +1,5 @@
 /**
- * Phase 10 — Blessed, Shaman, Mad Scientist pure-logic tests.
+ * Blessed, Shaman, and Mad Scientist pure-logic tests.
  *
  * Tests cover only the pure-logic parts that don't require Foundry globals.
  * Foundry-dependent workflows (invokeMiracle, performRitual, deviseBlueprint)

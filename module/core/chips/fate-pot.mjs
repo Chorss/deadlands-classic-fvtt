@@ -12,7 +12,7 @@
  *   - Starting seed: 50W / 25R / 10B / 0L. dlc p.146.
  *
  * Pure logic (no DOM) — testable without Foundry via the static helpers that
- * accept a plain `potData` object (see chip-rules.test.mjs, Phase 5).
+ * accept a plain `potData` object (see chip-rules.test.mjs).
  *
  * @license MIT
  */

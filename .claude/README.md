@@ -1,7 +1,7 @@
 # .claude/ — AI workshop
 
-Claude Code configuration for this repository. Orientation only — the authoritative
-project context is `CLAUDE.md` at the repo root, which auto-loads every session.
+Claude Code integration for this repository. The authoritative, tool-neutral project context is
+`AGENTS.md`; `CLAUDE.md` imports it and adds only Claude-specific integration notes.
 
 ## Layout
 
@@ -20,7 +20,7 @@ project context is `CLAUDE.md` at the repo root, which auto-loads every session.
 | File | In git? | Purpose |
 |---|---|---|
 | `settings.json` | ✓ | Shared permissions, hook wiring, shared env (`DEADLANDS_DEV`) |
-| `settings.local.json` | ✗ (gitignored) | Per-machine `DEADLANDS_RULES_PATH`, domain allowlists, local tooling permissions |
+| `settings.local.json` | ✗ (gitignored) | Minimal per-clone MCP enablement only; paths and secrets stay in the environment |
 | `agents/*.md`, `skills/*/SKILL.md`, `hooks/*.sh`, `rules/*.md` | ✓ | Shared workshop — every contributor gets the same setup |
 
 ## Hooks
@@ -51,7 +51,7 @@ Three details worth knowing:
 
 `settings.json` splits into two kinds of deny rule, and they are not equally strong.
 
-**Path rules — file tools only.** `CLAUDE.md` says never to modify `.git/`, `.agents/`,
+**Path rules — file tools only.** `AGENTS.md` says never to modify `.git/`, `.agents/`,
 `.codex/`, `vendor/`, `books/`, `.pdf-extract/` or `LICENSE`; `Edit(...)` deny rules
 block Write/Edit tool calls to those targets:
 
@@ -78,26 +78,22 @@ Foundry test traffic. Adding a domain is a reviewed repository change.
 
 ## Skills
 
-- `/verify-system` — `npm run lint` + `npm run verify:all`, one-paragraph report
+- `/verify-system` — `npm run verify:ci`, one-paragraph report
 - `/verify-foundry` — establish the exact Foundry build and authoritative API sources before
   Foundry-dependent edits; run the doctor and all local E2E flows afterward
 - `/verify-mechanic` — verify a mechanic against `deadlands-rules-ref` **before** coding it;
   returns `<slug> p.NNN` + paraphrase. Delegates to `pdf-reference-lookup`
-- `/release [major|minor|patch]` — cut a versioned release (bumps, tags, pushes; CI builds the zip)
-- `/new-phase [N] [slug]` — create branch `phase-N/<slug>`, extract checklist + test block from
-  `docs/implementation-plan.md`, list companion PDFs to verify
+- `/release [major|minor|patch]` — prepare and validate a release PR; never tag automatically
 - `/add-archetype <kebab-name> [--mechanics|--overlay]` — full archetype scaffold; delegates to
   `archetype-scaffolder`
 
-Skills are invoked with `/name` or automatically when their `description:` matches the task.
-`/release` deliberately carries Polish trigger phrases ("zrób release", "taguj wersję") in its
-description, so the maintainer's usual phrasing invokes it.
+The five canonical procedures live in `.agents/skills/`; files under `.claude/skills/` are thin
+adapters. Skills are invoked with `/name` or automatically when their description matches a task.
 
 ## Agents
 
-- `pdf-reference-lookup` — given a mechanic query, returns `<slug> p.NNN` + a short
-  quoted fragment from the rulebook extracts. Resolves `$DEADLANDS_RULES_PATH` on
-  every call; falls back to local `.pdf-extract/` if unset.
+- `pdf-reference-lookup` — given a mechanic query, returns `<slug> p.NNN` plus a short
+  paraphrase. It prefers MCP and requires `$DEADLANDS_RULES_PATH` for fallback.
 - `mechanic-verifier` — audits **already-written** code or pack entries against the
   rulebook; produces a per-value MATCH/MISMATCH table with page cites. Use after
   coding a mechanic or during review.
@@ -110,7 +106,7 @@ description, so the maintainer's usual phrasing invokes it.
 
 ## Rules
 
-Claude Code loads `.claude/rules/*.md` itself — there are no `@`-includes in `CLAUDE.md`.
+Claude Code loads `.claude/rules/*.md` itself; `CLAUDE.md` imports canonical `AGENTS.md`.
 A rule **without** `paths:` frontmatter loads at session start with the same priority as
 `CLAUDE.md`. A rule **with** `paths:` loads only when a matching file is read or written,
 which keeps it out of sessions that never touch those files.
@@ -130,11 +126,10 @@ keeps its own non-blocking reminder on mechanics files.
 
 ## Verification
 
-One definition of green, shared by CI, the pre-commit hook and `/verify-system`:
+One complete definition of green, shared by CI, the Stop hook and `/verify-system`:
 
 ```bash
-npm run lint          # Biome — formatting + lint rules
-npm run verify:all    # verify-documenttypes → audit-css → audit-i18n → tests
+npm run verify:ci
 ```
 
 ## Local setup (one-time)
@@ -155,7 +150,5 @@ export FOUNDRY_DATA_PATH=/path/to/FoundryVTT
 export FOUNDRY_WORLD=deadlands-test
 ```
 
-Without it, the post-extract quality gate hook will skip verification (no local fallback — scripts now live in `deadlands-rules-ref`).
-Never store license keys or passwords here. `.mcp.json` starts the pinned
-`@playwright/mcp@0.0.79` and `@upstash/context7-mcp@4.0.3` executables from
-`node_modules`; run `npm ci` before using either server.
+Never store these paths, license keys, or passwords in project settings. The portable
+`tools/deadlands-rules-mcp.sh` launcher reads `DEADLANDS_RULES_PATH` at runtime.

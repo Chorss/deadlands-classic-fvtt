@@ -1,7 +1,7 @@
 /**
  * Chip widget helpers — thin UI bridge between sheet actions and chip-rules.
  *
- * Full spend/grant buttons are wired in the sheet actions (Phase 5). This module
+ * Full spend/grant buttons are wired in the sheet actions. This module
  * provides the context-builder used by both BaseCharacterSheet and future archetype
  * sheets so the view model stays in one place.
  *

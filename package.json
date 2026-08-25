@@ -18,6 +18,7 @@
     "lint": "biome check",
     "fmt": "biome format --write",
     "verify": "node tools/verify-documenttypes.mjs",
+    "verify:ci": "npm run lint && npm run verify:all",
     "verify:all": "npm run verify && node tools/audit-css.mjs && node tools/audit-i18n.mjs && node tools/audit-docs.mjs && npm test",
     "audit:i18n": "node tools/audit-i18n.mjs",
     "audit:docs": "node tools/audit-docs.mjs",

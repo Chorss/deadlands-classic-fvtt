@@ -3,6 +3,7 @@ paths:
   - "module/**/*.mjs"
   - "tests/**/*.mjs"
   - "packs/**"
+  - "content/_source/**/*.json"
   - "docs/mechanics-reference.md"
 ---
 
@@ -28,7 +29,7 @@ each with slug, page offset, and a PASS/WARN/FAIL extract-quality flag).
   Never code a rule from memory.
 - **Page cites, not prose.** Cite `<slug> p.NNN` in code comments / PR bodies where it aids review.
   **Never paste rulebook prose** into code, comments, packs, commits, issues, or PRs — it's Pinnacle
-  IP (see `CLAUDE.md` §PDF rulebook).
+  IP (see `AGENTS.md` §Rulebook evidence).
 
 ## Which book
 

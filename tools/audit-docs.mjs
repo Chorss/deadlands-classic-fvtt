@@ -10,8 +10,8 @@
  * ERRORS (exit 1)
  *   1. A tracked file points at a **gitignored file** as if a reader could open
  *      it. This is the concrete bug the tool exists for: docs/*.pl.md are
- *      gitignored, yet the plan linked to one and the /new-phase skill ran awk
- *      over another, so both were dead after a fresh clone. Only paths that name
+ *      gitignored, yet older workshop guidance linked to one, so it was dead
+ *      after a fresh clone. Only paths that name
  *      a file (i.e. carry an extension) count — CLAUDE.md deliberately discusses
  *      the ignored `vendor/`, `books/` and `.pdf-extract/` directories, and
  *      saying "do not touch this" is not a broken pointer. IGNORED_OK holds the
@@ -24,26 +24,20 @@
  *      clone do not have the private rules repo, and this degrades rather than
  *      failing, the same way audit-css treats module/ more leniently than
  *      templates/.
- *   4. A `docs/*.md` file missing from CLAUDE.md's "Sources of truth" table.
+ *   4. A `docs/*.md` file missing from AGENTS.md's "Sources of truth" table.
  *      A doc nobody is pointed at is a doc that quietly goes stale, and CLAUDE.md
- *      is what every session reads first, so the table is the index that has to
+ *      is what every agent reads first, so the table is the index that has to
  *      stay complete.
  *
  *      This ran as a warning until the table was corrected, because a hard
  *      failure against an incorrect table would have left verify:all permanently
  *      red — and the Stop hook runs verify:all on every dirty tree, so that would
  *      have blocked every turn. The table is correct now, so the check is a hard
- *      error, with one consequence worth stating plainly: **CLAUDE.md is outside
- *      the editable surface Claude may touch unprompted.** A session that adds a
- *      `docs/*.md` will therefore hit a gate it cannot clear on its own; the
- *      failure message says so, and the answer is to ask the maintainer for the
- *      one-line table addition, not to delete the doc or work around the check.
+ *      error.
  *
  * WARNINGS (never affect the exit code)
  *   5. A backticked path that does not exist. Warning-only because
- *      implementation-plan.md deliberately names things that do not exist yet
- *      (docs/claude-workflow.md, module/core/migration.mjs) — a decision recorded
- *      in commit 745320f. ASPIRATIONAL_OK holds those.
+ *      examples may deliberately name things that do not exist yet.
  *
  * EN/PL parity is deliberately not checked: repo docs are English, the only
  * Polish file is a natively-Polish note with no English counterpart, and CI
@@ -334,26 +328,25 @@ for (const { file, line, target } of ignoredCandidates) {
   }
 }
 
-// ── Check 4: CLAUDE.md's "Sources of truth" table covers every doc ───────────
+// ── Check 4: AGENTS.md's "Sources of truth" table covers every doc ───────────
 
-const claudeMd = path.join(REPO_ROOT, "CLAUDE.md");
-if (fs.existsSync(claudeMd)) {
-  const text = fs.readFileSync(claudeMd, "utf8");
+const agentsMd = path.join(REPO_ROOT, "AGENTS.md");
+if (fs.existsSync(agentsMd)) {
+  const text = fs.readFileSync(agentsMd, "utf8");
   const table = extractSourcesOfTruthTable(text);
   const docs = fs
     .readdirSync(path.join(REPO_ROOT, "docs"))
     .filter((f) => f.endsWith(".md") && !f.endsWith(".pl.md"));
   if (!table.text) {
-    err("CLAUDE.md", table.line, 'missing the "Sources of truth" table');
+    err("AGENTS.md", table.line, 'missing the "Sources of truth" table');
   } else {
     for (const doc of docs) {
       if (!table.text.includes(`\`docs/${doc}\``)) {
         err(
-          "CLAUDE.md",
+          "AGENTS.md",
           table.line,
-          `docs/${doc} is missing from the Sources of truth table — add a row for it. ` +
-            `Note that CLAUDE.md is outside the editable surface, so a Claude session ` +
-            `must ask the maintainer for this rather than editing it unprompted.`
+          `docs/${doc} is missing from the Sources of truth table — add a row to ` +
+            "the canonical project instructions."
         );
       }
     }
