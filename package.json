@@ -33,7 +33,7 @@
     "unpack:content": "fvtt package unpack --in content/packs --out content/_source"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.5.10",
+    "@biomejs/biome": "^2.5.11",
     "@foundryvtt/foundryvtt-cli": "^3.0.4",
     "@playwright/mcp": "0.0.79",
     "@playwright/test": "^1.62.1"
